@@ -14,6 +14,7 @@ import permissions from "@src/views/apps/roles-permissions/store";
 
 import productions from "./slices/mySlices/productions";
 import clients from "./slices/mySlices/clients";
+import configurations from "./slices/mySlices/configurations";
 import restApi from "./api/restApi";
 
 const rootReducer = {
@@ -32,6 +33,7 @@ const rootReducer = {
 
   productions,
   clients,
+  configurations,
 
   [restApi.reducerPath]: restApi.reducer,
 };

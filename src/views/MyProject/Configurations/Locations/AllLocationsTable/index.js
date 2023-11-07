@@ -15,9 +15,13 @@ import { useHistory } from "react-router-dom";
 import { LocationsService } from "@src/services";
 import useSWR from "swr";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { openDeleteLocationPopup } from "../../../../../redux/slices/mySlices/configurations";
 
 const AllLocationsTable = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
 
   const locationsService = new LocationsService();
 
@@ -27,132 +31,6 @@ const AllLocationsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR("LIST_LOCATIONS", () => locationsService.getLocations());
-
-  // const tableData = [
-  //   {
-  //     id: 1,
-  //     set_name: "Studio A",
-  //     dateCreated: "2020-01-15",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "John",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 2,
-
-  //     set_name: "Outdoor Backlot",
-  //     dateCreated: "2018-06-23",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Musk",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 3,
-  //     set_name: "Victorian Era Street",
-  //     dateCreated: "2019-03-10",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Andrew",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 4,
-  //     set_name: "Sci-Fi Spaceship",
-  //     dateCreated: "2017-11-05",
-  //     status: "In-Active",
-  //     description: "hello",
-  //     created_by: "Vegas",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 5,
-  //     set_name: "Tropical Paradise",
-  //     dateCreated: "2021-02-20",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "phillip",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-
-  //   {
-  //     id: 6,
-  //     set_name: "Medieval Castle",
-  //     dateCreated: "2020-01-15",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "John",
-  //     set_id: "9359",
-  //     state: "Telangana",
-  //     country: "India",
-
-  //     location: "2485 Jarvisville Road",
-  //   },
-  //   {
-  //     id: 7,
-  //     set_name: "Wild West Town",
-  //     dateCreated: "2018-06-23",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Musk",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 8,
-  //     set_name: "Futuristic Lab",
-  //     dateCreated: "2019-03-10",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Andrew",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 9,
-  //     set_name: "Futuristic Lab",
-  //     dateCreated: "2017-11-05",
-  //     status: "In-Active",
-  //     description: "hello",
-  //     created_by: "Vegas",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 10,
-  //     set_name: "DevOps",
-  //     dateCreated: "2021-02-20",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "phillip",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  // ];
 
   const columns = [
     {
@@ -239,7 +117,10 @@ const AllLocationsTable = () => {
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
-            <DropdownItem className="w-100">
+            <DropdownItem
+              onClick={() => dispatch(openDeleteLocationPopup(row.ID))}
+              className="w-100"
+            >
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem>

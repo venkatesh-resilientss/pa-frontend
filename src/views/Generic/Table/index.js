@@ -306,6 +306,7 @@ const DataTableWithButtons = ({
             paginationDefaultPage={currentPage + 1}
             paginationComponent={CustomPagination}
             data={searchValue.length ? filteredData : data}
+
             // selectableRowsComponent={BootstrapCheckbox}
           />
         </div>

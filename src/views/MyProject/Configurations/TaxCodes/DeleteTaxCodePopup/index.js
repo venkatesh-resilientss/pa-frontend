@@ -2,19 +2,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import useSWR, { mutate } from "swr";
+import { closeDeleteTaxCodesPopup } from "@src/redux/slices/mySlices/configurations";
+import { TaxCodesService } from "@src/services";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteTaxCodePopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const taxCodeService = new TaxCodesService();
+
+  const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
+    taxCodeService.getTaxCodes()
+  );
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.taxcodes.deleteTaxCodePopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.taxcodes.deleteTaxCodePopup.helperData
   );
+
+  const handleDeleteTaxCode = async () => {
+    console.log("IDDD", id);
+    try {
+      await TaxCodesService.delete(helperData);
+      toast.success("TaxCode Deleted Successfully");
+      dispatch(closeDeleteTaxCodesPopup());
+      mutate(taxCodeMutate());
+    } catch (error) {
+      console.error("Error deleting TaxCode:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +42,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteTaxCodesPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -52,16 +72,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeleteTaxCodesPopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteTaxCode()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteTaxCodePopup;

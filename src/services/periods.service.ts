@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {GET_CLIENTS, GET_PERIODS} from '../lib/endpoints';
+  import {DELETE_PERIODS, EDIT_PERIODS, GET_CLIENTS, GET_PERIODS} from '../lib/endpoints';
 
   class PeriodsService extends APIService {
     getPeriods(): Promise<any> {
@@ -21,6 +21,29 @@
         })
         .catch((error) => {
           throw error.response.data;
+        });
+    }
+
+
+    static delete(id: any) {
+      return axios
+        .delete(DELETE_PERIODS(id))
+        .then((response) => {
+          return response?.data;
+        })
+        .catch((error) => {
+          throw error?.response?.data;
+        });
+    }
+
+    static edit(id: any) {
+      return axios
+        .put(EDIT_PERIODS(id))
+        .then((response) => {
+          return response?.data;
+        })
+        .catch((error) => {
+          throw error?.response?.data;
         });
     }
 

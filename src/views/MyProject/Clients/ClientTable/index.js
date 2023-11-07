@@ -3,11 +3,11 @@ import { IoAlertCircle, IoTimerOutline } from "react-icons/io5";
 import { MdCancel, MdPlayCircleFilled } from "react-icons/md";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { FcFilmReel } from "react-icons/fc";
-import clientLogo from "../../../../assets/MyImages/client.svg";
-import BluBlu from "../../../../assets/MyImages/blublu.svg";
-import storyFoam from "../../../../assets/MyImages/storyfarm.svg";
-import Indigo from "../../../../assets/MyImages/indigo.svg";
-import fiveFilms from "../../../../assets/MyImages/5films.svg";
+import clientLogo from "@src/assets/MyImages/client.svg";
+import BluBlu from "@src/assets/MyImages/blublu.svg";
+import storyFoam from "@src/assets/MyImages/storyfarm.svg";
+import Indigo from "@src/assets/MyImages/indigo.svg";
+import fiveFilms from "@src/assets/MyImages/5films.svg";
 
 import {
   Nav,
@@ -45,88 +45,97 @@ import {
 import axios from "axios";
 import DataTableWithButtons from "../../Table/index";
 import { BiCheckCircle } from "react-icons/bi";
-import { openDeleteClientPopup } from "../../../../redux/slices/mySlices/clients";
+import { openDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
+import { ClientsService } from "../../../../services";
+import useSWR from "swr";
+import moment from "moment";
 
 const ClientsListTable = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const tableData = [
-    {
-      client: "Umault LLC",
-      dateCreated: "2020-01-15",
-      status: "Active",
-      active_projects: "07",
-      created_by: "John",
-      image: clientLogo,
-    },
-    {
-      client: "5:00 Films & Media",
-      dateCreated: "2018-06-23",
-      status: "Active",
-      active_projects: "06",
-      created_by: "Musk",
-      image: fiveFilms,
-    },
-    {
-      client: "ALCHEMY Creative",
-      dateCreated: "2019-03-10",
-      status: "Active",
-      active_projects: "10",
-      created_by: "Andrew",
-      image: storyFoam,
-    },
-    {
-      client: "BluBlu Studios Corp",
-      dateCreated: "2017-11-05",
-      status: "In-Active",
-      active_projects: "04",
-      created_by: "Vegas",
-      image: BluBlu,
-    },
-    {
-      client: "Indigo Productions ",
-      dateCreated: "2021-02-20",
-      status: "Active",
-      active_projects: "02",
-      created_by: "phillip",
-      image: Indigo,
-    },
+  const clientService = new ClientsService();
 
-    {
-      client: "Umault LLC",
-      dateCreated: "2020-01-15",
-      status: "Active",
-      active_projects: "08",
-      created_by: "John",
-      image: clientLogo,
-    },
-    {
-      client: "5:00 Films & Media",
-      dateCreated: "2018-06-23",
-      status: "Active",
-      active_projects: "08",
-      created_by: "Musk",
-      image: storyFoam,
-    },
+  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
+    clientService.getClients()
+  );
 
-    {
-      client: "Umault LLC",
-      dateCreated: "2020-01-15",
-      status: "Active",
-      active_projects: "08",
-      created_by: "John",
-      image: storyFoam,
-    },
-    {
-      client: "5:00 Films & Media",
-      dateCreated: "2018-06-23",
-      status: "Active",
-      active_projects: "08",
-      created_by: "Musk",
-      image: storyFoam,
-    },
-  ];
+  // const tableData = [
+  //   {
+  //     client: "Umault LLC",
+  //     dateCreated: "2020-01-15",
+  //     status: "Active",
+  //     active_projects: "07",
+  //     created_by: "John",
+  //     image: clientLogo,
+  //   },
+  //   {
+  //     client: "5:00 Films & Media",
+  //     dateCreated: "2018-06-23",
+  //     status: "Active",
+  //     active_projects: "06",
+  //     created_by: "Musk",
+  //     image: fiveFilms,
+  //   },
+  //   {
+  //     client: "ALCHEMY Creative",
+  //     dateCreated: "2019-03-10",
+  //     status: "Active",
+  //     active_projects: "10",
+  //     created_by: "Andrew",
+  //     image: storyFoam,
+  //   },
+  //   {
+  //     client: "BluBlu Studios Corp",
+  //     dateCreated: "2017-11-05",
+  //     status: "In-Active",
+  //     active_projects: "04",
+  //     created_by: "Vegas",
+  //     image: BluBlu,
+  //   },
+  //   {
+  //     client: "Indigo Productions ",
+  //     dateCreated: "2021-02-20",
+  //     status: "Active",
+  //     active_projects: "02",
+  //     created_by: "phillip",
+  //     image: Indigo,
+  //   },
+
+  //   {
+  //     client: "Umault LLC",
+  //     dateCreated: "2020-01-15",
+  //     status: "Active",
+  //     active_projects: "08",
+  //     created_by: "John",
+  //     image: clientLogo,
+  //   },
+  //   {
+  //     client: "5:00 Films & Media",
+  //     dateCreated: "2018-06-23",
+  //     status: "Active",
+  //     active_projects: "08",
+  //     created_by: "Musk",
+  //     image: storyFoam,
+  //   },
+
+  //   {
+  //     client: "Umault LLC",
+  //     dateCreated: "2020-01-15",
+  //     status: "Active",
+  //     active_projects: "08",
+  //     created_by: "John",
+  //     image: storyFoam,
+  //   },
+  //   {
+  //     client: "5:00 Films & Media",
+  //     dateCreated: "2018-06-23",
+  //     status: "Active",
+  //     active_projects: "08",
+  //     created_by: "Musk",
+  //     image: storyFoam,
+  //   },
+  // ];
 
   const columns = [
     {
@@ -154,7 +163,7 @@ const ClientsListTable = () => {
                 fontSize: "10px",
               }}
             >
-              Admin Name
+              {row?.Name}
             </div>
             <div className="" style={{ fontSize: "10px" }}>
               name@.gmail.com
@@ -165,7 +174,16 @@ const ClientsListTable = () => {
     },
 
     {
-      name: <div>Active Projects</div>,
+      name: <div>Active Productions</div>,
+      width: "170px",
+      sortable: true,
+      sortField: "production_name",
+      selector: (row) => row?.production_name,
+      cell: (row) => row?.active_projects,
+    },
+
+    {
+      name: <div>Rss Support User</div>,
       width: "150px",
       sortable: true,
       sortField: "production_name",
@@ -177,9 +195,9 @@ const ClientsListTable = () => {
       name: <div>Created By</div>,
       width: "140px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.created_by,
+      sortField: "CreatedBy",
+      selector: (row) => row?.CreatedBy,
+      cell: (row) => row?.Created?.username,
     },
 
     {
@@ -187,37 +205,37 @@ const ClientsListTable = () => {
       sortable: true,
       sortField: "production_name",
       selector: (row) => row?.production_name,
-      cell: (row) => row?.dateCreated,
+      cell: (row) => moment(row?.UpdatedDate).format("YYYY-MM-DD "),
       width: "130px",
     },
 
-    {
-      name: <div>Documents</div>,
-      cell: (row) => (
-        <div>
-          <div style={{ fontSize: "10px", fontWeight: "400" }}>
-            <BiCheckCircle className="text-success" size={14} /> Insurance
-            Policy{" "}
-          </div>
-          <div style={{ fontSize: "10px", fontWeight: "400" }}>
-            {" "}
-            <BiCheckCircle className="text-success" size={14} />
-            W-9 Forms{" "}
-          </div>
-        </div>
-      ),
-      width: "150px",
-    },
+    // {
+    //   name: <div>Documents</div>,
+    //   cell: (row) => (
+    //     <div>
+    //       <div style={{ fontSize: "10px", fontWeight: "400" }}>
+    //         <BiCheckCircle className="text-success" size={14} /> Insurance
+    //         Policy{" "}
+    //       </div>
+    //       <div style={{ fontSize: "10px", fontWeight: "400" }}>
+    //         {" "}
+    //         <BiCheckCircle className="text-success" size={14} />
+    //         W-9 Forms{" "}
+    //       </div>
+    //     </div>
+    //   ),
+    //   width: "150px",
+    // },
 
     {
       name: <div>Status</div>,
       cell: (row) => (
         <div>
-          <Badge
-            color={row?.status === "Active" ? "light-success" : "light-danger"}
-          >
-            {row?.status}
-          </Badge>
+          {row?.IsActive ? (
+            <Badge color={"light-success"}>Active</Badge>
+          ) : (
+            <Badge color={"light-danger"}>In-Active</Badge>
+          )}
         </div>
       ),
     },
@@ -270,15 +288,9 @@ const ClientsListTable = () => {
   return (
     <Card className="col-12">
       <CardBody className="overflow-auto">
-        {/* <Table
-          columns={columns}
-          //   customHook={tableData}
-          customHook={tableData}   
-          showSearch={true}
-        /> */}
         <DataTableWithButtons
           tableTitle={"All Clients"}
-          data={tableData}
+          data={clientData}
           columns={columns}
           showButton={true}
           buttonClick={() => history.push(`/create-client`)}

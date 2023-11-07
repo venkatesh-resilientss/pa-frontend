@@ -2,19 +2,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import useSWR, { mutate } from "swr";
+import { closeDeleteStatePopup } from "@src/redux/slices/mySlices/configurations";
+import { StatesService } from "@src/services";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteStatePopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const stateService = new StatesService();
+
+  const { mutate: stateMutate } = useSWR("LIST_STATES", () =>
+    stateService.getStates()
+  );
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.states.deleteStatePopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.states.deleteStatePopup.helperData
   );
+
+  const handleDeleteState = async () => {
+    console.log("IDDD", id);
+    try {
+      await StatesService.delete(helperData);
+      toast.success("State Deleted Successfully");
+      dispatch(closeDeleteStatePopup());
+      mutate(stateMutate());
+    } catch (error) {
+      console.error("Error deleting State:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +42,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteStatePopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -52,16 +72,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeleteStatePopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteState()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteStatePopup;

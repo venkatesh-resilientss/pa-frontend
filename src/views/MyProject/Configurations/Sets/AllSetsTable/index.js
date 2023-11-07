@@ -15,10 +15,14 @@ import { useHistory } from "react-router-dom";
 import { SetsService } from "@src/services";
 import useSWR from "swr";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { openDeleteSetPopup } from "../../../../../redux/slices/mySlices/configurations";
 
 const AllSetsTable = () => {
   const history = useHistory();
   const setsService = new SetsService();
+
+  const dispatch = useDispatch();
 
   const {
     data: setsData,
@@ -215,7 +219,10 @@ const AllSetsTable = () => {
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
-            <DropdownItem className="w-100">
+            <DropdownItem
+              onClick={() => dispatch(openDeleteSetPopup(row.ID))}
+              className="w-100"
+            >
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem>

@@ -1,13 +1,21 @@
 import { useParams, useLocation } from "react-router-dom";
 import { Button, Col, Input, Label } from "reactstrap";
 import { useHistory } from "react-router-dom";
+import useSWR from "swr";
+import { DepartmentsService } from "@src/services";
+import { useState } from "react";
 
 function index() {
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
 
-  console.log("ID", id);
+  const [activeStatus, setActiveStatus] = useState();
+
+  const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
+    DepartmentsService.details(id)
+  );
+
   return (
     <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
       <div
@@ -43,10 +51,7 @@ function index() {
         >
           Department Name
         </Label>
-        <Input
-          placeholder="Department"
-          defaultValue={location?.state?.row?.department}
-        />
+        <Input placeholder="Department" defaultValue={departmentsData?.Name} />
       </Col>
 
       <Col xl="4">
@@ -58,7 +63,7 @@ function index() {
         </Label>
         <Input
           placeholder="Details about department"
-          defaultValue={location?.state?.row?.description}
+          defaultValue={departmentsData?.Description}
         />
       </Col>
 
@@ -73,14 +78,24 @@ function index() {
           <div className="d-flex gap-1">
             <input
               type="radio"
-              checked={location?.state?.row?.status === "Active"}
+              id="ex1-active"
+              name="ex1"
+              value={activeStatus}
+              onChange={() => {
+                setActiveStatus(true);
+              }}
             />
             <div>Active</div>
           </div>
           <div className="d-flex gap-1">
             <input
               type="radio"
-              checked={location?.state?.row?.status === "In-Active"}
+              name="ex1"
+              id="ex1-inactive"
+              value={activeStatus}
+              onChange={() => {
+                setActiveStatus(false);
+              }}
             />
             <div>In-Active</div>
           </div>

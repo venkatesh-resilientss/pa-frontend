@@ -14,6 +14,8 @@ export {default as COAAccountsService} from './coaaccounts.service';
 export {default as ForgotPasswordService} from './forgetpassword.service';
 export {default as ClientsService} from './clients.service';
 export {default as PeriodsService} from './periods.service';
+export {default as UsersService} from './users.service';
+
 
 
 

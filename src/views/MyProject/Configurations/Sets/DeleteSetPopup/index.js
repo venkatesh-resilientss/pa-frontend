@@ -2,19 +2,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import { closeDeleteSetPopup } from "../../../../../redux/slices/mySlices/configurations";
+import { SetsService } from "@src/services";
+import useSWR, { mutate } from "swr";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteSetPopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const setService = new SetsService();
+
+  const {
+    data: setData,
+    isLoading: userLoading,
+    error: userError,
+    mutate: setMutate,
+  } = useSWR("LIST_SETS", () => setService.getSets());
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.sets.deleteSetPopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.sets.deleteSetPopup.helperData
   );
+
+  const handleDeleteSet = async () => {
+    console.log("IDDD", id);
+    try {
+      await SetsService.delete(helperData);
+      toast.success("Set Deleted Successfully");
+      dispatch(closeDeleteSetPopup());
+      mutate(setMutate());
+    } catch (error) {
+      console.error("Error deleting Set:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +45,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteSetPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -51,17 +74,16 @@ const DeleteClientPopup = ({ id }) => {
         <hr />
 
         <div className="d-flex justify-content-center gap-1">
-          <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
-            color="white"
-          >
+          <Button onClick={() => dispatch(closeDeleteSetPopup())} color="white">
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteSet()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteSetPopup;

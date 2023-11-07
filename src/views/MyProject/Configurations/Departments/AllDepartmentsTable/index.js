@@ -16,9 +16,13 @@ import useSWR from "swr";
 import { DepartmentsService } from "@src/services";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { openDeleteDepartmentPopup } from "@src/redux/slices/mySlices/configurations";
+import { useDispatch } from "react-redux";
 
 const AllDepartmentsTable = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
 
@@ -29,15 +33,16 @@ const AllDepartmentsTable = () => {
     mutate: userMutate,
   } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
-  const handleDeleteDepartment = async ({ id }) => {
-    console.log("IDDD", id);
-    try {
-      await DepartmentsService.delete(id);
-      toast.success("Department Deleted Successfully");
-    } catch (error) {
-      console.error("Error deleting Department:", error);
-    }
-  };
+  // const handleDelete = (id) => {
+  //   DepartmentsService.delete(id).then((res) => {
+  //     if (res) {
+  //       toast.success("Deleted Department successfully");
+  //     }
+  //     if (res.error) {
+  //       toast.error("something went wrong!");
+  //     }
+  //   });
+  // };
 
   // const tableData = [
   //   {
@@ -175,6 +180,7 @@ const AllDepartmentsTable = () => {
 
     {
       name: <div>Options</div>,
+
       cell: (row) => (
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
@@ -202,7 +208,7 @@ const AllDepartmentsTable = () => {
             </DropdownItem>
 
             <DropdownItem
-              onClick={() => handleDeleteDepartment({ id: row.ID })}
+              onClick={() => dispatch(openDeleteDepartmentPopup(row?.ID))}
               className="w-100"
             >
               <Trash size={14} className="me-50" />

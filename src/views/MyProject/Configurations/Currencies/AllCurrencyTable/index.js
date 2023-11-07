@@ -10,12 +10,15 @@ import {
 import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import DataTableWithButtons from "@src/views/Generic/Table/index";
 import { useHistory } from "react-router-dom";
-import { CurrencyService } from "../../../../../services";
+import { CurrencyService } from "@src/services";
 import useSWR from "swr";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { openDeleteCurrencyPopup } from "@src/redux/slices/mySlices/configurations";
 
 const AllCurrencyTable = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
 
@@ -25,158 +28,6 @@ const AllCurrencyTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
-
-  // const tableData = [
-  //   {
-  //     id: 1,
-  //     currency_code: "USD",
-  //     dateCreated: "2020-01-15",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "John",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //     currency_name: "United States Dollar",
-  //   },
-  //   {
-  //     id: 2,
-
-  //     dateCreated: "2018-06-23",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Musk",
-  //     currency_code: "GBP",
-
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //     currency_name: "British Pound",
-  //   },
-  //   {
-  //     id: 3,
-  //     currency_code: "EUR",
-  //     currency_name: "Euro",
-
-  //     set_name: "Victorian Era Street",
-  //     dateCreated: "2019-03-10",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Andrew",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 4,
-  //     currency_code: "JPY",
-  //     currency_name: "Japanese Yen",
-
-  //     set_name: "Sci-Fi Spaceship",
-  //     dateCreated: "2017-11-05",
-  //     status: "In-Active",
-  //     description: "hello",
-  //     created_by: "Vegas",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 5,
-  //     currency_code: "EUR",
-  //     currency_name: "Euro",
-
-  //     set_name: "Tropical Paradise",
-  //     dateCreated: "2021-02-20",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "phillip",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-
-  //   {
-  //     id: 6,
-  //     currency_code: "INR",
-  //     currency_name: "Indian Rupee",
-
-  //     set_name: "Medieval Castle",
-  //     dateCreated: "2020-01-15",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "John",
-  //     set_id: "9359",
-  //     state: "Telangana",
-  //     country: "India",
-
-  //     location: "2485 Jarvisville Road",
-  //   },
-  //   {
-  //     id: 7,
-  //     currency_code: "AED",
-  //     currency_name: "United Arab Emirates Dirham",
-
-  //     set_name: "Wild West Town",
-  //     dateCreated: "2018-06-23",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Musk",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 8,
-  //     currency_code: "EUR",
-  //     currency_name: "EURO",
-
-  //     set_name: "Futuristic Lab",
-  //     dateCreated: "2019-03-10",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "Andrew",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 9,
-  //     currency_code: "USD",
-  //     currency_name: "EURO",
-
-  //     set_name: "Futuristic Lab",
-  //     dateCreated: "2017-11-05",
-  //     status: "In-Active",
-  //     description: "hello",
-  //     created_by: "Vegas",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     country: "India",
-  //   },
-  //   {
-  //     id: 10,
-  //     currency_code: "USD",
-
-  //     set_name: "DevOps",
-  //     dateCreated: "2021-02-20",
-  //     status: "Active",
-  //     description: "hello",
-  //     created_by: "phillip",
-  //     set_id: "9359",
-  //     location: "2485 Jarvisville Road",
-  //     state: "Telangana",
-  //     currency_name: "EURO",
-
-  //     country: "India",
-  //   },
-  // ];
 
   const columns = [
     {
@@ -253,7 +104,10 @@ const AllCurrencyTable = () => {
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
-            <DropdownItem className="w-100">
+            <DropdownItem
+              onClick={() => dispatch(openDeleteCurrencyPopup(row.ID))}
+              className="w-100"
+            >
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem>

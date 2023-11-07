@@ -2,19 +2,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import useSWR, { mutate } from "swr";
+import { BankService } from "@src/services";
+import { closeDeleteBanksPopup } from "@src/redux/slices/mySlices/configurations";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteBankPopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const bankService = new BankService();
+
+  const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
+    bankService.getBanks()
+  );
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.banks.deleteBankPopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.banks.deleteBankPopup.helperData
   );
+
+  const handleDeleteBank = async () => {
+    console.log("IDDD", id);
+    try {
+      await BankService.delete(helperData);
+      toast.success("Bank Deleted Successfully");
+      dispatch(closeDeleteBanksPopup());
+      mutate(bankMutate());
+    } catch (error) {
+      console.error("Error deleting Bank:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +42,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteBanksPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -52,16 +72,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeleteBanksPopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteBank()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteBankPopup;

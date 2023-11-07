@@ -2,19 +2,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import { DepartmentsService } from "@src/services";
+import { closeDeleteDepartmentPopup } from "../../../../../redux/slices/mySlices/configurations";
+import useSWR, { mutate } from "swr";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteDepartmentPopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const departmentsService = new DepartmentsService();
+
+  const {
+    data: departmentsData,
+    isLoading: userLoading,
+    error: userError,
+    mutate: userMutate,
+  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.department.deleteDepartmentPopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.department.deleteDepartmentPopup.helperData
   );
+
+  const handleDeleteDepartment = async () => {
+    console.log("IDDD", id);
+    try {
+      await DepartmentsService.delete(helperData);
+      toast.success("Department Deleted Successfully");
+      dispatch(closeDeleteDepartmentPopup());
+      mutate(userMutate());
+    } catch (error) {
+      console.error("Error deleting Department:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +45,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteDepartmentPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -52,16 +75,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeleteDepartmentPopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteDepartment()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteDepartmentPopup;

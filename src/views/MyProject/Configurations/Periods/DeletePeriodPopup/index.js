@@ -2,19 +2,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import useSWR, { mutate } from "swr";
+import { closeDeletePeriodPopup } from "@src/redux/slices/mySlices/configurations";
+import { PeriodsService } from "@src/services";
 
-const DeleteClientPopup = ({ id }) => {
+const DeletePeriodPopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const periodService = new PeriodsService();
+
+  const { mutate: periodMutate } = useSWR("LIST_PERIODS", () =>
+    periodService.getPeriods()
+  );
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.periods.deletePeriodPopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.periods.deletePeriodPopup.helperData
   );
+
+  const handleDeletePeriod = async () => {
+    try {
+      await PeriodsService.delete(helperData);
+      toast.success("Period Deleted Successfully");
+      dispatch(closeDeletePeriodPopup());
+      mutate(periodMutate());
+    } catch (error) {
+      console.error("Error deleting Period:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,7 +41,7 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeletePeriodPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
       {/* <ModalHeader
@@ -52,16 +71,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeletePeriodPopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeletePeriod()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeletePeriodPopup;

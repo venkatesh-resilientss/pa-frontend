@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {CREATE_LOCATIONS, GET_LOCATIONS} from '../lib/endpoints';
+import {CREATE_LOCATIONS, DELETE_LOCATION, EDIT_LOCATION, GET_LOCATIONS} from '../lib/endpoints';
 
 class LocationsService extends APIService {
   getLocations(): Promise<any> {
@@ -24,6 +24,30 @@ class LocationsService extends APIService {
         throw error.response.data;
       });
   }
+
+  static delete(id: any) {
+    return axios
+      .delete(DELETE_LOCATION(id))
+      .then((response) => {
+        return response?.data;
+      })
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+
+  static edit(id: any) {
+    return axios
+      .put(EDIT_LOCATION(id))
+      .then((response) => {
+        return response?.data;
+      })
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
 }
+
+
 
 export default LocationsService;

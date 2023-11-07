@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {CREATE_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES} from '../lib/endpoints';
+  import {CREATE_CURRENCIES, DELETE_CURRENCIES, EDIT_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES} from '../lib/endpoints';
 
   class CurrencyService extends APIService {
     getCurrencies(): Promise<any> {
@@ -21,6 +21,28 @@
         })
         .catch((error) => {
           throw error.response.data;
+        });
+    }
+
+    static delete(id: any) {
+      return axios
+        .delete(DELETE_CURRENCIES(id))
+        .then((response) => {
+          return response?.data;
+        })
+        .catch((error) => {
+          throw error?.response?.data;
+        });
+    }
+
+    static edit(id: any) {
+      return axios
+        .put(EDIT_CURRENCIES(id))
+        .then((response) => {
+          return response?.data;
+        })
+        .catch((error) => {
+          throw error?.response?.data;
         });
     }
   }

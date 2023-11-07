@@ -2,19 +2,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeDeleteClientPopup } from "@src/redux/slices/mySlices/clients";
 import infoImage from "@src/assets/MyImages/info 1.svg";
+import useSWR, { mutate } from "swr";
+import { closeDeleteCurrencyPopup } from "@src/redux/slices/mySlices/configurations";
+import { CurrencyService } from "@src/services";
 
-const DeleteClientPopup = ({ id }) => {
+const DeleteCurrencyPopup = ({ id }) => {
   const dispatch = useDispatch();
 
+  const currencyService = new CurrencyService();
+
+  const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
+    currencyService.getCurrencies()
+  );
+
   const popupStatus = useSelector(
-    (state) => state.clients.deleteClientPopup.status
+    (state) => state.configurations.currency.deleteCurrencyPopup.status
   );
 
   const helperData = useSelector(
-    (state) => state.clients.deleteClientPopup.helperData
+    (state) => state.configurations.currency.deleteCurrencyPopup.helperData
   );
+
+  const handleDeleteCurrency = async () => {
+    try {
+      await CurrencyService.delete(helperData);
+      toast.success("Currency Deleted Successfully");
+      dispatch(closeDeleteCurrencyPopup());
+      mutate(currencyMutate());
+    } catch (error) {
+      console.error("Error deleting Currency:", error);
+    }
+  };
 
   const { register, handleSubmit } = useForm();
 
@@ -22,13 +41,9 @@ const DeleteClientPopup = ({ id }) => {
     <Modal
       style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteClientPopup())}
+      toggle={() => dispatch(closeDeleteCurrencyPopup())}
       className={"modal-dialog-centered modal-sm "}
     >
-      {/* <ModalHeader
-        className="bg-white"
-        toggle={() => dispatch(closeAssignRSSLPopup())}
-      ></ModalHeader> */}
       <ModalBody>
         <div className="d-flex justify-content-center">
           <img src={infoImage} />
@@ -52,16 +67,18 @@ const DeleteClientPopup = ({ id }) => {
 
         <div className="d-flex justify-content-center gap-1">
           <Button
-            onClick={() => dispatch(closeDeleteClientPopup())}
+            onClick={() => dispatch(closeDeleteCurrencyPopup())}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button onClick={() => handleDeleteCurrency()} color="danger">
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>
   );
 };
 
-export default DeleteClientPopup;
+export default DeleteCurrencyPopup;
