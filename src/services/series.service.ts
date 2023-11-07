@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {GET_SERIES} from '../lib/endpoints';
+  import {CREATE_SERIES, GET_SERIES} from '../lib/endpoints';
 
   class SeriesService extends APIService {
     getSeries(): Promise<any> {
@@ -12,6 +12,20 @@
           throw error?.response?.data;
         });
     }
+
+    static create(data:any) {
+      return axios
+        .post(CREATE_SERIES, data)
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          throw error.response.data;
+        });
+    }
+
+
+    
   }
 
   export default SeriesService;

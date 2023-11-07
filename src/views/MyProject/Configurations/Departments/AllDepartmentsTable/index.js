@@ -7,7 +7,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
+import { Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import axios from "axios";
 import DataTableWithButtons from "../../../Table/index";
 import { FcFilmReel } from "react-icons/fc";
@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import useSWR from "swr";
 import { DepartmentsService } from "@src/services";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 const AllDepartmentsTable = () => {
   const history = useHistory();
@@ -27,6 +28,16 @@ const AllDepartmentsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
+
+  const handleDeleteDepartment = async ({ id }) => {
+    console.log("IDDD", id);
+    try {
+      await DepartmentsService.delete(id);
+      toast.success("Department Deleted Successfully");
+    } catch (error) {
+      console.error("Error deleting Department:", error);
+    }
+  };
 
   // const tableData = [
   //   {
@@ -183,13 +194,17 @@ const AllDepartmentsTable = () => {
             <DropdownItem
               className="w-100"
               onClick={() =>
-                history.push(`/edit-department/${row?.id}`, { row })
+                history.push(`/edit-department/${row?.ID}`, { row })
               }
             >
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
-            <DropdownItem className="w-100">
+
+            <DropdownItem
+              onClick={() => handleDeleteDepartment({ id: row.ID })}
+              className="w-100"
+            >
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem>
@@ -200,7 +215,7 @@ const AllDepartmentsTable = () => {
   ];
 
   return (
-    <Card className="col-12">
+    <Card className="col-12 overflow-auto">
       <CardBody className="overflow-auto">
         {/* <Table
           columns={columns}

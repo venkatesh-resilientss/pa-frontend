@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {GET_DEPARTMENTS} from '../lib/endpoints';
+import {CREATE_DEPARTMENTS, DELETE_DEPARTMENTS, GET_DEPARTMENTS} from '../lib/endpoints';
 
 class DepartmentsService extends APIService {
   getDepartments(): Promise<any> {
@@ -11,7 +11,37 @@ class DepartmentsService extends APIService {
       .catch((error: any) => {
         throw error?.response?.data;
       });
+
+
+      
   }
+
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_DEPARTMENTS, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+
+  static delete(id: any) {
+    return axios
+      .delete(DELETE_DEPARTMENTS(id))
+      .then((response) => {
+        return response?.data;
+      })
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+
+ 
 }
+
+
 
 export default DepartmentsService;

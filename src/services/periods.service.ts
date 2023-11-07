@@ -1,10 +1,10 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {CREATE_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES} from '../lib/endpoints';
+  import {GET_CLIENTS, GET_PERIODS} from '../lib/endpoints';
 
-  class CurrencyService extends APIService {
-    getCurrencies(): Promise<any> {
-      return this.get(`${GET_CURRENCIES}`)
+  class PeriodsService extends APIService {
+    getPeriods(): Promise<any> {
+      return this.get(`${GET_PERIODS}`)
         .then((res) => {
           return res?.data;
         })
@@ -15,7 +15,7 @@
 
     static create(data:any) {
       return axios
-        .post(CREATE_CURRENCIES, data)
+        .post(GET_PERIODS, data)
         .then((response) => {
           return response.data;
         })
@@ -23,6 +23,8 @@
           throw error.response.data;
         });
     }
+
+    
   }
 
-  export default CurrencyService;
+  export default PeriodsService;

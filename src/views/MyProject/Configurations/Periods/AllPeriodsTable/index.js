@@ -9,219 +9,231 @@ import {
 } from "reactstrap";
 import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import axios from "axios";
-import DataTableWithButtons from "../../../../Generic/Table/index";
+import DataTableWithButtons from "@src/views/Generic/Table/index";
 import { FcFilmReel } from "react-icons/fc";
 import { useHistory } from "react-router-dom";
+import moment from "moment";
+import { PeriodsService } from "@src/services";
+import useSWR from "swr";
 
 const AllPeriodsTable = () => {
   const history = useHistory();
 
-  const tableData = [
-    {
-      id: 1,
-      currency_code: "USD",
-      dateCreated: "2020-01-15",
-      status: "Active",
-      description: "Cash",
-      created_by: "John",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-      currency_name: "United States Dollar",
-      account_type: "Expenses",
-    },
-    {
-      id: 2,
+  const periodsService = new PeriodsService();
 
-      dateCreated: "2018-06-23",
-      status: "Active",
-      description: "Cash",
-      created_by: "Musk",
-      currency_code: "GBP",
-      account_type: "Expenses",
+  const {
+    data: periodData,
+    isLoading: userLoading,
+    error: userError,
+    mutate: userMutate,
+  } = useSWR("LIST_USERS", () => periodsService.getPeriods());
 
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-      currency_name: "British Pound",
-    },
-    {
-      id: 3,
-      currency_code: "EUR",
-      currency_name: "Euro",
+  // const tableData = [
+  //   {
+  //     id: 1,
+  //     currency_code: "USD",
+  //     dateCreated: "2020-01-15",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "John",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //     currency_name: "United States Dollar",
+  //     account_type: "Expenses",
+  //   },
+  //   {
+  //     id: 2,
 
-      set_name: "Victorian Era Street",
-      dateCreated: "2019-03-10",
-      status: "Active",
-      description: "Cash",
-      created_by: "Andrew",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
-    {
-      id: 4,
-      currency_code: "JPY",
-      currency_name: "Japanese Yen",
+  //     dateCreated: "2018-06-23",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "Musk",
+  //     currency_code: "GBP",
+  //     account_type: "Expenses",
 
-      set_name: "Sci-Fi Spaceship",
-      dateCreated: "2017-11-05",
-      status: "In-Active",
-      description: "Assets",
-      created_by: "Vegas",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
-    {
-      id: 5,
-      currency_code: "EUR",
-      currency_name: "Euro",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //     currency_name: "British Pound",
+  //   },
+  //   {
+  //     id: 3,
+  //     currency_code: "EUR",
+  //     currency_name: "Euro",
 
-      set_name: "Tropical Paradise",
-      dateCreated: "2021-02-20",
-      status: "Active",
-      description: "Cash",
-      created_by: "phillip",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
+  //     set_name: "Victorian Era Street",
+  //     dateCreated: "2019-03-10",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "Andrew",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
+  //   {
+  //     id: 4,
+  //     currency_code: "JPY",
+  //     currency_name: "Japanese Yen",
 
-    {
-      id: 6,
-      currency_code: "INR",
-      currency_name: "Indian Rupee",
+  //     set_name: "Sci-Fi Spaceship",
+  //     dateCreated: "2017-11-05",
+  //     status: "In-Active",
+  //     description: "Assets",
+  //     created_by: "Vegas",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
+  //   {
+  //     id: 5,
+  //     currency_code: "EUR",
+  //     currency_name: "Euro",
 
-      set_name: "Medieval Castle",
-      dateCreated: "2020-01-15",
-      status: "Active",
-      description: "Cash",
-      created_by: "John",
-      account_type: "Expenses",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-      location: "2485 Jarvisville Road",
-    },
-    {
-      id: 7,
-      currency_code: "AED",
-      currency_name: "United Arab Emirates Dirham",
+  //     set_name: "Tropical Paradise",
+  //     dateCreated: "2021-02-20",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "phillip",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
 
-      set_name: "Wild West Town",
-      dateCreated: "2018-06-23",
-      status: "Active",
-      description: "Cash",
-      created_by: "Musk",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
-    {
-      id: 8,
-      currency_code: "EUR",
-      currency_name: "EURO",
+  //   {
+  //     id: 6,
+  //     currency_code: "INR",
+  //     currency_name: "Indian Rupee",
 
-      set_name: "Futuristic Lab",
-      dateCreated: "2019-03-10",
-      status: "Active",
-      description: "Cash",
-      created_by: "Andrew",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
-    {
-      id: 9,
-      currency_code: "USD",
-      currency_name: "EURO",
+  //     set_name: "Medieval Castle",
+  //     dateCreated: "2020-01-15",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "John",
+  //     account_type: "Expenses",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //     location: "2485 Jarvisville Road",
+  //   },
+  //   {
+  //     id: 7,
+  //     currency_code: "AED",
+  //     currency_name: "United Arab Emirates Dirham",
 
-      set_name: "Futuristic Lab",
-      dateCreated: "2017-11-05",
-      status: "In-Active",
-      description: "Cash",
-      created_by: "Vegas",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      period_name: "Period1",
-    },
-    {
-      id: 10,
-      currency_code: "USD",
+  //     set_name: "Wild West Town",
+  //     dateCreated: "2018-06-23",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "Musk",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
+  //   {
+  //     id: 8,
+  //     currency_code: "EUR",
+  //     currency_name: "EURO",
 
-      set_name: "DevOps",
-      dateCreated: "2021-02-20",
-      status: "Active",
-      description: "Cash",
-      created_by: "phillip",
-      account_type: "Expenses",
-      location: "2485 Jarvisville Road",
-      coa_number: "1-001",
-      currency_name: "EURO",
+  //     set_name: "Futuristic Lab",
+  //     dateCreated: "2019-03-10",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "Andrew",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
+  //   {
+  //     id: 9,
+  //     currency_code: "USD",
+  //     currency_name: "EURO",
 
-      period_name: "Period1",
-      tax_rate: "9.2%",
-    },
-  ];
+  //     set_name: "Futuristic Lab",
+  //     dateCreated: "2017-11-05",
+  //     status: "In-Active",
+  //     description: "Cash",
+  //     created_by: "Vegas",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     period_name: "Period1",
+  //   },
+  //   {
+  //     id: 10,
+  //     currency_code: "USD",
+
+  //     set_name: "DevOps",
+  //     dateCreated: "2021-02-20",
+  //     status: "Active",
+  //     description: "Cash",
+  //     created_by: "phillip",
+  //     account_type: "Expenses",
+  //     location: "2485 Jarvisville Road",
+  //     coa_number: "1-001",
+  //     currency_name: "EURO",
+
+  //     period_name: "Period1",
+  //     tax_rate: "9.2%",
+  //   },
+  // ];
 
   const columns = [
     {
       name: <div>Period Name</div>,
       width: "170px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.period_name,
+      sortField: "Name",
+      selector: (row) => row?.Name,
+      cell: (row) => row?.Name,
     },
 
     {
       name: <div>Start Date</div>,
       width: "140px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.dateCreated,
+      sortField: "Start",
+      selector: (row) => row?.Start,
+      cell: (row) => row?.Start,
     },
 
     {
       name: <div>End Date</div>,
       width: "140px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.dateCreated,
+      sortField: "End",
+      selector: (row) => row?.End,
+      cell: (row) => row?.End,
     },
 
     {
       name: <div>Description</div>,
       width: "140px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.description,
+      sortField: "Description",
+      selector: (row) => row?.Description,
+      cell: (row) => row?.Description,
     },
 
     {
       name: <div>Created by</div>,
       width: "140px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.created_by,
+      sortField: "CreatedBy",
+      selector: (row) => row?.CreatedBy,
+      cell: (row) => row?.CreatedBy,
     },
 
     {
@@ -230,18 +242,18 @@ const AllPeriodsTable = () => {
       sortable: true,
       sortField: "production_name",
       selector: (row) => row?.production_name,
-      cell: (row) => row?.dateCreated,
+      cell: (row) => moment(row?.UpdatedDate).format("YYYY-MM-DD "),
     },
 
     {
       name: <div>Status</div>,
       cell: (row) => (
         <div>
-          <Badge
-            color={row?.status === "Active" ? "light-success" : "light-danger"}
-          >
-            {row?.status}
-          </Badge>
+          {row?.IsActive ? (
+            <Badge color={"light-success"}>Active</Badge>
+          ) : (
+            <Badge color={"light-danger"}>In-Active</Badge>
+          )}
         </div>
       ),
     },
@@ -293,7 +305,7 @@ const AllPeriodsTable = () => {
         <DataTableWithButtons
           tableTitle={"All Periods"}
           header={true}
-          data={tableData}
+          data={periodData}
           columns={columns}
           showButton={true}
           buttonClick={() => history.push(`/add-period`)}

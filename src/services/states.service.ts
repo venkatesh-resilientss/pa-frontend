@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {GET_STATES} from '../lib/endpoints';
+import {CREATE_STATES, GET_STATES} from '../lib/endpoints';
 
 class StatesService extends APIService {
   getStates(): Promise<any> {
@@ -10,6 +10,17 @@ class StatesService extends APIService {
       })
       .catch((error: any) => {
         throw error?.response?.data;
+      });
+  }
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_STATES, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 }

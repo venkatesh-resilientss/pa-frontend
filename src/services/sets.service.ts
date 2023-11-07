@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {GET_SETS} from '../lib/endpoints';
+import {CREATE_SETS, GET_SETS} from '../lib/endpoints';
 
 class SetsService extends APIService {
   getSets(): Promise<any> {
@@ -10,6 +10,17 @@ class SetsService extends APIService {
       })
       .catch((error: any) => {
         throw error?.response?.data;
+      });
+  }
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_SETS, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 }

@@ -7,7 +7,7 @@ function index() {
   const location = useLocation();
   const history = useHistory();
 
-  console.log("ID", location);
+  console.log("ID", id);
   return (
     <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
       <div

@@ -210,15 +210,6 @@ const AllTaxCodesTable = () => {
     },
 
     {
-      name: <div>Tax Rate</div>,
-      width: "140px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.tax_rate,
-    },
-
-    {
       name: <div>Created by</div>,
       width: "140px",
       sortable: true,

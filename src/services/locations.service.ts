@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {GET_LOCATIONS} from '../lib/endpoints';
+import {CREATE_LOCATIONS, GET_LOCATIONS} from '../lib/endpoints';
 
 class LocationsService extends APIService {
   getLocations(): Promise<any> {
@@ -10,6 +10,18 @@ class LocationsService extends APIService {
       })
       .catch((error: any) => {
         throw error?.response?.data;
+      });
+  }
+
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_LOCATIONS, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 }

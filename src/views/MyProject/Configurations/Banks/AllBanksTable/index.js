@@ -201,6 +201,14 @@ const AllBanksTable = () => {
 
   const columns = [
     {
+      name: <div>Bank Code</div>,
+      width: "140px",
+      sortable: true,
+      sortField: "Code",
+      selector: (row) => row?.Code,
+      cell: (row) => row?.Code,
+    },
+    {
       name: <div>Bank Name</div>,
       width: "170px",
       sortable: true,

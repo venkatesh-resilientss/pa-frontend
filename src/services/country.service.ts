@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {GET_COUNTRIES} from '../lib/endpoints';
+  import {CREATE_COUNTRIES, GET_COUNTRIES} from '../lib/endpoints';
 
   class CountryService extends APIService {
     getCountries(): Promise<any> {
@@ -10,6 +10,17 @@
         })
         .catch((error: any) => {
           throw error?.response?.data;
+        });
+    }
+
+    static create(data:any) {
+      return axios
+        .post(CREATE_COUNTRIES, data)
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          throw error.response.data;
         });
     }
   }

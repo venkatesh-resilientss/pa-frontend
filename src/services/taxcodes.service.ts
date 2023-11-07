@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {GET_TAXCODES} from '../lib/endpoints';
+import {CREATE_TAXCODES, GET_TAXCODES} from '../lib/endpoints';
 
 class TaxCodesService extends APIService {
   getTaxCodes(): Promise<any> {
@@ -10,6 +10,17 @@ class TaxCodesService extends APIService {
       })
       .catch((error: any) => {
         throw error?.response?.data;
+      });
+  }
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_TAXCODES, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 }

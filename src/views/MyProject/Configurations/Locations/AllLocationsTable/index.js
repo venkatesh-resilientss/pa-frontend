@@ -156,6 +156,16 @@ const AllLocationsTable = () => {
 
   const columns = [
     {
+      name: <div>Location Code</div>,
+      width: "140px",
+
+      sortable: true,
+      sortField: "Code",
+      selector: (row) => row?.Code,
+      cell: (row) => row?.Code,
+    },
+
+    {
       name: <div>Location Name</div>,
       width: "170px",
       sortable: true,
@@ -165,31 +175,12 @@ const AllLocationsTable = () => {
     },
 
     {
-      name: <div>Address</div>,
-      width: "140px",
+      name: <div>Description</div>,
+      width: "160px",
       sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.location,
-    },
-
-    {
-      name: <div>State</div>,
-      width: "140px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.state,
-    },
-
-    {
-      name: <div>Country</div>,
-      width: "140px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-
-      cell: (row) => row?.country,
+      sortField: "description",
+      selector: (row) => row?.Description,
+      cell: (row) => row?.Description,
     },
 
     {

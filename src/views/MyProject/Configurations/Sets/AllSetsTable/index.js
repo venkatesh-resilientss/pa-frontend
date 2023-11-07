@@ -134,6 +134,14 @@ const AllSetsTable = () => {
 
   const columns = [
     {
+      name: <div>Set Code</div>,
+      width: "140px",
+      sortable: true,
+      sortField: "Code",
+      selector: (row) => row?.Code,
+      cell: (row) => row?.Code,
+    },
+    {
       name: <div>Set Name</div>,
       width: "170px",
       sortable: true,
@@ -143,31 +151,12 @@ const AllSetsTable = () => {
     },
 
     {
-      name: <div>Set ID</div>,
-      width: "130px",
-      sortable: true,
-      sortField: "ClientID",
-      selector: (row) => row?.ClientID,
-      cell: (row) => row?.ClientID,
-    },
-
-    {
       name: <div>Description</div>,
       width: "160px",
       sortable: true,
       sortField: "Description",
       selector: (row) => row?.Description,
       cell: (row) => row?.Description,
-    },
-
-    {
-      name: <div>Location</div>,
-      width: "140px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-
-      cell: (row) => row?.location,
     },
 
     {
