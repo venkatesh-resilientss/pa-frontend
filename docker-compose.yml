@@ -20,9 +20,14 @@ services:
       - 80:80
     networks:
       - payroll-api-network
+      - payroll-app-network
 
 networks:
   payroll-api-network:
     external:
       name: payroll-api-network
+  
+  payroll-app-network:
+    external:
+      name: payroll-app-network
   
