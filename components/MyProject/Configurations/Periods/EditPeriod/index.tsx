@@ -35,7 +35,7 @@ function EditPeriod() {
   useEffect(() => {
     if (!periodData) return;
 
-    periodData?.Name && setValue("name", periodData?.Name);
+    periodData?.Name && setValue("periodname", periodData?.Name);
 
     periodData?.Description && setValue("description", periodData?.Description);
     periodData?.Start && setValue("startDate", periodData?.Start);
@@ -55,7 +55,7 @@ function EditPeriod() {
     let backendFormat;
 
     backendFormat = {
-      name: data.name,
+      name: data.periodname,
       description: data.description,
       is_active: activeStatus,
       start: data.startDate,
@@ -76,14 +76,13 @@ function EditPeriod() {
   };
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
       >
         All Periods
       </div>
-
       <div className="d-flex justify-content-between">
         <div
           className="text-black"
@@ -92,58 +91,42 @@ function EditPeriod() {
           Edit Period
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
-            onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
-          >
-            Dismiss
-          </Button>
+           <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
           <Button
             onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            EDIT
+            color="primary" className="px-4 p-2">
+            Edit
           </Button>
         </div>
       </div>
-
       <hr style={{ height: "2px" }} />
       <Form
-        onSubmit={handleSubmit(onSubmit)}
         style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
         className=" mt-2 d-flex flex-column"
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Period Name{" "}
-          </Label>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <Input
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                placeholder="Bank Name"
-                invalid={errors.name && true}
-                {...field}
-              />
+          <div className="mb-1">
+            <Label> Period Name</Label>
+            <Controller
+              name="periodname"
+              rules={{ required: "Period Name  is required" }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Period name"
+                  invalid={errors.periodname && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.periodname && (
+              <span style={{ color: "red" }}>
+                {errors.periodname.message as React.ReactNode}
+              </span>
             )}
-          />{" "}
+          </div>
         </Col>
 
         <Col xl="4" className="d-flex gap-1">
@@ -157,12 +140,17 @@ function EditPeriod() {
             <Controller
               name="startDate"
               control={control}
-              render={({ field }) => <DatePicker {...field} />}
+              rules={{ required: "End Date  is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  placeholderText="Select a date"
+                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                />
+              )}
             />
           </Col>
 
           <Col xl="6">
-            {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -172,81 +160,73 @@ function EditPeriod() {
             <Controller
               name="endDate"
               control={control}
-              render={({ field }) => <DatePicker {...field} />}
+              rules={{ required: "End Date  is required" }}
+              render={({ field }) => (
+                <DatePicker
+                  placeholderText="Select a date"
+                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                />
+              )}
             />
           </Col>
         </Col>
 
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Description
-          </Label>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <Input
-                type="textarea"
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "400",
-                  height: "81px",
-                }}
-                placeholder="Description"
-                invalid={errors.description && true}
-                {...field}
-              />
+          <div className="mb-1">
+            <Label> Description</Label>
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: "Description  is required" }}
+              render={({ field }) => (
+                <Input
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "400",
+                    height: "81px",
+                  }}
+                  placeholder="Description"
+                  invalid={errors.description && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.description && (
+              <span style={{ color: "red" }}>
+                {errors.description.message as React.ReactNode}
+              </span>
             )}
-          />
+          </div>
         </Col>
 
         <div className="d-flex flex-column mt-1">
           <Label
             className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
+            style={{ fontSize: "16px", fontWeight: "400" }}
           >
             Status{" "}
           </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <Controller
-                name="active"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    defaultChecked={periodData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(true);
-                    }}
-                  />
-                )}
-              />{" "}
+              <input
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
+              />
               <div>Active</div>
             </div>
             <div className="d-flex gap-1">
-              <Controller
-                name="inactive"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    defaultChecked={!periodData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(false);
-                    }}
-                  />
-                )}
-              />{" "}
+              <input
+                type="radio"
+                name="ex1"
+                id="ex1-inactive"
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
+              />
               <div>In-Active</div>
             </div>
           </div>

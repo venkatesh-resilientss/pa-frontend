@@ -33,8 +33,8 @@ function EditLocation() {
   useEffect(() => {
     if (!locationData) return;
 
-    locationData?.Name && setValue("name", locationData?.Name);
-    locationData?.Code && setValue("code", locationData?.Code);
+    locationData?.Name && setValue("locationname", locationData?.Name);
+    locationData?.Code && setValue("locationcode", locationData?.Code);
 
     locationData?.Description &&
       setValue("description", locationData?.Description);
@@ -53,10 +53,10 @@ function EditLocation() {
     let backendFormat;
 
     backendFormat = {
-      name: data.name,
+      name: data.locationname,
       description: data.description,
       is_active: activeStatus,
-      code: data.code,
+      code: data.locationcode,
     };
 
     LocationsService.edit(id, backendFormat)
@@ -73,10 +73,8 @@ function EditLocation() {
   };
 
   return (
-    <div className="container mt-4  ">
-      <div className="row">
-        <div className="col-md-12">
-          <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    
+          <div className="mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -93,27 +91,10 @@ function EditLocation() {
               </div>
 
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4 p-2"                 
                 >
                   Edit
                 </Button>
@@ -123,77 +104,92 @@ function EditLocation() {
             <hr style={{ height: "2px" }} />
 
             <Form
-              onSubmit={handleSubmit(onSubmit)}
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
+              onSubmit={handleSubmit(onSubmit)}
             >
+              {" "}
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "16px", fontWeight: "400" }}
-                >
-                  Location Name
-                </Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Location Name"
-                      invalid={errors.name && true}
-                      {...field}
-                    />
-                  )}
-                />{" "}
-              </Col>
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "16px", fontWeight: "400" }}
-                >
-                  Location Code
-                </Label>
-                <Controller
-                  name="code"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Location Code"
-                      invalid={errors.code && true}
-                      {...field}
-                    />
-                  )}
-                />{" "}
-              </Col>
+                <div className="mb-1">
+                  <Label className="form-label" for="login-email">
+                    Location Name
+                  </Label>
+                  <Controller
+                    name="locationname"
+                    rules={{ required: "Location Name is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        placeholder="Location Name"
+                        invalid={errors.locationname && true}
+                        {...field}
+                      />
+                    )}
+                  />
 
-              <Col xl="4">
-                <Label
-                  className="text-black form-lable"
-                  style={{ fontSize: "16px", fontWeight: "400" }}
-                >
-                  Description
-                </Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      type="textarea"
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "400",
-                        height: "81px",
-                      }}
-                      placeholder="Description"
-                      invalid={errors.description && true}
-                      {...field}
-                    />
+                  {errors.locationname && (
+                    <span style={{ color: "red" }}>
+                      {errors.locationname.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
-
+              <Col xl="4">
+                <div className="mb-1">
+                  <Label className="form-label" for="login-email">
+                    Location Code
+                  </Label>
+                  <Controller
+                    name="locationcode"
+                    rules={{ required: "Location Code is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        placeholder="Location Code"
+                        invalid={errors.locationcode && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.locationcode && (
+                    <span style={{ color: "red" }}>
+                      {errors.locationcode.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
+              </Col>
+              <Col xl="4">
+                <div className="mb-1">
+                  <Label className="form-label" for="login-email">
+                    Description
+                  </Label>
+                  <Controller
+                    name="description"
+                    rules={{ required: "Description  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                          height: "81px",
+                        }}
+                        placeholder="Description"
+                        type="textarea"
+                        invalid={errors.description && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
+              </Col>
               <div className="d-flex flex-column mt-1">
                 <Label
                   className="text-black"
@@ -203,50 +199,32 @@ function EditLocation() {
                 </Label>
                 <div className="d-flex gap-1">
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="active"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-active"
-                          name="ex1"
-                          defaultChecked={locationData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(true);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      type="radio"
+                      id="ex1-active"
+                      name="ex1"
+                      onChange={() => {
+                        setActiveStatus(true);
+                      }}
+                    />
                     <div>Active</div>
                   </div>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="inactive"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1"
-                          id="ex1-inactive"
-                          defaultChecked={!locationData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(false);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      type="radio"
+                      name="ex1"
+                      id="ex1-inactive"
+                      onChange={() => {
+                        setActiveStatus(false);
+                      }}
+                    />
                     <div>In-Active</div>
                   </div>
                 </div>
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+        
   );
 }
 

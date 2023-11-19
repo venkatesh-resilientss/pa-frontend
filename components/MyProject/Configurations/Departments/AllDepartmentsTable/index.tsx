@@ -27,7 +27,10 @@ import useSWR from "swr";
 import { DepartmentsService } from "services";
 import moment from "moment";
 import { toast } from "react-toastify";
-import { openDeleteDepartmentPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadDepartmentPopup,
+  openDeleteDepartmentPopup,
+} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
@@ -192,10 +195,8 @@ const AllDepartmentsTable = () => {
   ];
 
   return (
-    <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+    <div className="section">
+          <div>
             <Card
               className="mt-2"
               style={{
@@ -224,12 +225,15 @@ const AllDepartmentsTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -276,8 +280,7 @@ const AllDepartmentsTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -287,8 +290,8 @@ const AllDepartmentsTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
+        
+      
     </div>
   );
 };

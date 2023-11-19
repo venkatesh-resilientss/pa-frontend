@@ -364,7 +364,7 @@ const PendingProductionsTable = () => {
         </Col>
       </Row>
 
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} />
+      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined} />
     </div>
   );
 };

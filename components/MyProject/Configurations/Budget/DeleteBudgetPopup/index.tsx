@@ -4,35 +4,35 @@ import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
-import { BankService } from "services";
-import { closeDeleteBanksPopup } from "redux/slices/mySlices/configurations";
+import { BankService, BudgetService } from "services";
+import { closeDeleteBudgetPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 
-const DeleteBankPopup = ({ id }) => {
+const DeleteBudgetPopup = () => {
   const dispatch = useDispatch();
 
-  const bankService = new BankService();
+  const budgetService = new BudgetService();
 
-  const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
+  const { mutate: budgetMutate } = useSWR("LIST_BUDGETS", () =>
+    budgetService.getBudgets()
   );
 
   const popupStatus = useSelector(
-    (state: any) => state.configurations.banks.deleteBankPopup.status
+    (state: any) => state.configurations.budgets.deleteBudgetPopup.status
   );
 
   const helperData = useSelector(
-    (state: any) => state.configurations.banks.deleteBankPopup.helperData
+    (state: any) => state.configurations.budgets.deleteBudgetPopup.helperData
   );
 
-  const handleDeleteBank = async () => {
-    console.log("IDDD", id);
+  const handleDeleteBudget = async () => {
     try {
-      await BankService.delete(helperData);
-      toast.success("Bank Deleted Successfully");
-      mutate(bankMutate());
+      await BudgetService.delete(helperData);
+      toast.success("Budget Deleted Successfully");
+      dispatch(closeDeleteBudgetPopup("close"));
+      mutate(budgetMutate());
     } catch (error) {
-      console.error("Error deleting Bank:", error);
+      console.error("Error deleting Budget:", error);
     }
   };
 
@@ -41,7 +41,7 @@ const DeleteBankPopup = ({ id }) => {
   return (
     <Modal
       isOpen={popupStatus}
-      toggle={() => dispatch(closeDeleteBanksPopup("delete"))}
+      toggle={() => dispatch(closeDeleteBudgetPopup("delete"))}
       className="custom-modal modal-dialog-centered"
     >
       <ModalBody>
@@ -80,7 +80,7 @@ const DeleteBankPopup = ({ id }) => {
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
             style={{ fontSize: "10.96px", fontWeight: "400" }}
-            onClick={() => dispatch(closeDeleteBanksPopup("delete"))}
+            onClick={() => dispatch(closeDeleteBudgetPopup("delete"))}
             color="white"
           >
             Cancel
@@ -92,7 +92,7 @@ const DeleteBankPopup = ({ id }) => {
               backgroundColor: "#CF0C0C",
               border: "none",
             }}
-            onClick={() => handleDeleteBank()}
+            onClick={() => handleDeleteBudget()}
           >
             Delete
           </Button>
@@ -102,4 +102,4 @@ const DeleteBankPopup = ({ id }) => {
   );
 };
 
-export default DeleteBankPopup;
+export default DeleteBudgetPopup;

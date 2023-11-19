@@ -4,7 +4,7 @@ import {AUTH_LOGIN} from '../constants/endpoints';
 import APIService from './api.service';
 import {
   LOGIN,
-  TENANT_LOGIN
+  TENANT_LOGIN,GET_USER_FROM_TOKEN
 } from "lib/endpoints";
 class AuthService extends APIService {
 
@@ -14,10 +14,26 @@ class AuthService extends APIService {
     return this.post(`${LOGIN}`, data)
       .then((res) => {
         return res.data;
+
       })
       .catch((error: any) => {
         throw error.response.data;
       });
+  }
+  getUserFromToken(): Promise<any> {
+    return this.get(`${GET_USER_FROM_TOKEN}`)
+      .then((res) => {
+        return res.data;
+
+      })
+      .catch((error: any) => {
+        throw error.response.data;
+      });
+  }
+
+  authenticateUser(access: string): void {
+    this.setAccessToken(access);
+    axios.defaults.headers.common.Authorization = `Bearer ${access}`;
   }
 
     // tenant user sign in

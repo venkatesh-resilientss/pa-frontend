@@ -136,7 +136,7 @@ const AllRoleTable = () => {
         </CardBody>
       </Card>
       <Card className="mt-4">
-        <GridTable rowData={rolesdata} columnDefs={columns} pageSize={4} />
+        <GridTable rowData={rolesdata} columnDefs={columns} pageSize={4}  searchText={undefined}/>
       </Card>
     </>
   );

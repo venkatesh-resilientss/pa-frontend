@@ -41,9 +41,8 @@ function AddCountry() {
 
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      
+          <div className="section mt-4">
             <div className="overflow-auto">
               <div
                 className="text-black"
@@ -51,7 +50,6 @@ function AddCountry() {
               >
                 All Countries
               </div>
-
               <div className="d-flex justify-content-between">
                 <div
                   className="text-black"
@@ -60,35 +58,17 @@ function AddCountry() {
                   Add Country
                 </div>
                 <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                      backgroundColor: "transparent",
-                      color: "#2D2C2C",
-                      border: "none",
-                    }}
-                  >
-                    Dismiss
-                  </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                   <Button
                     onClick={handleSubmit(onSubmit)}
-                    color="primary"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                    }}
+                    color="primary" className="px-4 p-2"
+                   
                   >
                     Save
                   </Button>
                 </div>
               </div>
-
               <hr style={{ height: "2px" }} />
-
               <Form
                 style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
                 className=" mt-2 d-flex flex-column"
@@ -100,6 +80,7 @@ function AddCountry() {
                     <Controller
                       name="countryname"
                       control={control}
+                      rules={{ required: "Country Name  is required" }}
                       render={({ field }) => (
                         <Input
                           style={{ fontSize: "12px", fontWeight: "400" }}
@@ -109,6 +90,11 @@ function AddCountry() {
                         />
                       )}
                     />
+                    {errors.countryname && (
+                      <span style={{ color: "red" }}>
+                        {errors.countryname.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -148,8 +134,7 @@ function AddCountry() {
               </Form>
             </div>
           </div>
-        </div>
-      </div>
+        
     </>
   );
 }

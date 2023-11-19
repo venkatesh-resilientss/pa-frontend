@@ -51,9 +51,9 @@ function AddSet() {
   };
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div >
       <div
-        className="text-black"
+        className="text-black mt-4"
         style={{ fontSize: "16px", fontWeight: "600" }}
       >
         All Sets
@@ -67,28 +67,10 @@ function AddSet() {
           Add New Set
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
+             <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
           <Button
-            onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
-          >
-            Dismiss
-          </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
+            onClick={handleSubmit(onSubmit)} className="px-4"
+            color="primary">
             Save
           </Button>
         </div>
@@ -107,6 +89,7 @@ function AddSet() {
             <Label>Set Name</Label>
             <Controller
               name="setname"
+              rules={{ required: "Set Name is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -117,6 +100,11 @@ function AddSet() {
                 />
               )}
             />
+            {errors.setname && (
+              <span style={{ color: "red" }}>
+                {errors.setname.message as React.ReactNode}
+              </span>
+            )}
           </div>
         </Col>
         <Col xl="4">
@@ -126,6 +114,7 @@ function AddSet() {
             </Label>
             <Controller
               name="setcode"
+              rules={{ required: "Set Code is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -136,6 +125,11 @@ function AddSet() {
                 />
               )}
             />
+            {errors.setcode && (
+              <span style={{ color: "red" }}>
+                {errors.setcode.message as React.ReactNode}
+              </span>
+            )}
           </div>
         </Col>
         <Col xl="4">
@@ -145,6 +139,7 @@ function AddSet() {
             </Label>
             <Controller
               name="description"
+              rules={{ required: "Description is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -160,6 +155,11 @@ function AddSet() {
                 />
               )}
             />
+            {errors.description && (
+              <span style={{ color: "red" }}>
+                {errors.description.message as React.ReactNode}
+              </span>
+            )}
           </div>
         </Col>
         <div className="d-flex flex-column mt-1">

@@ -3,7 +3,7 @@ import GridTable from "components/grid-tables/gridTable";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
-// import { enrypt } from "lib/encrypt";
+import { decrypt, encrypt } from "lib/encypt";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -213,16 +213,24 @@ const MyPage = () => {
     phoneNumber: "+91 6309648049",
     address: "2-173, ola amigo, Park Avenue",
   };
+  const encryptTest = async ()=>{
+    // var res = await encrypt('krish');
+    // var res  = await decrypt(de);
+  }
+
+  useEffect(() => {
+    encryptTest()
+  }, []);
   return (
     <>
       <div className="my-5 m-auto d-flex">
-        <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} />
+        <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined}/>
       </div>
       {/* <div className="">
-        <Sidebar />
-      </div> */}
+    <Sidebar />
+    </div> */}
     </>
   );
-};
+};;
 
 export default MyPage;

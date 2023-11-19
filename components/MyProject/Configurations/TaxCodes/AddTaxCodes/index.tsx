@@ -38,10 +38,8 @@ function AddTaxCode() {
       });
   };
   return (
-    <div className="container mt-3">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="overflow-auto">
+    
+          <div className="overflow-auto mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -57,27 +55,11 @@ function AddTaxCode() {
                 Add New Tax Code
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4"
+                  
                 >
                   Save
                 </Button>
@@ -98,6 +80,7 @@ function AddTaxCode() {
                   </Label>
                   <Controller
                     name="taxcode"
+                    rules={{ required: "Tax Code  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -108,6 +91,11 @@ function AddTaxCode() {
                       />
                     )}
                   />
+                  {errors.taxcode && (
+                    <span style={{ color: "red" }}>
+                      {errors.taxcode.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
 
@@ -119,6 +107,7 @@ function AddTaxCode() {
                   <Controller
                     name="description"
                     control={control}
+                    rules={{ required: "Description  is required" }}
                     render={({ field }) => (
                       <Input
                         style={{
@@ -133,6 +122,11 @@ function AddTaxCode() {
                       />
                     )}
                   />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
 
@@ -170,9 +164,7 @@ function AddTaxCode() {
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+        
   );
 }
 

@@ -256,7 +256,7 @@ const ClientsListTable = () => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Clients</div>

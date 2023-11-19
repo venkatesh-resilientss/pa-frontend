@@ -21,7 +21,10 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import useSWR from "swr";
 import moment from "moment";
-import { openDeleteBanksPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadBanksPopup,
+  openDeleteBanksPopup,
+} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useState } from "react";
@@ -236,9 +239,7 @@ const AllBanksTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -267,12 +268,15 @@ const AllBanksTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadBanksPopup("banks"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -317,8 +321,7 @@ const AllBanksTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -329,8 +332,7 @@ const AllBanksTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      
   );
 };
 

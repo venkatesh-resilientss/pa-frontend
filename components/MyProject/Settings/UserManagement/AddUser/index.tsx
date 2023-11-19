@@ -4,70 +4,64 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { UsersService } from "services";
-import Select from 'react-select';
-import { ClientsService,RoleService,ProjectService } from "services";
-
+import Select from "react-select";
+import { ClientsService, RoleService, ProjectService } from "services";
 
 import useSWR from "swr";
 
-
 function AddUser() {
-
   //get cleints
   const clientService = new ClientsService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
     clientService.getClients()
-    );
-  
+  );
+
   const clientOptions = Array.isArray(clientData)
     ? clientData.map((client) => ({
         value: client.ID,
         label: client.Name,
       }))
     : [];
-  
-    //get roles
-    const roleservice = new RoleService();
-    const { data: rolesdata } = useSWR("LIST_ROLES", () =>
-      roleservice.getRoles()
-      );
 
-    const roleOptions = Array.isArray(rolesdata)
-      ? rolesdata.map((role) => ({
-          value: role.ID,
-          label: role.RollName,
-        }))
-      : [];
+  //get roles
+  const roleservice = new RoleService();
+  const { data: rolesdata } = useSWR("LIST_ROLES", () =>
+    roleservice.getRoles()
+  );
 
-    //get projects
+  const roleOptions = Array.isArray(rolesdata)
+    ? rolesdata.map((role) => ({
+        value: role.ID,
+        label: role.RollName,
+      }))
+    : [];
 
-    const projectservice = new ProjectService();
-    const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
+  //get projects
+
+  const projectservice = new ProjectService();
+  const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
     projectservice.getProjects()
-    );
+  );
 
-    const projectOptions = Array.isArray(projectsdata)
-      ? projectsdata.map((project) => ({
-          value: project.ID,
-          label: project.Name,
-        }))
-      : [];
-    
-  const router=useRouter()
+  const projectOptions = Array.isArray(projectsdata)
+    ? projectsdata.map((project) => ({
+        value: project.ID,
+        label: project.Name,
+      }))
+    : [];
+
+  const router = useRouter();
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedProduction, setSelectedProduction] = useState(null);
 
- 
-
   const roleSelectStyles = {
     control: (provided) => ({
       ...provided,
-      width: '100%',
+      width: "100%",
     }),
   };
-
 
   const {
     control,
@@ -77,36 +71,33 @@ function AddUser() {
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(false);
-  
- const onSubmit = (data) => {
-  let backendFormat;
 
-  backendFormat = {
-    last_name: data.lastname,
-    first_name: data.firstname,
-    middle_name: data.middlename,
-    email: data.email,
-    client_id: selectedClient?.value,
-    roleID: selectedRole?.value,
-    is_active: activeStatus
-  };
+  const onSubmit = (data) => {
+    let backendFormat;
 
-  UsersService.create(backendFormat)
+    backendFormat = {
+      last_name: data.lastname,
+      first_name: data.firstname,
+      middle_name: data.middlename,
+      email: data.email,
+      client_id: selectedClient?.value,
+      roleID: selectedRole?.value,
+      is_active: activeStatus,
+    };
+
+    UsersService.create(backendFormat)
       .then((res) => {
         toast.success("User Added successfully");
-        router.push('/settings/usermanagement');
+        router.push("/settings/usermanagement");
         reset();
       })
-    .catch((error) => {
-      toast.error(error?.error);
-    });
-};
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+  };
 
   return (
-    <div
-      
-      className=" text-black mt-4 p-3"
-    >
+    <div className=" text-black mt-4 p-3">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -122,8 +113,18 @@ function AddUser() {
           Add New User
         </div>
         <div className="d-flex gap-1">
-         <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
-          <Button onClick={handleSubmit(onSubmit)}  color="primary" className="px-4">
+          <a
+            href="#"
+            onClick={() => router.back()}
+            className="text-decoration-none text-secondary m-2"
+          >
+            Dismiss
+          </a>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            color="primary"
+            className="px-4"
+          >
             Save
           </Button>
         </div>
@@ -147,10 +148,14 @@ function AddUser() {
                       invalid={errors.lastname && true}
                       {...field}
                     />
-                    {errors.lastname && <div className="text-danger">{String(errors.lastname.message)}</div>}
+                    {errors.lastname && (
+                      <div className="text-danger">
+                        {String(errors.lastname.message)}
+                      </div>
+                    )}
                   </>
                 )}
-                rules={{ required: 'Last Name is required' }}
+                rules={{ required: "Last Name is required" }}
               />
             </div>
           </Col>
@@ -170,10 +175,14 @@ function AddUser() {
                       {...field}
                       required={true}
                     />
-                    {errors.firstname && <div className="text-danger">{String(errors.firstname.message)}</div>}
+                    {errors.firstname && (
+                      <div className="text-danger">
+                        {String(errors.firstname.message)}
+                      </div>
+                    )}
                   </>
                 )}
-                rules={{ required: 'First Name is required' }}
+                rules={{ required: "First Name is required" }}
               />
             </div>
           </Col>
@@ -181,58 +190,62 @@ function AddUser() {
 
         <div className="d-flex gap-4 mt-2">
           <Col xl="4">
-        <div className="mb-1">
-          <Label>Middle Initial Name</Label>
-          <Controller
-            name="middlename"
-            control={control}
-            render={({ field }) => (
-              <>
-                <Input
-                  className="p-2"
-                  placeholder="Middle Name"
-                  invalid={errors.middlename && true}
-                  {...field}
-                />
-                {errors.middlename && (
-                  <div className="text-danger">{String(errors.middlename.message)}</div>
+            <div className="mb-1">
+              <Label>Middle Initial Name</Label>
+              <Controller
+                name="middlename"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Input
+                      className="p-2"
+                      placeholder="Middle Name"
+                      invalid={errors.middlename && true}
+                      {...field}
+                    />
+                    {errors.middlename && (
+                      <div className="text-danger">
+                        {String(errors.middlename.message)}
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-            rules={{ required: 'Middle Name is required' }}
-          />
-        </div>
-      </Col>
+                rules={{ required: "Middle Name is required" }}
+              />
+            </div>
+          </Col>
 
-     <Col xl={4}>
-  <div className="mb-1">
-    <Label>Email</Label>
-    <Controller
-      name="email"
-      control={control}
-      render={({ field }) => (
-        <>
-          <Input
-            className="p-2"
-            placeholder="Email"
-            invalid={errors.email && true}
-            {...field}
-          />
-          {errors.email && (
-            <div className="text-danger">{String(errors.email.message)}</div>
-          )}
-        </>
-      )}
-      rules={{ 
-        required: 'Email is required',
-        pattern: {
-          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-          message: 'Invalid email address'
-        }
-      }}
-    />
-  </div>
-</Col>
+          <Col xl={4}>
+            <div className="mb-1">
+              <Label>Email</Label>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Input
+                      className="p-2"
+                      placeholder="Email"
+                      invalid={errors.email && true}
+                      {...field}
+                    />
+                    {errors.email && (
+                      <div className="text-danger">
+                        {String(errors.email.message)}
+                      </div>
+                    )}
+                  </>
+                )}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: "Invalid email address",
+                  },
+                }}
+              />
+            </div>
+          </Col>
         </div>
 
         <Col xl="4">
@@ -240,9 +253,10 @@ function AddUser() {
             <Label>Select Role</Label>
             <Controller
               name="role"
+              rules={{ required: "Role is required" }}
               control={control}
               render={({ field }) => (
-                <Select 
+                <Select
                   {...field}
                   options={roleOptions}
                   value={selectedRole}
@@ -251,49 +265,67 @@ function AddUser() {
                 />
               )}
             />
+            {errors.role && (
+              <span style={{ color: "red" }}>
+                {errors.role.message as React.ReactNode}
+              </span>
+            )}
           </div>
         </Col>
-
-
 
         <div className="d-flex gap-4 mt-2">
-           <Col xl="4">
-          <div className="mb-1">
-            <Label>Select Client</Label>
-         
-            <Controller
-              name="client"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={clientOptions}
-                  value={selectedClient}
-                  onChange={(selectedOption) => setSelectedClient(selectedOption)}
-                  // Add styles as needed
-                />
+          <Col xl="4">
+            <div className="mb-1">
+              <Label>Select Client</Label>
+
+              <Controller
+                name="client"
+                rules={{ required: "Client is required" }}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={clientOptions}
+                    value={selectedClient}
+                    onChange={(selectedOption) =>
+                      setSelectedClient(selectedOption)
+                    }
+                    // Add styles as needed
+                  />
+                )}
+              />
+              {errors.client && (
+                <span style={{ color: "red" }}>
+                  {errors.client.message as React.ReactNode}
+                </span>
               )}
-            />
-          </div>
-        </Col>
-         <Col xl="4">
-          <div className="mb-1">
-            <Label>Select Production</Label>
-            <Controller
-              name="production"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={projectOptions}
-                  value={selectedProduction}
-                  onChange={(selectedOption) => setSelectedProduction(selectedOption)}
-                  
-                />
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1">
+              <Label>Select Production</Label>
+              <Controller
+                name="production"
+                rules={{ required: "Production is required" }}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={projectOptions}
+                    value={selectedProduction}
+                    onChange={(selectedOption) =>
+                      setSelectedProduction(selectedOption)
+                    }
+                  />
+                )}
+              />
+              {errors.production && (
+                <span style={{ color: "red" }}>
+                  {errors.production.message as React.ReactNode}
+                </span>
               )}
-            />
-          </div>
-        </Col>
+            </div>
+          </Col>
         </div>
 
         <div className="d-flex flex-column mt-2">
@@ -329,8 +361,6 @@ function AddUser() {
           </div>
         </div>
       </Form>
-
-      
     </div>
   );
 }

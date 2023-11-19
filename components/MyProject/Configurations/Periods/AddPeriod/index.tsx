@@ -57,10 +57,9 @@ function AddPeriod() {
 
   return (
     <>
-      <div className="container mt-2">
-        <div className="row">
-          <div className="col-md-12">
-            <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+      
+          <div className="section mt-4">
+            <div className="overflow-auto">
               <div
                 className="text-black"
                 style={{ fontSize: "16px", fontWeight: "600" }}
@@ -76,27 +75,11 @@ function AddPeriod() {
                   Add New Period
                 </div>
                 <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                      backgroundColor: "transparent",
-                      color: "#2D2C2C",
-                      border: "none",
-                    }}
-                  >
-                    Dismiss
-                  </Button>
+                    <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                   <Button
                     onClick={handleSubmit(onSubmit)}
-                    color="primary"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                    }}
+                    color="primary" className="px-4 p-2"
+                    
                   >
                     Save
                   </Button>
@@ -114,6 +97,7 @@ function AddPeriod() {
                     <Label> Period Name</Label>
                     <Controller
                       name="periodname"
+                      rules={{ required: "Period Name  is required" }}
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -124,6 +108,11 @@ function AddPeriod() {
                         />
                       )}
                     />
+                    {errors.periodname && (
+                      <span style={{ color: "red" }}>
+                        {errors.periodname.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -135,12 +124,18 @@ function AddPeriod() {
                     >
                       Start Date
                     </Label>
-
-                    <DatePicker
-                      placeholderText="Select a date"
-                      selected={startDate}
-                      onChange={handleStartDateChange}
-                      dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                    <Controller
+                      name="startDate"
+                      control={control}
+                      rules={{ required: "End Date  is required" }}
+                      render={({ field }) => (
+                        <DatePicker
+                          placeholderText="Select a date"
+                          selected={startDate}
+                          onChange={handleStartDateChange}
+                          dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                        />
+                      )}
                     />
                   </Col>
 
@@ -151,11 +146,18 @@ function AddPeriod() {
                     >
                       End Date
                     </Label>
-                    <DatePicker
-                      placeholderText="Select a date"
-                      selected={endDate}
-                      onChange={handleEndDateChange}
-                      dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                    <Controller
+                      name="endDate"
+                      control={control}
+                      rules={{ required: "End Date  is required" }}
+                      render={({ field }) => (
+                        <DatePicker
+                          placeholderText="Select a date"
+                          selected={endDate}
+                          onChange={handleEndDateChange}
+                          dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                        />
+                      )}
                     />
                   </Col>
                 </Col>
@@ -166,6 +168,7 @@ function AddPeriod() {
                     <Controller
                       name="description"
                       control={control}
+                      rules={{ required: "Description  is required" }}
                       render={({ field }) => (
                         <Input
                           style={{
@@ -179,6 +182,11 @@ function AddPeriod() {
                         />
                       )}
                     />
+                    {errors.description && (
+                      <span style={{ color: "red" }}>
+                        {errors.description.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -217,8 +225,7 @@ function AddPeriod() {
               </Form>
             </div>
           </div>
-        </div>
-      </div>
+        
     </>
   );
 }

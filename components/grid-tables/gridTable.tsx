@@ -2,27 +2,42 @@ import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useMemo, useRef, useCallback } from "react";
 
-const GridTable = ({ rowData, columnDefs, pageSize }) => {
+const GridTable = ({ rowData, columnDefs, pageSize,searchText }) => {
   const gridRef = useRef(null);
+
+  const [isGridReady,setIsGridReady] = useState(false);
+
+
+  /** Search */
+  useEffect(()=>{
+    if(isGridReady)
+      gridRef.current.api.setQuickFilter(searchText);
+  },[searchText])
+
   const gridOptions = {
     // Enable pagination
     pagination: true,
     // Set the number of rows per page
     paginationPageSize: pageSize, // Change this to your desired page size
   };
+
   const gridReady = useCallback(() => {
+
+    setIsGridReady(true);
     /**
      * Initialize Pagination
      */
     // initPagination();
   }, []);
-  const sizeColumnsToFit = useCallback(()=>{
+
+  const sizeColumnsToFit = useCallback(() => {
     gridRef.current.api.sizeColumnsToFit();
-  },[])
+  }, []);
+
   const rowStyles = {
-    rowHeight: 58,
+    rowHeight: 68,
     rowStyle: {
-      maxHeight: "48px",
+      maxHeight: "58px",
     },
   };
   /**

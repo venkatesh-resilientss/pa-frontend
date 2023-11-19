@@ -35,8 +35,8 @@ function EditCurrency() {
   useEffect(() => {
     if (!currencyData) return;
 
-    currencyData?.Name && setValue("name", currencyData?.Name);
-    currencyData?.Code && setValue("code", currencyData?.Code);
+    currencyData?.Name && setValue("currencyname", currencyData?.Name);
+    currencyData?.Code && setValue("currencycode", currencyData?.Code);
 
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
@@ -55,10 +55,10 @@ function EditCurrency() {
     let backendFormat;
 
     backendFormat = {
-      name: data.name,
+      name: data.currencyname,
       description: data.description,
       is_active: activeStatus,
-      code: data.code,
+      code: data.currencycode,
     };
 
     CurrencyService.edit(id, backendFormat)
@@ -75,9 +75,8 @@ function EditCurrency() {
   };
 
   return (
-    <div className="container mt-2">
-      <div className="row">
-        <div className="col-md-12">
+   
+        <div className="section mt-4">
           <div className="overflow-auto">
             <div
               className="text-black"
@@ -94,27 +93,11 @@ function EditCurrency() {
                 Edit Currency
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                    <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4 p-2"
+                  
                 >
                   Edit
                 </Button>
@@ -123,94 +106,91 @@ function EditCurrency() {
 
             <hr style={{ height: "2px" }} />
             <Form
-              onSubmit={handleSubmit(onSubmit)}
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
+              onSubmit={handleSubmit(onSubmit)}
             >
+              {" "}
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Currency Code
-                </Label>
-                <Controller
-                  name="code"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Currency Code"
-                      invalid={errors.code && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label>Currency Code</Label>
+                  <Controller
+                    name="currencycode"
+                    rules={{ required: "Currency Code  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="Currency Code"
+                        invalid={errors.currencycode && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.currencycode && (
+                    <span style={{ color: "red" }}>
+                      {errors.currencycode.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
-
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Currency Name
-                </Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Currency Name"
-                      invalid={errors.name && true}
-                      {...field}
-                    />
+                <div className="mb-1 mt-2">
+                  <Label>Currency Name</Label>
+                  <Controller
+                    name="currencyname"
+                    rules={{ required: "Currency Name  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="Currency Name"
+                        invalid={errors.currencyname && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.currencyname && (
+                    <span style={{ color: "red" }}>
+                      {errors.currencyname.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
-
               {/* <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Currency Symbol
-                </Label>
-                <Controller
-                  name="symbol"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder=" Currency Symbol"
-                      invalid={errors.symbol && true}
-                      {...field}
-                    />
-                  )}
-                />{" "}
+                <div className="mb-1 mt-2">
+                  <Label>Currency Symbol</Label>
+                  <Controller
+                    name="currencysymbol"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="Currency Symbol"
+                        invalid={errors.currencysymbol && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                </div>
               </Col>
-
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Current rate vs 1.00 unit of base currency
-                </Label>
-                <Controller
-                  name="rate"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder=" Current Rate"
-                      invalid={errors.rate && true}
-                      {...field}
-                    />
-                  )}
-                />{" "}
+                <div className="mb-1 mt-2">
+                  <Label>Current rate vs 1.00 unit of base currency</Label>
+                  <Controller
+                    name="currencyrate"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="Currency rate"
+                        invalid={errors.currencyrate && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                </div>
               </Col>
-
               <Col xl="4">
                 <div className="mb-1 mt-2">
                   <div className="form-check">
@@ -220,12 +200,11 @@ function EditCurrency() {
                       value=""
                       id="flexCheckDefault"
                     />
-                    <label className="form-check-label">Default Currency</label>
+                    <label className="form-check-label">Default checkbox</label>
                   </div>
                 </div>
               </Col> */}
-
-              <div className="d-flex flex-column mt-1">
+              <div className="d-flex flex-column mt-2">
                 <Label
                   className="text-black"
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -234,41 +213,25 @@ function EditCurrency() {
                 </Label>
                 <div className="d-flex gap-1">
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="active"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-active"
-                          name="ex1"
-                          defaultChecked={currencyData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(true);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      type="radio"
+                      id="ex1-active"
+                      name="ex1"
+                      onChange={() => {
+                        setActiveStatus(true);
+                      }}
+                    />
                     <div>Active</div>
                   </div>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="inactive"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1"
-                          id="ex1-inactive"
-                          defaultChecked={!currencyData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(false);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      type="radio"
+                      name="ex1"
+                      id="ex1-inactive"
+                      onChange={() => {
+                        setActiveStatus(false);
+                      }}
+                    />
                     <div>In-Active</div>
                   </div>
                 </div>
@@ -276,8 +239,7 @@ function EditCurrency() {
             </Form>
           </div>
         </div>
-      </div>
-    </div>
+      
   );
 }
 

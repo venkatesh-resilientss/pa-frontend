@@ -28,4 +28,9 @@
     color: #030229;
     font-weight: 400;
   }
+    .ag-cell {
+      --ag-internal-padded-row-height: fit-content;
+      display: flex;
+      align-items: center;
+    }
 }

@@ -26,7 +26,10 @@ import { LocationsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { openDeleteLocationPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadLocationsPopup,
+  openDeleteLocationPopup,
+} from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -248,9 +251,7 @@ const AllLocationsTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+          <div className="section mt-4">
             <Card
               className="mt-2"
               style={{
@@ -279,12 +280,15 @@ const AllLocationsTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadLocationsPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -331,8 +335,7 @@ const AllLocationsTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -342,8 +345,6 @@ const AllLocationsTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
     </div>
   );
 };

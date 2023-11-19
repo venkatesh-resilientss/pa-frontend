@@ -34,6 +34,7 @@ function Stats() {
                 {statsData?.TotalActiveClients}
               </h2>
             }
+            stats={statsData?.TotalActiveClients}
           />
         </Col>
 
@@ -46,6 +47,7 @@ function Stats() {
                 {statsData?.NewClientsThisMonth}
               </h2>
             }
+            stats={statsData?.NewClientsThisMonth}
           />
         </Col>
 
@@ -56,6 +58,7 @@ function Stats() {
             renderStats={
               <h2 className="fw-bolder mb-75  ">{statsData?.ActiveProjects}</h2>
             }
+            stats={statsData?.ActiveProjects}
           />
         </Col>
         <Col >
@@ -67,6 +70,7 @@ function Stats() {
                 {statsData?.ProspectClients}
               </h2>
             }
+            stats={statsData?.ProspectClients}
           />
         </Col>
         <Col >
@@ -79,6 +83,7 @@ function Stats() {
                 {statsData?.OutstandingInvoices}
               </h2>
             }
+            stats={statsData?.OutstandingInvoices}
           />
         </Col>
       </Row>

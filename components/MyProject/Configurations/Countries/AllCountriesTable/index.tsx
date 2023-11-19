@@ -29,7 +29,10 @@ import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import { openDeleteCountryPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadCountriesPopup,
+  openDeleteCountryPopup,
+} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
 
@@ -220,9 +223,8 @@ const AllCountriesTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -251,12 +253,15 @@ const AllCountriesTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadCountriesPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -301,8 +306,7 @@ const AllCountriesTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -313,8 +317,7 @@ const AllCountriesTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+     
   );
 };
 

@@ -24,14 +24,14 @@ const ProjectCard = ({ data }) => {
     return res;
   };
   return (
-    <Card className="text-black px-1">
+    <Card className="text-black px-1 h-100">
       <CardBody>
         <div className="d-flex">
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
               <div className="d-flex justify-content-between">
                 <div style={{ fontSize: "12px", color: "#030229" }}>
-                  {data.client_name}
+                  {data.client_name ? data.client_name : "-"}
                 </div>
                 <div
                   className="border rounded cursor-pointer text-black text-center d-flex px-1 p-1"
@@ -58,15 +58,14 @@ const ProjectCard = ({ data }) => {
                     color: "#030229",
                   }}
                 >
-                  {data.project_name}
+                  {data.project_name ? data.project_name : "-"}
                 </div>
-
-                
               </div>
             </div>
 
             <div style={{ fontSize: "10px" }} className="mt-1">
-              Payroll Coordinator : John Duo
+              Payroll Coordinator :{" "}
+              {data.payroll_coordinator ? data.payroll_coordinator : "-"}
             </div>
           </div>
         </div>
@@ -104,24 +103,48 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
           </div>
-
-          
         </div>
 
         <div
           className="d-flex justify-content-between mt-3"
           style={{ fontSize: "10px" }}
         >
-          <div className="d-flex" style={{ gap: "2px" }}>
-            <BiSolidCameraMovie
-              style={{ marginBottom: "3px", fontSize: "10px" }}
-            />{" "}
-            Subscribed Softwares
+          <div>
+            <div className="d-flex" style={{ gap: "2px" }}>
+              <BiSolidCameraMovie
+                style={{ marginBottom: "3px", fontSize: "10px" }}
+              />{" "}
+              Subscribed Softwares
+            </div>
+            <div
+              className="d-flex justify-content-between"
+              style={{ fontSize: "10px" }}
+            >
+              <div className="d-flex gap-1 mt-1">
+                {data.softwares?.map((software, i) => {
+                  return (
+                    <div
+                      key={`software-card-${i}`}
+                      style={{
+                        fontSize: "10px",
+                        fontWeight: "400",
+                        backgroundColor: "#B5DEF0",
+                        width: "auto",
+                        color: "#030229",
+                        padding: "4px",
+                        borderRadius: "5%",
+                      }}
+                    >
+                      {software.name} test
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-
           <div>
             <div
-              className="d-flex justify-content-between mt-2"
+              className="d-flex justify-content-between"
               style={{ fontSize: "10px" }}
             >
               <div className="d-flex" style={{ gap: "2px" }}>
@@ -140,38 +163,11 @@ const ProjectCard = ({ data }) => {
             </div>
             <div>
               <div style={{ fontWeight: "bold", fontSize: "10px" }}>
-                {data.payrolldate ? formatDate(data.payrolldate) : ""}{" "}
+                {data.payrolldate ? formatDate(data.payrolldate) : "-"}{" "}
                 {/* Payroll date */}
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="d-flex justify-content-between mt-2"
-          style={{ fontSize: "10px" }}
-        >
-          <div className="d-flex gap-1 mt-1">
-            {data.softwares?.map((software, i) => {
-              return (
-                <div
-                  key={`software-card-${i}`}
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: "400",
-                    backgroundColor: "#B5DEF0",
-                    width: "auto",
-                    color: "#030229",
-                    padding: "4px",
-                    borderRadius: "5%",
-                  }}
-                >
-                  {software.name}
-                </div>
-              );
-            })}
-          </div>
-
-          
         </div>
       </CardBody>
     </Card>

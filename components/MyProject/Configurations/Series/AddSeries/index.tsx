@@ -42,9 +42,8 @@ function AddSeries() {
 
   return (
     <>
-      <div className="container mt-2">
-        <div className="row">
-          <div className="col-md-12">
+      
+          <div className="section mt-4">
             <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
               <div
                 className="text-black"
@@ -61,27 +60,11 @@ function AddSeries() {
                   Add New Series
                 </div>
                 <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                      backgroundColor: "transparent",
-                      color: "#2D2C2C",
-                      border: "none",
-                    }}
-                  >
-                    Dismiss
-                  </Button>
+                   <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                   <Button
                     onClick={handleSubmit(onSubmit)}
-                    color="primary"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                    }}
+                    color="primary" className="px-4 p-1"
+                    
                   >
                     Save
                   </Button>
@@ -101,6 +84,7 @@ function AddSeries() {
                     </Label>
                     <Controller
                       name="seriesname"
+                      rules={{ required: "Series Name is required" }}
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -111,6 +95,11 @@ function AddSeries() {
                         />
                       )}
                     />
+                    {errors.seriesname && (
+                      <span style={{ color: "red" }}>
+                        {errors.seriesname.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -121,6 +110,7 @@ function AddSeries() {
                     </Label>
                     <Controller
                       name="Seriescode"
+                      rules={{ required: "Series Code is required" }}
                       control={control}
                       render={({ field }) => (
                         <Input
@@ -131,6 +121,11 @@ function AddSeries() {
                         />
                       )}
                     />
+                    {errors.Seriescode && (
+                      <span style={{ color: "red" }}>
+                        {errors.Seriescode.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -142,6 +137,7 @@ function AddSeries() {
                     <Controller
                       name="description"
                       control={control}
+                      rules={{ required: "Description is required" }}
                       render={({ field }) => (
                         <Input
                           style={{
@@ -156,6 +152,11 @@ function AddSeries() {
                         />
                       )}
                     />
+                    {errors.description && (
+                      <span style={{ color: "red" }}>
+                        {errors.description.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
                 </Col>
 
@@ -189,8 +190,7 @@ function AddSeries() {
               </Form>
             </div>
           </div>
-        </div>
-      </div>
+        
     </>
   );
 }

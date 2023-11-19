@@ -44,10 +44,9 @@ function AddChartOfAccounts() {
   };
 
   return (
-    <div className="container mt-2">
-      <div className="row">
-        <div className="col-md-12">
-          <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+  
+        <div className="section mt-4">
+          <div className="overflow-auto">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -63,27 +62,11 @@ function AddChartOfAccounts() {
                 Add New Chart Of Accounts
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4"
+                 
                 >
                   Save
                 </Button>
@@ -102,6 +85,7 @@ function AddChartOfAccounts() {
                   <Label>COA Name</Label>
                   <Controller
                     name="COAName"
+                    rules={{ required: "COA Name  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -112,6 +96,11 @@ function AddChartOfAccounts() {
                       />
                     )}
                   />
+                  {errors.COAName && (
+                    <span style={{ color: "red" }}>
+                      {errors.COAName.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -119,6 +108,7 @@ function AddChartOfAccounts() {
                   <Label>COA Code</Label>
                   <Controller
                     name="COACode"
+                    rules={{ required: "COA Code  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -129,6 +119,11 @@ function AddChartOfAccounts() {
                       />
                     )}
                   />
+                  {errors.COACode && (
+                    <span style={{ color: "red" }}>
+                      {errors.COACode.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -137,6 +132,7 @@ function AddChartOfAccounts() {
                   <Controller
                     name="COAParent"
                     control={control}
+                    rules={{ required: "COA Parent  is required" }}
                     render={({ field }) => (
                       <Input
                         placeholder="COA Parent"
@@ -146,6 +142,11 @@ function AddChartOfAccounts() {
                       />
                     )}
                   />
+                  {errors.COAParent && (
+                    <span style={{ color: "red" }}>
+                      {errors.COAParent.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -153,6 +154,7 @@ function AddChartOfAccounts() {
                   <Label> Account Type</Label>
                   <Controller
                     name="AccountType"
+                    rules={{ required: "Account Type Name  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -163,6 +165,11 @@ function AddChartOfAccounts() {
                       />
                     )}
                   />
+                  {errors.AccountType && (
+                    <span style={{ color: "red" }}>
+                      {errors.AccountType.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -170,6 +177,7 @@ function AddChartOfAccounts() {
                   <Label> Description</Label>
                   <Controller
                     name="Description"
+                    rules={{ required: "Description  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -185,6 +193,11 @@ function AddChartOfAccounts() {
                       />
                     )}
                   />
+                  {errors.Description && (
+                    <span style={{ color: "red" }}>
+                      {errors.Description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -244,8 +257,7 @@ function AddChartOfAccounts() {
             </Form>
           </div>
         </div>
-      </div>
-    </div>
+
   );
 }
 

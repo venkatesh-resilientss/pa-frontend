@@ -186,7 +186,7 @@ const FlightStatusTrackerTable = () => {
           </div>
         </div>
 
-        <GridTable rowData={rowData} columnDefs={colDef} pageSize={4} />
+        <GridTable rowData={rowData} columnDefs={colDef} pageSize={4} searchText={undefined} />
       </div>
     </Card>
   );

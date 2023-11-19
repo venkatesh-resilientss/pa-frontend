@@ -150,10 +150,10 @@ function AddBudget() {
       code: data.taxcode,
       name: data.name,
       description: data.description,
-      company: data.company.value,
-      production: data.production.value,
-      currency: data.currency.value,
-      series: data.series.value,
+      company: data.company?.value,
+      production: data.production?.value,
+      CurrencyID: data.currency?.value,
+      series: data.series?.value,
 
       set: data.set.value,
       location: data.location.value,
@@ -171,7 +171,7 @@ function AddBudget() {
       });
   };
   return (
-    <div className="container mt-2">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -187,28 +187,10 @@ function AddBudget() {
           Add New Budget
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
-            onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
-          >
-            Dismiss
-          </Button>
+           <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
           <Button
             onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
+            color="primary" className="px-4 p-2">
             Save
           </Button>
         </div>
@@ -232,6 +214,7 @@ function AddBudget() {
           <Controller
             name="name"
             control={control}
+            rules={{ required: "Budget Name is required" }}
             render={({ field }) => (
               <Input
                 placeholder="Budget Name"
@@ -241,6 +224,11 @@ function AddBudget() {
               />
             )}
           />
+          {errors.name && (
+            <span style={{ color: "red" }}>
+              {errors.name.message as React.ReactNode}
+            </span>
+          )}
         </Col>
         <Col xl="3">
           <Label
@@ -252,6 +240,7 @@ function AddBudget() {
           <Controller
             name="code"
             control={control}
+            rules={{ required: "Budget Code is required" }}
             render={({ field }) => (
               <Input
                 placeholder="Budget Code"
@@ -261,6 +250,11 @@ function AddBudget() {
               />
             )}
           />
+          {errors.code && (
+            <span style={{ color: "red" }}>
+              {errors.code.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Form>
       <Row>
@@ -274,6 +268,7 @@ function AddBudget() {
           <Controller
             name="company"
             control={control}
+            rules={{ required: "Company is required" }}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -286,6 +281,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.company && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.company.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="3">
@@ -297,6 +298,7 @@ function AddBudget() {
           </Label>
           <Controller
             name={"production"}
+            rules={{ required: "Production is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -310,6 +312,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.production && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.production.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Row>
       <Row>
@@ -322,6 +330,7 @@ function AddBudget() {
           </Label>
           <Controller
             name={"currency"}
+            rules={{ required: "Currency is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -335,6 +344,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.currency && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.currency.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="3">
@@ -346,6 +361,7 @@ function AddBudget() {
           </Label>
           <Controller
             name={"series"}
+            rules={{ required: "Series is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -359,6 +375,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.series && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.series.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Row>
       <Row>
@@ -372,6 +394,7 @@ function AddBudget() {
           <Controller
             name={"location"}
             control={control}
+            rules={{ required: "Location is required" }}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -384,6 +407,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.location && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.location.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="3">
@@ -395,6 +424,7 @@ function AddBudget() {
           </Label>
           <Controller
             name={"set"}
+            rules={{ required: "Set is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -408,6 +438,12 @@ function AddBudget() {
               />
             )}
           />
+          {errors.set && (
+            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+              {" "}
+              {errors.set.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Row>
 

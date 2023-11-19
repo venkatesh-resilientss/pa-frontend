@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps, err }) {
         <title>RSSL</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="d-flex" style={{ gap: "45px" }}>
+      <div className="d-flex">
         {/* Display sidebar conditionally */}
         {noSidebar.includes(activeRoute) ? "" : <Sidebar />}
         {/* Main Container Wrapper*/}
@@ -41,6 +41,7 @@ function MyApp({ Component, pageProps, err }) {
             overflowY: "auto",
             overflowX: "hidden",
           }}
+          className={`${noSidebar.includes(activeRoute) ? "" : 'px-4'}`}
         >
           <Provider store={store}>
             <Layout>

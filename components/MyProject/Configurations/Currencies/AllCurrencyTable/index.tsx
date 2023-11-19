@@ -23,7 +23,10 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
-import { openDeleteCurrencyPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadCurrenciesPopup,
+  openDeleteCurrencyPopup,
+} from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
 import approvalLine from "../../../../../assets/myIcons/approvalLine.svg";
@@ -273,10 +276,12 @@ const AllCurrencyTable = () => {
   ];
 
   return (
-    <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+
+    <>
+
+      <div>
+      
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -305,12 +310,15 @@ const AllCurrencyTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadCurrenciesPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -352,13 +360,13 @@ const AllCurrencyTable = () => {
               </CardBody>
             </Card>
           </div>
+
           {currencyData?.result.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}/>
             </div>
           ) : (
             <div>
@@ -368,9 +376,11 @@ const AllCurrencyTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
+        
     </div>
+    
+    </>
+    
   );
 };
 

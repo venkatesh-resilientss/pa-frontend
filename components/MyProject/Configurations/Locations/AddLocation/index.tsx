@@ -40,10 +40,8 @@ function AddLocation() {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="overflow-auto">
+   
+          <div className="overflow-auto mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -59,35 +57,16 @@ function AddLocation() {
                 Add New Location
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4"             
                 >
                   Save
                 </Button>
               </div>
             </div>
-
             <hr style={{ height: "2px" }} />
-
             <Form
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
@@ -101,6 +80,7 @@ function AddLocation() {
                   </Label>
                   <Controller
                     name="locationname"
+                    rules={{ required: "Location Name is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -111,6 +91,12 @@ function AddLocation() {
                       />
                     )}
                   />
+
+                  {errors.locationname && (
+                    <span style={{ color: "red" }}>
+                      {errors.locationname.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -120,6 +106,7 @@ function AddLocation() {
                   </Label>
                   <Controller
                     name="locationcode"
+                    rules={{ required: "Location Code is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -130,6 +117,11 @@ function AddLocation() {
                       />
                     )}
                   />
+                  {errors.locationcode && (
+                    <span style={{ color: "red" }}>
+                      {errors.locationcode.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <Col xl="4">
@@ -139,6 +131,7 @@ function AddLocation() {
                   </Label>
                   <Controller
                     name="description"
+                    rules={{ required: "Description  is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -154,6 +147,11 @@ function AddLocation() {
                       />
                     )}
                   />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
               <div className="d-flex flex-column mt-1">
@@ -190,9 +188,7 @@ function AddLocation() {
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+      
   );
 }
 

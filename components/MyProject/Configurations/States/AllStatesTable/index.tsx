@@ -19,7 +19,10 @@ import { StatesService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { openDeleteStatePopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadStatesPopup,
+  openDeleteStatePopup,
+} from "redux/slices/mySlices/configurations";
 import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -235,9 +238,8 @@ const AllStatesTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+    
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -266,12 +268,15 @@ const AllStatesTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadStatesPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -316,7 +321,7 @@ const AllStatesTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
+                pageSize={4} searchText={undefined}
               />
             </div>
           ) : (
@@ -328,8 +333,7 @@ const AllStatesTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      
   );
 };
 

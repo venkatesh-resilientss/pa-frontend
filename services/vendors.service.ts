@@ -1,6 +1,6 @@
 import axios from "axios";
 import APIService from "./api.service";
-import { DELETE_VENDORS, EDIT_VENDORS, GET_VENDORS } from "../lib/endpoints";
+import { CREATE_VENDORS, DELETE_VENDORS, EDIT_VENDORS, GET_VENDORS } from "../lib/endpoints";
 
 class VendorsService extends APIService {
   getVendors(): Promise<any> {
@@ -32,6 +32,17 @@ class VendorsService extends APIService {
       })
       .catch((error) => {
         throw error?.response?.data;
+      });
+  }
+
+  static create(data:any) {
+    return axios
+      .post(CREATE_VENDORS, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 }

@@ -289,7 +289,7 @@ const TotalAmountTable = () => {
       <GridTable
         rowData={rowData}
         columnDefs={columnDefs}
-        pageSize={4}
+        pageSize={4} searchText={undefined}
         // components={{
         //   input: Input, // Use Input from reactstrap for editable fields
         // }}

@@ -22,7 +22,7 @@ export const DELETE_BANKS = (id: any) => `${baseUrl}/api/banks/${id}`; //DELETE 
 export const EDIT_BANKS = (id: any) => `${baseUrl}/api/banks/${id}`; //EDIT banks
 export const BANKS_DETAIL_ENDPOINT = (id: string) => `${baseUrl}/api/banks/${id}`; // Bank Details
 
-export const TENANT_LOGIN =  `${baseUrl}/api/users/tenants`
+export const TENANT_LOGIN =  `${baseUrl}/api/tenants/search`
 
 export const GET_ROLES = `${baseUrl}/api/roles/` //Users
 
@@ -68,6 +68,8 @@ export const CREATE_SETS = `${baseUrl}/api/sets/`; //Create Sets
 export const SETS_DETAIL_ENDPOINT = (id: string) => `${baseUrl}/api/sets/${id}`; //Sets Details
 
 export const GET_VENDORS = `${baseUrl}/api/vendors/`; //Vendors
+export const CREATE_VENDORS = `${baseUrl}/api/vendors/`; //Create vendors
+
 export const DELETE_VENDORS = (id: any) => `${baseUrl}/api/vendors/${id}`; //DELETE vendors
 export const EDIT_VENDORS = (id: any) => `${baseUrl}/api/vendors/${id}`; //EDIT Vendors
 export const VENDORS_DETAIL_ENDPOINT = (id: string) =>
@@ -116,8 +118,12 @@ export const EDIT_PERIODS = (id: any) => `${baseUrl}/api/periods/${id}`; //EDIT 
 export const PERIODS_DETAIL_ENDPOINT = (id: string) =>
   `${baseUrl}/api/periods/${id}`; //periods Details
 
-export const GET_USERS = `${baseUrl}/api/users/`; //Users
-export const CREATE_USERS = `${baseUrl}/api/users`; //Create Users
+export const GET_USERS = `${baseUrl}/api/users/?limit=100&offset=0`; //Users
+export const CREATE_USERS = `${baseUrl}/api/users/`; //Create Users
 export const EDIT_USERS = (id: any) => `${baseUrl}/api/users/${id}`; //EDIT users
 export const USERS_DETAIL_ENDPOINT = (id: string) =>
   `${baseUrl}/api/users/${id}`; //Users Details
+
+
+export const GET_ROLE_BY_ID = (id) => `${baseUrl}/api/roles/${id}` //Users
+export const GET_USER_FROM_TOKEN  = `${baseUrl}/api/users/userinfo`; //GET USER FROM TOKEN

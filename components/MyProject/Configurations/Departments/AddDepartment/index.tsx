@@ -41,9 +41,7 @@ function AddDepartment() {
   };
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-12">
+    
           <div>
             <div
               className="text-black mt-3"
@@ -60,27 +58,11 @@ function AddDepartment() {
                 Add New Department
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className='px-4'
+                  
                 >
                   Save
                 </Button>
@@ -101,6 +83,7 @@ function AddDepartment() {
                   </Label>
                   <Controller
                     name="departmentname"
+                    rules={{ required: "Department Name is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -111,6 +94,11 @@ function AddDepartment() {
                       />
                     )}
                   />
+                  {errors.departmentname && (
+                    <span style={{ color: "red" }}>
+                      {errors.departmentname.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
 
@@ -121,6 +109,7 @@ function AddDepartment() {
                   </Label>
                   <Controller
                     name="departmentcode"
+                    rules={{ required: "Department Code is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -134,6 +123,11 @@ function AddDepartment() {
                       />
                     )}
                   />
+                  {errors.departmentcode && (
+                    <span style={{ color: "red" }}>
+                      {errors.departmentcode.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
 
@@ -144,6 +138,7 @@ function AddDepartment() {
                   </Label>
                   <Controller
                     name="description"
+                    rules={{ required: "Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -159,6 +154,11 @@ function AddDepartment() {
                       />
                     )}
                   />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
 
@@ -194,9 +194,7 @@ function AddDepartment() {
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+        
   );
 }
 

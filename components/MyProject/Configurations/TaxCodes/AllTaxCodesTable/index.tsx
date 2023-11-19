@@ -23,7 +23,10 @@ import detailsIocn from "assets/myIcons/list.svg";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { openDeleteTaxCodesPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadTaxCodesPopup,
+  openDeleteTaxCodesPopup,
+} from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -228,9 +231,8 @@ const AllTaxCodesTable = () => {
   ];
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+        
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -261,13 +263,16 @@ const AllTaxCodesTable = () => {
                     </div>
 
                     <Input
-                      className=""
+                      className="searchConfig"
                       type="search"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadTaxCodesPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -314,8 +319,7 @@ const AllTaxCodesTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -325,8 +329,7 @@ const AllTaxCodesTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
+        
     </div>
   );
 };

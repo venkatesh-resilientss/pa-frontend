@@ -24,7 +24,10 @@ import { SetsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { openDeleteSetPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadSetsPopup,
+  openDeleteSetPopup,
+} from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
 import { useState } from "react";
@@ -241,9 +244,8 @@ const AllSetsTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      
+          <div className="section mt-4">
             <Card
               className="mt-2"
               style={{
@@ -272,12 +274,15 @@ const AllSetsTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadSetsPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -322,8 +327,7 @@ const AllSetsTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -333,8 +337,7 @@ const AllSetsTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
+        
     </div>
   );
 };

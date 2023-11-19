@@ -27,7 +27,10 @@ import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import { openDeleteVendorPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadVendorsPopup,
+  openDeleteVendorPopup,
+} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import NoDataPage from "components/NoDataPage";
@@ -242,9 +245,7 @@ const AllVendorsTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+          <div className="section mt-4">
             <Card
               className="mt-2"
               style={{
@@ -273,12 +274,15 @@ const AllVendorsTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadVendorsPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -323,7 +327,7 @@ const AllVendorsTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
+                pageSize={4} searchText={undefined}
               />
             </div>
           ) : (
@@ -335,8 +339,7 @@ const AllVendorsTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+     
   );
 };
 

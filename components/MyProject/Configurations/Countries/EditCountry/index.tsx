@@ -35,7 +35,7 @@ function EditCountry() {
   useEffect(() => {
     if (!countryData) return;
 
-    countryData?.Name && setValue("name", countryData?.Name);
+    countryData?.Name && setValue("countryname", countryData?.Name);
   }),
     [countryData];
 
@@ -51,11 +51,9 @@ function EditCountry() {
     let backendFormat;
 
     backendFormat = {
-      name: data.name,
+      name: data.countryname,
       description: data.description,
       is_active: activeStatus,
-      start: data.startDate,
-      endDate: data.endDate,
     };
 
     CountryService.edit(id, backendFormat)
@@ -73,10 +71,8 @@ function EditCountry() {
 
   return (
     <>
-      <div className="container mt-2">
-        <div className="row">
-          <div className="col-md-12">
-            <div className="overflow-auto">
+     
+            <div className="mt-4">
               <div
                 className="text-black"
                 style={{ fontSize: "16px", fontWeight: "600" }}
@@ -92,58 +88,43 @@ function EditCountry() {
                   Edit Country
                 </div>
                 <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                      backgroundColor: "transparent",
-                      color: "#2D2C2C",
-                      border: "none",
-                    }}
-                  >
-                    Dismiss
-                  </Button>
+                  <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                   <Button
                     onClick={handleSubmit(onSubmit)}
-                    color="primary"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      height: "34px",
-                    }}
-                  >
-                    EDIT
+                    color="primary" className="px-3 p-2">
+                    Edit
                   </Button>
                 </div>
               </div>
 
               <hr style={{ height: "2px" }} />
               <Form
-                onSubmit={handleSubmit(onSubmit)}
                 style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
                 className=" mt-2 d-flex flex-column"
+                onSubmit={handleSubmit(onSubmit)}
               >
                 <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "16px", fontWeight: "400" }}
-                  >
-                    Country Name
-                  </Label>
-                  <Controller
-                    name="name"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        style={{ fontSize: "12px", fontWeight: "400" }}
-                        placeholder="Country Name"
-                        invalid={errors.name && true}
-                        {...field}
-                      />
+                  <div className="mb-1">
+                    <Label>Country name</Label>
+                    <Controller
+                      name="countryname"
+                      control={control}
+                      rules={{ required: "Country Name  is required" }}
+                      render={({ field }) => (
+                        <Input
+                          style={{ fontSize: "12px", fontWeight: "400" }}
+                          placeholder="Country name"
+                          invalid={errors.countryname && true}
+                          {...field}
+                        />
+                      )}
+                    />
+                    {errors.countryname && (
+                      <span style={{ color: "red" }}>
+                        {errors.countryname.message as React.ReactNode}
+                      </span>
                     )}
-                  />{" "}
+                  </div>
                 </Col>
 
                 <div className="d-flex flex-column mt-1">
@@ -155,50 +136,33 @@ function EditCountry() {
                   </Label>
                   <div className="d-flex gap-1">
                     <div className="d-flex gap-1">
-                      <Controller
-                        name="active"
-                        control={control}
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            type="radio"
-                            id="ex1-active"
-                            name="ex1"
-                            defaultChecked={countryData?.IsActive}
-                            onChange={() => {
-                              setActiveStatus(true);
-                            }}
-                          />
-                        )}
-                      />{" "}
+                      <input
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        type="radio"
+                        id="ex1-active"
+                        name="ex1"
+                        onChange={() => {
+                          setActiveStatus(true);
+                        }}
+                      />
                       <div>Active</div>
                     </div>
                     <div className="d-flex gap-1">
-                      <Controller
-                        name="inactive"
-                        control={control}
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            type="radio"
-                            name="ex1"
-                            id="ex1-inactive"
-                            defaultChecked={!countryData?.IsActive}
-                            onChange={() => {
-                              setActiveStatus(false);
-                            }}
-                          />
-                        )}
-                      />{" "}
+                      <input
+                        type="radio"
+                        name="ex1"
+                        id="ex1-inactive"
+                        onChange={() => {
+                          setActiveStatus(false);
+                        }}
+                      />
                       <div>In-Active</div>
                     </div>
                   </div>
                 </div>
               </Form>
             </div>
-          </div>
-        </div>
-      </div>
+          
     </>
   );
 }

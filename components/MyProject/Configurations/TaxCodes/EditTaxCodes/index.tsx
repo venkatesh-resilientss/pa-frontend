@@ -72,10 +72,8 @@ function EditTaxCode() {
   };
 
   return (
-    <div className="container mt-2">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="overflow-auto">
+   
+          <div className="mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -120,77 +118,66 @@ function EditTaxCode() {
 
             <hr style={{ height: "2px" }} />
             <Form
-              onSubmit={handleSubmit(onSubmit)}
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
+              onSubmit={handleSubmit(onSubmit)}
             >
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Tax Code
-                </Label>
-                <Controller
-                  name="taxcode"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Tax Code"
-                      invalid={errors.taxcode && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label className="form-label" for="login-email">
+                    Tax Code
+                  </Label>
+                  <Controller
+                    name="taxcode"
+                    rules={{ required: "Tax Code  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        placeholder="Tax Code"
+                        invalid={errors.taxcode && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.taxcode && (
+                    <span style={{ color: "red" }}>
+                      {errors.taxcode.message as React.ReactNode}
+                    </span>
                   )}
-                />
+                </div>
               </Col>
 
               <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Description
-                </Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "400",
-                        height: "81px",
-                      }}
-                      placeholder="Description"
-                      type="textarea"
-                      invalid={errors.description && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label className="form-label" for="login-email">
+                    Description
+                  </Label>
+                  <Controller
+                    name="description"
+                    control={control}
+                    rules={{ required: "Description  is required" }}
+                    render={({ field }) => (
+                      <Input
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                          height: "81px",
+                        }}
+                        placeholder="Description"
+                        type="textarea"
+                        invalid={errors.description && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
                   )}
-                />
+                </div>
               </Col>
-
-              {/* <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Tax Rate
-                </Label>
-                <Controller
-                  name="taxrate"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Tax rate"
-                      invalid={errors.taxrate && true}
-                      {...field}
-                    />
-                  )}
-                />
-              </Col> */}
 
               <div className="d-flex flex-column mt-1">
                 <Label
@@ -201,52 +188,32 @@ function EditTaxCode() {
                 </Label>
                 <div className="d-flex gap-1">
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="active"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-active"
-                          name="ex1"
-                          defaultChecked={taxcodesData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(true);
-                          }}
-                        />
-                      )}
+                    <input
+                      type="radio"
+                      id="ex1-active"
+                      name="ex1"
+                      onChange={() => {
+                        setActiveStatus(true);
+                      }}
                     />
-
                     <div>Active</div>
                   </div>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="inactive"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1"
-                          id="ex1-inactive"
-                          defaultChecked={!taxcodesData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(false);
-                          }}
-                        />
-                      )}
+                    <input
+                      type="radio"
+                      name="ex1"
+                      id="ex1-inactive"
+                      onChange={() => {
+                        setActiveStatus(false);
+                      }}
                     />
-
                     <div>In-Active</div>
                   </div>
                 </div>
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+        
   );
 }
 

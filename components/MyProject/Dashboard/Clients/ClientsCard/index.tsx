@@ -35,7 +35,7 @@ const ClientsCard = ({ data }) => {
             <div
               style={{ fontSize: "18px", fontWeight: "700", color: "#030229" }}
             >
-              {data.name}
+              {data.name ? data.name : '-'}
             </div>
 
             <div
@@ -80,7 +80,7 @@ const ClientsCard = ({ data }) => {
                 }}
                 alt={""}
               />{" "}
-              {data.contact.full_name}
+              {data.contact.full_name ? data.contact.full_name : '-'}
             </div>
             <div
               style={{
@@ -90,7 +90,7 @@ const ClientsCard = ({ data }) => {
                 marginLeft: "90px",
               }}
             >
-              No. of Active Productions: {data.projects_count}
+              No. of Active Productions: {data.projects_count ? data.projects_count : '-'}
             </div>
           </div>
           <div className="d-flex flex-column gap-1 mt-1">
@@ -98,10 +98,8 @@ const ClientsCard = ({ data }) => {
               className="text-black"
               style={{ fontSize: "10px", fontWeight: "400" }}
             >
-              <Mail size={12} /> Email:{data.contact.email_id}
+              <Mail size={12} /> Email:{data.contact.email_id ? data.contact.email_id : '-'}
             </div>
-
-            
           </div>
         </div>
       </div>

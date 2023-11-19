@@ -54,6 +54,8 @@ const Welcome = () => {
 
     authService.userSignIN(payload).then((res: any) => {
       console.log(res);
+      authService.authenticateUser(res?.token);
+
       router.push("/dashboard");
       //for local
       // window.location.href = `http://${tenantName}:3000/dashboard`;

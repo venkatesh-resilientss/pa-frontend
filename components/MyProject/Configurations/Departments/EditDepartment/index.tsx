@@ -34,6 +34,8 @@ function EditDepartment() {
     if (!departmentsData) return;
 
     departmentsData?.Name && setValue("name", departmentsData?.Name);
+    departmentsData?.Code && setValue("code", departmentsData?.Code);
+
     departmentsData?.Description &&
       setValue("description", departmentsData?.Description);
   }),
@@ -73,10 +75,8 @@ function EditDepartment() {
     setActiveStatus(value);
   };
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="overflow-auto">
+    
+          <div className="mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -92,27 +92,10 @@ function EditDepartment() {
                 Edit Department
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
+                  color="primary" className="px-4 p-1"
                 >
                   Edit
                 </Button>
@@ -121,102 +104,129 @@ function EditDepartment() {
 
             <hr style={{ height: "2px" }} />
             <Form
-              // onSubmit={handleSubmit(onSubmit)}
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
+              onSubmit={handleSubmit(onSubmit)}
             >
               <Col xl="4">
-                <Label className="form-label" for="login-email">
-                  Department Name
-                </Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Department Name"
-                      invalid={errors.name && true}
-                      {...field}
-                    />
+                <div className="mb-1 mt-1">
+                  <Label className="form-label" for="login-email">
+                    Department Name
+                  </Label>
+                  <Controller
+                    name="name"
+                    rules={{ required: "Department Name is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        placeholder="Department Name"
+                        invalid={errors.name && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.name && (
+                    <span style={{ color: "red" }}>
+                      {errors.name.message as React.ReactNode}
+                    </span>
                   )}
-                />
+                </div>
               </Col>
 
-              <Col xl="4" className="mt-3">
-                <Label className="form-label">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      type="textarea"
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "400",
-                        height: "81px",
-                      }}
-                      placeholder="Description"
-                      invalid={errors.description && true}
-                      {...field}
-                    />
+              <Col xl="4">
+                <div className="mb-1 mt-1">
+                  <Label className="form-label" for="login-email">
+                    Department Code
+                  </Label>
+                  <Controller
+                    name="code"
+                    rules={{ required: "Department Code is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                        }}
+                        placeholder="Department Code"
+                        invalid={errors.code && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.code && (
+                    <span style={{ color: "red" }}>
+                      {errors.code.message as React.ReactNode}
+                    </span>
                   )}
-                />
+                </div>
+              </Col>
+
+              <Col xl="4">
+                <div className="mb-1 mt-1">
+                  <Label className="form-label" for="login-email">
+                    Description
+                  </Label>
+                  <Controller
+                    name="description"
+                    rules={{ required: "Description is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                          height: "81px",
+                        }}
+                        placeholder="Description"
+                        type="textarea"
+                        invalid={errors.description && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.description && (
+                    <span style={{ color: "red" }}>
+                      {errors.description.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
               </Col>
 
               <div className="d-flex flex-column mt-1">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                >
+                <Label className="text-black" style={{ fontWeight: "400" }}>
                   Status{" "}
                 </Label>
                 <div className="d-flex gap-1">
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="active"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-active"
-                          name="ex1"
-                          defaultChecked={departmentsData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(true);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      className="custom-radio-input"
+                      type="radio"
+                      id="ex1-active"
+                      name="ex1"
+                      onChange={() => {
+                        setActiveStatus(true);
+                      }}
+                    />
                     <div>Active</div>
                   </div>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="inactive"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1"
-                          id="ex1-inactive"
-                          defaultChecked={!departmentsData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(false);
-                          }}
-                        />
-                      )}
-                    />{" "}
+                    <input
+                      type="radio"
+                      name="ex1"
+                      id="ex1-inactive"
+                      onChange={() => {
+                        setActiveStatus(false);
+                      }}
+                    />
                     <div>In-Active</div>
                   </div>
                 </div>
               </div>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+        
   );
 }
 

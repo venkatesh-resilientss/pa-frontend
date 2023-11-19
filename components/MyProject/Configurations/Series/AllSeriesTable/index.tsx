@@ -24,7 +24,10 @@ import { SeriesService } from "services";
 import moment from "moment";
 import useSWR from "swr";
 import { useDispatch } from "react-redux";
-import { openDeleteSeriesPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadSeriesPopup,
+  openDeleteSeriesPopup,
+} from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -238,9 +241,8 @@ const AllSeriesTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+    
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -269,12 +271,15 @@ const AllSeriesTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadSeriesPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -319,8 +324,7 @@ const AllSeriesTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -331,8 +335,7 @@ const AllSeriesTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+     
   );
 };
 

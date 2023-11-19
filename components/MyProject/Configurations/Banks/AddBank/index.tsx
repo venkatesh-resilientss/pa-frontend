@@ -23,9 +23,10 @@ function AddBank() {
     let backendFormat;
 
     backendFormat = {
-      code: data.taxcode,
       description: data.description,
       is_active: activeStatus,
+      name: data.bankName,
+      location: data.location,
     };
 
     BankService.create(backendFormat)
@@ -39,7 +40,7 @@ function AddBank() {
       });
   };
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div  className="overflow-auto">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -95,10 +96,29 @@ function AddBank() {
           >
             Bank Name
           </Label>
-          <Input
-            style={{ fontSize: "12px", fontWeight: "400" }}
-            placeholder="Bank Name"
+
+          <Controller
+            name="bankName"
+            control={control}
+            rules={{ required: "Bank Name is required" }}
+            render={({ field }) => (
+              <Input
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                }}
+                placeholder="Bank Name"
+                {...register}
+                invalid={errors.bankName && true}
+                {...field}
+              />
+            )}
           />
+          {errors.bankName && (
+            <span style={{ color: "red" }}>
+              {errors.bankName.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="4">
@@ -108,15 +128,29 @@ function AddBank() {
           >
             Description
           </Label>
-          <Input
-            style={{
-              fontSize: "12px",
-              fontWeight: "400",
-              height: "81px",
-            }}
-            type="textarea"
-            placeholder=" Description"
+          <Controller
+            name="description"
+            rules={{ required: "Description  is required" }}
+            control={control}
+            render={({ field }) => (
+              <Input
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  height: "81px",
+                }}
+                placeholder="Description"
+                type="textarea"
+                invalid={errors.description && true}
+                {...field}
+              />
+            )}
           />
+          {errors.description && (
+            <span style={{ color: "red" }}>
+              {errors.description.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="4">
@@ -126,10 +160,28 @@ function AddBank() {
           >
             Location
           </Label>
-          <Input
-            style={{ fontSize: "12px", fontWeight: "400" }}
-            placeholder="Location"
+          <Controller
+            name="location"
+            control={control}
+            rules={{ required: "Location is required" }}
+            render={({ field }) => (
+              <Input
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                }}
+                placeholder="Location"
+                {...register}
+                invalid={errors.location && true}
+                {...field}
+              />
+            )}
           />
+          {errors.location && (
+            <span style={{ color: "red" }}>
+              {errors.location.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <div className="d-flex flex-column mt-1">

@@ -31,7 +31,7 @@ function EditBank() {
   useEffect(() => {
     if (!bankData) return;
 
-    bankData?.Code && setValue("taxcode", bankData?.Code);
+    bankData?.Code && setValue("bankName", bankData?.Code);
 
     bankData?.Description && setValue("description", bankData?.Description);
   }),
@@ -67,7 +67,7 @@ function EditBank() {
   };
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -113,9 +113,9 @@ function EditBank() {
       <hr style={{ height: "2px" }} />
 
       <Form
-        onSubmit={handleSubmit(onSubmit)}
         style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
         className=" mt-2 d-flex flex-column"
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Col xl="4">
           <Label
@@ -124,18 +124,28 @@ function EditBank() {
           >
             Bank Name
           </Label>
+
           <Controller
-            name="name"
+            name="bankName"
             control={control}
+            rules={{ required: "Bank Name is required" }}
             render={({ field }) => (
               <Input
-                style={{ fontSize: "12px", fontWeight: "400" }}
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                }}
                 placeholder="Bank Name"
-                invalid={errors.name && true}
+                invalid={errors.bankName && true}
                 {...field}
               />
             )}
           />
+          {errors.bankName && (
+            <span style={{ color: "red" }}>
+              {errors.bankName.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <Col xl="4">
@@ -147,21 +157,27 @@ function EditBank() {
           </Label>
           <Controller
             name="description"
+            rules={{ required: "Description  is required" }}
             control={control}
             render={({ field }) => (
               <Input
-                type="textarea"
                 style={{
                   fontSize: "12px",
                   fontWeight: "400",
                   height: "81px",
                 }}
                 placeholder="Description"
+                type="textarea"
                 invalid={errors.description && true}
                 {...field}
               />
             )}
           />
+          {errors.description && (
+            <span style={{ color: "red" }}>
+              {errors.description.message as React.ReactNode}
+            </span>
+          )}
         </Col>
 
         <div className="d-flex flex-column mt-1">
@@ -173,41 +189,11 @@ function EditBank() {
           </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <Controller
-                name="active"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    defaultChecked={bankData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(true);
-                    }}
-                  />
-                )}
-              />
+              <input type="radio" />
               <div>Active</div>
             </div>
             <div className="d-flex gap-1">
-              <Controller
-                name="inactive"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    defaultChecked={!bankData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(false);
-                    }}
-                  />
-                )}
-              />{" "}
+              <input type="radio" />
               <div>In-Active</div>
             </div>
           </div>

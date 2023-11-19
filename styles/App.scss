@@ -220,7 +220,20 @@ font-weight: 300 !important;
 
 input.search {
   width: 260px;
-    height: "38px" !important;
+  height: "38px";
+  display: block;
+  padding: 9px 4px 9px 40px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+  border-radius: 10.141px;
+  border: 2.535px solid #ECECEC;
+  margin-right: 10px;
+
+}
+
+input.searchConfig {
+  width: 260px;
+    height: "38px";
   display: block;
   padding: 9px 4px 9px 40px;
   background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;

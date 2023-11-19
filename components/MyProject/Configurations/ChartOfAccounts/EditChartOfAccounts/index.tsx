@@ -33,12 +33,12 @@ function EditChartOfAccounts() {
   useEffect(() => {
     if (!coaData) return;
 
-    coaData?.Name && setValue("name", coaData?.Name);
-    coaData?.Code && setValue("code", coaData?.Code);
+    coaData?.Name && setValue("COAName", coaData?.Name);
+    coaData?.Code && setValue("COACode", coaData?.Code);
 
-    coaData?.Description && setValue("description", coaData?.Description);
-    coaData?.Type && setValue("accountType", coaData?.Type);
-    coaData?.Parent && setValue("parent", coaData?.Parent);
+    coaData?.Description && setValue("Description", coaData?.Description);
+    coaData?.Type && setValue("AccountType", coaData?.Type);
+    coaData?.Parent && setValue("COAParent", coaData?.Parent);
   }),
     [coaData];
 
@@ -55,12 +55,12 @@ function EditChartOfAccounts() {
     let backendFormat;
 
     backendFormat = {
-      name: data.name,
-      description: data.description,
+      name: data.COAName,
+      description: data.Description,
       is_active: activeStatus,
-      code: data.code,
-      parent: data.parent,
-      accountType: data.accountType,
+      code: data.COACode,
+      parent: data.COAParent,
+      accountType: data.AccountType,
       postable: postable,
     };
 
@@ -78,10 +78,8 @@ function EditChartOfAccounts() {
   };
 
   return (
-    <div className="container mt-2">
-      <div className="row">
-        <div className="col-md-12">
-          <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+  
+          <div className="mt-4">
             <div
               className="text-black"
               style={{ fontSize: "16px", fontWeight: "600" }}
@@ -97,28 +95,10 @@ function EditChartOfAccounts() {
                 Edit Chart Of Accounts
               </div>
               <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                <Button
-                  onClick={() => router.back()}
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                    backgroundColor: "transparent",
-                    color: "#2D2C2C",
-                    border: "none",
-                  }}
-                >
-                  Dismiss
-                </Button>
+                          <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
                 <Button
                   onClick={handleSubmit(onSubmit)}
-                  color="primary"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    height: "34px",
-                  }}
-                >
+                  color="primary" className="px-4">
                   Edit
                 </Button>
               </div>
@@ -126,193 +106,188 @@ function EditChartOfAccounts() {
 
             <hr style={{ height: "2px" }} />
             <Form
-              onSubmit={handleSubmit(onSubmit)}
               style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
               className=" mt-2 d-flex flex-column"
+              onSubmit={handleSubmit(onSubmit)}
             >
+              {" "}
               <Col xl="4">
-                <Label className="text-black">COA Name</Label>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="COA Name"
-                      invalid={errors.name && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label>COA Name</Label>
+                  <Controller
+                    name="COAName"
+                    rules={{ required: "COA Name  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="COA Name"
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        invalid={errors.COAName && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.COAName && (
+                    <span style={{ color: "red" }}>
+                      {errors.COAName.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
-              </Col>
-
-              <Col xl="4">
-                <Label className="text-black">COA Code</Label>
-                <Controller
-                  name="code"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="COA Code"
-                      invalid={errors.code && true}
-                      {...field}
-                    />
-                  )}
-                />{" "}
+                </div>
               </Col>
               <Col xl="4">
-                <Label className="text-black">COA Parent</Label>
-                <Controller
-                  name="parent"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="COA Parent"
-                      invalid={errors.parent && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label>COA Code</Label>
+                  <Controller
+                    name="COACode"
+                    rules={{ required: "COA Code  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="COA Code"
+                        invalid={errors.COACode && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.COACode && (
+                    <span style={{ color: "red" }}>
+                      {errors.COACode.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
               <Col xl="4">
-                <Label className="text-black">Account Type</Label>
-                <Controller
-                  name="accountType"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Account Type"
-                      invalid={errors.accountType && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label>COA Parent</Label>
+                  <Controller
+                    name="COAParent"
+                    control={control}
+                    rules={{ required: "COA Parent  is required" }}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="COA Parent"
+                        invalid={errors.COAParent && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.COAParent && (
+                    <span style={{ color: "red" }}>
+                      {errors.COAParent.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
-
               <Col xl="4">
-                <Label className="text-black">Description</Label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      type="textarea"
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "400",
-                        height: "81px",
-                      }}
-                      placeholder="Description"
-                      invalid={errors.description && true}
-                      {...field}
-                    />
+                <div className="mb-1">
+                  <Label> Account Type</Label>
+                  <Controller
+                    name="AccountType"
+                    rules={{ required: "Account Type Name  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        placeholder="AccountType"
+                        invalid={errors.AccountType && true}
+                        style={{ fontSize: "12px", fontWeight: "400" }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.AccountType && (
+                    <span style={{ color: "red" }}>
+                      {errors.AccountType.message as React.ReactNode}
+                    </span>
                   )}
-                />{" "}
+                </div>
               </Col>
-
-              <div className="d-flex flex-column mt-1">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                >
-                  Postable
-                </Label>
-                <div className="d-flex gap-1">
+              <Col xl="4">
+                <div className="mb-1">
+                  <Label> Description</Label>
+                  <Controller
+                    name="Description"
+                    rules={{ required: "Description  is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="textarea"
+                        placeholder="Description"
+                        invalid={errors.Description && true}
+                        style={{
+                          fontSize: "12px",
+                          fontWeight: "400",
+                          height: "81px",
+                        }}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.Description && (
+                    <span style={{ color: "red" }}>
+                      {errors.Description.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
+              </Col>
+              <Col xl="4">
+                <div className="d-flex flex-column mt-1">
+                  <Label
+                    className="text-black"
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                  >
+                    Postable{" "}
+                  </Label>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="yes"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-yes"
-                          name="ex1-yes"
-                          onChange={() => {
-                            setPostable(true);
-                          }}
-                        />
-                      )}
-                    />{" "}
-                    <div>Yes</div>
-                  </div>
-                  <div className="d-flex gap-1">
-                    <Controller
-                      name="no"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1-yes"
-                          id="ex1-no"
-                          onChange={() => {
-                            setPostable(false);
-                          }}
-                        />
-                      )}
-                    />{" "}
-                    <div>No</div>
+                    <div className="d-flex gap-1">
+                      <input
+                        type="radio"
+                        id="ex1-active"
+                        name="ex1"
+                        onChange={() => {
+                          setActiveStatus(true);
+                        }}
+                      />
+                      <div>Yes</div>
+                    </div>
+                    <div className="d-flex gap-1">
+                      <input
+                        type="radio"
+                        id="ex1-active"
+                        name="ex1"
+                        onChange={() => {
+                          setActiveStatus(false);
+                        }}
+                      />
+                      <div>No</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="d-flex flex-column mt-1">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                >
-                  Status{" "}
-                </Label>
-                <div className="d-flex gap-1">
+              </Col>
+              <Col>
+                <div className="d-flex flex-column mt-1">
+                  <Label
+                    className="text-black"
+                    style={{ fontSize: "12x", fontWeight: "400" }}
+                  >
+                    Status{" "}
+                  </Label>
                   <div className="d-flex gap-1">
-                    <Controller
-                      name="active"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          id="ex1-active"
-                          name="ex1"
-                          defaultChecked={coaData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(true);
-                          }}
-                        />
-                      )}
-                    />{" "}
-                    <div>Active</div>
-                  </div>
-                  <div className="d-flex gap-1">
-                    <Controller
-                      name="inactive"
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          type="radio"
-                          name="ex1"
-                          id="ex1-inactive"
-                          defaultChecked={!coaData?.IsActive}
-                          onChange={() => {
-                            setActiveStatus(false);
-                          }}
-                        />
-                      )}
-                    />{" "}
-                    <div>In-Active</div>
+                    <div className="d-flex gap-1">
+                      <input type="radio" />
+                      <div>Active</div>
+                    </div>
+                    <div className="d-flex gap-1">
+                      <input type="radio" />
+                      <div>In-Active</div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Col>
             </Form>
           </div>
-        </div>
-      </div>
-    </div>
+     
   );
 }
 

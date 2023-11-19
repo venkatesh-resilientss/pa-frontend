@@ -26,12 +26,6 @@ const schema = yup.object().shape({
   tenant: yup.string().min(3).required(),
 });
 
-const defaultValues = {
-  password: "admin",
-  email: "admin@vuexy.com",
-  tenant: "tenant",
-};
-
 interface FormData {
   email: string;
   password: string;
@@ -56,7 +50,6 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues,
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
@@ -211,7 +204,7 @@ const LoginPage = () => {
                           <Controller
                             name="email"
                             control={control}
-                            rules={{ required: "email is required" }}
+                            rules={{ required: "Email is required" }}
                             render={({ field }) => (
                               <input
                                 {...field}
@@ -231,6 +224,12 @@ const LoginPage = () => {
                               />
                             )}
                           />
+
+                          {errors.email && (
+                            <span style={{ color: "red" }}>
+                              {errors.email.message as React.ReactNode}
+                            </span>
+                          )}
                         </div>
                         <div
                           className="font-Segoe-UI text-41 font-normal leading-54 tracking-0 text-left mt-3 p-2"

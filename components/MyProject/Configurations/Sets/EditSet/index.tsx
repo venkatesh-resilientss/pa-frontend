@@ -33,7 +33,9 @@ function EditSet() {
   useEffect(() => {
     if (!setData) return;
 
-    setData?.Name && setValue("name", setData?.Name);
+    setData?.Name && setValue("setname", setData?.Name);
+    setData?.Code && setValue("setcode", setData?.Code);
+
     setData?.Description && setValue("description", setData?.Description);
   }),
     [setData];
@@ -71,7 +73,7 @@ function EditSet() {
   };
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div  className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -88,27 +90,11 @@ function EditSet() {
         </div>
 
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
-            onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
-          >
-            Dismiss
-          </Button>
+            <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
           <Button
             onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
+            color="primary" className="px-4 p-2"
+           
           >
             Edit
           </Button>
@@ -117,78 +103,89 @@ function EditSet() {
 
       <hr style={{ height: "2px" }} />
       <Form
-        onSubmit={handleSubmit(onSubmit)}
         style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
         className=" mt-2 d-flex flex-column"
+        onSubmit={handleSubmit(onSubmit)}
       >
+        {" "}
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Set Name
-          </Label>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <Input
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                placeholder="State Name"
-                invalid={errors.name && true}
-                {...field}
-              />
+          <div className="mb-1">
+            <Label>Set Name</Label>
+            <Controller
+              name="setname"
+              rules={{ required: "Set Name is required" }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Set Name"
+                  invalid={errors.departmenname && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.setname && (
+              <span style={{ color: "red" }}>
+                {errors.setname.message as React.ReactNode}
+              </span>
             )}
-          />{" "}
+          </div>
         </Col>
-
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Set ID
-          </Label>
-          <Controller
-            name="setId"
-            control={control}
-            render={({ field }) => (
-              <Input
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                placeholder="Set Id"
-                invalid={errors.setId && true}
-                {...field}
-              />
+          <div className="mb-1">
+            <Label className="form-label" for="login-email">
+              Set Code
+            </Label>
+            <Controller
+              name="setcode"
+              rules={{ required: "Set Code is required" }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  placeholder="Set Code"
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  invalid={errors.setcode && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.setcode && (
+              <span style={{ color: "red" }}>
+                {errors.setcode.message as React.ReactNode}
+              </span>
             )}
-          />{" "}
+          </div>
         </Col>
-
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Description
-          </Label>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <Input
-                type="textarea"
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "400",
-                  height: "81px",
-                }}
-                placeholder="Description"
-                invalid={errors.description && true}
-                {...field}
-              />
+          <div className="mb-1">
+            <Label className="form-label" for="login-email">
+              Description
+            </Label>
+            <Controller
+              name="description"
+              rules={{ required: "Description is required" }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{
+                    fontSize: "12px",
+                    fontWeight: "400",
+                    height: "81px",
+                  }}
+                  placeholder="Description"
+                  type="textarea"
+                  invalid={errors.description && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.description && (
+              <span style={{ color: "red" }}>
+                {errors.description.message as React.ReactNode}
+              </span>
             )}
-          />{" "}
+          </div>
         </Col>
-
         <div className="d-flex flex-column mt-1">
           <Label
             className="text-black"
@@ -198,41 +195,16 @@ function EditSet() {
           </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <Controller
-                name="active"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    defaultChecked={setData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(true);
-                    }}
-                  />
-                )}
-              />{" "}
+              <input type="radio" id="ex1-active" name="ex1" value="active" />
               <div>Active</div>
             </div>
             <div className="d-flex gap-1">
-              <Controller
-                name="inactive"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    defaultChecked={!setData?.IsActive}
-                    onChange={() => {
-                      setActiveStatus(false);
-                    }}
-                  />
-                )}
-              />{" "}
+              <input
+                type="radio"
+                name="ex1"
+                id="ex1-inactive"
+                value="inactive"
+              />
               <div>In-Active</div>
             </div>
           </div>

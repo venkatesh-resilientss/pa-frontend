@@ -2,7 +2,7 @@ import Dashboard from "components/MyProject/Dashboard";
 
 function index() {
   return (
-    <div style={{paddingRight : '45px'}}>
+    <div>
       <Dashboard />
     </div>
   );

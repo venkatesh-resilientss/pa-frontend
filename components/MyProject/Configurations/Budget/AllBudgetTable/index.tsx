@@ -21,7 +21,11 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import useSWR from "swr";
 import moment from "moment";
-import { openDeleteBanksPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadBudgetsPopup,
+  openDeleteBanksPopup,
+  openDeleteBudgetPopup,
+} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import { useState } from "react";
@@ -105,7 +109,7 @@ const AllBudgetTable = () => {
             <DropdownItem
               tag="a"
               className="w-100"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => dispatch(openDeleteBudgetPopup(props.data.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
@@ -252,9 +256,8 @@ const AllBudgetTable = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
+      
+          <div className="section">
             <Card
               className="mt-2"
               style={{
@@ -283,12 +286,15 @@ const AllBudgetTable = () => {
 
                     <Input
                       type="search"
-                      className="search"
+                      className="searchConfig"
                       placeholder="Search..."
                       style={{ width: "217px", height: "38px" }}
                     />
 
                     <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadBudgetsPopup("upload"))
+                      }
                       style={{
                         height: "38px",
                         backgroundColor: "#E7EFFF",
@@ -333,8 +339,7 @@ const AllBudgetTable = () => {
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4}
-              />
+                pageSize={4} searchText={undefined}              />
             </div>
           ) : (
             <div>
@@ -344,8 +349,7 @@ const AllBudgetTable = () => {
               />
             </div>
           )}
-        </div>
-      </div>
+       
     </div>
   );
 };
