@@ -173,7 +173,7 @@ const BanksBulkUploadPopup = () => {
               border: "none",
             }}
           >
-            Upload
+            Uploadss
           </Button>
         </div>
       </ModalBody>

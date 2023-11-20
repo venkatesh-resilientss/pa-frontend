@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {CREATE_CURRENCIES, CURRENCY_DETAIL_ENDPOINT, DELETE_CURRENCIES, EDIT_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES} from '../lib/endpoints';
+  import {CREATE_CURRENCIES, CURRENCY_DETAIL_ENDPOINT, DELETE_CURRENCIES, EDIT_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES,UPLOAD_CURRENCIES_LIST} from '../lib/endpoints';
 
   class CurrencyService extends APIService {
     getCurrencies(): Promise<any> {
@@ -33,6 +33,29 @@
         .catch((error) => {
           throw error.response.data;
         });
+    }
+
+      static uploadcurrencylist(fileName: any) {
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the file name to the FormData object with the specified field name
+      formData.append("file", fileName);
+
+      return axios.post(UPLOAD_CURRENCIES_LIST, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Upload failed", error);
+        // Log the entire error response
+        console.log("Error Response:", error.response);
+        throw error.response.data;
+      });
     }
 
     static delete(id: any) {

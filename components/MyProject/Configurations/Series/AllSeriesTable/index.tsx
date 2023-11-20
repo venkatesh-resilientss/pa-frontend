@@ -33,19 +33,21 @@ import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { hasPermission } from "commonFunctions/functions";
 
 const AllSeriesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const seriesService = new SeriesService();
 
   const {
     data: seriesData,
-    isLoading: userLoading,
+    isLoading: seriesLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_SERIES", () => seriesService.getSeries());
+  } = useSWR(["LIST_SERIES", searchText], () => seriesService.getSeries());
 
   const dataSource = seriesData?.data;
 
@@ -241,101 +243,140 @@ const AllSeriesTable = () => {
 
   return (
     <div>
-    
-          <div className="section">
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Series
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {seriesData?.data.length} Series
-                    </div>
-
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() =>
-                        dispatch(openBulkUploadSeriesPopup("upload"))
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Bulk Upload
-                    </Button>
-
-                    <Button
-                      onClick={() => router.push(`/configurations/add-series`)}
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#00AEEF",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        border: "none",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusWhiteIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Add Series
-                    </Button>
-                  </div>
+      <div className="section mt-4">
+        <Card
+          className="mt-2"
+          style={{
+            backgroundColor: "#E7EFFF",
+            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <CardBody>
+            <div className="d-flex justify-content-between">
+              <div>
+                <div
+                  className="m-2"
+                  style={{ fontSize: "16px", fontWeight: "600" }}
+                >
+                  All Series
                 </div>
-              </CardBody>
-            </Card>
-          </div>
+              </div>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  {seriesData?.data.length} Series
+                </div>
+
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+
+                <Button
+                  onClick={() => dispatch(openBulkUploadSeriesPopup("upload"))}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#E7EFFF",
+                    color: "#4C4C61",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    borderColor: "#4C4C61",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Bulk Upload
+                </Button>
+
+                {/* <Button
+                  onClick={() => router.push(`/configurations/add-series`)}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#00AEEF",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusWhiteIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Add Series
+                </Button> */}
+                {hasPermission(
+                  "configuration_management",
+                  "create_configuration"
+                ) && (
+                  <Button
+                    onClick={() => router.push(`/configurations/add-series`)}
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Add Series
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      {seriesLoading ? (
+        <div className="mt-2">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
           {dataSource?.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}              />
+                pageSize={10}
+                searchText={searchText}
+              />
             </div>
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create Series"}
+                // buttonName={"Add Series"}
+                buttonName={
+                  hasPermission("configuration_management", "create_configuration")
+                    ? "Create Series"
+                    : ""
+                }
                 buttonLink={"/configurations/add-series"}
               />
             </div>
           )}
-        </div>
-     
+        </>
+      )}
+    </div>
   );
 };
 

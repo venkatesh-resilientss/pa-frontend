@@ -13,99 +13,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ClientsService, RoleService, ProjectService } from "services";
 import { toast } from "react-toastify";
-
-const permissionSetData = {
-  "Client Management": {
-    state: false,
-    permissions: {
-      "Create Client": { state: false },
-      "Edit Client": { state: false },
-      "Deactivate Client": { state: false },
-    },
-  },
-  "Production Management": {
-    state: false,
-    permissions: {
-      "Create Production": { state: false },
-      "Edit Production": { state: false },
-      "Deactivate Production": { state: false },
-    },
-  },
-  "Configuration Management": {
-    state: false,
-    permissions: {
-      "Create Configuration": { state: false },
-      "Edit Configuration": { state: false },
-      "Deactivate Configuration": { state: false },
-    },
-  },
-  "User & Role Management": {
-    state: false,
-    permissions: {
-      "Create User": { state: false },
-      "Edit User": { state: false },
-      "Deactivate User": { state: false },
-      "Create Role": { state: false },
-      "Edit Role": { state: false },
-      "Deactivate Role": { state: false },
-    },
-  },
-  "Transaction Management": {
-    state: false,
-    permissions: {
-      "Create Purchase Order": { state: false },
-      "Edit Purchase Order": { state: false },
-      "View Purchase Order List": { state: false },
-      "Approve or Reject Purchase Order": { state: false },
-      "Create Account Pay": { state: false },
-      "Edit Account Pay": { state: false },
-      "View Account Pay List": { state: false },
-      "Approve or Reject Account Pay": { state: false },
-      "Create Journal Entry": { state: false },
-      "Edit Journal Entry": { state: false },
-      "View Journal Entry List": { state: false },
-      "Create Petty Cash": { state: false },
-      "Edit Petty Cash": { state: false },
-      "View Petty Cash List": { state: false },
-      "Approve or Reject Petty Cash": { state: false },
-      "Create Payroll": { state: false },
-      "Edit Payroll": { state: false },
-      "View Payroll List": { state: false },
-      "Approve or Reject Payroll": { state: false },
-    },
-  },
-  "Payments Management": {
-    state: false,
-    permissions: {
-      "View All Payments": { state: false },
-      "Check Signature Access": { state: false },
-      "Check Payment Processing": { state: false },
-      "EFT Payment Processing": { state: false },
-      "Wire Payment Processing": { state: false },
-      "Manual Check Processing": { state: false },
-      "Approve or Reject Payment": { state: false },
-    },
-  },
-  "Reports Management": {
-    state: false,
-    permissions: {
-      "Trail Balance": { state: false },
-      "General Ledger Reporting": { state: false },
-      "Cost Report": { state: false },
-      "Purchase Order Reporting": { state: false },
-      "Check Register": { state: false },
-      "Vendor Reporting": { state: false },
-      "Vendor Listing": { state: false },
-      "Chart of Accounts": { state: false },
-      "Asset Report": { state: false },
-      "Audit Report by Transaction": { state: false },
-      "Audit Report by Account": { state: false },
-      "Posting Report by Transaction": { state: false },
-      "Posting Report by Account": { state: false },
-      "Bank Reconciliation Report": { state: false },
-    },
-  },
-};
+import { roleCreationData } from "constants/common";
 
 const roleservice = new RoleService();
 function AddRole() {
@@ -113,10 +21,10 @@ function AddRole() {
 
   const [restricted, setRestricted] = useState(false);
   const [role_name, setRole_name] = useState("");
-  const [role_id, setRole_id] = useState("");
-  const [permissionSet, setPermissionSet]: any = useState(permissionSetData);
+  const [role_id, setRole_id] = useState();
+  const [viewmode, setViewmode] = useState(false);
+  const [permissionSet, setPermissionSet]: any = useState(roleCreationData);
 
-  
   const handlePermissionChange = (category, permission, newValue) => {
     setPermissionSet((prevPermissionSet) => {
       const updatedPermissionSet = { ...prevPermissionSet };
@@ -134,48 +42,165 @@ function AddRole() {
     });
   };
 
-  const convertToPayload = (permissionSet) => {
-    const payload = {};
+  useEffect(() => {
+    if (router.query.q === "view_role") {
+      setViewmode(true);
+    } else {
+      setViewmode(false);
+    }
+    if (router.query.q === "edit_role" || router.query.q === "view_role") {
+      roleservice
+        .getrole_by_id(router.query.role_id)
+        .then((res) => {
+          console.log("res", res);
+          setRole_name(res.RoleName);
+          setRole_id(res.RoleId);
 
-    Object.entries(permissionSet).forEach(
-      ([category, { state, permissions }]: any) => {
-        const formattedCategory = category.replace(/\s/g, ""); // Remove spaces from category names
-        payload[formattedCategory] = {};
-
-        Object.entries(permissions).forEach(([permission, { state }]: any) => {
-          const formattedPermission = permission.replace(/\s/g, ""); // Remove spaces from permission names
-          payload[formattedCategory][formattedPermission] = state;
+          if (res.AccessType === "full_access") {
+            setRestricted(false);
+          } else setRestricted(true);
+          if (res.Permissions) {
+            const apiPermissions = res.Permissions;
+            setPermissionSet((prevPermissionSet) => {
+              const updatedPermissionSet = { ...prevPermissionSet };
+              // Iterate over each category
+              Object.entries(updatedPermissionSet).forEach(
+                ([category, value]: any) => {
+                  // Update category state
+                  updatedPermissionSet[category].state =
+                    apiPermissions[value.value]?.state || false;
+                  // Iterate over each permission in the category
+                  Object.entries(
+                    updatedPermissionSet[category].permissions
+                  ).forEach(([permission, valuess]: any) => {
+                    // Update permission state
+                    const apiPermission = apiPermissions[value.value];
+                    updatedPermissionSet[category].permissions[
+                      permission
+                    ].state = apiPermission[valuess.value] || false;
+                  });
+                }
+              );
+              return updatedPermissionSet;
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error, "error");
         });
-      }
-    );
+    }
+  }, [router]);
 
-    return payload;
-  };
+  useEffect(() => {
+    console.log("set pemissio klnnn", permissionSet);
+  }, [permissionSet]);
+  // const convertToPayload = (permissionSet) => {
+  //   const payload = {};
+
+  //   Object.entries(permissionSet).forEach(
+  //     ([category, { state, permissions }]: any) => {
+  //       const formattedCategory = category
+  //         .replace(/\s/g, "")
+  //         .replace("&", "And"); // Remove spaces from category names
+  //       payload[formattedCategory] = {};
+
+  //       Object.entries(permissions).forEach(([permission, { state }]: any) => {
+  //         const formattedPermission = permission.replace(/\s/g, ""); // Remove spaces from permission names
+  //         payload[formattedCategory][formattedPermission] = state;
+  //       });
+  //     }
+  //   );
+
+  //   return payload;
+  // };
+
+  function convertToNewFormat(oldPermissions: any) {
+    const newPermissions: any = {};
+
+    // Iterate through each role in the oldPermissions
+    for (const [roleName, roleData] of Object.entries<any>(oldPermissions)) {
+      // Set the state and value for the role
+      newPermissions[roleData.value] = {
+        state: roleData.state,
+        // permissions: {},
+      };
+
+      // Iterate through each permission in the role
+      for (const [permissionName, permissionData] of Object.entries<any>(
+        roleData.permissions
+      )) {
+        // Set the state for the permission
+        newPermissions[roleData.value][permissionData.value] =
+          permissionData.state;
+      }
+    }
+
+    return newPermissions;
+  }
 
   const resetData = () => {
-    setPermissionSet(permissionSetData);
-    setRole_id("");
+    setPermissionSet(roleCreationData);
+    setRole_id(null);
     setRole_name("");
     setRestricted(false);
   };
 
   const save_role = () => {
+    if (!role_name || !role_id) {
+      toast.error("Please enter roleId and role name");
+      return;
+    }
+    console.log(permissionSet, "permissionSet");
+    // return;
     let payload: any = {
       CreatedBy: 2,
       IsActive: true,
       RoleName: role_name,
-      RoleID: role_id,
-      Access: restricted ? "restricted" : "full_access",
+      RoleID: parseInt(role_id),
+      AccessType: restricted ? "restricted" : "full_access",
     };
     if (restricted) {
-      const convertedPayload = convertToPayload(permissionSet);
+      const convertedPayload = convertToNewFormat(permissionSet);
+      // const convertedPayload = convertToPayload(permissionSet);
       payload.permissions = convertedPayload;
+      console.log(convertedPayload, "permisssionsettttt");
     }
 
     roleservice
       .post_roles(payload)
       .then((res) => {
         toast.success("Role created successfully");
+        router.push("/settings/rolemanagement");
+        resetData();
+      })
+      .catch((error) => {
+        console.log(error, "error");
+      });
+  };
+  const updateRole = (roleId) => {
+    if (!role_name || !role_id) {
+      toast.error("Please enter roleId and role name");
+      return;
+    }
+    // return;
+    let payload: any = {
+      CreatedBy: 2,
+      IsActive: true,
+      RoleName: role_name,
+      RoleID: parseInt(role_id),
+      AccessType: restricted ? "restricted" : "full_access",
+    };
+    if (restricted) {
+      const convertedPayload = convertToNewFormat(permissionSet);
+      // const convertedPayload = convertToPayload(permissionSet);
+      payload.permissions = convertedPayload;
+      console.log(convertedPayload, "permisssionsettttt");
+    }
+
+    roleservice
+      .update_role(roleId, payload)
+      .then((res) => {
+        toast.success("Role updated successfully");
         router.push("/settings/rolemanagement");
         resetData();
       })
@@ -216,26 +241,70 @@ function AddRole() {
           className="text-black"
           style={{ fontSize: "25px", fontWeight: "600" }}
         >
-          Create New Role
+          {router.query.q === "create_role" ? "Create New Role" : "Edit role"}
         </div>
-        <div className="d-flex gap-1">
-          <Button
-            onClick={() => router.back()}
-            color="white"
-            size="sm"
-            className="px-3"
-          >
-            Dismiss
-          </Button>
-          <Button
-            size="sm"
-            color="primary"
-            className="px-3"
-            onClick={save_role}
-          >
-            Save
-          </Button>
-        </div>
+        {router.query.q === "view_role" ? (
+          <div className="d-flex gap-1">
+            <Button
+              onClick={() => router.back()}
+              color="white"
+              size="sm"
+              className="px-3"
+            >
+              Back
+            </Button>
+            <Button
+              size="sm"
+              color="primary"
+              className="px-3"
+              onClick={() =>
+                router.push(
+                  `/settings/roles?q=edit_role&role_id=${router.query.role_id}`
+                )
+              }
+            >
+              Edit
+            </Button>
+          </div>
+        ) : router.query.q === "edit_role" ? (
+          <div className="d-flex gap-1">
+            <Button
+              onClick={() => router.back()}
+              color="white"
+              size="sm"
+              className="px-3"
+            >
+              Back
+            </Button>
+            <Button
+              size="sm"
+              color="primary"
+              className="px-3"
+              onClick={() => updateRole(router.query.role_id)}
+            >
+              Update
+            </Button>
+          </div>
+        ) : (
+          <div className="d-flex gap-1">
+            <Button
+              onClick={() => router.back()}
+              color="white"
+              size="sm"
+              className="px-3"
+            >
+              Dismiss
+            </Button>
+            <Button
+              size="sm"
+              color="primary"
+              className="px-3"
+              onClick={save_role}
+            >
+              Save
+            </Button>
+          </div>
+        )}
       </div>
 
       <hr style={{ height: "2px" }} />
@@ -249,8 +318,9 @@ function AddRole() {
                 <Input
                   id="exampleEmail"
                   name="email"
+                  disabled={viewmode}
                   placeholder="Enter Role Name"
-                  type="email"
+                  type="text"
                   value={role_name}
                   onChange={(e) => {
                     setRole_name(e.target.value);
@@ -264,10 +334,11 @@ function AddRole() {
                 <Input
                   id="examplePassword"
                   name="password"
+                  disabled={viewmode}
                   placeholder="Enter Role Id"
-                  type="password"
+                  type="text"
                   value={role_id}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     setRole_id(e.target.value);
                   }}
                 />
@@ -290,6 +361,7 @@ function AddRole() {
               type="radio"
               id="ex1-active"
               name="ex1"
+              disabled={viewmode}
               checked={!restricted}
               onChange={() => {
                 setRestricted(false);
@@ -302,6 +374,7 @@ function AddRole() {
               type="radio"
               name="ex1"
               id="ex1-inactive"
+              disabled={viewmode}
               checked={restricted}
               onChange={() => setRestricted(true)}
             />
@@ -330,6 +403,7 @@ function AddRole() {
                   value={value}
                   handlePermissionChange={handlePermissionChange}
                   handleCategoryChange={handleCategoryChange}
+                  viewmode={viewmode}
                 />
               );
             })}
@@ -347,6 +421,7 @@ const CustomPermissions = ({
   value,
   handlePermissionChange,
   handleCategoryChange,
+  viewmode,
 }) => {
   const toggleCategoryState = (e) => {
     const newValue = e.target.checked;
@@ -366,6 +441,7 @@ const CustomPermissions = ({
         <Input
           type="checkbox"
           checked={value.state}
+          disabled={viewmode}
           onChange={toggleCategoryState}
         />
         <div className="fw-bold">{keys}</div>
@@ -383,6 +459,7 @@ const CustomPermissions = ({
                 <Input
                   type="checkbox"
                   checked={v.state}
+                  disabled={viewmode}
                   onChange={() => handlePermissionChange(keys, k, !v.state)}
                 />
               </div>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import APIService from './api.service';
-import {CREATE_TAXCODES, DELETE_TAXCODES, EDIT_TAXCODES, GET_TAXCODES, TAXCODES_DETAIL_ENDPOINT} from '../lib/endpoints';
+import {CREATE_TAXCODES, DELETE_TAXCODES, EDIT_TAXCODES, GET_TAXCODES, TAXCODES_DETAIL_ENDPOINT,UPLOAD_TAX_CODE_LIST} from '../lib/endpoints';
 
 class TaxCodesService extends APIService {
   getTaxCodes(): Promise<any> {
@@ -23,6 +23,29 @@ class TaxCodesService extends APIService {
         throw error.response.data;
       });
   }
+
+    static uploadtaxcodeslist(fileName: any) {
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the file name to the FormData object with the specified field name
+      formData.append("file", fileName);
+
+      return axios.post(UPLOAD_TAX_CODE_LIST, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Upload failed", error);
+        // Log the entire error response
+        console.log("Error Response:", error.response);
+        throw error.response.data;
+      });
+    }
 
   static delete(id: any) {
     return axios

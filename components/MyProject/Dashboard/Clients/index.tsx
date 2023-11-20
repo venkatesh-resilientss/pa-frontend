@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { DashboardService } from "services";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
+import { hasPermission } from "commonFunctions/functions";
 
 function Clients() {
   const router = useRouter();
@@ -32,7 +33,7 @@ function Clients() {
   }, []);
   // const {isLoading,clientsData} = {clientsData : {data : []},isLoading : true}
   return (
-    <div className="h-100 d-flex justify-content-between flex-column">
+    <div className="h-100 d-flex gap-2 flex-column">
       <div className="d-flex justify-content-between">
         <div
           style={{ fontSize: "16px", fontWeight: "600", color: "#030229" }}
@@ -42,7 +43,7 @@ function Clients() {
         </div>
 
         <div className="d-flex gap-1">
-          <Button
+          {/* <Button
             size="sm"
             color="info"
             style={{
@@ -56,11 +57,29 @@ function Clients() {
             onClick={() => router.push(`/clients/create-client`)}
           >
             <Users size={12} /> Create Client
-          </Button>
+          </Button> */}
+
+          {hasPermission("client_management", "create_client") && (
+            <Button
+              size="sm"
+              color="info"
+              style={{
+                fontSize: "14px",
+                color: "#FFFFFF",
+                backgroundColor: "#00AEEF",
+                margin: "4px",
+                padding: "5px",
+                width: "120px",
+              }}
+              onClick={() => router.push(`/clients/create-client`)}
+            >
+              <Users size={12} /> Create Client
+            </Button>
+          )}
         </div>
       </div>
 
-      <div className="mt-2 d-flex gap-3 flex-column">
+      <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
         {!isLoading &&
           clientsData.map((client, i) => {
             return (

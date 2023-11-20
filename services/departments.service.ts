@@ -5,7 +5,7 @@ import {
   DELETE_DEPARTMENTS,
   DEPARTMENT_DETAIL_ENDPOINT,
   EDIT_DEPARTMENTS,
-  GET_DEPARTMENTS,
+  GET_DEPARTMENTS,UPLOAD_DEPARTMENT_LIST
 } from "../lib/endpoints";
 
 class DepartmentsService extends APIService {
@@ -29,6 +29,30 @@ class DepartmentsService extends APIService {
         throw error.response.data;
       });
   }
+
+
+    static uploaddepartmentlist(fileName: any) {
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the file name to the FormData object with the specified field name
+      formData.append("file", fileName);
+
+      return axios.post(UPLOAD_DEPARTMENT_LIST, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Upload failed", error);
+        // Log the entire error response
+        console.log("Error Response:", error.response);
+        throw error.response.data;
+      });
+    }
 
   static details(id: any) {
     return axios

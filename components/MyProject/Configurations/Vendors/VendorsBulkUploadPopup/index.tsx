@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
 import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
-import { closeBulkUploadVendorsPopup } from "redux/slices/mySlices/configurations";
+import { VendorsService } from "services";
+import { closeBulkUploadVendorsPopup, closeDeleteVendorPopup } from "redux/slices/mySlices/configurations";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
@@ -27,15 +27,9 @@ const VendorsBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
+   
 
-    setUploadedFiles(fileData);
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -45,6 +39,37 @@ const VendorsBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+
+  const handleFileUpload = ()=>{
+    if (uploadedFiles.length === 0) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+
+    const fileName = uploadedFiles[0];
+
+    // Call the uploadbanklist function from your service with only the file name
+    VendorsService.upload(fileName)
+      .then((result) => {
+        // Handle success
+        toast.success("Data inserted successfully.");
+    
+        
+        dispatch(closeDeleteVendorPopup("close"));
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Upload failed", error);
+      
+        toast.error("Failed to insert data.");
+      });
+  }
+  
+
+  const handleDownload = ()=>{
+    const url = '/upload-sample-files/vendors_sample.csv';
+    window.open(url);
+  }
 
   return (
     <Modal
@@ -66,6 +91,7 @@ const VendorsBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -172,6 +198,7 @@ const VendorsBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            onClick={handleFileUpload}
           >
             Upload
           </Button>

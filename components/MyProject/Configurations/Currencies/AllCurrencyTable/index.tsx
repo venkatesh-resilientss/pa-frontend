@@ -23,6 +23,7 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
+import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadCurrenciesPopup,
   openDeleteCurrencyPopup,
@@ -36,6 +37,7 @@ import NoDataPage from "components/NoDataPage";
 
 const AllCurrencyTable = () => {
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const dispatch = useDispatch();
 
@@ -43,10 +45,12 @@ const AllCurrencyTable = () => {
 
   const {
     data: currencyData,
-    isLoading: userLoading,
+    isLoading: currenciesLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
+  } = useSWR(["LIST_CURRENCIES", searchText], () =>
+    currencyService.getCurrencies()
+  );
   console.log(currencyData, "currencyData");
   const dataSource = currencyData?.result;
 
@@ -120,7 +124,7 @@ const AllCurrencyTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={(e) =>
                 router.push(`/configurations/edit-currencies/${props.data?.ID}`)
               }
@@ -129,7 +133,7 @@ const AllCurrencyTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={(e) => dispatch(openDeleteCurrencyPopup(props.data.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
@@ -158,7 +162,7 @@ const AllCurrencyTable = () => {
     },
     {
       headerName: "Currencies Symbol",
-      field: "CurrenciesSymbol",
+      field: "CurrencySymbol",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -276,66 +280,85 @@ const AllCurrencyTable = () => {
   ];
 
   return (
-
     <>
-
       <div>
-      
-          <div className="section">
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Currencies
-                    </div>
+        <div className="section">
+          <Card
+            className="mt-2"
+            style={{
+              backgroundColor: "#E7EFFF",
+              boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <CardBody>
+              <div className="d-flex justify-content-between">
+                <div>
+                  <div
+                    className="m-2"
+                    style={{ fontSize: "16px", fontWeight: "600" }}
+                  >
+                    All Currencies
+                  </div>
+                </div>
+
+                <div
+                  className="d-flex align-items-center"
+                  style={{ gap: "10px" }}
+                >
+                  <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                    {currencyData?.result.length} Currencies
                   </div>
 
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
+                  <Input
+                    onChange={(e) => setSearchText(e.target.value)}
+                    type="search"
+                    className="searchConfig"
+                    placeholder="Search..."
+                    style={{ width: "217px", height: "38px" }}
+                  />
+
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadCurrenciesPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
                   >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {currencyData?.result.length} Currencies
-                    </div>
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
 
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() =>
-                        dispatch(openBulkUploadCurrenciesPopup("upload"))
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Bulk Upload
-                    </Button>
-
+                  {/* <Button
+                    onClick={() => router.push(`/configurations/add-currency`)}
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Add Currency
+                  </Button> */}
+                  {hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  ) && (
                     <Button
                       onClick={() =>
                         router.push(`/configurations/add-currency`)
@@ -355,32 +378,52 @@ const AllCurrencyTable = () => {
                       />{" "}
                       Add Currency
                     </Button>
-                  </div>
+                  )}
                 </div>
-              </CardBody>
-            </Card>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+        {currenciesLoading ? (
+          <div className="mt-2">
+            <GridTable
+              rowData={dataSource}
+              columnDefs={columnDefs}
+              pageSize={10}
+              searchText={searchText}
+            />
           </div>
-
-          {currencyData?.result.length > 0 ? (
-            <div className="mt-2">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}/>
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                buttonName={"Create Currency"}
-                buttonLink={"/configurations/add-currency"}
-              />
-            </div>
-          )}
-        
-    </div>
-    
+        ) : (
+          <>
+            {currencyData?.result.length > 0 ? (
+              <div className="mt-2">
+                <GridTable
+                  rowData={dataSource}
+                  columnDefs={columnDefs}
+                  pageSize={9}
+                  searchText={searchText}
+                />
+              </div>
+            ) : (
+              <div>
+                <NoDataPage
+                  // buttonName={"Create Currency"}
+                  buttonName={
+                      hasPermission(
+                        "configuration_management",
+                        "create_configuration"
+                      )
+                        ? "Create Currency"
+                        : "No button"
+                    }
+                  buttonLink={"/configurations/add-currency"}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </>
-    
   );
 };
 

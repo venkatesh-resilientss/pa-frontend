@@ -123,7 +123,7 @@ function AddBudget() {
     budgetService.getCompany()
   );
 
-  const companySelectFormat = budgetData?.data.map((b) => {
+  const companySelectFormat = budgetData?.map((b) => {
     return {
       value: b.id,
       label: b.Name,
@@ -187,10 +187,28 @@ function AddBudget() {
           Add New Budget
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-           <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
+          <Button
+            onClick={() => router.back()}
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              height: "34px",
+              backgroundColor: "transparent",
+              color: "#2D2C2C",
+              border: "none",
+            }}
+          >
+            Dismiss
+          </Button>
           <Button
             onClick={handleSubmit(onSubmit)}
-            color="primary" className="px-4 p-2">
+            color="primary"
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              height: "34px",
+            }}
+          >
             Save
           </Button>
         </div>
@@ -205,12 +223,7 @@ function AddBudget() {
       >
         {" "}
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Budget Name
-          </Label>
+          <Label className="form-lable-font">Budget Name</Label>
           <Controller
             name="name"
             control={control}
@@ -231,12 +244,7 @@ function AddBudget() {
           )}
         </Col>
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Budget Code
-          </Label>
+          <Label className="form-lable-font">Budget Code</Label>
           <Controller
             name="code"
             control={control}
@@ -259,12 +267,7 @@ function AddBudget() {
       </Form>
       <Row>
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Company
-          </Label>
+          <Label className="form-lable-font">Company</Label>
           <Controller
             name="company"
             control={control}
@@ -290,12 +293,7 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Production
-          </Label>
+          <Label className="form-lable-font">Production</Label>
           <Controller
             name={"production"}
             rules={{ required: "Production is required" }}
@@ -322,12 +320,7 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Currency
-          </Label>
+          <Label className="form-lable-font">Currency</Label>
           <Controller
             name={"currency"}
             rules={{ required: "Currency is required" }}
@@ -353,12 +346,7 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Series
-          </Label>
+          <Label className="form-lable-font">Series</Label>
           <Controller
             name={"series"}
             rules={{ required: "Series is required" }}
@@ -370,7 +358,7 @@ function AddBudget() {
                 className="react-select"
                 classNamePrefix="select"
                 loadOptions={loadSeriesOptions}
-                placeholder="Select Currency"
+                placeholder="Select Series"
                 defaultOptions={seriesSelectFormat}
               />
             )}
@@ -385,12 +373,7 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Location
-          </Label>
+          <Label className="form-lable-font">Location</Label>
           <Controller
             name={"location"}
             control={control}
@@ -416,12 +399,7 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Set
-          </Label>
+          <Label className="form-lable-font">Set</Label>
           <Controller
             name={"set"}
             rules={{ required: "Set is required" }}
@@ -448,12 +426,7 @@ function AddBudget() {
       </Row>
 
       <div className="d-flex flex-column mt-1">
-        <Label
-          className="text-black"
-          style={{ fontSize: "12px", fontWeight: "400" }}
-        >
-          Status{" "}
-        </Label>
+        <Label className="form-lable-font">Status </Label>
         <div className="d-flex gap-1">
           <div className="d-flex gap-1">
             <input

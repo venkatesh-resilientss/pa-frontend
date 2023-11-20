@@ -13,7 +13,7 @@ const DeletePeriodPopup = ({ id }) => {
 
   const periodService = new PeriodsService();
 
-  const { mutate: periodMutate } = useSWR("LIST_PERIODS", () =>
+  const { mutate: periodMutate } = useSWR("GET_PERIODS", () =>
     periodService.getPeriods()
   );
 
@@ -30,8 +30,7 @@ const DeletePeriodPopup = ({ id }) => {
       await PeriodsService.delete(helperData);
       toast.success("Period Deleted Successfully");
       dispatch(closeDeletePeriodPopup("close"));
-
-      mutate(periodMutate());
+      periodMutate();
     } catch (error) {
       console.error("Error deleting Period:", error);
     }

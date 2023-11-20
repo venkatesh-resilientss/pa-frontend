@@ -17,7 +17,7 @@ const DeleteDepartmentPopup = ({ id }) => {
     data: departmentsData,
     isLoading: userLoading,
     error: userError,
-    mutate: userMutate,
+    mutate: departmentMutate,
   } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
   const popupStatus = useSelector(
@@ -30,12 +30,11 @@ const DeleteDepartmentPopup = ({ id }) => {
   );
 
   const handleDeleteDepartment = async () => {
-    console.log("IDDD", id);
     try {
       await DepartmentsService.delete(helperData);
       toast.success("Department Deleted Successfully");
       dispatch(closeDeleteDepartmentPopup(id));
-      mutate(userMutate());
+      mutate(departmentMutate());
     } catch (error) {
       console.error("Error deleting Department:", error);
     }

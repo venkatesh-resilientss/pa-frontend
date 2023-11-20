@@ -78,29 +78,45 @@ function VendorAccordion() {
   } = useForm();
 
   return (
-    <div>
-      <div className="mt-4">
+    <div className="mt-4">
+      <div
+        className="text-black"
+        style={{ fontSize: "16px", fontWeight: "600" }}
+      >
+        All Vendors
+      </div>
+      <div className="d-flex justify-content-between">
         <div
           className="text-black"
-          style={{ fontSize: "16px", fontWeight: "600" }}
+          style={{ fontSize: "32px", fontWeight: "600" }}
         >
-          All Vendors
+          Add New Vendor
         </div>
-        <div className="d-flex justify-content-between">
-          <div
-            className="text-black"
-            style={{ fontSize: "32px", fontWeight: "600" }}
+        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <Button
+            onClick={() => router.back()}
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              height: "34px",
+              backgroundColor: "transparent",
+              color: "#2D2C2C",
+              border: "none",
+            }}
           >
-            Add New Vendor
-          </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
-              <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary" className="px-3 p-2" >
-              Save
-            </Button>
-          </div>
+            Dismiss
+          </Button>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            color="primary"
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              height: "34px",
+            }}
+          >
+            Save
+          </Button>
         </div>
       </div>
 

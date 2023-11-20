@@ -21,6 +21,7 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import useSWR from "swr";
 import moment from "moment";
+import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadBanksPopup,
   openDeleteBanksPopup,
@@ -36,15 +37,16 @@ import NoDataPage from "components/NoDataPage";
 const AllBanksTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const bankService = new BankService();
 
   const {
     data: bankData,
-    isLoading: userLoading,
+    isLoading: bankLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_BANKS", () => bankService.getBanks());
+  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks());
 
   const dataSource = bankData?.data;
 
@@ -239,100 +241,140 @@ const AllBanksTable = () => {
 
   return (
     <div>
-          <div className="section">
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Banks
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {bankData?.data.length} Banks
-                    </div>
-
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() =>
-                        dispatch(openBulkUploadBanksPopup("banks"))
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Bulk Upload
-                    </Button>
-
-                    <Button
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#00AEEF",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        border: "none",
-                      }}
-                      onClick={() => router.push(`/configurations/add-bank`)}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusWhiteIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Add Bank
-                    </Button>
-                  </div>
+      <div className="section">
+        <Card
+          className="mt-2"
+          style={{
+            backgroundColor: "#E7EFFF",
+            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <CardBody>
+            <div className="d-flex justify-content-between">
+              <div>
+                <div
+                  className="m-2"
+                  style={{ fontSize: "16px", fontWeight: "600" }}
+                >
+                  All Banks
                 </div>
-              </CardBody>
-            </Card>
-          </div>
+              </div>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  {bankData?.data.length} Banks
+                </div>
+
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+
+                <Button
+                  onClick={() => dispatch(openBulkUploadBanksPopup("banks"))}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#E7EFFF",
+                    color: "#4C4C61",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    borderColor: "#4C4C61",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Bulk Upload
+                </Button>
+
+                {/* <Button
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#00AEEF",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                  }}
+                  onClick={() => router.push(`/configurations/add-bank`)}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusWhiteIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Add Bank
+                </Button> */}
+                {hasPermission(
+                  "configuration_management",
+                  "create_configuration"
+                ) && (
+                  <Button
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                    onClick={() => router.push(`/configurations/add-bank`)}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Add Bank
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      {bankLoading ? (
+        <div className="mt-2">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
           {dataSource?.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}              />
+                pageSize={9}
+                searchText={searchText}
+              />
             </div>
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create Bank"}
+                // buttonName={"Add Bank"}
+                 buttonName={
+                    hasPermission("configuration_management", "create_configuration")
+                      ? "Create Bank"
+                      : "No button"
+                  }
                 buttonLink={"/configurations/add-bank"}
               />
             </div>
           )}
-        </div>
-      
+        </>
+      )}
+    </div>
   );
 };
 

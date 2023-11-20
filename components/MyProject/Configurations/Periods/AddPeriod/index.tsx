@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import the CSS
+import moment from "moment";
 
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
@@ -34,13 +35,15 @@ function AddPeriod() {
   const [activeStatus, setActiveStatus] = useState(false);
 
   const onSubmit = (data) => {
+    console.log("DTA", data);
+
     let backendFormat;
 
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      start: startDate,
-      end: endDate,
+      start: data.startDate,
+      end: data.endDate,
       is_active: activeStatus,
     };
 
@@ -57,175 +60,183 @@ function AddPeriod() {
 
   return (
     <>
-      
-          <div className="section mt-4">
-            <div className="overflow-auto">
-              <div
-                className="text-black"
-                style={{ fontSize: "16px", fontWeight: "600" }}
+      <div className="section mt-4">
+        <div className="overflow-auto">
+          <div
+            className="text-black"
+            style={{ fontSize: "16px", fontWeight: "600" }}
+          >
+            All Periods
+          </div>
+
+          <div className="d-flex justify-content-between">
+            <div
+              className="text-black"
+              style={{ fontSize: "32px", fontWeight: "600" }}
+            >
+              Add New Period
+            </div>
+            <div className="d-flex me-2 " style={{ gap: "10px" }}>
+              <Button
+                onClick={() => router.back()}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "400",
+                  height: "34px",
+                  backgroundColor: "transparent",
+                  color: "#2D2C2C",
+                  border: "none",
+                }}
               >
-                All Periods
-              </div>
-
-              <div className="d-flex justify-content-between">
-                <div
-                  className="text-black"
-                  style={{ fontSize: "32px", fontWeight: "600" }}
-                >
-                  Add New Period
-                </div>
-                <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                    <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
-                  <Button
-                    onClick={handleSubmit(onSubmit)}
-                    color="primary" className="px-4 p-2"
-                    
-                  >
-                    Save
-                  </Button>
-                </div>
-              </div>
-
-              <hr style={{ height: "2px" }} />
-              <Form
-                style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-                className=" mt-2 d-flex flex-column"
-                onSubmit={handleSubmit(onSubmit)}
+                Dismiss
+              </Button>
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                color="primary"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  height: "34px",
+                }}
               >
-                <Col xl="4">
-                  <div className="mb-1">
-                    <Label> Period Name</Label>
-                    <Controller
-                      name="periodname"
-                      rules={{ required: "Period Name  is required" }}
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          style={{ fontSize: "12px", fontWeight: "400" }}
-                          placeholder="Period name"
-                          invalid={errors.periodname && true}
-                          {...field}
-                        />
-                      )}
-                    />
-                    {errors.periodname && (
-                      <span style={{ color: "red" }}>
-                        {errors.periodname.message as React.ReactNode}
-                      </span>
-                    )}
-                  </div>
-                </Col>
-
-                <Col xl="4" className="d-flex gap-1">
-                  <Col xl="6">
-                    <Label
-                      className="text-black"
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                    >
-                      Start Date
-                    </Label>
-                    <Controller
-                      name="startDate"
-                      control={control}
-                      rules={{ required: "End Date  is required" }}
-                      render={({ field }) => (
-                        <DatePicker
-                          placeholderText="Select a date"
-                          selected={startDate}
-                          onChange={handleStartDateChange}
-                          dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
-                        />
-                      )}
-                    />
-                  </Col>
-
-                  <Col xl="6">
-                    <Label
-                      className="text-black"
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                    >
-                      End Date
-                    </Label>
-                    <Controller
-                      name="endDate"
-                      control={control}
-                      rules={{ required: "End Date  is required" }}
-                      render={({ field }) => (
-                        <DatePicker
-                          placeholderText="Select a date"
-                          selected={endDate}
-                          onChange={handleEndDateChange}
-                          dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
-                        />
-                      )}
-                    />
-                  </Col>
-                </Col>
-
-                <Col xl="4">
-                  <div className="mb-1">
-                    <Label> Description</Label>
-                    <Controller
-                      name="description"
-                      control={control}
-                      rules={{ required: "Description  is required" }}
-                      render={({ field }) => (
-                        <Input
-                          style={{
-                            fontSize: "12px",
-                            fontWeight: "400",
-                            height: "81px",
-                          }}
-                          placeholder="Description"
-                          invalid={errors.description && true}
-                          {...field}
-                        />
-                      )}
-                    />
-                    {errors.description && (
-                      <span style={{ color: "red" }}>
-                        {errors.description.message as React.ReactNode}
-                      </span>
-                    )}
-                  </div>
-                </Col>
-
-                <div className="d-flex flex-column mt-1">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "16px", fontWeight: "400" }}
-                  >
-                    Status{" "}
-                  </Label>
-                  <div className="d-flex gap-1">
-                    <div className="d-flex gap-1">
-                      <input
-                        type="radio"
-                        id="ex1-active"
-                        name="ex1"
-                        onChange={() => {
-                          setActiveStatus(true);
-                        }}
-                      />
-                      <div>Active</div>
-                    </div>
-                    <div className="d-flex gap-1">
-                      <input
-                        type="radio"
-                        name="ex1"
-                        id="ex1-inactive"
-                        onChange={() => {
-                          setActiveStatus(false);
-                        }}
-                      />
-                      <div>In-Active</div>
-                    </div>
-                  </div>
-                </div>
-              </Form>
+                Save
+              </Button>
             </div>
           </div>
-        
+
+          <hr style={{ height: "2px" }} />
+
+          <Form
+            style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
+            className=" mt-2 d-flex flex-column"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <Col xl="4">
+              <div className="mb-1">
+                <Label className="form-lable-font"> Period Name</Label>
+                <Controller
+                  name="periodname"
+                  rules={{ required: "Period Name  is required" }}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Period name"
+                      invalid={errors.periodname && true}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.periodname && (
+                  <span style={{ color: "red" }}>
+                    {errors.periodname.message as React.ReactNode}
+                  </span>
+                )}
+              </div>
+            </Col>
+
+            <Col xl="4" className="d-flex flex-column">
+              <Label className="form-lable-font">Start Date</Label>
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    id="startDatePicker" // Add the id here
+                    className="w-100 custom-datepicker "
+                    placeholderText="Select Start date"
+                    selected={startDate}
+                    onChange={handleStartDateChange}
+                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  />
+                )}
+              />
+            </Col>
+
+            <Col xl="4" className="d-flex flex-column">
+              <Label className="form-lable-font">End Date</Label>
+              <Controller
+                name="endDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    id="endDatePicker" // Add the id here
+                    className="w-100 custom-datepicker "
+                    placeholderText="Select End date"
+                    selected={endDate}
+                    onChange={handleEndDateChange}
+                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx"
+                  />
+                )}
+              />
+            </Col>
+
+            <Col xl="4">
+              <div className="mb-1 ">
+                <Label className="form-lable-font">Description</Label>
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={{ required: "Description  is required" }}
+                  render={({ field }) => (
+                    <Input
+                      type="textarea"
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "400",
+                        height: "81px",
+                      }}
+                      placeholder="Description"
+                      invalid={errors.description && true}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <span style={{ color: "red" }}>
+                    {errors.description.message as React.ReactNode}
+                  </span>
+                )}
+              </div>
+            </Col>
+
+            <div className="d-flex flex-column mt-1">
+              <Label
+                className="text-black"
+                style={{ fontSize: "16px", fontWeight: "400" }}
+              >
+                Status{" "}
+              </Label>
+              <div className="d-flex gap-1">
+                <div className="d-flex gap-1">
+                  <input
+                    type="radio"
+                    id="ex1-active"
+                    name="ex1"
+                    onChange={() => {
+                      setActiveStatus(true);
+                    }}
+                  />
+                  <div>Active</div>
+                </div>
+                <div className="d-flex gap-1">
+                  <input
+                    type="radio"
+                    name="ex1"
+                    id="ex1-inactive"
+                    onChange={() => {
+                      setActiveStatus(false);
+                    }}
+                  />
+                  <div>In-Active</div>
+                </div>
+              </div>
+            </div>
+          </Form>
+        </div>
+      </div>
     </>
   );
 }

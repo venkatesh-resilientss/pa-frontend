@@ -87,7 +87,7 @@ function EditBank() {
             onClick={() => router.back()}
             style={{
               fontSize: "14px",
-              fontWeight: "600",
+              fontWeight: "400",
               height: "34px",
               backgroundColor: "transparent",
               color: "#2D2C2C",
@@ -105,7 +105,7 @@ function EditBank() {
               height: "34px",
             }}
           >
-            EDIT
+            Save
           </Button>
         </div>
       </div>

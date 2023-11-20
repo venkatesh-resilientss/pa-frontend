@@ -1,6 +1,6 @@
 import axios from "axios";
 import APIService from "./api.service";
-import {  BUDGETS_DETAIL_ENDPOINT, CREATE_BUDGET, DELETE_BUDGET, EDIT_BUDGET, GET_BUDGETS, GET_COMPANIES } from "../lib/endpoints";
+import {  BUDGETS_DETAIL_ENDPOINT, CREATE_BUDGET, DELETE_BUDGET, EDIT_BUDGET, GET_BUDGETS, GET_COMPANIES,UPLOAD_BUDGET_LIST } from "../lib/endpoints";
 
 class BudgetService extends APIService {
   getBudgets(): Promise<any> {
@@ -46,6 +46,30 @@ class BudgetService extends APIService {
         throw error.response.data;
       });
   }
+
+
+     static uploadbudgetlist(fileName: any) {
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the file name to the FormData object with the specified field name
+      formData.append("file", fileName);
+
+      return axios.post(UPLOAD_BUDGET_LIST, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Upload failed", error);
+        // Log the entire error response
+        console.log("Error Response:", error.response);
+        throw error.response.data;
+      });
+    }
 
   static details(id: string) {
     return axios

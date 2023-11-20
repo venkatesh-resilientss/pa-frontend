@@ -32,7 +32,7 @@ export default function NoDataPage({ buttonLink, buttonName }) {
             Please create your first client to be able to work
           </div>
         </div>
-        <Button
+        {/* <Button
           onClick={() => router.push(buttonLink)}
           style={{
             fontSize: "14px",
@@ -48,7 +48,26 @@ export default function NoDataPage({ buttonLink, buttonName }) {
             alt="plus-icon"
           />{" "}
           {buttonName}
-        </Button>
+        </Button> */}
+        {buttonName !== "No button" && (
+          <Button
+            onClick={() => router.push(buttonLink)}
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              backgroundColor: "#00AEEF",
+              border: "none",
+              height: "38.01px",
+            }}
+          >
+            <Image
+              style={{ width: "14px", height: "14px" }}
+              src={plusWhiteIcon}
+              alt="plus-icon"
+            />{" "}
+            {buttonName}
+          </Button>
+        )}
       </div>
     </div>
   );

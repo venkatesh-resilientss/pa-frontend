@@ -10,6 +10,7 @@ import CustomBadge from 'components/Generic/CustomBadge';
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
 import router, { useRouter } from 'next/router';
+import { hasPermission } from "commonFunctions/functions";
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -98,9 +99,9 @@ const AllRoleTable = () => {
             <Image src={actionIcon} alt="" width={14} id={id} />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem
+            {/* <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() => router.push(`/settings/edit-user/${id}`)}
             >
               <Action
@@ -111,7 +112,7 @@ const AllRoleTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() => handleDeleteClick(id)}
             >
               <Action
@@ -119,7 +120,33 @@ const AllRoleTable = () => {
                 name={"Delete"}
                 action={() => { }}
               />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasPermission("user_and_role_management", "edit_user") && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={() => router.push(`/settings/edit-user/${id}`)}
+              >
+                <Action
+                  icon={"/icons/edit_square.svg"}
+                  name={"Edit"}
+                  action={() => {}}
+                />
+              </DropdownItem>
+            )}
+            {hasPermission("user_and_role_management", "deactivate_user") && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={() => handleDeleteClick(id)}
+              >
+                <Action
+                  icon={"/icons/delete.svg"}
+                  name={"Delete"}
+                  action={() => {}}
+                />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -128,15 +155,15 @@ const AllRoleTable = () => {
 
   const MemberRenderer = (props) => (
         <div className="d-flex align-items-center mr-3">
-        <div className="ml-2">
-          {/* <div>
-            <img src={props.data.profile_image} alt="Profile" />
-          </div> */}
-          <div>
-            <p>{props.data.adminname}</p>
-            <p className='mt-2 mb-2'>{props.data.email}</p>
-          </div>
+        <div className="ml-2 d-flex align-items-center gap-2">
+        <div className="rounded-circle">
+          <img src={props.data.profile_image ? props.data.profile_image :  "/icons/sample-profile.png"}  alt="Profile" width={30} style={{borderRadius : '50%'}} />
         </div>
+        <div>
+          <p style={{fontSize : '14px'}}>{props.data.adminname}</p>
+          <p className="mt-1" style={{fontSize : '14px'}}>{props.data.email}</p>
+        </div>
+      </div>
       </div>
 
   );
@@ -190,12 +217,20 @@ const AllRoleTable = () => {
                   placeholder="Search..."
                 />
               </Form>
-              <button
+              {/* <button
                 className='btn btn-primary'
                 onClick={() => router.push('/settings/add-user')}
               >
                 <Plus size={16} /> Add User
-              </button>
+              </button> */}
+              {hasPermission("user_and_role_management", "create_user") && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => router.push("/settings/add-user")}
+                >
+                  <Plus size={16} /> Add User
+                </button>
+              )}
             </div>
           </div>
         </CardBody>

@@ -85,7 +85,7 @@ const Welcome = () => {
         {/* left */}
         <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
           <Image
-            src={"/logo-final4.svg"}
+            src={"/login.png"}
             alt="logo"
             className="img-fluid mt-5"
             width={400}

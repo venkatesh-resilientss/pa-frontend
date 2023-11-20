@@ -12,6 +12,7 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { CurrencyService } from "services";
 
 const CurrenciesBulkUploadPopup = () => {
   const dispatch = useDispatch();
@@ -27,15 +28,8 @@ const CurrenciesBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
-
-    setUploadedFiles(fileData);
+    
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -45,6 +39,36 @@ const CurrenciesBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+
+  const handleUpload = () => {
+  if (uploadedFiles.length === 0) {
+    toast.error("Please select a file to upload.");
+    return;
+  }
+
+  const fileName = uploadedFiles[0];
+
+  // Call the uploadbanklist function from your service with only the file name
+  CurrencyService.uploadcurrencylist(fileName)
+    .then((result) => {
+      // Handle success
+      toast.success("Data inserted successfully.");
+   
+      
+      dispatch(closeBulkUploadCurrenciesPopup("close"));
+    })
+    .catch((error) => {
+      // Handle error
+      console.error("Upload failed", error);
+     
+      toast.error("Failed to insert data.");
+    });
+};
+
+const handleDownload = ()=>{
+  const url = '/upload-sample-files/currencies_sample.csv';
+  window.open(url);
+}
 
   return (
     <Modal
@@ -66,6 +90,7 @@ const CurrenciesBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -131,7 +156,7 @@ const CurrenciesBulkUploadPopup = () => {
                 {uploadedFiles.map((file, index) => (
                   <li
                     style={{
-                      fontSize: "10px",
+                      fontSize: "14px",
                       fontWeight: "400",
                       color: "#030229",
                     }}
@@ -157,17 +182,17 @@ const CurrenciesBulkUploadPopup = () => {
             onClick={() => dispatch(closeBulkUploadCurrenciesPopup("close"))}
             color="white"
             style={{
-              height: "26px",
-              fontSize: "10px",
+             
+              fontSize: "14px",
               fontWeight: "400",
             }}
           >
             Cancel
           </Button>
-          <Button
+          <Button onClick={handleUpload}
             style={{
-              height: "26px",
-              fontSize: "10px",
+           
+              fontSize: "14px",
               fontWeight: "400",
               backgroundColor: "#00AEEF",
               border: "none",
@@ -182,3 +207,7 @@ const CurrenciesBulkUploadPopup = () => {
 };
 
 export default CurrenciesBulkUploadPopup;
+function closeBulkUploadBanksPopup(arg0: string): any {
+  throw new Error("Function not implemented.");
+}
+

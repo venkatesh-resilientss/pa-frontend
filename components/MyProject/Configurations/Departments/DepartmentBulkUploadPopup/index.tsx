@@ -8,37 +8,52 @@ import { closeBulkUploadDepartmentPopup } from "redux/slices/mySlices/configurat
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 
+
 const DepartmentBulkUploadPopup = () => {
   const dispatch = useDispatch();
+
+  
+  const departmentsService = new DepartmentsService();
+
+  const {
+    data: departmentsData,
+    isLoading: userLoading,
+    error: userError,
+    mutate: userMutate,
+  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.bulkUploadPopup.status
   );
 
-  const helperData = useSelector(
-    (state: any) => state.configurations.department.bulkUploadPopup.helperData
-  );
-
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
+  const reloadDepartmentTable = () => {
+    mutate("LIST_DEPARTMENTS");
+  };
 
-    setUploadedFiles(fileData);
+  useEffect(() => {
+    if (!popupStatus) {
+      // Reset uploaded files when the popup is closed
+      setUploadedFiles([]);
+    }
+  }, [popupStatus]);
+  
+  const onDrop = useCallback((acceptedFiles) => {
+    
+    setUploadedFiles(acceptedFiles);
   }, []);
 
+
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -46,6 +61,36 @@ const DepartmentBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+
+
+const handleUpload = () => {
+  if (uploadedFiles.length === 0) {
+    toast.error("Please select a file to upload.");
+    return;
+  }
+
+  const fileName = uploadedFiles[0];
+
+  // Call the uploadbanklist function from your service with only the file name
+  DepartmentsService.uploaddepartmentlist(fileName)
+    .then((result) => {
+      reloadDepartmentTable();
+      // Handle success
+      toast.success("Data inserted successfully.");
+      dispatch(closeBulkUploadDepartmentPopup("close"));
+    })
+    .catch((error) => {
+      // Handle error
+      console.error("Upload failed", error);
+     
+      toast.error("Failed to insert data.");
+    });
+};
+
+const handleDownload = ()=>{
+  const url = '/upload-sample-files/departments_sample.csv';
+  window.open(url);
+}
   return (
     <Modal
       isOpen={popupStatus}
@@ -66,6 +111,7 @@ const DepartmentBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -157,18 +203,17 @@ const DepartmentBulkUploadPopup = () => {
             onClick={() => dispatch(closeBulkUploadDepartmentPopup("close"))}
             color="white"
             style={{
-              height: "26px",
-              fontSize: "10px",
+              
+              fontSize: "14px",
               fontWeight: "400",
             }}
           >
             Cancel
           </Button>
           <Button
+          onClick={handleUpload}
             style={{
-              height: "26px",
-              fontSize: "10px",
-              fontWeight: "400",
+              fontSize: "14px",
               backgroundColor: "#00AEEF",
               border: "none",
             }}

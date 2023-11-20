@@ -340,6 +340,15 @@ footer {
   height: 215px;
   width: 342px;
 }
-.react-slect-border{
-  border: 1px solid red;
+
+.form-lable-font{
+  font-size: 16px;
+}
+input::placeholder {
+  color: #C9C9C9 !important;
+}
+
+
+.custom-datepicker {
+  height: 30px
 }

@@ -12,6 +12,8 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { StatesService } from "services";
+
 
 const StatesBulkUploadPopup = () => {
   const dispatch = useDispatch();
@@ -27,15 +29,9 @@ const StatesBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
+    
 
-    setUploadedFiles(fileData);
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -46,6 +42,36 @@ const StatesBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+
+  const handleUpload = () => {
+    if (uploadedFiles.length === 0) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+
+    const fileName = uploadedFiles[0];
+
+    // Call the uploadbanklist function from your service with only the file name
+    StatesService.uploadstateslist(fileName)
+      .then((result) => {
+        // Handle success
+        toast.success("Data inserted successfully.");
+    
+        
+        dispatch(closeBulkUploadStatesPopup("close"));
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Upload failed", error);
+      
+        toast.error("Failed to insert data.");
+      });
+  };
+
+  const handleDownload = ()=>{
+    const url = '/upload-sample-files/states_sample.csv';
+    window.open(url);
+  }
   return (
     <Modal
       isOpen={popupStatus}
@@ -66,6 +92,7 @@ const StatesBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -157,17 +184,15 @@ const StatesBulkUploadPopup = () => {
             onClick={() => dispatch(closeBulkUploadStatesPopup("close"))}
             color="white"
             style={{
-              height: "26px",
-              fontSize: "10px",
+              fontSize: "14px",
               fontWeight: "400",
             }}
           >
             Cancel
           </Button>
-          <Button
+          <Button onClick={handleUpload}
             style={{
-              height: "26px",
-              fontSize: "10px",
+              fontSize: "14px",
               fontWeight: "400",
               backgroundColor: "#00AEEF",
               border: "none",

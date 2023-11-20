@@ -17,7 +17,7 @@ import editIocn from "assets/myIcons/edit_square.svg";
 import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
-
+import { hasPermission } from "commonFunctions/functions";
 import axios from "axios";
 import DataTableWithButtons from "components/Generic/Table/index";
 import { FcFilmReel } from "react-icons/fc";
@@ -39,15 +39,18 @@ import NoDataPage from "components/NoDataPage";
 const AllLocationsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const locationsService = new LocationsService();
 
   const {
     data: locationsData,
-    isLoading: userLoading,
+    isLoading: locationsLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_LOCATIONS", () => locationsService.getLocations());
+  } = useSWR(["LIST_LOCATIONS", searchText], () =>
+    locationsService.getLocations()
+  );
   const dataSource = locationsData?.result;
 
   const AddLocation = (e) => {
@@ -109,7 +112,7 @@ const AllLocationsTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={(e) =>
                 router.push(`/configurations/edit-location/${props.data.ID}`)
               }
@@ -118,7 +121,7 @@ const AllLocationsTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
@@ -251,100 +254,141 @@ const AllLocationsTable = () => {
 
   return (
     <div>
-          <div className="section mt-4">
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Locations
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {locationsData?.result.length} Locations
-                    </div>
-
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() =>
-                        dispatch(openBulkUploadLocationsPopup("upload"))
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Bulk Upload
-                    </Button>
-
-                    <Button
-                      onClick={() =>
-                        router.push(`/configurations/add-location`)
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#00AEEF",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        border: "none",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusWhiteIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Add Location
-                    </Button>
-                  </div>
+      <div className="section mt-4">
+        <Card
+          className="mt-2"
+          style={{
+            backgroundColor: "#E7EFFF",
+            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <CardBody>
+            <div className="d-flex justify-content-between">
+              <div>
+                <div
+                  className="m-2"
+                  style={{ fontSize: "16px", fontWeight: "600" }}
+                >
+                  All Locations
                 </div>
-              </CardBody>
-            </Card>
-          </div>
+              </div>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  {locationsData?.result.length} Locations
+                </div>
+
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+
+                <Button
+                  onClick={() =>
+                    dispatch(openBulkUploadLocationsPopup("upload"))
+                  }
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#E7EFFF",
+                    color: "#4C4C61",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    borderColor: "#4C4C61",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Bulk Upload
+                </Button>
+
+                {/* <Button
+                  onClick={() => router.push(`/configurations/add-location`)}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#00AEEF",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusWhiteIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Add Location
+                </Button> */}
+                {hasPermission(
+                  "configuration_management",
+                  "create_configuration"
+                ) && (
+                  <Button
+                    onClick={() => router.push(`/configurations/add-location`)}
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Add Location
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      {locationsLoading ? (
+        <div className="mt-2">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
           {locationsData?.result.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}              />
+                pageSize={9}
+                searchText={searchText}
+              />
             </div>
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create Location"}
+                // buttonName={"Create Location"}
+                 buttonName={
+                    hasPermission("configuration_management", "create_configuration")
+                      ? "Create Location"
+                      : "No button"
+                  }
                 buttonLink={"/configurations/add-location"}
               />
             </div>
           )}
+        </>
+      )}
     </div>
   );
 };

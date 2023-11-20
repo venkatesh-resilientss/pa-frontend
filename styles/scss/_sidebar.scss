@@ -11,27 +11,7 @@ li {
 a {
   text-decoration: none;
 }
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #ffffff;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #00aeef;
-  border-radius: 3px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 .sidebar {
   hr {
     margin: 1rem 0;
@@ -44,11 +24,12 @@ a {
   overflow-y: auto;
   overflow-x: hidden;
   transition: 0.2s ease;
-  .bottom-bar{
-    padding: 0 .5rem;
+  .bottom-bar {
+    padding: 0 0.5rem;
   }
   .route-button {
-    .route-name,.child-route-name {
+    .route-name,
+    .child-route-name {
       color: #4c4c61;
     }
   }
@@ -57,33 +38,53 @@ a {
       font-weight: 600;
       color: #000;
     }
-    .child-route-name.active{
+    .child-route-name.active {
       color: #000;
       font-weight: 600;
     }
   }
 }
+/* width */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
+/* Track */
+.sidebar::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+/* Handle */
+.sidebar::-webkit-scrollbar-thumb {
+  background: #00aeef;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 .sidebar.minimized {
-  padding-right: .5rem;
-  padding-left: .5rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
   hr {
     border-color: #fff;
     opacity: 0.8;
-    margin: .5rem 0;
+    margin: 0.5rem 0;
   }
-  a{
+  a {
     line-height: 0;
   }
   .route-button,
   .bottom-bar {
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     img {
       filter: brightness(0) invert(100%);
     }
   }
-  .route-button{
-    padding: .5rem 1rem;
+  .route-button {
+    padding: 0.5rem 1rem;
   }
   .route-button.active {
     background: #00aeef;

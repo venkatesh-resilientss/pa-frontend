@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
 import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
 import { closeBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
@@ -12,6 +11,7 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { SetsService } from "services";
 
 const SetsBulkUploadPopup = () => {
   const dispatch = useDispatch();
@@ -27,15 +27,8 @@ const SetsBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
-
-    setUploadedFiles(fileData);
+   
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -45,6 +38,36 @@ const SetsBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+
+
+  const handleUpload = () => {
+  if (uploadedFiles.length === 0) {
+    toast.error("Please select a file to upload.");
+    return;
+  }
+
+  const fileName = uploadedFiles[0];
+
+  // Call the uploadbanklist function from your service with only the file name
+  SetsService.uploadsetlist(fileName)
+    .then((result) => {
+      // Handle success
+      toast.success("Data inserted successfully.");
+   
+      dispatch(closeBulkUploadSetsPopup("close"));
+    })
+    .catch((error) => {
+      // Handle error
+      console.error("Upload failed", error);
+     
+      toast.error("Failed to insert data.");
+    });
+};
+
+const handleDownload = ()=>{
+  const url = '/upload-sample-files/sets_sample.csv';
+  window.open(url);
+}
 
   return (
     <Modal
@@ -66,6 +89,7 @@ const SetsBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -131,7 +155,7 @@ const SetsBulkUploadPopup = () => {
                 {uploadedFiles.map((file, index) => (
                   <li
                     style={{
-                      fontSize: "10px",
+                      fontSize: "14px",
                       fontWeight: "400",
                       color: "#030229",
                     }}
@@ -157,17 +181,16 @@ const SetsBulkUploadPopup = () => {
             onClick={() => dispatch(closeBulkUploadSetsPopup("close"))}
             color="white"
             style={{
-              height: "26px",
-              fontSize: "10px",
+              
+              fontSize: "14px",
               fontWeight: "400",
             }}
           >
             Cancel
           </Button>
-          <Button
+          <Button onClick={handleUpload}
             style={{
-              height: "26px",
-              fontSize: "10px",
+              fontSize: "14px",
               fontWeight: "400",
               backgroundColor: "#00AEEF",
               border: "none",

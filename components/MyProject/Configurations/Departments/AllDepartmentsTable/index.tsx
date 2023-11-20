@@ -18,7 +18,7 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-
+import { hasPermission } from "commonFunctions/functions";
 import axios from "axios";
 import DataTableWithButtons from "../../../Table/index";
 import { FcFilmReel } from "react-icons/fc";
@@ -41,16 +41,19 @@ import NoDataPage from "components/NoDataPage";
 const AllDepartmentsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const departmentsService = new DepartmentsService();
 
   const {
     data: departmentsData,
-    isLoading: userLoading,
+    isLoading: departmentLoading,
     error: userError,
-    mutate: DepartmentMutet,
-  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
-  console.log(departmentsData, "departmentsData");
+    mutate: userMutate,
+  } = useSWR(["LIST_DEPARTMENTS", searchText], () =>
+    departmentsService.getDepartments()
+  );
 
   const dataSource = departmentsData && departmentsData.result;
   const dataSourceLength = dataSource && dataSource.length;
@@ -125,7 +128,7 @@ const AllDepartmentsTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() =>
                 dispatch(openDeleteDepartmentPopup(props.data?.ID))
               }
@@ -195,103 +198,143 @@ const AllDepartmentsTable = () => {
   ];
 
   return (
-    <div className="section">
-          <div>
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Departments
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {departmentsData?.result.length} Departments
-                    </div>
-
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() =>
-                        dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />
-                      Bulk Upload
-                    </Button>
-
-                    <Button
-                      onClick={() =>
-                        router.push(`/configurations/add-department`)
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#00AEEF",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        border: "none",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusWhiteIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Create Department
-                    </Button>
-                  </div>
+    <div className="section mt-4">
+      <div>
+        <Card
+          style={{
+            backgroundColor: "#E7EFFF",
+            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <CardBody>
+            <div className="d-flex justify-content-between">
+              <div>
+                <div
+                  className="m-2"
+                  style={{ fontSize: "16px", fontWeight: "600" }}
+                >
+                  All Departments
                 </div>
-              </CardBody>
-            </Card>
-          </div>
-          {departmentsData?.result.length > 0 ? (
+              </div>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  {departmentsData?.result.length} Departments
+                </div>
+
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+
+                <Button
+                  onClick={() =>
+                    dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
+                  }
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#E7EFFF",
+                    color: "#4C4C61",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    borderColor: "#4C4C61",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusIcon}
+                    alt="plus-icon"
+                  />
+                  Bulk Upload
+                </Button>
+
+                {/* <Button
+                  onClick={() => router.push(`/configurations/add-department`)}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#00AEEF",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusWhiteIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Create Department
+                </Button> */}
+                {hasPermission(
+                  "configuration_management",
+                  "create_configuration"
+                ) && (
+                  <Button
+                    onClick={() =>
+                      router.push(`/configurations/add-department`)
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Create Department
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      {departmentLoading ? (
+        <div className="mt-2">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
+          {dataSource?.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}              />
+                pageSize={9}
+                searchText={searchText}
+              />
             </div>
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create Department"}
-                buttonLink={"/configurations/add-department"}
+                // buttonName={"Create Department"}
+                buttonName={
+                  hasPermission("configuration_management", "create_configuration")
+                    ? "Create Department"
+                    : "No button"
+                }
+                buttonLink={"/configurations/Create Department"}
               />
             </div>
           )}
-        
-      
+        </>
+      )}
     </div>
   );
 };

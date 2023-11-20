@@ -1,6 +1,6 @@
 import axios from "axios";
 import APIService from "./api.service";
-import { CREATE_VENDORS, DELETE_VENDORS, EDIT_VENDORS, GET_VENDORS } from "../lib/endpoints";
+import { CREATE_VENDORS, DELETE_VENDORS, EDIT_VENDORS, GET_VENDORS, UPLOAD_VENDORS_LIST } from "../lib/endpoints";
 
 class VendorsService extends APIService {
   getVendors(): Promise<any> {
@@ -44,6 +44,29 @@ class VendorsService extends APIService {
       .catch((error) => {
         throw error.response.data;
       });
+  }
+
+  static upload(file:any){
+     // Create a FormData object
+     const formData = new FormData();
+
+     // Append the file name to the FormData object with the specified field name
+     formData.append("file", file);
+
+     return axios.post(UPLOAD_VENDORS_LIST, formData, {
+       headers: {
+         'Content-Type': 'multipart/form-data',
+       },
+     })
+     .then((response) => {
+       return response.data;
+     })
+     .catch((error) => {
+       console.error("Upload failed", error);
+       // Log the entire error response
+       console.log("Error Response:", error.response);
+       throw error.response.data;
+     });
   }
 }
 

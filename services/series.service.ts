@@ -1,6 +1,6 @@
   import axios from 'axios';
   import APIService from './api.service';
-  import {CREATE_SERIES, DELETE_SERIES, EDIT_SERIES, GET_SERIES, SERIES_DETAIL_ENDPOINT} from '../lib/endpoints';
+  import {CREATE_SERIES, DELETE_SERIES, EDIT_SERIES, GET_SERIES, SERIES_DETAIL_ENDPOINT,UPLOAD_SERIES_LIST} from '../lib/endpoints';
 
   class SeriesService extends APIService {
     getSeries(): Promise<any> {
@@ -24,6 +24,29 @@
         });
     }
 
+
+      static uploadserieslist(fileName: any) {
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the file name to the FormData object with the specified field name
+      formData.append("file", fileName);
+
+      return axios.post(UPLOAD_SERIES_LIST, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Upload failed", error);
+        // Log the entire error response
+        console.log("Error Response:", error.response);
+        throw error.response.data;
+      });
+    }
 
     static delete(id: any) {
       return axios

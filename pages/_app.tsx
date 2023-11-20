@@ -11,10 +11,11 @@ import Sidebar from "components/Sidebar";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MainLayout from "layouts/mainlayout";
 
 function MyApp({ Component, pageProps, err }) {
   const router = useRouter();
-  const Layout = Component.Layout || React.Fragment;
+  // const Layout = Component.Layout || React.Fragment;
   const modifiedPageProps = { ...pageProps, err };
   /**
    * Pages not to render sidebar -
@@ -44,10 +45,10 @@ function MyApp({ Component, pageProps, err }) {
           className={`${noSidebar.includes(activeRoute) ? "" : 'px-4'}`}
         >
           <Provider store={store}>
-            <Layout>
+            <MainLayout>
               <Component {...modifiedPageProps} />
               <ToastContainer />
-            </Layout>
+            </MainLayout>
           </Provider>
         </div>
       </div>

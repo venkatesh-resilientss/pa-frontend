@@ -40,7 +40,7 @@ function AddBank() {
       });
   };
   return (
-    <div  className="overflow-auto">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -60,7 +60,7 @@ function AddBank() {
             onClick={() => router.back()}
             style={{
               fontSize: "14px",
-              fontWeight: "600",
+              fontWeight: "400",
               height: "34px",
               backgroundColor: "transparent",
               color: "#2D2C2C",
@@ -90,12 +90,7 @@ function AddBank() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Bank Name
-          </Label>
+          <Label className="form-lable-font">Bank Name</Label>
 
           <Controller
             name="bankName"
@@ -103,10 +98,7 @@ function AddBank() {
             rules={{ required: "Bank Name is required" }}
             render={({ field }) => (
               <Input
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "400",
-                }}
+                className="p-2"
                 placeholder="Bank Name"
                 {...register}
                 invalid={errors.bankName && true}
@@ -122,12 +114,7 @@ function AddBank() {
         </Col>
 
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Description
-          </Label>
+          <Label className="form-lable-font">Description</Label>
           <Controller
             name="description"
             rules={{ required: "Description  is required" }}
@@ -154,22 +141,14 @@ function AddBank() {
         </Col>
 
         <Col xl="4">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Location
-          </Label>
+          <Label className="form-lable-font">Last Name</Label>
           <Controller
             name="location"
             control={control}
             rules={{ required: "Location is required" }}
             render={({ field }) => (
               <Input
-                style={{
-                  fontSize: "12px",
-                  fontWeight: "400",
-                }}
+                className="p-2"
                 placeholder="Location"
                 {...register}
                 invalid={errors.location && true}

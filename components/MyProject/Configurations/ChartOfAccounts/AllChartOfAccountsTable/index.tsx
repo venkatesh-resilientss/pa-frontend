@@ -30,6 +30,7 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { openDeleteAccountPayablePopup } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
+import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadCOAPopup,
   openDeleteCOAPopup,
@@ -40,13 +41,14 @@ const AllChartOfAccountsTable = () => {
   const dispatch = useDispatch();
   const CoasService = new COAAccountsService();
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
 
   const {
     data: coasData,
-    isLoading: userLoading,
+    isLoading: coasLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_LOCATIONS", () => CoasService.getCoasAccounts());
+  } = useSWR(["LIST_COAS", searchText], () => CoasService.getCoasAccounts());
   const dataSource = coasData?.result;
 
   const StateBadge = (props) => {
@@ -265,100 +267,143 @@ const AllChartOfAccountsTable = () => {
 
   return (
     <div>
-     
-          <div className="section">
-            <Card
-              className="mt-2"
-              style={{
-                backgroundColor: "#E7EFFF",
-                boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-              }}
-            >
-              <CardBody>
-                <div className="d-flex justify-content-between">
-                  <div>
-                    <div
-                      className="m-2"
-                      style={{ fontSize: "16px", fontWeight: "600" }}
-                    >
-                      All Chart of Accounts(COA)
-                    </div>
-                  </div>
-
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "10px" }}
-                  >
-                    <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                      {coasData?.result.length} COAs
-                    </div>
-
-                    <Input
-                      type="search"
-                      className="searchConfig"
-                      placeholder="Search..."
-                      style={{ width: "217px", height: "38px" }}
-                    />
-
-                    <Button
-                      onClick={() => dispatch(openBulkUploadCOAPopup("upload"))}
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#E7EFFF",
-                        color: "#4C4C61",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        borderColor: "#4C4C61",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Bulk Upload
-                    </Button>
-
-                    <Button
-                      onClick={() =>
-                        router.push(`/configurations/add-chart-of-accounts`)
-                      }
-                      style={{
-                        height: "38px",
-                        backgroundColor: "#00AEEF",
-                        fontSize: "14px",
-                        fontWeight: "600",
-                        border: "none",
-                      }}
-                    >
-                      <Image
-                        style={{ width: "14px", height: "14px" }}
-                        src={plusWhiteIcon}
-                        alt="plus-icon"
-                      />{" "}
-                      Create COA
-                    </Button>
-                  </div>
+      <div className="section">
+        <Card
+          className="mt-2"
+          style={{
+            backgroundColor: "#E7EFFF",
+            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <CardBody>
+            <div className="d-flex justify-content-between">
+              <div>
+                <div
+                  className="m-2"
+                  style={{ fontSize: "16px", fontWeight: "600" }}
+                >
+                  All Chart of Accounts(COA)
                 </div>
-              </CardBody>
-            </Card>
-          </div>
+              </div>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  {coasData?.result.length} COAs
+                </div>
+
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+
+                <Button
+                  onClick={() => dispatch(openBulkUploadCOAPopup("upload"))}
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#E7EFFF",
+                    color: "#4C4C61",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    borderColor: "#4C4C61",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Bulk Upload
+                </Button>
+
+                {/* <Button
+                  onClick={() =>
+                    router.push(`/configurations/add-chart-of-accounts`)
+                  }
+                  style={{
+                    height: "38px",
+                    backgroundColor: "#00AEEF",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    border: "none",
+                  }}
+                >
+                  <Image
+                    style={{ width: "14px", height: "14px" }}
+                    src={plusWhiteIcon}
+                    alt="plus-icon"
+                  />{" "}
+                  Create COA
+                </Button> */}
+                {hasPermission(
+                  "configuration_management",
+                  "create_configuration"
+                ) && (
+                  <Button
+                    onClick={() =>
+                      router.push(`/configurations/add-chart-of-accounts`)
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#00AEEF",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      border: "none",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusWhiteIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Create COA
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+      {coasLoading ? (
+        <div className="mt-2">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
           {coasData?.result.length > 0 ? (
             <div className="mt-2">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={4} searchText={undefined}              />
+                pageSize={9}
+                searchText={searchText}
+              />
             </div>
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create COA"}
+                // buttonName={"Create COA"}
+                buttonName={
+                  hasPermission("configuration_management", "create_configuration")
+                ? "Create COA"
+                : ""
+            }
                 buttonLink={"/configurations/add-chart-of-accounts"}
               />
             </div>
           )}
-     
+        </>
+      )}
     </div>
   );
 };

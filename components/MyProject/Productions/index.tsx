@@ -4,6 +4,7 @@ import { BsCameraVideo } from "react-icons/bs";
 import Tabs from "./Tabs";
 import { useRouter } from "next/router";
 import AssignRSSLPopup from "./PendingProductions/AssignRSSLPopup";
+import { hasPermission } from "commonFunctions/functions";
 function Productions() {
   const router = useRouter();
   return (
@@ -42,7 +43,7 @@ function Productions() {
               <Input placeholder="search..." />
             </InputGroup>
           </Form> */}
-            <Button
+            {/* <Button
               onClick={() => router.push(`/create-production`)}
               color="info"
               style={{ color: "#FFFFFF", fontWeight: 600 }}
@@ -55,7 +56,23 @@ function Productions() {
                 }}
               />{" "}
               New Production
-            </Button>
+            </Button> */}
+            {hasPermission("production_management", "create_production") && (
+              <Button
+                onClick={() => router.push(`/create-production`)}
+                color="info"
+                style={{ color: "#FFFFFF", fontWeight: 600 }}
+              >
+                <BsCameraVideo
+                  style={{
+                    marginBottom: "2px",
+                    color: "#FFFFFF",
+                    fontWeight: 600,
+                  }}
+                />{" "}
+                New Production
+              </Button>
+            )}
           </Col>
         </Row>
         <Tabs />

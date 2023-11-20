@@ -51,7 +51,7 @@ function AddSet() {
   };
 
   return (
-    <div >
+    <div>
       <div
         className="text-black mt-4"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -67,10 +67,28 @@ function AddSet() {
           Add New Set
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-             <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
           <Button
-            onClick={handleSubmit(onSubmit)} className="px-4"
-            color="primary">
+            onClick={() => router.back()}
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              height: "34px",
+              backgroundColor: "transparent",
+              color: "#2D2C2C",
+              border: "none",
+            }}
+          >
+            Dismiss
+          </Button>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            color="primary"
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              height: "34px",
+            }}
+          >
             Save
           </Button>
         </div>
@@ -86,7 +104,7 @@ function AddSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label>Set Name</Label>
+            <Label className="form-lable-font">Set Name</Label>
             <Controller
               name="setname"
               rules={{ required: "Set Name is required" }}
@@ -109,9 +127,7 @@ function AddSet() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-label" for="login-email">
-              Set Code
-            </Label>
+            <Label className="form-lable-font">Set Code</Label>
             <Controller
               name="setcode"
               rules={{ required: "Set Code is required" }}
@@ -134,9 +150,7 @@ function AddSet() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-label" for="login-email">
-              Description
-            </Label>
+            <Label className="form-lable-font">Description</Label>
             <Controller
               name="description"
               rules={{ required: "Description is required" }}
@@ -163,12 +177,7 @@ function AddSet() {
           </div>
         </Col>
         <div className="d-flex flex-column mt-1">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Status{" "}
-          </Label>
+          <Label className="form-lable-font">Status </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
               <input

@@ -37,7 +37,7 @@ function EditUser() {
   const roleOptions = Array.isArray(rolesdata)
     ? rolesdata.map((role) => ({
         value: role.ID,
-        label: role.RollName,
+        label: role.RoleName,
       }))
     : [];
 
@@ -96,7 +96,7 @@ function EditUser() {
     // Set default values for select boxes
     setSelectedRole({
       value: eachclicntdata?.Role?.ID || '', // Assuming Role ID is the correct property
-      label: eachclicntdata?.Role?.RollName || '', // Assuming RollName is the correct property
+      label: eachclicntdata?.Role?.RoleName || '', // Assuming RollName is the correct property
     });
 
     setSelectedClient({

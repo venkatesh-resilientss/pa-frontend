@@ -8,6 +8,7 @@ import BluBlu from "src/assets/MyImages/blublu.svg";
 import storyFoam from "src/assets/MyImages/storyfarm.svg";
 import Indigo from "src/assets/MyImages/indigo.svg";
 import fiveFilms from "src/assets/MyImages/5films.svg";
+import { hasPermission } from "commonFunctions/functions";
 import {
   Modal,
   ModalHeader,
@@ -238,7 +239,7 @@ const ClientsListTable = () => {
               <FcFilmReel size={14} className="me-50" />
               <span className="align-middle">View Productions</span>
             </DropdownItem>
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
@@ -248,7 +249,19 @@ const ClientsListTable = () => {
             >
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasPermission("client_management", "edit_client") && (
+              <DropdownItem className="w-100">
+                <Edit size={14} className="me-50 cursor-pointer" />
+                <span className="align-middle">Edit</span>
+              </DropdownItem>
+            )}
+            {hasPermission("client_management", "deactivate_client") && (
+              <DropdownItem className="w-100">
+                <Trash size={14} className="me-50 cursor-pointer" />
+                <span className="align-middle">Delete</span>
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       ),
@@ -260,12 +273,20 @@ const ClientsListTable = () => {
       <Card className="w-100 p-3 client-card-bg my-3">
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Clients</div>
-          <Button
+          {/* <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={toggle}
           >
             <Users size={14} /> Create Client
-          </Button>
+          </Button> */}
+          {hasPermission("client_management", "create_client") && (
+            <Button
+              className="my-1 my-sm-0 button-props border-0 "
+              onClick={toggle}
+            >
+              <Users size={14} /> Create Client
+            </Button>
+          )}
         </div>
       </Card>
       {/* <GridTable rowData={clientData} columnDefs={columns} pageSize={4} /> */}

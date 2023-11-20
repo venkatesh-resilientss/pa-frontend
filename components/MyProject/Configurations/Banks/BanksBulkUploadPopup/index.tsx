@@ -12,9 +12,11 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { BankService } from "services";
 
 const BanksBulkUploadPopup = () => {
   const dispatch = useDispatch();
+
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.bulkUploadPopup.status
@@ -28,14 +30,9 @@ const BanksBulkUploadPopup = () => {
 
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
+   
 
-    setUploadedFiles(fileData);
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -45,6 +42,42 @@ const BanksBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+
+  const handleUpload = () => {
+    if (uploadedFiles.length === 0) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+
+    const fileName = uploadedFiles[0];
+
+    // Call the uploadbanklist function from your service with only the file name
+    BankService.uploadbanklist(fileName)
+      .then((result) => {
+        // Handle success
+        toast.success("Data inserted successfully.");
+    
+        
+        dispatch(closeBulkUploadBanksPopup("close"));
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Upload failed", error);
+      
+        toast.error("Failed to insert data.");
+      });
+  };
+
+  const handleDownload = ()=>{
+    const url = '/upload-sample-files/banks_sample.csv';
+    window.open(url);
+  }
+
+
+
+
+
+
 
   return (
     <Modal
@@ -66,6 +99,7 @@ const BanksBulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}
@@ -165,6 +199,7 @@ const BanksBulkUploadPopup = () => {
             Cancel
           </Button>
           <Button
+          onClick={handleUpload}
             style={{
               height: "26px",
               fontSize: "10px",

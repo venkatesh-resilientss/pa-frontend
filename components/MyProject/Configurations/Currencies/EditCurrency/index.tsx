@@ -75,89 +75,104 @@ function EditCurrency() {
   };
 
   return (
-   
-        <div className="section mt-4">
-          <div className="overflow-auto">
-            <div
-              className="text-black"
-              style={{ fontSize: "16px", fontWeight: "600" }}
-            >
-              All currencies
-            </div>
+    <div className="section mt-4">
+      <div className="overflow-auto">
+        <div
+          className="text-black"
+          style={{ fontSize: "16px", fontWeight: "600" }}
+        >
+          All currencies
+        </div>
 
-            <div className="d-flex justify-content-between">
-              <div
-                className="text-black"
-                style={{ fontSize: "32px", fontWeight: "600" }}
-              >
-                Edit Currency
-              </div>
-              <div className="d-flex me-2 " style={{ gap: "10px" }}>
-                    <a href="#" onClick={() => router.back()} className='text-decoration-none text-secondary m-2'>Dismiss</a>
-                <Button
-                  onClick={handleSubmit(onSubmit)}
-                  color="primary" className="px-4 p-2"
-                  
-                >
-                  Edit
-                </Button>
-              </div>
-            </div>
-
-            <hr style={{ height: "2px" }} />
-            <Form
-              style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-              className=" mt-2 d-flex flex-column"
-              onSubmit={handleSubmit(onSubmit)}
+        <div className="d-flex justify-content-between">
+          <div
+            className="text-black"
+            style={{ fontSize: "32px", fontWeight: "600" }}
+          >
+            Edit Currency
+          </div>
+          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <Button
+              onClick={() => router.back()}
+              style={{
+                fontSize: "14px",
+                fontWeight: "400",
+                height: "34px",
+                backgroundColor: "transparent",
+                color: "#2D2C2C",
+                border: "none",
+              }}
             >
-              {" "}
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label>Currency Code</Label>
-                  <Controller
-                    name="currencycode"
-                    rules={{ required: "Currency Code  is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        placeholder="Currency Code"
-                        invalid={errors.currencycode && true}
-                        style={{ fontSize: "12px", fontWeight: "400" }}
-                        {...field}
-                      />
-                    )}
+              Dismiss
+            </Button>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              color="primary"
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                height: "34px",
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+
+        <hr style={{ height: "2px" }} />
+        <Form
+          style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
+          className=" mt-2 d-flex flex-column"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {" "}
+          <Col xl="4">
+            <div className="mb-1">
+              <Label>Currency Code</Label>
+              <Controller
+                name="currencycode"
+                rules={{ required: "Currency Code  is required" }}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="Currency Code"
+                    invalid={errors.currencycode && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
                   />
-                  {errors.currencycode && (
-                    <span style={{ color: "red" }}>
-                      {errors.currencycode.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1 mt-2">
-                  <Label>Currency Name</Label>
-                  <Controller
-                    name="currencyname"
-                    rules={{ required: "Currency Name  is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        placeholder="Currency Name"
-                        invalid={errors.currencyname && true}
-                        style={{ fontSize: "12px", fontWeight: "400" }}
-                        {...field}
-                      />
-                    )}
+                )}
+              />
+              {errors.currencycode && (
+                <span style={{ color: "red" }}>
+                  {errors.currencycode.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1 mt-2">
+              <Label>Currency Name</Label>
+              <Controller
+                name="currencyname"
+                rules={{ required: "Currency Name  is required" }}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="Currency Name"
+                    invalid={errors.currencyname && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
                   />
-                  {errors.currencyname && (
-                    <span style={{ color: "red" }}>
-                      {errors.currencyname.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-              {/* <Col xl="4">
+                )}
+              />
+              {errors.currencyname && (
+                <span style={{ color: "red" }}>
+                  {errors.currencyname.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
+          {/* <Col xl="4">
                 <div className="mb-1 mt-2">
                   <Label>Currency Symbol</Label>
                   <Controller
@@ -204,42 +219,41 @@ function EditCurrency() {
                   </div>
                 </div>
               </Col> */}
-              <div className="d-flex flex-column mt-2">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                >
-                  Status{" "}
-                </Label>
-                <div className="d-flex gap-1">
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      id="ex1-active"
-                      name="ex1"
-                      onChange={() => {
-                        setActiveStatus(true);
-                      }}
-                    />
-                    <div>Active</div>
-                  </div>
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      name="ex1"
-                      id="ex1-inactive"
-                      onChange={() => {
-                        setActiveStatus(false);
-                      }}
-                    />
-                    <div>In-Active</div>
-                  </div>
-                </div>
+          <div className="d-flex flex-column mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Status{" "}
+            </Label>
+            <div className="d-flex gap-1">
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  id="ex1-active"
+                  name="ex1"
+                  onChange={() => {
+                    setActiveStatus(true);
+                  }}
+                />
+                <div>Active</div>
               </div>
-            </Form>
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  name="ex1"
+                  id="ex1-inactive"
+                  onChange={() => {
+                    setActiveStatus(false);
+                  }}
+                />
+                <div>In-Active</div>
+              </div>
+            </div>
           </div>
-        </div>
-      
+        </Form>
+      </div>
+    </div>
   );
 }
 

@@ -45,7 +45,10 @@ const COABulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
-
+  const handleDownload = ()=>{
+    const url = '/upload-sample-files/coa_sample.csv';
+    window.open(url);
+  }
   return (
     <Modal
       isOpen={popupStatus}
@@ -66,6 +69,7 @@ const COABulkUploadPopup = () => {
               height: "25.31px",
               borderColor: "#00AEEF",
             }}
+            onClick={handleDownload}
           >
             <Image
               src={downloadIcon}

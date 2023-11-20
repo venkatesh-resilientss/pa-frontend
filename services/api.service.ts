@@ -6,20 +6,20 @@ class APIService {
   date = new Date();
   expiry = Moment(this.date).add(7, "days");
 
-  constructor() {
-    /**Interceptor - Request */
-    // axios.interceptors.request.use(
-    //   async (config) => {
-    //     /**Encryption */
-    //     config.data = await encrypt(config.data)
-    //     config.headers["Content-Type"] = 'text/plain'
-    //     return config;
-    //   },
-    //   (error) => {
-    //     Promise.reject(error);
-    //   }
-    // );
-  }
+  // constructor() {
+  //   /**Interceptor - Request */
+  //   axios.interceptors.request.use(
+  //     async (config) => {
+  //       /**Encryption */
+  //       config.data = await encrypt(config.data)
+  //       config.headers["Content-Type"] = 'text/plain'
+  //       return config;
+  //     },
+  //     (error) => {
+  //       Promise.reject(error);
+  //     }
+  //   );
+  // }
   //Passing bearer for all api calls
   getAxiosHeaders(): any {
     const token = cookie.get("accessToken");
