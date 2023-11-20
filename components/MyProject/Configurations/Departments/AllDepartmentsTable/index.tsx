@@ -37,13 +37,24 @@ import CustomBadge from "components/Generic/CustomBadge";
 
 import Image from "next/image";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllDepartmentsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const departmentsService = new DepartmentsService();
 
   const {
@@ -52,7 +63,7 @@ const AllDepartmentsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_DEPARTMENTS", searchText], () =>
-    departmentsService.getDepartments()
+    departmentsService.getDepartments(tenantId)
   );
 
   const dataSource = departmentsData && departmentsData.result;
@@ -325,7 +336,10 @@ const AllDepartmentsTable = () => {
               <NoDataPage
                 // buttonName={"Create Department"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Department"
                     : "No button"
                 }

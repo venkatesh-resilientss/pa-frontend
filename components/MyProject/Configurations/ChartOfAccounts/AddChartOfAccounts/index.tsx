@@ -2,14 +2,25 @@ import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { COAAccountsService } from "services";
+import { checkTenant } from "constants/function";
 
 function AddChartOfAccounts() {
   const router = useRouter();
   const [activeStatus, setActiveStatus] = useState(false);
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     control,
     setError,
@@ -31,7 +42,7 @@ function AddChartOfAccounts() {
       IsActive: activeStatus,
     };
 
-    COAAccountsService.create(backendFormat)
+    COAAccountsService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("COA Added successfully");
         router.back();

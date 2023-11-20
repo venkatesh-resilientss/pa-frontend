@@ -30,16 +30,28 @@ import {
   openBulkUploadLocationsPopup,
   openDeleteLocationPopup,
 } from "redux/slices/mySlices/configurations";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllLocationsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
 
   const locationsService = new LocationsService();
 
@@ -49,7 +61,7 @@ const AllLocationsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_LOCATIONS", searchText], () =>
-    locationsService.getLocations()
+    locationsService.getLocations(tenantId)
   );
   const dataSource = locationsData?.result;
 
@@ -378,11 +390,14 @@ const AllLocationsTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create Location"}
-                 buttonName={
-                    hasPermission("configuration_management", "create_configuration")
-                      ? "Create Location"
-                      : "No button"
-                  }
+                buttonName={
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
+                    ? "Create Location"
+                    : "No button"
+                }
                 buttonLink={"/configurations/add-location"}
               />
             </div>

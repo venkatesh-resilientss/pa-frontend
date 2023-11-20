@@ -24,7 +24,7 @@ import editIocn from "assets/myIcons/edit_square.svg";
 import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
@@ -36,19 +36,32 @@ import {
   openDeleteCOAPopup,
 } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllChartOfAccountsTable = () => {
   const dispatch = useDispatch();
   const CoasService = new COAAccountsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: coasData,
     isLoading: coasLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_COAS", searchText], () => CoasService.getCoasAccounts());
+  } = useSWR(["LIST_COAS", searchText], () =>
+    CoasService.getCoasAccounts(tenantId)
+  );
   const dataSource = coasData?.result;
 
   const StateBadge = (props) => {
@@ -394,10 +407,13 @@ const AllChartOfAccountsTable = () => {
               <NoDataPage
                 // buttonName={"Create COA"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
-                ? "Create COA"
-                : ""
-            }
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
+                    ? "Create COA"
+                    : ""
+                }
                 buttonLink={"/configurations/add-chart-of-accounts"}
               />
             </div>

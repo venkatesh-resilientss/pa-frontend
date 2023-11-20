@@ -16,6 +16,7 @@ import { DashboardService } from "services";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { hasPermission } from "commonFunctions/functions";
+import { checkTenant } from "constants/function";
 
 function Clients() {
   const router = useRouter();
@@ -23,14 +24,23 @@ function Clients() {
 
   const [clientsData, setClientsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    dashboardService.getOnBoardedClients().then((res) => {
-      if (res.data) {
-        setClientsData(res.data);
-        setIsLoading(false);
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      console.log(tenant, "tenant");
+      if (tenant) {
+        dashboardService.getOnBoardedClients(tenant.id).then((res) => {
+          if (res.data) {
+            setClientsData(res.data);
+            setIsLoading(false);
+          }
+        });
       }
-    });
+    };
+    getTenant();
   }, []);
+
   // const {isLoading,clientsData} = {clientsData : {data : []},isLoading : true}
   return (
     <div className="h-100 d-flex gap-2 flex-column">

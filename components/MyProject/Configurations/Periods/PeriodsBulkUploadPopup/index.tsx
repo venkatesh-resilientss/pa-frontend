@@ -8,15 +8,26 @@ import { closeBulkUploadPeriodsPopup } from "redux/slices/mySlices/configuration
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { PeriodsService } from "services";
+import { checkTenant } from "constants/function";
 
 const PeriodsBulkUploadPopup = () => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const popupStatus = useSelector(
     (state: any) => state.configurations.periods.bulkUploadPopup.status
   );
@@ -50,7 +61,7 @@ const PeriodsBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    PeriodsService.uploadperiodslist(fileName)
+    PeriodsService.uploadperiodslist(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
@@ -65,10 +76,10 @@ const PeriodsBulkUploadPopup = () => {
       });
   };
 
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/periods_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/periods_sample.csv";
     window.open(url);
-  }
+  };
   return (
     <Modal
       isOpen={popupStatus}

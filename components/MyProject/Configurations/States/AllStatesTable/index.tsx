@@ -33,22 +33,36 @@ import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllStatesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [tenantId, setTenantId] = useState("");
 
   const statesService = new StatesService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: statesData,
     isLoading: stateLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_STATES", searchText], () => statesService.getStates());
+  } = useSWR(["LIST_STATES", searchText], () =>
+    statesService.getStates(tenantId)
+  );
 
   const dataSource = statesData?.data;
 
@@ -310,7 +324,7 @@ const AllStatesTable = () => {
                   />{" "}
                   Add State
                 </Button> */}
-                 {hasPermission(
+                {hasPermission(
                   "configuration_management",
                   "create_configuration"
                 ) && (
@@ -362,7 +376,10 @@ const AllStatesTable = () => {
               <NoDataPage
                 // buttonName={"Add State"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Add State"
                     : ""
                 }

@@ -7,12 +7,23 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CountryService, StatesService } from "services";
 import AsyncSelect from "react-select/async";
+import { checkTenant } from "constants/function";
 
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
-
-  const fetchStateDetails = (id) => StatesService.details(id);
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchStateDetails = (id) => StatesService.details(tenantId, id);
 
   const {
     data: stateData,
@@ -44,7 +55,7 @@ function EditState() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries()
+    countryService.getCountries(tenantId)
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -61,7 +72,7 @@ function EditState() {
   const stateService = new StatesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
@@ -77,7 +88,7 @@ function EditState() {
       CountryID: data.country?.value,
     };
 
-    StatesService.edit(id, backendFormat)
+    StatesService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("State Edited successfully");
         mutate(countryMutate());

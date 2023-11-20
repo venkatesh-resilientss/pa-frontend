@@ -13,11 +13,22 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 
+import { checkTenant } from "constants/function";
 
 const DepartmentBulkUploadPopup = () => {
   const dispatch = useDispatch();
 
-  
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const departmentsService = new DepartmentsService();
 
   const {
@@ -25,7 +36,9 @@ const DepartmentBulkUploadPopup = () => {
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
+  } = useSWR("LIST_DEPARTMENTS", () =>
+    departmentsService.getDepartments(tenantId)
+  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.bulkUploadPopup.status
@@ -43,17 +56,12 @@ const DepartmentBulkUploadPopup = () => {
       setUploadedFiles([]);
     }
   }, [popupStatus]);
-  
+
   const onDrop = useCallback((acceptedFiles) => {
-    
     setUploadedFiles(acceptedFiles);
   }, []);
 
-
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -61,36 +69,34 @@ const DepartmentBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+  const handleUpload = () => {
+    if (uploadedFiles.length === 0) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
 
+    const fileName = uploadedFiles[0];
 
-const handleUpload = () => {
-  if (uploadedFiles.length === 0) {
-    toast.error("Please select a file to upload.");
-    return;
-  }
+    // Call the uploadbanklist function from your service with only the file name
+    DepartmentsService.uploaddepartmentlist(tenantId, fileName)
+      .then((result) => {
+        reloadDepartmentTable();
+        // Handle success
+        toast.success("Data inserted successfully.");
+        dispatch(closeBulkUploadDepartmentPopup("close"));
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Upload failed", error);
 
-  const fileName = uploadedFiles[0];
+        toast.error("Failed to insert data.");
+      });
+  };
 
-  // Call the uploadbanklist function from your service with only the file name
-  DepartmentsService.uploaddepartmentlist(fileName)
-    .then((result) => {
-      reloadDepartmentTable();
-      // Handle success
-      toast.success("Data inserted successfully.");
-      dispatch(closeBulkUploadDepartmentPopup("close"));
-    })
-    .catch((error) => {
-      // Handle error
-      console.error("Upload failed", error);
-     
-      toast.error("Failed to insert data.");
-    });
-};
-
-const handleDownload = ()=>{
-  const url = '/upload-sample-files/departments_sample.csv';
-  window.open(url);
-}
+  const handleDownload = () => {
+    const url = "/upload-sample-files/departments_sample.csv";
+    window.open(url);
+  };
   return (
     <Modal
       isOpen={popupStatus}
@@ -203,7 +209,6 @@ const handleDownload = ()=>{
             onClick={() => dispatch(closeBulkUploadDepartmentPopup("close"))}
             color="white"
             style={{
-              
               fontSize: "14px",
               fontWeight: "400",
             }}
@@ -211,7 +216,7 @@ const handleDownload = ()=>{
             Cancel
           </Button>
           <Button
-          onClick={handleUpload}
+            onClick={handleUpload}
             style={{
               fontSize: "14px",
               backgroundColor: "#00AEEF",

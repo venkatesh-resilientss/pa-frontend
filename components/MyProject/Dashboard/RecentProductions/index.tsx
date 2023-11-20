@@ -14,20 +14,30 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Controller } from "react-hook-form";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
+import { checkTenant } from "constants/function";
 
 function RecentProductions() {
   const dashboardService = new DashboardService();
-  const [recentProductionsData,setRecentProductionsData] = useState([]);
-  const [isLoading,setIsLoading] = useState(false);
-  useEffect(()=>{
-    dashboardService.getRecentProductions().then(res=>{
-      setIsLoading(res.isLoading)
-      if(res.data){
-        // console.log(res.data)
-        setRecentProductionsData(res.data)
+  const [recentProductionsData, setRecentProductionsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        dashboardService.getRecentProductions(tenant.id).then((res) => {
+          setIsLoading(res.isLoading);
+          if (res.data) {
+            // console.log(res.data)
+            setRecentProductionsData(res.data);
+          }
+        });
       }
-    })
-  },[])
+    };
+    getTenant();
+  }, []);
+  useEffect(() => {}, []);
   return (
     <>
       <div className="d-flex justify-content-between">

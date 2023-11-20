@@ -2,9 +2,10 @@ import { useForm, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LocationsService, SeriesService, SetsService } from "services";
 import useSWR from "swr";
+import { checkTenant } from "constants/function";
 
 function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
@@ -13,11 +14,21 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
   const [set, setSet] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries(tenantId)
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -35,7 +46,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations(tenantId)
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -52,7 +63,9 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets(tenantId)
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {

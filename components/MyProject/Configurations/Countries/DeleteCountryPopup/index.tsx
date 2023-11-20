@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { BankService, CountryService } from "services";
 import { closeDeleteCountryPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteCountryPopup = () => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const countryService = new CountryService();
 
   const { mutate: countryMutate } = useSWR("LIST_COUNTRIES", () =>
-    countryService.getCountries()
+    countryService.getCountries(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -27,7 +39,7 @@ const DeleteCountryPopup = () => {
 
   const handleDeleteCountry = async () => {
     try {
-      await CountryService.delete(helperData);
+      await CountryService.delete(tenantId, helperData);
       toast.success("Country Deleted Successfully");
       dispatch(closeDeleteCountryPopup("close"));
       mutate(countryMutate());

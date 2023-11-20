@@ -7,18 +7,30 @@ import { closeDeleteSetPopup } from "redux/slices/mySlices/configurations";
 import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteSetPopup = ({ id }) => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
 
   const setService = new SetsService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: setData,
     isLoading: userLoading,
     error: userError,
     mutate: setMutate,
-  } = useSWR("LIST_SETS", () => setService.getSets());
+  } = useSWR("LIST_SETS", () => setService.getSets(tenantId));
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.sets.deleteSetPopup.status
@@ -31,7 +43,7 @@ const DeleteSetPopup = ({ id }) => {
   const handleDeleteSet = async () => {
     console.log("IDDD", id);
     try {
-      await SetsService.delete(helperData);
+      await SetsService.delete(tenantId, helperData);
       toast.success("Set Deleted Successfully");
       dispatch(closeDeleteSetPopup("close"));
       mutate(setMutate());

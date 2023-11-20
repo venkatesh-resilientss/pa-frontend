@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { TaxCodesService } from "services";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { checkTenant } from "constants/function";
 
 function AddTaxCode() {
   const {
@@ -15,9 +16,19 @@ function AddTaxCode() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
 
   const [activeStatus, setActiveStatus] = useState(false);
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const onSubmit = (data) => {
     let backendFormat;
 
@@ -27,7 +38,7 @@ function AddTaxCode() {
       is_active: activeStatus,
     };
 
-    TaxCodesService.create(backendFormat)
+    TaxCodesService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("TaxCode Added successfully");
         reset();

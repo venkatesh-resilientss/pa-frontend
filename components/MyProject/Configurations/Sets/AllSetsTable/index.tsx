@@ -30,25 +30,36 @@ import {
 } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import { checkTenant } from "constants/function";
 
 const AllSetsTable = () => {
   const setsService = new SetsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [tenantId, setTenantId] = useState("");
 
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: setsData,
     isLoading: setsLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets());
+  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets(tenantId));
   const dataSource = setsData?.result;
 
   console.log(setsData, "setsData");
@@ -369,10 +380,13 @@ const AllSetsTable = () => {
               <NoDataPage
                 // buttonName={"Create Set"}
                 buttonName={
-                    hasPermission("configuration_management", "create_configuration")
-                      ? "Create Set"
-                      : "No button"
-                  }
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
+                    ? "Create Set"
+                    : "No button"
+                }
                 buttonLink={"/configurations/add-set"}
               />
             </div>

@@ -8,16 +8,27 @@ import { closeBulkUploadSeriesPopup } from "redux/slices/mySlices/configurations
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SeriesService } from "services";
 
+import { checkTenant } from "constants/function";
 
 const SeriesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const popupStatus = useSelector(
     (state: any) => state.configurations.series.bulkUploadPopup.status
   );
@@ -29,7 +40,6 @@ const SeriesBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -41,7 +51,6 @@ const SeriesBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
-
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
@@ -51,18 +60,17 @@ const SeriesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    SeriesService.uploadserieslist(fileName)
+    SeriesService.uploadserieslist(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
-    
-        
+
         dispatch(closeBulkUploadSeriesPopup("close"));
       })
       .catch((error) => {
         // Handle error
         console.error("Upload failed", error);
-      
+
         toast.error("Failed to insert data.");
       });
   };
@@ -188,7 +196,8 @@ const SeriesBulkUploadPopup = () => {
           >
             Cancel
           </Button>
-          <Button onClick={handleUpload}
+          <Button
+            onClick={handleUpload}
             style={{
               fontSize: "14px",
               fontWeight: "400",

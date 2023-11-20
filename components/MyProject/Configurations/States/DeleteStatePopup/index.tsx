@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { closeDeleteStatePopup } from "redux/slices/mySlices/configurations";
 import { StatesService } from "services";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteStatePopup = ({ id }) => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
 
   const stateService = new StatesService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { mutate: stateMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -28,7 +40,7 @@ const DeleteStatePopup = ({ id }) => {
   const handleDeleteState = async () => {
     console.log("IDDD", id);
     try {
-      await StatesService.delete(helperData);
+      await StatesService.delete(tenantId, helperData);
       toast.success("State Deleted Successfully");
       dispatch(closeDeleteStatePopup("delete"));
       mutate(stateMutate());

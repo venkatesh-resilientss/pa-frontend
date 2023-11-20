@@ -8,15 +8,16 @@ import { closeBulkUploadStatesPopup } from "redux/slices/mySlices/configurations
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { StatesService } from "services";
-
+import { checkTenant } from "constants/function";
 
 const StatesBulkUploadPopup = () => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.states.bulkUploadPopup.status
@@ -25,12 +26,19 @@ const StatesBulkUploadPopup = () => {
   const helperData = useSelector(
     (state: any) => state.configurations.states.bulkUploadPopup.helperData
   );
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    
-
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -42,7 +50,6 @@ const StatesBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
-
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
@@ -52,26 +59,25 @@ const StatesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    StatesService.uploadstateslist(fileName)
+    StatesService.uploadstateslist(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
-    
-        
+
         dispatch(closeBulkUploadStatesPopup("close"));
       })
       .catch((error) => {
         // Handle error
         console.error("Upload failed", error);
-      
+
         toast.error("Failed to insert data.");
       });
   };
 
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/states_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/states_sample.csv";
     window.open(url);
-  }
+  };
   return (
     <Modal
       isOpen={popupStatus}
@@ -190,7 +196,8 @@ const StatesBulkUploadPopup = () => {
           >
             Cancel
           </Button>
-          <Button onClick={handleUpload}
+          <Button
+            onClick={handleUpload}
             style={{
               fontSize: "14px",
               fontWeight: "400",

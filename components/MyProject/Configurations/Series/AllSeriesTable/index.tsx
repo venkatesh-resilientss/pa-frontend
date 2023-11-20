@@ -29,25 +29,38 @@ import {
   openDeleteSeriesPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import { checkTenant } from "constants/function";
 
 const AllSeriesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [tenantId, setTenantId] = useState("");
 
   const seriesService = new SeriesService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: seriesData,
     isLoading: seriesLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SERIES", searchText], () => seriesService.getSeries());
+  } = useSWR(["LIST_SERIES", searchText], () =>
+    seriesService.getSeries(tenantId)
+  );
 
   const dataSource = seriesData?.data;
 
@@ -366,7 +379,10 @@ const AllSeriesTable = () => {
               <NoDataPage
                 // buttonName={"Add Series"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Series"
                     : ""
                 }

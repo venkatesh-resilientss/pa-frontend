@@ -3,11 +3,13 @@ import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SeriesService } from "services";
+import { checkTenant } from "constants/function";
 
 function AddSeries() {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
 
   const {
     control,
@@ -16,7 +18,16 @@ function AddSeries() {
     reset,
     formState: { errors },
   } = useForm();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const [activeStatus, SeriesActiveStatus] = useState(false);
 
   const onSubmit = (data) => {
@@ -29,7 +40,7 @@ function AddSeries() {
       is_active: activeStatus,
     };
 
-    SeriesService.create(backendFormat)
+    SeriesService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Series Added successfully");
         reset();

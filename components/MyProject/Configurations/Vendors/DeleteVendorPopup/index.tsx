@@ -12,14 +12,26 @@ import {
 } from "services";
 import { closeDeleteVendorPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteVendorPopup = () => {
   const dispatch = useDispatch();
 
   const vendorService = new VendorsService();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { mutate: coaMutate } = useSWR("LIST_VENDORS", () =>
-    vendorService.getVendors()
+    vendorService.getVendors(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -32,7 +44,7 @@ const DeleteVendorPopup = () => {
 
   const handleDeleteVendor = async () => {
     try {
-      await VendorsService.delete(helperData);
+      await VendorsService.delete(tenantId, helperData);
       toast.success("Vendor Deleted Successfully");
       dispatch(closeDeleteVendorPopup("close"));
       mutate(coaMutate());

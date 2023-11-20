@@ -9,8 +9,8 @@ import {
 } from "../lib/endpoints";
 
 class DepartmentsService extends APIService {
-  getDepartments(): Promise<any> {
-    return this.get(`${GET_DEPARTMENTS}`)
+  getDepartments(tenant_id:any): Promise<any> {
+    return this.get(`${GET_DEPARTMENTS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -19,9 +19,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static create(data: any) {
+  static create(tenant_id:any,data: any) {
     return axios
-      .post(CREATE_DEPARTMENTS, data)
+      .post(CREATE_DEPARTMENTS(tenant_id), data)
       .then((response) => {
         return response.data;
       })
@@ -31,14 +31,14 @@ class DepartmentsService extends APIService {
   }
 
 
-    static uploaddepartmentlist(fileName: any) {
+    static uploaddepartmentlist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_DEPARTMENT_LIST, formData, {
+      return axios.post(UPLOAD_DEPARTMENT_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -54,9 +54,9 @@ class DepartmentsService extends APIService {
       });
     }
 
-  static details(id: any) {
+  static details(tenant_id:any,id: any) {
     return axios
-      .get(DEPARTMENT_DETAIL_ENDPOINT(id))
+      .get(DEPARTMENT_DETAIL_ENDPOINT(tenant_id,id))
       .then((response) => {
         return response.data;
       })
@@ -65,9 +65,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static delete(id: any) {
+  static delete(tenant_id:any,id: any) {
     return axios
-      .delete(DELETE_DEPARTMENTS(id))
+      .delete(DELETE_DEPARTMENTS(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -76,9 +76,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static edit(id: any, updatedData: any) {
+  static edit(tenant_id:any,id: any, updatedData: any) {
     return axios
-      .put(EDIT_DEPARTMENTS(id), updatedData)
+      .put(EDIT_DEPARTMENTS(tenant_id,id), updatedData)
       .then((response) => {
         return response?.data;
       })

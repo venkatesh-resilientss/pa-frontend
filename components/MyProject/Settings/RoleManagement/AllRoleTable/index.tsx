@@ -19,19 +19,33 @@ import axios from "axios";
 import DataTableWithButtons from "components/Generic/Table/index";
 import { useRouter } from "next/router";
 import GridTable from "components/grid-tables/gridTable";
-import { useEffect } from "react";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import { useEffect, useState } from "react";
+import { checkTenant } from "constants/function";
+
 const AllRoleTable = () => {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
+
   const roleservice = new RoleService();
 
-  
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
 
-  const { data: rolesdata, isLoading: rolesLoading, mutate: mutateRoles  } = useSWR(
-    "LIST_ROLES",
-    () => roleservice.getRoles()
-  );
+  const {
+    data: rolesdata,
+    isLoading: rolesLoading,
+    mutate: mutateRoles,
+  } = useSWR("LIST_ROLES", () => roleservice.getRoles(tenantId));
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -76,7 +90,7 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       // cellRenderer: (row) => (row.IsActive ? "Active" : "In-active"),
     },
-   {
+    {
       field: "Options",
       cellRenderer: (row) => {
         console.log(row, "DATA");
@@ -132,7 +146,7 @@ const AllRoleTable = () => {
 
   const deleteRole = (role_id) => {
     roleservice
-      .delete_role(role_id)
+      .delete_role(tenantId, role_id)
       .then((res) => {
         mutateRoles();
         toast.success("Role delelted successfully");

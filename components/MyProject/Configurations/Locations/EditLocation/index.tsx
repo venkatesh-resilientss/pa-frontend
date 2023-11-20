@@ -5,12 +5,23 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
+import { checkTenant } from "constants/function";
 
 function EditLocation() {
   const router = useRouter();
   const { id } = router.query;
-
-  const fetchLocationDetails = (id) => LocationsService.details(id);
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchLocationDetails = (id) => LocationsService.details(tenantId, id);
 
   const {
     data: locationData,
@@ -44,7 +55,7 @@ function EditLocation() {
   const locationsService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
@@ -59,7 +70,7 @@ function EditLocation() {
       code: data.locationcode,
     };
 
-    LocationsService.edit(id, backendFormat)
+    LocationsService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());

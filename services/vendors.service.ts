@@ -3,8 +3,8 @@ import APIService from "./api.service";
 import { CREATE_VENDORS, DELETE_VENDORS, EDIT_VENDORS, GET_VENDORS, UPLOAD_VENDORS_LIST } from "../lib/endpoints";
 
 class VendorsService extends APIService {
-  getVendors(): Promise<any> {
-    return this.get(`${GET_VENDORS}`)
+  getVendors(tenant_id:any): Promise<any> {
+    return this.get(`${GET_VENDORS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +13,9 @@ class VendorsService extends APIService {
       });
   }
 
-  static delete(id: any) {
+  static delete(tenant_id:any,id: any) {
     return axios
-      .delete(DELETE_VENDORS(id))
+      .delete(DELETE_VENDORS(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -24,9 +24,9 @@ class VendorsService extends APIService {
       });
   }
 
-  static edit(id: any) {
+  static edit(tenant_id:any,id: any) {
     return axios
-      .put(EDIT_VENDORS(id))
+      .put(EDIT_VENDORS(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -35,9 +35,9 @@ class VendorsService extends APIService {
       });
   }
 
-  static create(data:any) {
+  static create(tenant_id:any,data:any) {
     return axios
-      .post(CREATE_VENDORS, data)
+      .post(CREATE_VENDORS(tenant_id), data)
       .then((response) => {
         return response.data;
       })
@@ -46,14 +46,14 @@ class VendorsService extends APIService {
       });
   }
 
-  static upload(file:any){
+  static upload(tenant_id:any,file:any){
      // Create a FormData object
      const formData = new FormData();
 
      // Append the file name to the FormData object with the specified field name
      formData.append("file", file);
 
-     return axios.post(UPLOAD_VENDORS_LIST, formData, {
+     return axios.post(UPLOAD_VENDORS_LIST(tenant_id), formData, {
        headers: {
          'Content-Type': 'multipart/form-data',
        },

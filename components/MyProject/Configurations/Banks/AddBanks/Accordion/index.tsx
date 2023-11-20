@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionBody,
@@ -18,10 +18,21 @@ import PhysicalAddressForm from "./PhysicalAddress";
 import DefaultAccountForm from "./DefaultAccount";
 import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
+import { checkTenant } from "constants/function";
 
 function BankAccordion() {
   const { reset } = useForm();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const [open, setOpen] = useState("");
 
   const toggle = (id) => {
@@ -52,7 +63,7 @@ function BankAccordion() {
       // SecondaryContactID:
     };
 
-    BankService.create(backendFormat)
+    BankService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Bank Added successfully");
         // reset();

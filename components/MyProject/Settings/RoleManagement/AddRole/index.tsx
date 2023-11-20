@@ -14,16 +14,28 @@ import { useEffect, useState } from "react";
 import { ClientsService, RoleService, ProjectService } from "services";
 import { toast } from "react-toastify";
 import { roleCreationData } from "constants/common";
+import { checkTenant } from "constants/function";
 
 const roleservice = new RoleService();
 function AddRole() {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
 
   const [restricted, setRestricted] = useState(false);
   const [role_name, setRole_name] = useState("");
   const [role_id, setRole_id] = useState();
   const [viewmode, setViewmode] = useState(false);
   const [permissionSet, setPermissionSet]: any = useState(roleCreationData);
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
 
   const handlePermissionChange = (category, permission, newValue) => {
     setPermissionSet((prevPermissionSet) => {
@@ -50,7 +62,7 @@ function AddRole() {
     }
     if (router.query.q === "edit_role" || router.query.q === "view_role") {
       roleservice
-        .getrole_by_id(router.query.role_id)
+        .getrole_by_id(tenantId, router.query.role_id)
         .then((res) => {
           console.log("res", res);
           setRole_name(res.RoleName);
@@ -167,7 +179,7 @@ function AddRole() {
     }
 
     roleservice
-      .post_roles(payload)
+      .post_roles(tenantId, payload)
       .then((res) => {
         toast.success("Role created successfully");
         router.push("/settings/rolemanagement");
@@ -198,7 +210,7 @@ function AddRole() {
     }
 
     roleservice
-      .update_role(roleId, payload)
+      .update_role(tenantId, roleId, payload)
       .then((res) => {
         toast.success("Role updated successfully");
         router.push("/settings/rolemanagement");
@@ -217,9 +229,8 @@ function AddRole() {
       // Update all permissions within the category
       Object.keys(updatedPermissionSet[category].permissions).forEach(
         (permission) => {
-          updatedPermissionSet[category].permissions[
-            permission
-          ].state = newValue;
+          updatedPermissionSet[category].permissions[permission].state =
+            newValue;
         }
       );
 

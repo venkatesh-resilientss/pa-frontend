@@ -6,13 +6,25 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { CurrencyService } from "services";
+import { checkTenant } from "constants/function";
 
 function EditCurrency() {
   const router = useRouter();
 
   const { id } = router.query;
+  const [tenantId, setTenantId] = useState("");
 
-  const fetchCurrencyDetails = (id) => CurrencyService.details(id);
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchCurrencyDetails = (id) => CurrencyService.details(tenantId, id);
 
   const {
     data: currencyData,
@@ -46,7 +58,7 @@ function EditCurrency() {
   const currencyService = new CurrencyService();
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
@@ -61,7 +73,7 @@ function EditCurrency() {
       code: data.currencycode,
     };
 
-    CurrencyService.edit(id, backendFormat)
+    CurrencyService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());

@@ -9,8 +9,8 @@ import {
 } from "../lib/endpoints";
 
 class COAAccountsService extends APIService {
-  getCoasAccounts(): Promise<any> {
-    return this.get(`${GET_COAACCOUNTS}`)
+  getCoasAccounts(tenant_id:any): Promise<any> {
+    return this.get(`${GET_COAACCOUNTS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -19,9 +19,9 @@ class COAAccountsService extends APIService {
       });
   }
 
-  static details(id: any) {
+  static details(tenant_id:any,id: any) {
     return axios
-      .get(COAACCOUNTS_DETAIL_ENDPOINT(id))
+      .get(COAACCOUNTS_DETAIL_ENDPOINT(tenant_id,id))
       .then((response) => {
         return response.data;
       })
@@ -30,9 +30,9 @@ class COAAccountsService extends APIService {
       });
   }
 
-  static create(data: any) {
+  static create(tenant_id:any,data: any) {
     return axios
-      .post(CREATE_COAACCOUNTS, data)
+      .post(CREATE_COAACCOUNTS(tenant_id), data)
       .then((response) => {
         return response.data;
       })
@@ -41,9 +41,9 @@ class COAAccountsService extends APIService {
       });
   }
 
-  static delete(id: any) {
+  static delete(tenant_id:any,id: any) {
     return axios
-      .delete(DELETE_COAACCOUNTS(id))
+      .delete(DELETE_COAACCOUNTS(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -52,9 +52,9 @@ class COAAccountsService extends APIService {
       });
   }
 
-  static edit(id: any,data) {
+  static edit(tenant_id:any,id: any,data) {
     return axios
-      .put(EDIT_COAACCOUNTS(id),data)
+      .put(EDIT_COAACCOUNTS(tenant_id,id),data)
       .then((response) => {
         return response?.data;
       })

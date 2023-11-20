@@ -28,11 +28,12 @@ import {
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllBanksTable = () => {
   const dispatch = useDispatch();
@@ -40,13 +41,24 @@ const AllBanksTable = () => {
   const [searchText, setSearchText] = useState("");
 
   const bankService = new BankService();
+  const [tenantId, setTenantId] = useState("");
 
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: bankData,
     isLoading: bankLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks());
+  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks(tenantId));
 
   const dataSource = bankData?.data;
 
@@ -363,11 +375,14 @@ const AllBanksTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add Bank"}
-                 buttonName={
-                    hasPermission("configuration_management", "create_configuration")
-                      ? "Create Bank"
-                      : "No button"
-                  }
+                buttonName={
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
+                    ? "Create Bank"
+                    : "No button"
+                }
                 buttonLink={"/configurations/add-bank"}
               />
             </div>

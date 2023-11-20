@@ -6,13 +6,24 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { COAAccountsService } from "services";
+import { checkTenant } from "constants/function";
 
 function EditChartOfAccounts() {
   const router = useRouter();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { id } = router.query;
 
-  const fetchCOADetails = (id) => COAAccountsService.details(id);
+  const fetchCOADetails = (id) => COAAccountsService.details(tenantId, id);
 
   const {
     data: coaData,
@@ -45,7 +56,7 @@ function EditChartOfAccounts() {
   const cOAAccountsService = new COAAccountsService();
 
   const { mutate: currencyMutate } = useSWR("LIST_COA", () =>
-    cOAAccountsService.getCoasAccounts()
+    cOAAccountsService.getCoasAccounts(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
@@ -64,7 +75,7 @@ function EditChartOfAccounts() {
       postable: postable,
     };
 
-    COAAccountsService.edit(id, backendFormat)
+    COAAccountsService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("COA Edited successfully");
         mutate(currencyMutate());

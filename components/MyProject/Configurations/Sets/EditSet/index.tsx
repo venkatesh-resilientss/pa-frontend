@@ -6,13 +6,24 @@ import { useEffect, useState } from "react";
 import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
+import { checkTenant } from "constants/function";
 
 function EditSet() {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
 
   const { id } = router.query;
-
-  const fetchSetDetails = (id) => SetsService.details(id);
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchSetDetails = (id) => SetsService.details(tenantId, id);
 
   const {
     data: setData,
@@ -43,7 +54,7 @@ function EditSet() {
   const setService = new SetsService();
 
   const { mutate: countryMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets()
+    setService.getSets(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
@@ -59,7 +70,7 @@ function EditSet() {
       endDate: data.endDate,
     };
 
-    SetsService.edit(id, backendFormat)
+    SetsService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Set Edited successfully");
         mutate(countryMutate());

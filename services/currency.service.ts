@@ -3,8 +3,8 @@
   import {CREATE_CURRENCIES, CURRENCY_DETAIL_ENDPOINT, DELETE_CURRENCIES, EDIT_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES,UPLOAD_CURRENCIES_LIST} from '../lib/endpoints';
 
   class CurrencyService extends APIService {
-    getCurrencies(): Promise<any> {
-      return this.get(`${GET_CURRENCIES}`)
+    getCurrencies(tenant_id:any): Promise<any> {
+      return this.get(`${GET_CURRENCIES(tenant_id)}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +13,9 @@
         });
     }
 
-    static details(id: any) {
+    static details(tenant_id:any,id: any) {
       return axios
-        .get(CURRENCY_DETAIL_ENDPOINT(id))
+        .get(CURRENCY_DETAIL_ENDPOINT(tenant_id,id))
         .then((response) => {
           return response.data;
         })
@@ -24,9 +24,9 @@
         });
     }
 
-    static create(data:any) {
+    static create(tenant_id:any,data:any) {
       return axios
-        .post(CREATE_CURRENCIES, data)
+        .post(CREATE_CURRENCIES(tenant_id), data)
         .then((response) => {
           return response.data;
         })
@@ -35,14 +35,14 @@
         });
     }
 
-      static uploadcurrencylist(fileName: any) {
+      static uploadcurrencylist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_CURRENCIES_LIST, formData, {
+      return axios.post(UPLOAD_CURRENCIES_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -58,9 +58,9 @@
       });
     }
 
-    static delete(id: any) {
+    static delete(tenant_id:any,id: any) {
       return axios
-        .delete(DELETE_CURRENCIES(id))
+        .delete(DELETE_CURRENCIES(tenant_id,id))
         .then((response) => {
           return response?.data;
         })
@@ -69,9 +69,9 @@
         });
     }
 
-    static edit(id: any,data) {
+    static edit(tenant_id:any,id: any,data) {
       return axios
-        .put(EDIT_CURRENCIES(id),data)
+        .put(EDIT_CURRENCIES(tenant_id,id),data)
         .then((response) => {
           return response?.data;
         })

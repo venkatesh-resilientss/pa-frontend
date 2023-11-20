@@ -7,14 +7,27 @@ import useSWR, { mutate } from "swr";
 import { BankService, BudgetService } from "services";
 import { closeDeleteBudgetPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteBudgetPopup = () => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
 
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const budgetService = new BudgetService();
 
   const { mutate: budgetMutate } = useSWR("LIST_BUDGETS", () =>
-    budgetService.getBudgets()
+    budgetService.getBudgets(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -26,8 +39,10 @@ const DeleteBudgetPopup = () => {
   );
 
   const handleDeleteBudget = async () => {
+    const tenant = await checkTenant();
+
     try {
-      await BudgetService.delete(helperData);
+      await BudgetService.delete(tenant.id, helperData);
       toast.success("Budget Deleted Successfully");
       dispatch(closeDeleteBudgetPopup("close"));
       mutate(budgetMutate());

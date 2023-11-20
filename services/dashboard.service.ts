@@ -4,8 +4,8 @@ import { GET_DASHBOARD_STATS, GET_ONBOARDED_CLIENTS, GET_RECENT_PRODUCTIONS } fr
 
 class DashboardService extends APIService {
   
-  getStats(): Promise<any> {
-    return this.get(`${GET_DASHBOARD_STATS}`)
+  getStats(tenant_id:any): Promise<any> {
+    return this.get(`${GET_DASHBOARD_STATS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -15,8 +15,8 @@ class DashboardService extends APIService {
   }
 
 
-  getRecentProductions(): Promise<any> {
-    return this.get(`${GET_RECENT_PRODUCTIONS}`)
+  getRecentProductions(tenant_id:any): Promise<any> {
+    return this.get(`${GET_RECENT_PRODUCTIONS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -26,8 +26,8 @@ class DashboardService extends APIService {
   }
 
 
-  getOnBoardedClients(): Promise<any> {
-    return this.get(`${GET_ONBOARDED_CLIENTS}`)
+  getOnBoardedClients(tenant_id:any): Promise<any> {
+    return this.get(`${GET_ONBOARDED_CLIENTS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })

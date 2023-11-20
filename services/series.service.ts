@@ -3,8 +3,8 @@
   import {CREATE_SERIES, DELETE_SERIES, EDIT_SERIES, GET_SERIES, SERIES_DETAIL_ENDPOINT,UPLOAD_SERIES_LIST} from '../lib/endpoints';
 
   class SeriesService extends APIService {
-    getSeries(): Promise<any> {
-      return this.get(`${GET_SERIES}`)
+    getSeries(tenant_id:any): Promise<any> {
+      return this.get(`${GET_SERIES(tenant_id)}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +13,9 @@
         });
     }
 
-    static create(data:any) {
+    static create(tenant_id:any,data:any) {
       return axios
-        .post(CREATE_SERIES, data)
+        .post(CREATE_SERIES(tenant_id), data)
         .then((response) => {
           return response.data;
         })
@@ -25,14 +25,14 @@
     }
 
 
-      static uploadserieslist(fileName: any) {
+      static uploadserieslist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_SERIES_LIST, formData, {
+      return axios.post(UPLOAD_SERIES_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -48,9 +48,9 @@
       });
     }
 
-    static delete(id: any) {
+    static delete(tenant_id:any,id: any) {
       return axios
-        .delete(DELETE_SERIES(id))
+        .delete(DELETE_SERIES(tenant_id,id))
         .then((response) => {
           return response?.data;
         })
@@ -60,9 +60,9 @@
     }
 
 
-    static edit(id: any,data) {
+    static edit(tenant_id:any,id: any,data) {
       return axios
-        .put(EDIT_SERIES(id),data)
+        .put(EDIT_SERIES(tenant_id,id),data)
         .then((response) => {
           return response?.data;
         })
@@ -72,9 +72,9 @@
     }
 
 
-    static details(id: string) {
+    static details(tenant_id:any,id: string) {
       return axios
-        .get(SERIES_DETAIL_ENDPOINT(id))
+        .get(SERIES_DETAIL_ENDPOINT(tenant_id,id))
         .then((response) => {
           return response.data;
         })

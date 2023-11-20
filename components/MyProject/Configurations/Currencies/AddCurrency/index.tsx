@@ -2,11 +2,23 @@ import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { CurrencyService } from "services";
+import { checkTenant } from "constants/function";
 
 function AddCurrency() {
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     control,
     setError,
@@ -29,7 +41,7 @@ function AddCurrency() {
       IsActive: activeStatus,
     };
 
-    CurrencyService.create(backendFormat)
+    CurrencyService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Currency Added successfully");
         reset();

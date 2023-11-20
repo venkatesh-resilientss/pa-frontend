@@ -3,8 +3,8 @@ import APIService from './api.service';
 import {CREATE_SETS, DELETE_SETS, EDIT_SERIES, GET_SETS, SETS_DETAIL_ENDPOINT,UPLOAD_SET_LIST} from '../lib/endpoints';
 
 class SetsService extends APIService {
-  getSets(): Promise<any> {
-    return this.get(`${GET_SETS}`)
+  getSets(tenant_id:any): Promise<any> {
+    return this.get(`${GET_SETS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +13,9 @@ class SetsService extends APIService {
       });
   }
 
-  static create(data:any) {
+  static create(tenant_id:any,data:any) {
     return axios
-      .post(CREATE_SETS, data)
+      .post(CREATE_SETS(tenant_id), data)
       .then((response) => {
         return response.data;
       })
@@ -24,14 +24,14 @@ class SetsService extends APIService {
       });
   }
 
-  static uploadsetlist(fileName: any) {
+  static uploadsetlist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_SET_LIST, formData, {
+      return axios.post(UPLOAD_SET_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -47,9 +47,9 @@ class SetsService extends APIService {
       });
     }
   
-  static delete(id: any) {
+  static delete(tenant_id:any,id: any) {
     return axios
-      .delete(DELETE_SETS(id))
+      .delete(DELETE_SETS(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -58,9 +58,9 @@ class SetsService extends APIService {
       });
   }
 
-  static edit(id: any,data) {
+  static edit(tenant_id:any,id: any,data) {
     return axios
-      .put(EDIT_SERIES(id),data)
+      .put(EDIT_SERIES(tenant_id,id),data)
       .then((response) => {
         return response?.data;
       })
@@ -69,9 +69,9 @@ class SetsService extends APIService {
       });
   }
 
-  static details(id: string) {
+  static details(tenant_id:any,id: string) {
     return axios
-      .get(SETS_DETAIL_ENDPOINT(id))
+      .get(SETS_DETAIL_ENDPOINT(tenant_id,id))
       .then((response) => {
         return response.data;
       })

@@ -3,8 +3,8 @@
   import {COUNTRIES_DETAIL_ENDPOINT, CREATE_COUNTRIES, DELETE_COUNTRIES, EDIT_COUNTRIES, GET_COUNTRIES,UPLOAD_COUNTRIES_LIST} from '../lib/endpoints';
 
   class CountryService extends APIService {
-    getCountries(): Promise<any> {
-      return this.get(`${GET_COUNTRIES}`)
+    getCountries(tenant_id:any): Promise<any> {
+      return this.get(`${GET_COUNTRIES(tenant_id)}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +13,9 @@
         });
     }
 
-    static create(data:any) {
+    static create(tenant_id:any,data:any) {
       return axios
-        .post(CREATE_COUNTRIES, data)
+        .post(CREATE_COUNTRIES(tenant_id), data)
         .then((response) => {
           return response.data;
         })
@@ -25,14 +25,14 @@
     }
 
 
-      static uploadcouuntrieslist(fileName: any) {
+      static uploadcouuntrieslist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_COUNTRIES_LIST, formData, {
+      return axios.post(UPLOAD_COUNTRIES_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -48,9 +48,9 @@
       });
     }
 
-    static delete(id: any) {
+    static delete(tenant_id:any,id: any) {
       return axios
-        .delete(DELETE_COUNTRIES(id))
+        .delete(DELETE_COUNTRIES(tenant_id,id))
         .then((response) => {
           return response?.data;
         })
@@ -59,9 +59,9 @@
         });
     }
 
-    static edit(id: any,data) {
+    static edit(tenant_id:any,id: any,data) {
       return axios
-        .put(EDIT_COUNTRIES(id),data)
+        .put(EDIT_COUNTRIES(tenant_id,id),data)
         .then((response) => {
           return response?.data;
         })
@@ -70,9 +70,9 @@
         });
     }
 
-    static details(id: string) {
+    static details(tenant_id:any,id: string) {
       return axios
-        .get(COUNTRIES_DETAIL_ENDPOINT(id))
+        .get(COUNTRIES_DETAIL_ENDPOINT(tenant_id,id))
         .then((response) => {
           return response.data;
         })

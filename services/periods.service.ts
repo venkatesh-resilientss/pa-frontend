@@ -3,8 +3,8 @@
   import {DELETE_PERIODS, EDIT_PERIODS, GET_CLIENTS, GET_PERIODS, PERIODS_DETAIL_ENDPOINT,UPLOAD_PERIODS_LIST} from '../lib/endpoints';
 
   class PeriodsService extends APIService {
-    getPeriods(): Promise<any> {
-      return this.get(`${GET_PERIODS}`)
+    getPeriods(tenant_id:any): Promise<any> {
+      return this.get(`${GET_PERIODS(tenant_id)}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +13,9 @@
         });
     }
 
-    static create(data:any) {
+    static create(tenant_id:any,data:any) {
       return axios
-        .post(GET_PERIODS, data)
+        .post(GET_PERIODS(tenant_id), data)
         .then((response) => {
           return response.data;
         })
@@ -24,14 +24,14 @@
         });
     }
 
-      static uploadperiodslist(fileName: any) {
+      static uploadperiodslist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_PERIODS_LIST, formData, {
+      return axios.post(UPLOAD_PERIODS_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -47,9 +47,9 @@
       });
     }
 
-    static delete(id: any) {
+    static delete(tenant_id:any,id: any) {
       return axios
-        .delete(DELETE_PERIODS(id))
+        .delete(DELETE_PERIODS(tenant_id,id))
         .then((response) => {
           return response?.data;
         })
@@ -58,9 +58,9 @@
         });
     }
 
-    static edit(id: any,data) {
+    static edit(tenant_id:any,id: any,data) {
       return axios
-        .put(EDIT_PERIODS(id),data)
+        .put(EDIT_PERIODS(tenant_id,id),data)
         .then((response) => {
           return response?.data;
         })
@@ -69,9 +69,9 @@
         });
     }
 
-    static details(id: string) {
+    static details(tenant_id:any,id: string) {
       return axios
-        .get(PERIODS_DETAIL_ENDPOINT(id))
+        .get(PERIODS_DETAIL_ENDPOINT(tenant_id,id))
         .then((response) => {
           return response.data;
         })

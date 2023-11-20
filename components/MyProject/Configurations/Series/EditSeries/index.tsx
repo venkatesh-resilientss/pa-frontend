@@ -6,13 +6,24 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { SeriesService } from "services";
+import { checkTenant } from "constants/function";
 
 function EditSeries() {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
 
   const { id } = router.query;
-
-  const fetchSeriesDetails = (id) => SeriesService.details(id);
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchSeriesDetails = (id) => SeriesService.details(tenantId, id);
 
   const {
     data: seriesData,
@@ -43,7 +54,7 @@ function EditSeries() {
   const seriesService = new SeriesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
@@ -58,7 +69,7 @@ function EditSeries() {
       code: data.Seriescode,
     };
 
-    SeriesService.edit(id, backendFormat)
+    SeriesService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Series Edited successfully");
         mutate(countryMutate());

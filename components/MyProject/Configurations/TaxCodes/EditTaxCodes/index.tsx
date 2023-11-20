@@ -6,12 +6,23 @@ import { useEffect, useState } from "react";
 import { TaxCodesService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
+import { checkTenant } from "constants/function";
 
 function EditTaxCode() {
   const router = useRouter();
   const { id } = router.query;
-
-  const fetchTaxCodeDetails = (id) => TaxCodesService.details(id);
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+  const fetchTaxCodeDetails = (id) => TaxCodesService.details(tenantId, id);
 
   const {
     data: taxcodesData,
@@ -44,7 +55,7 @@ function EditTaxCode() {
   const taxCodeService = new TaxCodesService();
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes()
+    taxCodeService.getTaxCodes(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
@@ -58,7 +69,7 @@ function EditTaxCode() {
       is_active: activeStatus,
     };
 
-    TaxCodesService.edit(id, backendFormat)
+    TaxCodesService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("TaxCode Edited successfully");
         mutate(taxCodeMutate());

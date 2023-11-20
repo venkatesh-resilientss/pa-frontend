@@ -8,24 +8,34 @@ import fluentMoneyHand from "assets/DashboardIcons/fluentMoneyHand.svg";
 import prospectClientIcon from "assets/DashboardIcons/prospectClientsIcon.svg";
 import { DashboardService } from "services";
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { checkTenant } from "constants/function";
 
 function Stats() {
   const statsService = new DashboardService();
+  const [tenantId, setTenantId] = useState("");
 
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: statsData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("GET_STATS", () => statsService.getStats());
+  } = useSWR("GET_STATS", () => statsService.getStats(tenantId));
   return (
-    <div
-      className="rounded mt-3 p-3"
-      style={{ backgroundColor: "#EAEDFF" }}
-    >
+    <div className="rounded mt-3 p-3" style={{ backgroundColor: "#EAEDFF" }}>
       <Row noGutters className="d-flex gap-2">
-        <Col >
+        <Col>
           <StatsHorizontal
             statTitle="Total Clients"
             icon={svg1}
@@ -38,7 +48,7 @@ function Stats() {
           />
         </Col>
 
-        <Col >
+        <Col>
           <StatsHorizontal
             statTitle="New Clients this Month"
             icon={user}
@@ -51,7 +61,7 @@ function Stats() {
           />
         </Col>
 
-        <Col >
+        <Col>
           <StatsHorizontal
             statTitle="Active Projects"
             icon={activeProject}
@@ -61,7 +71,7 @@ function Stats() {
             stats={statsData?.ActiveProjects}
           />
         </Col>
-        <Col >
+        <Col>
           <StatsHorizontal
             statTitle="Prospects Clients"
             icon={prospectClientIcon}
@@ -73,7 +83,7 @@ function Stats() {
             stats={statsData?.ProspectClients}
           />
         </Col>
-        <Col >
+        <Col>
           <StatsHorizontal
             statTitle="Outstanding Payments"
             icon={fluentMoneyHand}

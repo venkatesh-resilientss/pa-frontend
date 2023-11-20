@@ -56,12 +56,14 @@ const Welcome = () => {
       console.log(res);
       authService.authenticateUser(res?.token);
 
-      router.push("/dashboard");
+      // router.push("/dashboard");
       //for local
-      // window.location.href = `http://${tenantName}:3000/dashboard`;
+      // window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
 
       // for live
-      // window.location.href = `https://${tenantName}.dflux.ai/?accessToken=${res?.access}&refresh=${res?.refresh}`;
+      window.location.href = `http://${tenantName}.pa.resilientss.com/dashboard`;
+      //http://dev.pa.resilientss.com/
+      // http://dev.pa.resilientss.com/dashboard
     });
   };
 

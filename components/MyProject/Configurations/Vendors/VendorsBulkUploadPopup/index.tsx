@@ -4,18 +4,32 @@ import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
 import infoImage from "assets/MyImages/info 1.svg";
 import { VendorsService } from "services";
-import { closeBulkUploadVendorsPopup, closeDeleteVendorPopup } from "redux/slices/mySlices/configurations";
+import {
+  closeBulkUploadVendorsPopup,
+  closeDeleteVendorPopup,
+} from "redux/slices/mySlices/configurations";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { checkTenant } from "constants/function";
 
 const VendorsBulkUploadPopup = () => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const popupStatus = useSelector(
     (state: any) => state.configurations.vendors.bulkUploadPopup.status
   );
@@ -27,8 +41,6 @@ const VendorsBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-   
-
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -40,7 +52,7 @@ const VendorsBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
-  const handleFileUpload = ()=>{
+  const handleFileUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
@@ -49,27 +61,25 @@ const VendorsBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    VendorsService.upload(fileName)
+    VendorsService.upload(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
-    
-        
+
         dispatch(closeDeleteVendorPopup("close"));
       })
       .catch((error) => {
         // Handle error
         console.error("Upload failed", error);
-      
+
         toast.error("Failed to insert data.");
       });
-  }
-  
+  };
 
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/vendors_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/vendors_sample.csv";
     window.open(url);
-  }
+  };
 
   return (
     <Modal

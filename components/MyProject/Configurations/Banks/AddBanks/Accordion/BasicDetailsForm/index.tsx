@@ -3,9 +3,10 @@ import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CurrencyService } from "services";
 import useSWR from "swr";
+import { checkTenant } from "constants/function";
 
 function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   const {
@@ -17,7 +18,17 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   } = useForm();
 
   const [currency, setCurrency] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const currencyService = new CurrencyService();
 
   const {
@@ -25,7 +36,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {

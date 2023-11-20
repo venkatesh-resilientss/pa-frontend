@@ -3,8 +3,8 @@ import APIService from './api.service';
 import { GET_PROJECTS } from '../lib/endpoints';
 
 class ProjectService extends APIService {
-  getProjects(): Promise<any> {
-    return this.get(`${GET_PROJECTS}`)
+  getProjects(tenant_id:any): Promise<any> {
+    return this.get(`${GET_PROJECTS(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })

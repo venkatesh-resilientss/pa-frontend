@@ -2,12 +2,23 @@ import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LocationsService } from "services";
+import { checkTenant } from "constants/function";
 
 function AddLocation() {
   const router = useRouter();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     control,
     handleSubmit,
@@ -28,7 +39,7 @@ function AddLocation() {
       IsActive: activeStatus,
     };
 
-    LocationsService.create(backendFormat)
+    LocationsService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Location Added successfully");
         reset();

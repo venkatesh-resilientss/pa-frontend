@@ -6,11 +6,25 @@ import { BankService } from "services";
 import useSWR, { mutate } from "swr";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { checkTenant } from "constants/function";
+
 function EditBank() {
   const router = useRouter();
   const { id } = router.query;
+  const [tenantId, setTenantId] = useState("");
 
-  const fetchBankDetails = (id) => BankService.details(id);
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+
+  const fetchBankDetails = (id) => BankService.details(tenantId, id);
 
   const {
     data: bankData,
@@ -40,7 +54,7 @@ function EditBank() {
   const bankService = new BankService();
 
   const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
+    bankService.getBanks(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(bankData?.IsActive);
@@ -55,7 +69,7 @@ function EditBank() {
       location: data.location,
     };
 
-    BankService.edit(id, backendFormat)
+    BankService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Bank Edited successfully");
         mutate(bankMutate());

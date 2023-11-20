@@ -3,8 +3,8 @@
   import {DELETE_CLIENTS, EDIT_CLIENTS, GET_CLIENTS} from '../lib/endpoints';
 
   class ClientsService extends APIService {
-    getClients(): Promise<any> {
-      return this.get(`${GET_CLIENTS}`)
+    getClients(tenant_id:any): Promise<any> {
+      return this.get(`${GET_CLIENTS(tenant_id)}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +13,9 @@
         });
     }
 
-    static delete(id: any) {
+    static delete(tenant_id:any,id: any) {
       return axios
-        .delete(DELETE_CLIENTS(id))
+        .delete(DELETE_CLIENTS(tenant_id,id))
         .then((response) => {
           return response?.data;
         })
@@ -24,9 +24,9 @@
         });
     }
 
-    static edit(id: any) {
+    static edit(tenant_id:any,id: any) {
       return axios
-        .put(EDIT_CLIENTS(id))
+        .put(EDIT_CLIENTS(tenant_id,id))
         .then((response) => {
           return response?.data;
         })

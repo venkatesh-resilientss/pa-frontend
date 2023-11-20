@@ -25,7 +25,7 @@ import DataTableWithButtons from "components/Generic/Table/index";
 import { FcFilmReel } from "react-icons/fc";
 import { useRouter } from "next/router";
 import CountryService from "services/country.service";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
@@ -36,12 +36,23 @@ import {
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllCountriesTable = () => {
   const countryService = new CountryService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const dispatch = useDispatch();
 
   const {
@@ -49,7 +60,9 @@ const AllCountriesTable = () => {
     isLoading: countryLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () => countryService.getCountries());
+  } = useSWR(["LIST_USERS", searchText], () =>
+    countryService.getCountries(tenantId)
+  );
 
   const dataSource = countryData?.data;
 
@@ -298,7 +311,7 @@ const AllCountriesTable = () => {
                   />{" "}
                   Add Country
                 </Button> */}
-                 {hasPermission(
+                {hasPermission(
                   "configuration_management",
                   "create_configuration"
                 ) && (
@@ -350,7 +363,10 @@ const AllCountriesTable = () => {
               <NoDataPage
                 // buttonName={"Add Country"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Country"
                     : "No button"
                 }

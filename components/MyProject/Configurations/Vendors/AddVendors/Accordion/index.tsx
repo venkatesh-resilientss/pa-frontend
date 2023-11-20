@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionBody,
@@ -14,12 +14,23 @@ import { useForm } from "react-hook-form";
 import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { checkTenant } from "constants/function";
 
 function VendorAccordion() {
   const { reset } = useForm();
 
   const [open, setOpen] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -57,7 +68,7 @@ function VendorAccordion() {
       // ParentID
     };
 
-    VendorsService.create(backendFormat)
+    VendorsService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Vendor Added successfully");
         // reset();

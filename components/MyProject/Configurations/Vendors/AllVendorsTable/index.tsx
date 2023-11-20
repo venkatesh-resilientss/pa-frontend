@@ -23,7 +23,7 @@ import { FcFilmReel } from "react-icons/fc";
 import { useRouter } from "next/router";
 import { VendorsService } from "services";
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
@@ -35,15 +35,26 @@ import {
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllVendorsTable = () => {
   const vendorsService = new VendorsService();
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { data: vendorsData, isLoading: vendorsLoading } = useSWR(
     "LIST_VENDORS",
-    () => vendorsService.getVendors()
+    () => vendorsService.getVendors(tenantId)
   );
 
   const dataSource = vendorsData?.result;
@@ -371,7 +382,10 @@ const AllVendorsTable = () => {
               <NoDataPage
                 // buttonName={"Create Vendor"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Vendor"
                     : "No button"
                 }

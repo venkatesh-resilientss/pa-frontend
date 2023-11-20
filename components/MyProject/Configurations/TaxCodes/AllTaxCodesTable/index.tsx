@@ -28,26 +28,37 @@ import {
   openBulkUploadTaxCodesPopup,
   openDeleteTaxCodesPopup,
 } from "redux/slices/mySlices/configurations";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllTaxCodesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [tenantId, setTenantId] = useState("");
 
   const taxcodesService = new TaxCodesService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: taxcodesData,
     isLoading: taxCodesLoading,
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_TAXCODES", searchText], () =>
-    taxcodesService.getTaxCodes()
+    taxcodesService.getTaxCodes(tenantId)
   );
 
   const dataSource = taxcodesData?.data;
@@ -364,7 +375,10 @@ const AllTaxCodesTable = () => {
               <NoDataPage
                 // buttonName={"Add Tax Code"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Tax Code"
                     : "No button"
                 }

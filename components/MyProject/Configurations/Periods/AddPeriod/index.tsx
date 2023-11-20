@@ -3,16 +3,27 @@ import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { PeriodsService } from "services";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import the CSS
 import moment from "moment";
+import { checkTenant } from "constants/function";
 
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const router = useRouter();
 
   const handleStartDateChange = (date) => {
@@ -47,7 +58,7 @@ function AddPeriod() {
       is_active: activeStatus,
     };
 
-    PeriodsService.create(backendFormat)
+    PeriodsService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Period Added successfully");
         reset();
@@ -105,7 +116,6 @@ function AddPeriod() {
           </div>
 
           <hr style={{ height: "2px" }} />
-
           <Form
             style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
             className=" mt-2 d-flex flex-column"

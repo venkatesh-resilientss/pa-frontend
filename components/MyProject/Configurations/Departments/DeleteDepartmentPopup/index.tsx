@@ -7,18 +7,32 @@ import { DepartmentsService } from "services";
 import { closeDeleteDepartmentPopup } from "redux/slices/mySlices/configurations";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteDepartmentPopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: departmentsData,
     isLoading: userLoading,
     error: userError,
     mutate: departmentMutate,
-  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
+  } = useSWR("LIST_DEPARTMENTS", () =>
+    departmentsService.getDepartments(tenantId)
+  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.deleteDepartmentPopup.status
@@ -31,7 +45,7 @@ const DeleteDepartmentPopup = ({ id }) => {
 
   const handleDeleteDepartment = async () => {
     try {
-      await DepartmentsService.delete(helperData);
+      await DepartmentsService.delete(tenantId, helperData);
       toast.success("Department Deleted Successfully");
       dispatch(closeDeleteDepartmentPopup(id));
       mutate(departmentMutate());

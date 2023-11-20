@@ -8,15 +8,27 @@ import { closeBulkUploadBudgetsPopup } from "redux/slices/mySlices/configuration
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BudgetService } from "services";
-
+import { checkTenant } from "constants/function";
 
 const BudgetBulkUploadPopup = () => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
+
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.budgets.bulkUploadPopup.status
@@ -29,8 +41,6 @@ const BudgetBulkUploadPopup = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    
-
     setUploadedFiles(acceptedFiles);
   }, []);
 
@@ -51,18 +61,17 @@ const BudgetBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    BudgetService.uploadbudgetlist(fileName)
+    BudgetService.uploadbudgetlist(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
-    
-        
+
         dispatch(closeBulkUploadBudgetsPopup("close"));
       })
       .catch((error) => {
         // Handle error
         console.error("Upload failed", error);
-      
+
         toast.error("Failed to insert data.");
       });
   };
@@ -189,7 +198,8 @@ const BudgetBulkUploadPopup = () => {
           >
             Cancel
           </Button>
-          <Button onClick={handleUpload}
+          <Button
+            onClick={handleUpload}
             style={{
               fontSize: "14px",
               fontWeight: "400",

@@ -61,18 +61,30 @@ import { ClientsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import GridTable from "components/grid-tables/gridTable";
+import { checkTenant } from "constants/function";
 
 const ClientsListTable = () => {
   const dispatch = useDispatch();
 
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const [clientModal, setClientModal] = useState(false);
   const toggle = () => setClientModal(!clientModal);
 
   const clientService = new ClientsService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients()
+    clientService.getClients(tenantId)
   );
 
   const addNewClientSoftwares = [

@@ -28,17 +28,28 @@ import {
   openDeletePeriodPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import { checkTenant } from "constants/function";
 
 const AllPeriodsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const periodsService = new PeriodsService();
 
   const {
@@ -46,7 +57,9 @@ const AllPeriodsTable = () => {
     isLoading: periodLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () => periodsService.getPeriods());
+  } = useSWR(["LIST_USERS", searchText], () =>
+    periodsService.getPeriods(tenantId)
+  );
 
   const dataSource = periodData?.data;
 
@@ -365,7 +378,10 @@ const AllPeriodsTable = () => {
               <NoDataPage
                 // buttonName={"Add Period"}
                 buttonName={
-                  hasPermission("configuration_management", "create_configuration")
+                  hasPermission(
+                    "configuration_management",
+                    "create_configuration"
+                  )
                     ? "Create Period"
                     : "No button"
                 }

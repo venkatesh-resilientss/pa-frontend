@@ -3,8 +3,8 @@ import APIService from './api.service';
 import {CREATE_TAXCODES, DELETE_TAXCODES, EDIT_TAXCODES, GET_TAXCODES, TAXCODES_DETAIL_ENDPOINT,UPLOAD_TAX_CODE_LIST} from '../lib/endpoints';
 
 class TaxCodesService extends APIService {
-  getTaxCodes(): Promise<any> {
-    return this.get(`${GET_TAXCODES}`)
+  getTaxCodes(tenant_id:any): Promise<any> {
+    return this.get(`${GET_TAXCODES(tenant_id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +13,9 @@ class TaxCodesService extends APIService {
       });
   }
 
-  static create(data:any) {
+  static create(tenant_id:any,data:any) {
     return axios
-      .post(CREATE_TAXCODES, data)
+      .post(CREATE_TAXCODES(tenant_id), data)
       .then((response) => {
         return response.data;
       })
@@ -24,14 +24,14 @@ class TaxCodesService extends APIService {
       });
   }
 
-    static uploadtaxcodeslist(fileName: any) {
+    static uploadtaxcodeslist(tenant_id:any,fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_TAX_CODE_LIST, formData, {
+      return axios.post(UPLOAD_TAX_CODE_LIST(tenant_id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -47,9 +47,9 @@ class TaxCodesService extends APIService {
       });
     }
 
-  static delete(id: any) {
+  static delete(tenant_id:any,id: any) {
     return axios
-      .delete(DELETE_TAXCODES(id))
+      .delete(DELETE_TAXCODES(tenant_id,id))
       .then((response) => {
         return response?.data;
       })
@@ -58,9 +58,9 @@ class TaxCodesService extends APIService {
       });
   }
 
-  static edit(id: any,data) {
+  static edit(tenant_id:any,id: any,data) {
     return axios
-      .put(EDIT_TAXCODES(id),data)
+      .put(EDIT_TAXCODES(tenant_id,id),data)
       .then((response) => {
         return response?.data;
       })
@@ -70,9 +70,9 @@ class TaxCodesService extends APIService {
   }
 
 
-    static details(id: string) {
+    static details(tenant_id:any,id: string) {
       return axios
-        .get(TAXCODES_DETAIL_ENDPOINT(id))
+        .get(TAXCODES_DETAIL_ENDPOINT(tenant_id,id))
         .then((response) => {
           return response.data;
         })

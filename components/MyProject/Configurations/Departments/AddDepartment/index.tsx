@@ -3,11 +3,22 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { DepartmentsService } from "services";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { checkTenant } from "constants/function";
 
 function AddDepartment() {
   const router = useRouter();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     control,
     setError,
@@ -29,7 +40,7 @@ function AddDepartment() {
       isActive: activeStatus,
     };
 
-    DepartmentsService.create(backendFormat)
+    DepartmentsService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Department Added successfully");
         reset();

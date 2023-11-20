@@ -29,16 +29,27 @@ import {
   openDeleteCurrencyPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import approvalLine from "../../../../../assets/myIcons/approvalLine.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { checkTenant } from "constants/function";
 
 const AllCurrencyTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
@@ -49,7 +60,7 @@ const AllCurrencyTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_CURRENCIES", searchText], () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies(tenantId)
   );
   console.log(currencyData, "currencyData");
   const dataSource = currencyData?.result;
@@ -409,13 +420,13 @@ const AllCurrencyTable = () => {
                 <NoDataPage
                   // buttonName={"Create Currency"}
                   buttonName={
-                      hasPermission(
-                        "configuration_management",
-                        "create_configuration"
-                      )
-                        ? "Create Currency"
-                        : "No button"
-                    }
+                    hasPermission(
+                      "configuration_management",
+                      "create_configuration"
+                    )
+                      ? "Create Currency"
+                      : "No button"
+                  }
                   buttonLink={"/configurations/add-currency"}
                 />
               </div>

@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { closeDeleteTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import { TaxCodesService } from "services";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteTaxCodePopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const taxCodeService = new TaxCodesService();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes()
+    taxCodeService.getTaxCodes(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -27,8 +39,10 @@ const DeleteTaxCodePopup = ({ id }) => {
 
   const handleDeleteTaxCode = async () => {
     console.log("IDDD", id);
+    const tenant = await checkTenant();
+
     try {
-      await TaxCodesService.delete(helperData);
+      await TaxCodesService.delete(tenant.id, helperData);
       toast.success("TaxCode Deleted Successfully");
       dispatch(closeDeleteTaxCodesPopup("close"));
       mutate(taxCodeMutate());

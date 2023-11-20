@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { closeDeletePeriodPopup } from "redux/slices/mySlices/configurations";
 import { PeriodsService } from "services";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeletePeriodPopup = ({ id }) => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const periodService = new PeriodsService();
 
   const { mutate: periodMutate } = useSWR("GET_PERIODS", () =>
-    periodService.getPeriods()
+    periodService.getPeriods(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -27,7 +39,7 @@ const DeletePeriodPopup = ({ id }) => {
 
   const handleDeletePeriod = async () => {
     try {
-      await PeriodsService.delete(helperData);
+      await PeriodsService.delete(tenantId, helperData);
       toast.success("Period Deleted Successfully");
       dispatch(closeDeletePeriodPopup("close"));
       periodMutate();

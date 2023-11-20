@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { CountryService, StatesService } from "services";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import useSWR from "swr";
+import { checkTenant } from "constants/function";
 
 function AddState() {
   const router = useRouter();
@@ -20,11 +21,21 @@ function AddState() {
   } = useForm();
 
   const [activeStatus, StateActiveStatus] = useState(false);
+  const [tenantId, setTenantId] = useState("");
 
   const countryService = new CountryService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries()
+    countryService.getCountries(tenantId)
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -49,7 +60,7 @@ function AddState() {
       is_active: activeStatus,
     };
 
-    StatesService.create(backendFormat)
+    StatesService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("State Added successfully");
         reset();

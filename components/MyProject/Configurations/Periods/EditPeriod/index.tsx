@@ -8,13 +8,24 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { checkTenant } from "constants/function";
 
 function EditPeriod() {
   const router = useRouter();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { id } = router.query;
 
-  const fetchPeriodDetails = (id) => PeriodsService.details(id);
+  const fetchPeriodDetails = (id) => PeriodsService.details(tenantId, id);
 
   const {
     data: periodData,
@@ -46,7 +57,7 @@ function EditPeriod() {
   const periodService = new PeriodsService();
 
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodService.getPeriods()
+    periodService.getPeriods(tenantId)
   );
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
@@ -62,7 +73,7 @@ function EditPeriod() {
       endDate: data.endDate,
     };
 
-    PeriodsService.edit(id, backendFormat)
+    PeriodsService.edit(tenantId, id, backendFormat)
       .then((res) => {
         toast.success("Period Edited successfully");
         mutate(bankMutate());

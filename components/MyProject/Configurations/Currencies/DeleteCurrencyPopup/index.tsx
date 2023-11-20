@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { closeDeleteCurrencyPopup } from "redux/slices/mySlices/configurations";
 import { CurrencyService } from "services";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteCurrencyPopup = ({ id }) => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const currencyService = new CurrencyService();
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -27,7 +39,7 @@ const DeleteCurrencyPopup = ({ id }) => {
 
   const handleDeleteCurrency = async () => {
     try {
-      await CurrencyService.delete(helperData);
+      await CurrencyService.delete(tenantId, helperData);
       toast.success("Currency Deleted Successfully");
       dispatch(closeDeleteCurrencyPopup("close"));
       mutate(currencyMutate());

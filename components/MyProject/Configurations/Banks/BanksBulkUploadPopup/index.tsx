@@ -8,15 +8,26 @@ import { closeBulkUploadBanksPopup } from "redux/slices/mySlices/configurations"
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BankService } from "services";
+import { checkTenant } from "constants/function";
 
 const BanksBulkUploadPopup = () => {
   const dispatch = useDispatch();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.bulkUploadPopup.status
@@ -30,7 +41,6 @@ const BanksBulkUploadPopup = () => {
 
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
-   
 
     setUploadedFiles(acceptedFiles);
   }, []);
@@ -52,32 +62,25 @@ const BanksBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    BankService.uploadbanklist(fileName)
+    BankService.uploadbanklist(tenantId, fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
-    
-        
+
         dispatch(closeBulkUploadBanksPopup("close"));
       })
       .catch((error) => {
         // Handle error
         console.error("Upload failed", error);
-      
+
         toast.error("Failed to insert data.");
       });
   };
 
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/banks_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/banks_sample.csv";
     window.open(url);
-  }
-
-
-
-
-
-
+  };
 
   return (
     <Modal
@@ -199,7 +202,7 @@ const BanksBulkUploadPopup = () => {
             Cancel
           </Button>
           <Button
-          onClick={handleUpload}
+            onClick={handleUpload}
             style={{
               height: "26px",
               fontSize: "10px",

@@ -7,14 +7,26 @@ import useSWR, { mutate } from "swr";
 import { closeDeleteSeriesPopup } from "redux/slices/mySlices/configurations";
 import { SeriesService } from "services";
 import Image from "next/image";
+import { checkTenant } from "constants/function";
+import { useState, useEffect } from "react";
 
 const DeleteSeriesPopup = ({ id }) => {
   const dispatch = useDispatch();
+  const [tenantId, setTenantId] = useState("");
 
   const seriesService = new SeriesService();
-
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { mutate: seriesMutate } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -28,7 +40,7 @@ const DeleteSeriesPopup = ({ id }) => {
   const handleDeleteSeries = async () => {
     console.log("IDDD", id);
     try {
-      await SeriesService.delete(helperData);
+      await SeriesService.delete(tenantId, helperData);
       toast.success("Series Deleted Successfully");
 
       dispatch(closeDeleteSeriesPopup("delete"));

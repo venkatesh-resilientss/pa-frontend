@@ -2,7 +2,7 @@ import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import Select from "react-select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
 import {
@@ -15,9 +15,11 @@ import {
 } from "services";
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
+import { checkTenant } from "constants/function";
 
 function AddBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
+  const [tenantId, setTenantId] = useState("");
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -29,12 +31,23 @@ function AddBudget() {
 
   const currencyService = new CurrencyService();
 
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
+
   const {
     data: currencyData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {
@@ -51,7 +64,7 @@ function AddBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries(tenantId)
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -69,7 +82,7 @@ function AddBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations(tenantId)
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -86,7 +99,9 @@ function AddBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets(tenantId)
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -103,7 +118,7 @@ function AddBudget() {
   const statsService = new DashboardService();
 
   const { data: statsData } = useSWR("GET_RECENET", () =>
-    statsService.getRecentProductions()
+    statsService.getRecentProductions(tenantId)
   );
 
   const productionSelectFormat = statsData?.data.map((b) => {
@@ -120,7 +135,7 @@ function AddBudget() {
   const budgetService = new BudgetService();
 
   const { data: budgetData } = useSWR("LIST_COMPANY", () =>
-    budgetService.getCompany()
+    budgetService.getCompany(tenantId)
   );
 
   const companySelectFormat = budgetData?.map((b) => {
@@ -160,7 +175,7 @@ function AddBudget() {
       is_active: activeStatus,
     };
 
-    BudgetService.create(backendFormat)
+    BudgetService.create(tenantId, backendFormat)
       .then((res) => {
         toast.success("Budget Added successfully");
         router.back();
