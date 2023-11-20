@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 
 RUN apt-get update
 
@@ -14,7 +14,7 @@ RUN yarn install
 
 COPY . /usr/src/app
 
-# RUN yarn build
+RUN yarn build
 
 EXPOSE 3000
 

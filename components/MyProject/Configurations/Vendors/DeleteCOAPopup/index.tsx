@@ -7,14 +7,27 @@ import useSWR, { mutate } from "swr";
 import { BankService, COAAccountsService, CountryService } from "services";
 import { closeDeleteCOAPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { checkTenant } from "constants/function";
 
 const DeleteCOAPopup = () => {
   const dispatch = useDispatch();
 
   const coaService = new COAAccountsService();
 
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const { mutate: coaMutate } = useSWR("LIST_COAS", () =>
-    coaService.getCoasAccounts()
+    coaService.getCoasAccounts(tenantId)
   );
 
   const popupStatus = useSelector(
@@ -27,7 +40,7 @@ const DeleteCOAPopup = () => {
 
   const handleDeleteCOA = async () => {
     try {
-      await COAAccountsService.delete(helperData);
+      await COAAccountsService.delete(tenantId, helperData);
       toast.success("COA Deleted Successfully");
       dispatch(closeDeleteCOAPopup("close"));
       mutate(coaMutate());
