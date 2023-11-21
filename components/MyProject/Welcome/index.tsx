@@ -1,6 +1,6 @@
 "use client";
 import { Row, Col, Button } from "reactstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineLock } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { Image } from "react-bootstrap";
@@ -46,6 +46,13 @@ const Welcome = () => {
     setShowPassword(showPassword ? false : true);
   };
 
+  useEffect(() => {
+    const token: any = router.query.accessToken;
+    if (token) {
+      authService.authenticateUser(token);
+      router.push("/dashboard");
+    }
+  }, [router.query.accessToken]);
   const formSubmit = async (values: any) => {
     const payload: any = {
       email: email,
@@ -53,17 +60,11 @@ const Welcome = () => {
     };
 
     authService.userSignIN(payload).then((res: any) => {
-      console.log(res);
-      authService.authenticateUser(res?.token);
-
-      // router.push("/dashboard");
       //for local
-      // window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
+      // window.location.href = `http://${tenantName}.lvh.me:3000/?accessToken=${res?.token}`;
 
-      // for live
-      window.location.href = `http://${tenantName}.devpa.resilientss.com/dashboard`;
-      //http://dev.pa.resilientss.com/
-      // http://dev.pa.resilientss.com/dashboard
+      // for live url1
+      window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
     });
   };
 

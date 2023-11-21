@@ -20,8 +20,8 @@ class AuthService extends APIService {
         throw error.response.data;
       });
   }
-  getUserFromToken(): Promise<any> {
-    return this.get(`${GET_USER_FROM_TOKEN}`)
+  getUserFromToken(tenant_id:any): Promise<any> {
+    return this.get(`${GET_USER_FROM_TOKEN(tenant_id)}`)
       .then((res) => {
         return res.data;
 

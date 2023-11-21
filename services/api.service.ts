@@ -1,25 +1,11 @@
 import axios, { AxiosPromise } from "axios";
+// cookie
 import cookie from "js-cookie";
 import Moment from "moment";
-import { encrypt } from "lib/encypt";
-class APIService {
+
+abstract class APIService {
   date = new Date();
   expiry = Moment(this.date).add(7, "days");
-
-  // constructor() {
-  //   /**Interceptor - Request */
-  //   axios.interceptors.request.use(
-  //     async (config) => {
-  //       /**Encryption */
-  //       config.data = await encrypt(config.data)
-  //       config.headers["Content-Type"] = 'text/plain'
-  //       return config;
-  //     },
-  //     (error) => {
-  //       Promise.reject(error);
-  //     }
-  //   );
-  // }
   //Passing bearer for all api calls
   getAxiosHeaders(): any {
     const token = cookie.get("accessToken");
@@ -28,17 +14,30 @@ class APIService {
       "Content-Type": "application/json",
     };
   }
-  purgeAuth(): void {
-    cookie.remove("accessToken");
-    cookie.remove("refreshToken");
+  getToken(token: any): any {
+    return {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+      "Access-Control-Allow-HeadePrs": "X-PINGOTHER, Content-Type",
+      "Content-Type": "application/json; charset=utf-8",
+      "x-token": `${token}`,
+    };
   }
+
   // Setting access token in a cookie
-  setAccessToken(token: string): void {
+  setAccessToken(token: any): void {
+    console.log(token,"tttttttttttt")
     cookie.set("accessToken", token, { expires: this.expiry.toDate() });
   }
+
   // Setting refresh token in a cookie
   setRefreshToken(token: string): void {
     cookie.set("refreshToken", token, { expires: this.expiry.toDate() });
+  }
+
+  purgeAuth(): void {
+    cookie.remove("accessToken");
+    cookie.remove("refreshToken");
   }
 
   // Axios get method

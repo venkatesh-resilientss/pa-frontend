@@ -127,7 +127,7 @@ export const USERS_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/
 
 
 export const GET_ROLE_BY_ID = (id:any,tenant_id:any) => `${baseUrl}/api/${tenant_id}/roles/${id}` //Users
-export const GET_USER_FROM_TOKEN  = (tenant_id) => `${baseUrl}/api/${tenant_id}/users/userinfo`; //GET USER FROM TOKEN
+export const GET_USER_FROM_TOKEN  = (tenant_id:any) => `${baseUrl}/api/${tenant_id}/users/userinfo`; //GET USER FROM TOKEN
 
 export const GET_TENANT = (prefix: any) => `${baseUrl}/api/tenants/name?name=${prefix}`;
 //bulupload api's
