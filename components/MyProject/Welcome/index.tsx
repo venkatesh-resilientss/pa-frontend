@@ -61,7 +61,7 @@ const Welcome = () => {
       // window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
 
       // for live
-      window.location.href = `http://${tenantName}.pa.resilientss.com/dashboard`;
+      window.location.href = `http://${tenantName}.devpa.resilientss.com/dashboard`;
       //http://dev.pa.resilientss.com/
       // http://dev.pa.resilientss.com/dashboard
     });
