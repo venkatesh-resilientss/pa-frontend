@@ -11,10 +11,10 @@ import { Eye } from "@styled-icons/bootstrap/Eye";
 import { EyeSlash } from "@styled-icons/bootstrap/EyeSlash";
 // ** Demo Imports
 import Image from "next/image";
-import { ForgotPasswordService } from "services";
+import AuthService from "services/auth.service";
 import { useFormik, FormikErrors } from "formik";
 
-const forgotPassword = new ForgotPasswordService();
+const authService = new AuthService();
 
 const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,7 +69,7 @@ const ResetPassword = () => {
         email: email,
         reset_token: token,
       };
-      forgotPassword
+      authService
         .resetPassword(payload)
         .then(() => {
           toast.success("Password has been updated successfully", {

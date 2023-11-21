@@ -1,4 +1,4 @@
-export const DEFAULT_APP_STATE = "local";
+export const DEFAULT_APP_STATE = "local"
 export const roleCreationData = {
   "Client Management": {
     state: false,
@@ -158,7 +158,7 @@ export const roleCreationData = {
       },
     },
   },
-};
+}
 export const sidebarRoutes = [
   {
     name: "Dashboard",
@@ -297,4 +297,4 @@ export const sidebarRoutes = [
       },
     ],
   },
-];
+]

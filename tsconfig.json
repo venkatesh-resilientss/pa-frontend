@@ -6,10 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
-        "types": ["react-spring"],
-            "types": ["nookies"],
-
-
+    "types": [
+      "react-spring",
+      "nookies"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,

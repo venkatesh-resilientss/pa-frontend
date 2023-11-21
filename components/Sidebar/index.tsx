@@ -15,9 +15,9 @@ const Sidebar = () => {
    *
    */
   const [activeDropDown, setActiveDropDown] = useState(null);
-  const [parentRoute, setParentRoute] = useState(null);
-  const [childRoute, setChildRoute] = useState(null);
-  const handleDropDownChange = (path) => {
+  const [parentRoute, setParentRoute] = useState<any>(null);
+  const [childRoute, setChildRoute] = useState<any>(null);
+  const handleDropDownChange = (path: any) => {
     setActiveDropDown(path);
   };
   useEffect(() => {
@@ -38,7 +38,7 @@ const Sidebar = () => {
     name: "Jhon Doe",
     profileImg: "/profile-dummy.png",
   };
-  const IconLink = ({ title, children, placement }) => (
+  const IconLink = ({ title, children, placement }: any) => (
     <OverlayTrigger
       placement={placement}
       overlay={
@@ -64,7 +64,7 @@ const Sidebar = () => {
    * }
    * @returns route button
    */
-  const SideBarRoute = ({ route }) => {
+  const SideBarRoute = ({ route }: any) => {
     return (
       <div
         className={`route-button my-2 ${parentRoute === route.path ? "active" : ""}`}
@@ -74,7 +74,7 @@ const Sidebar = () => {
             className="d-flex align-items-center justify-content-between  cursor-pointer select-btn"
             onClick={() => {
               if (route.children) {
-                handleDropDownChange((prev) =>
+                handleDropDownChange((prev: any) =>
                   prev === route.path ? null : route.path
                 );
               } else handleDropDownChange(null);
@@ -105,16 +105,15 @@ const Sidebar = () => {
               </Link>
             )}
             {route.children ? (
-              <div className="" onClick={() => {}}>
+              <div className="" onClick={() => { }}>
                 <img
                   src="/icons/arrow-left.svg"
                   alt=""
                   style={{
-                    transform: `${
-                      activeDropDown === route.path
+                    transform: `${activeDropDown === route.path
                         ? "rotate(90deg)"
                         : "rotate(-90deg)"
-                    }`,
+                      }`,
                     transformOrigin: "center center",
                   }}
                 />
@@ -156,7 +155,7 @@ const Sidebar = () => {
           <>
             <div className="ps-3">
               <ul>
-                {route.children.map((child, i) => {
+                {route.children.map((child: any, i: any) => {
                   const fullPath = `${route.path}${child.path}`;
                   return (
                     <li
@@ -168,9 +167,8 @@ const Sidebar = () => {
                     >
                       <Link
                         href={fullPath}
-                        className={` child-route-name ${
-                          child.path === childRoute ? "active" : ""
-                        }`}
+                        className={` child-route-name ${child.path === childRoute ? "active" : ""
+                          }`}
                       >
                         {child.name}
                       </Link>
@@ -188,9 +186,8 @@ const Sidebar = () => {
   };
   return (
     <div
-      className={`d-flex flex-column sidebar justify-content-between ${
-        showSidebar ? "" : "minimized"
-      }`}
+      className={`d-flex flex-column sidebar justify-content-between ${showSidebar ? "" : "minimized"
+        }`}
     >
       <div>
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
