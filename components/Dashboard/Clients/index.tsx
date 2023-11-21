@@ -14,9 +14,22 @@ import Ellipse4 from "assets/DashboardIcons/Ellipse4.svg";
 import { useRouter } from "next/router";
 import DashboardService from "services/dashboard.service";
 import useSWR from "swr";
+import { useEffect, useState } from "react";
+import { checkTenant } from "constants/function";
 
 function Clients() {
   const router = useRouter();
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const dashboardService = new DashboardService();
 
   const {
@@ -24,7 +37,7 @@ function Clients() {
     isLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("GET_RECENET", () => dashboardService.getOnBoardedClients());
+  } = useSWR("GET_RECENET", () => dashboardService.getOnBoardedClients(tenantId));
   // const {isLoading,clientsData} = {clientsData : {data : []},isLoading : true}
   return (
     <div className="h-100 d-flex justify-content-between flex-column">

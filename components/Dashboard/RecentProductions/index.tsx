@@ -7,13 +7,25 @@ import ProjectCard from "./ProjectCard";
 import { BsCameraVideo } from "react-icons/bs";
 import DashboardService from "services/dashboard.service";
 import { useEffect, useState } from "react";
+import { checkTenant } from "constants/function";
 
 function RecentProductions() {
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const dashboardService = new DashboardService();
   const [recentProductionsData, setRecentProductionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    dashboardService.getRecentProductions().then((res: any) => {
+    dashboardService.getRecentProductions(tenantId).then((res: any) => {
       setIsLoading(res.isLoading)
       if (res.data) {
         // console.log(res.data)

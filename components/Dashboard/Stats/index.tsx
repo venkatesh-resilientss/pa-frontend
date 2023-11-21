@@ -8,17 +8,28 @@ import fluentMoneyHand from "public/assets/DashboardIcons/fluentMoneyHand.svg";
 import prospectClientIcon from "public/assets/DashboardIcons/prospectClientsIcon.svg";
 import DashboardService from "services/dashboard.service";
 import useSWR from "swr";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { checkTenant } from "constants/function";
 
 function Stats() {
   const statsService = new DashboardService();
-
+  const [tenantId, setTenantId] = useState("");
+  useEffect(() => {
+    const getTenant = async () => {
+      const tenant = await checkTenant();
+      // console.log(tenant, "tenant");
+      if (tenant) {
+        setTenantId(tenant.id);
+      }
+    };
+    getTenant();
+  }, []);
   const {
     data: statsData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("GET_STATS", () => statsService.getStats());
+  } = useSWR("GET_STATS", () => statsService.getStats(tenantId));
   return (
     <div
       className="rounded mt-3 p-3"
