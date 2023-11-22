@@ -13,6 +13,8 @@ function EditUser() {
   const router = useRouter();
   const { id } = router.query;
   const [tenantId, setTenantId] = useState("");
+
+
   useEffect(() => {
     const getTenant = async () => {
       const tenant = await checkTenant();
@@ -23,7 +25,7 @@ function EditUser() {
     };
     getTenant();
   }, []);
-  const getUserdetails = (id) => UsersService.details(tenantId, id);
+  const getUserdetails = (id) => usersService.getuserbyid(tenantId, id);
 
   const {
     data: eachclicntdata,
@@ -126,6 +128,7 @@ function EditUser() {
       setActiveStatus(eachclicntdata?.IsActive ? "active" : "inactive");
     }
   }, [eachclicntdata, userLoading, reset]);
+   const usersService = new UsersService();
 
   const onSubmit = (data) => {
     let backendFormat = {
@@ -138,7 +141,7 @@ function EditUser() {
       is_active: activeStatus,
     };
 
-    UsersService.edit(tenantId, id, backendFormat)
+    usersService.editUser(tenantId, id, backendFormat)
       .then((res) => {
         console.log(backendFormat);
         router.push("/settings/usermanagement");

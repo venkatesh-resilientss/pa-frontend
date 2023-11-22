@@ -6,10 +6,10 @@ export const hasPermission = (category, action) => {
   // console.log(roleInfo,'common function',category,action)
   try {
     const roleInfo = useSelector(UserInfo);
-        if (roleInfo.responseData.AccessType == "full_access") {
+        if (roleInfo.responseData.Role.AccessType == "full_access") {
             return true
         } else {
-            return  roleInfo.responseData.Permissions[category][action];
+            return  roleInfo.responseData.Role.Permissions[category][action];
       }
   } catch (err) {}
 };

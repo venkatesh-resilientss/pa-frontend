@@ -229,8 +229,9 @@ function AddRole() {
       // Update all permissions within the category
       Object.keys(updatedPermissionSet[category].permissions).forEach(
         (permission) => {
-          updatedPermissionSet[category].permissions[permission].state =
-            newValue;
+          updatedPermissionSet[category].permissions[
+            permission
+          ].state = newValue;
         }
       );
 

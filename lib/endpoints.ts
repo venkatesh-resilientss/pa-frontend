@@ -126,7 +126,7 @@ export const EDIT_USERS = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}
 export const USERS_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/${tenant_id}/users/${id}`; //Users Details
 
 
-export const GET_ROLE_BY_ID = (id:any,tenant_id:any) => `${baseUrl}/api/${tenant_id}/roles/${id}` //Users
+export const GET_ROLE_BY_ID = (tenant_id:any,id:any,) => `${baseUrl}/api/${tenant_id}/roles/${id}` //Users
 export const GET_USER_FROM_TOKEN  = (tenant_id:any) => `${baseUrl}/api/${tenant_id}/users/userinfo`; //GET USER FROM TOKEN
 
 export const GET_TENANT = (prefix: any) => `${baseUrl}/api/tenants/name?name=${prefix}`;

@@ -50,9 +50,11 @@ const AllRoleTable = () => {
     toggleDeleteModal();
   };
 
+  const usersService = new UsersService();
+
   const handleDeleteUser = async (id) => {
     try {
-      await UsersService.delete(tenantId, id);
+      await usersService.deleteUser(tenantId, id);
       // Optionally, you can update your local state or refetch data here
     } catch (error) {
       // Handle error, show a message, or log it
@@ -170,10 +172,10 @@ const AllRoleTable = () => {
                 action={() => { }}
               />
             </DropdownItem> */}
-            {hasPermission("user_and_role_management", "edit_user") && (
+            {hasPermission("user_and_role_management", "edit_user") && ( 
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() => router.push(`/settings/edit-user/${id}`)}
               >
                 <Action
@@ -182,11 +184,11 @@ const AllRoleTable = () => {
                   action={() => {}}
                 />
               </DropdownItem>
-            )}
+            )} 
             {hasPermission("user_and_role_management", "deactivate_user") && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() => handleDeleteClick(id)}
               >
                 <Action
@@ -195,7 +197,7 @@ const AllRoleTable = () => {
                   action={() => {}}
                 />
               </DropdownItem>
-            )}
+          )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -322,14 +324,14 @@ const AllRoleTable = () => {
               >
                 <Plus size={16} /> Add User
               </button> */}
-              {hasPermission("user_and_role_management", "create_user") && (
+              {/* {hasPermission("user_and_role_management", "create_user") && ( */}
                 <button
                   className="btn btn-primary"
                   onClick={() => router.push("/settings/add-user")}
                 >
                   <Plus size={16} /> Add User
                 </button>
-              )}
+              {/* )} */}
             </div>
           </div>
         </CardBody>

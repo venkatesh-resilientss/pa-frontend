@@ -82,6 +82,8 @@ function AddUser() {
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(false);
+  const usersService = new UsersService();
+
 
   const onSubmit = (data) => {
     let backendFormat;
@@ -96,7 +98,7 @@ function AddUser() {
       is_active: activeStatus,
     };
 
-    UsersService.create(tenantId, backendFormat)
+      usersService.postUsers(tenantId, backendFormat)
       .then((res) => {
         toast.success("User Added successfully");
         router.push("/settings/usermanagement");
@@ -104,7 +106,7 @@ function AddUser() {
       })
       .catch((error) => {
         toast.error(error?.error);
-      });
+      }) as Promise<any>;
   };
 
   return (

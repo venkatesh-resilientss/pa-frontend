@@ -5,6 +5,7 @@ import cookie from "js-cookie";
 import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER } from '../lib/endpoints';
 
   class UsersService extends APIService {
+    static postUsers: any;
     getUsers(tenant_id:any): Promise<any> {
       return this.get(`${GET_USERS(tenant_id)}`)
         .then((res) => {
@@ -15,50 +16,51 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
         });
     }
 
-    static create(tenant_id:any,data:any) {
-      return axios
-        .post(CREATE_USERS(tenant_id), data)
-        .then((response) => {
-          return response.data;
+  
+
+    postUsers(tenant_id:any,data): Promise<any> {
+      return this.post(`${CREATE_USERS(tenant_id)}`,data)
+        .then((res) => {
+          return res?.data;
         })
-        .catch((error) => {
-          throw error.response.data;
+        .catch((error: any) => {
+          throw error?.response?.data;
         });
     }
-      static edit(tenant_id:any,id, data) {
-        return axios
-          .put(EDIT_USERS(tenant_id,id), data)
-          .then((response) => {
-            return response?.data;
+
+
+    editUser(tenant_id:any,id,data): Promise<any> {
+      return this.put(EDIT_USERS(tenant_id,id),data)
+        .then((res) => {
+          return res?.data;
+        })
+        .catch((error: any) => {
+          throw error?.response?.data;
+        });
+    }
+
+
+  getuserbyid(tenant_id:any,id): Promise<any> {
+    return this.get(`${USERS_DETAIL_ENDPOINT(tenant_id,id)}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+
+
+    deleteUser(tenant_id:any,role_id): Promise<any> {
+        return this.delete(`${DELETE_USER(tenant_id,role_id)}`)
+          .then((res) => {
+            return res?.data;
           })
-          .catch((error) => {
+          .catch((error: any) => {
             throw error?.response?.data;
           });
       }
-
-      
-
-     static details(tenant_id:any,id: string) {
-      return axios
-        .get(USERS_DETAIL_ENDPOINT(tenant_id,id))
-        .then((response) => {
-          return response.data;
-        })
-        .catch((error) => {
-          throw error.response.data;
-        });
-    }
-
-     static delete(tenant_id:any,id: string) {
-      return axios
-        .delete(DELETE_USER(tenant_id,id))
-        .then((response) => {
-          return response.data;
-        })
-        .catch((error) => {
-          throw error.response.data;
-        });
-    }
 
     // Getting access token from cookie
   getAccessToken(): string | undefined {
