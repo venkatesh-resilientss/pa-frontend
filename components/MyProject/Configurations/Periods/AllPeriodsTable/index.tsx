@@ -39,17 +39,12 @@ const AllPeriodsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
   const periodsService = new PeriodsService();
 
   const {
@@ -57,9 +52,7 @@ const AllPeriodsTable = () => {
     isLoading: periodLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () =>
-    periodsService.getPeriods(tenantId)
-  );
+  } = useSWR(["LIST_USERS", searchText], () => periodsService.getPeriods());
 
   const dataSource = periodData?.data;
 
@@ -326,10 +319,7 @@ const AllPeriodsTable = () => {
                   />{" "}
                   Add Period
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -378,12 +368,7 @@ const AllPeriodsTable = () => {
               <NoDataPage
                 // buttonName={"Add Period"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Period"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Period" : "No button"
                 }
                 buttonLink={"/configurations/add-period"}
               />

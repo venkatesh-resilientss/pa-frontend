@@ -10,18 +10,11 @@ import { checkTenant } from "constants/function";
 function EditLocation() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchLocationDetails = (id) => LocationsService.details(tenantId, id);
+   
+  const locationService = new LocationsService();
+
+  const fetchLocationDetails = (id) =>
+    locationService.locationDetails(id);
 
   const {
     data: locationData,
@@ -55,7 +48,7 @@ function EditLocation() {
   const locationsService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
@@ -70,7 +63,8 @@ function EditLocation() {
       code: data.locationcode,
     };
 
-    LocationsService.edit(tenantId, id, backendFormat)
+    locationsService
+      .editLocation(id, backendFormat)
       .then((res) => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());

@@ -8,17 +8,9 @@ import { CurrencyService } from "services";
 import { checkTenant } from "constants/function";
 
 function AddCurrency() {
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
+  const currencyService = new CurrencyService();
   const {
     control,
     setError,
@@ -41,7 +33,8 @@ function AddCurrency() {
       IsActive: activeStatus,
     };
 
-    CurrencyService.create(tenantId, backendFormat)
+    currencyService
+      .createCurrency(backendFormat)
       .then((res) => {
         toast.success("Currency Added successfully");
         reset();

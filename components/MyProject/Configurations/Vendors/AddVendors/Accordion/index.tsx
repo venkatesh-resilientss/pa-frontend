@@ -20,17 +20,9 @@ function VendorAccordion() {
   const { reset } = useForm();
 
   const [open, setOpen] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const vendorService = new VendorsService();
+
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -68,7 +60,8 @@ function VendorAccordion() {
       // ParentID
     };
 
-    VendorsService.create(tenantId, backendFormat)
+    vendorService
+      .createVendor(backendFormat)
       .then((res) => {
         toast.success("Vendor Added successfully");
         // reset();

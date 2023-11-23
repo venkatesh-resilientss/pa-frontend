@@ -17,18 +17,7 @@ import { checkTenant } from "constants/function";
 
 const BudgetBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const budgetService = new BudgetService();
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.budgets.bulkUploadPopup.status
@@ -61,7 +50,8 @@ const BudgetBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    BudgetService.uploadbudgetlist(tenantId, fileName)
+    budgetService
+      .uploadbudgetlist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
@@ -75,10 +65,10 @@ const BudgetBulkUploadPopup = () => {
         toast.error("Failed to insert data.");
       });
   };
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/budget_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/budget_sample.csv";
     window.open(url);
-  }
+  };
 
   return (
     <Modal

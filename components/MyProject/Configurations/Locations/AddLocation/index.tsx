@@ -8,17 +8,9 @@ import { checkTenant } from "constants/function";
 
 function AddLocation() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const locationService = new LocationsService();
+
   const {
     control,
     handleSubmit,
@@ -39,7 +31,8 @@ function AddLocation() {
       IsActive: activeStatus,
     };
 
-    LocationsService.create(tenantId, backendFormat)
+    locationService
+      .createLocation(backendFormat)
       .then((res) => {
         toast.success("Location Added successfully");
         reset();

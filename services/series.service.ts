@@ -1,10 +1,9 @@
-  import axios from 'axios';
   import APIService from './api.service';
   import {CREATE_SERIES, DELETE_SERIES, EDIT_SERIES, GET_SERIES, SERIES_DETAIL_ENDPOINT,UPLOAD_SERIES_LIST} from '../lib/endpoints';
 
   class SeriesService extends APIService {
-    getSeries(tenant_id:any): Promise<any> {
-      return this.get(`${GET_SERIES(tenant_id)}`)
+    getSeries(): Promise<any> {
+      return this.get(`${GET_SERIES}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +12,9 @@
         });
     }
 
-    static create(tenant_id:any,data:any) {
-      return axios
-        .post(CREATE_SERIES(tenant_id), data)
+    createSeries(data:any) {
+      return this
+        .post(CREATE_SERIES, data)
         .then((response) => {
           return response.data;
         })
@@ -25,14 +24,14 @@
     }
 
 
-      static uploadserieslist(tenant_id:any,fileName: any) {
+       uploadserieslist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_SERIES_LIST(tenant_id), formData, {
+      return this.post(UPLOAD_SERIES_LIST, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -48,9 +47,9 @@
       });
     }
 
-    static delete(tenant_id:any,id: any) {
-      return axios
-        .delete(DELETE_SERIES(tenant_id,id))
+    deleteSeries(id: any) {
+      return this
+        .delete(DELETE_SERIES(id))
         .then((response) => {
           return response?.data;
         })
@@ -60,9 +59,9 @@
     }
 
 
-    static edit(tenant_id:any,id: any,data) {
-      return axios
-        .put(EDIT_SERIES(tenant_id,id),data)
+     editSeries(id: any,data) {
+      return this
+        .put(EDIT_SERIES(id),data)
         .then((response) => {
           return response?.data;
         })
@@ -72,9 +71,9 @@
     }
 
 
-    static details(tenant_id:any,id: string) {
-      return axios
-        .get(SERIES_DETAIL_ENDPOINT(tenant_id,id))
+    seriesDetails(id: string) {
+      return this
+        .get(SERIES_DETAIL_ENDPOINT(id))
         .then((response) => {
           return response.data;
         })

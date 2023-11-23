@@ -20,14 +20,18 @@ class AuthService extends APIService {
         throw error.response.data;
       });
   }
-  getUserFromToken(tenant_id:any): Promise<any> {
-    return this.get(`${GET_USER_FROM_TOKEN(tenant_id)}`)
+  //user logout
+  logout(){
+    this.purgeAuth();
+  }
+  getUserFromToken(): Promise<any> {
+    return this.get(`${GET_USER_FROM_TOKEN}`)
       .then((res) => {
         return res.data;
 
       })
       .catch((error: any) => {
-        throw error.response.data;
+        throw error.response;
       });
   }
 
@@ -48,8 +52,8 @@ class AuthService extends APIService {
     }
 
 
-  static create(data) {
-    return axios
+   createUser(data) {
+    return this
       .post(AUTH_LOGIN, data)
       .then((response) => {
         return response.data;

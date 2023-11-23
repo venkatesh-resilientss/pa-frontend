@@ -41,24 +41,17 @@ const AllBanksTable = () => {
   const [searchText, setSearchText] = useState("");
 
   const bankService = new BankService();
-  const [tenantId, setTenantId] = useState("");
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
   const {
     data: bankData,
     isLoading: bankLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks(tenantId));
+  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks());
 
   const dataSource = bankData?.data;
 
@@ -287,25 +280,26 @@ const AllBanksTable = () => {
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
                 />
-
-                <Button
-                  onClick={() => dispatch(openBulkUploadBanksPopup("banks"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasCreateConfiguration && (
+                  <Button
+                    onClick={() => dispatch(openBulkUploadBanksPopup("banks"))}
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -324,10 +318,7 @@ const AllBanksTable = () => {
                   />{" "}
                   Add Bank
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -376,12 +367,7 @@ const AllBanksTable = () => {
               <NoDataPage
                 // buttonName={"Add Bank"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Bank"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Bank" : "No button"
                 }
                 buttonLink={"/configurations/add-bank"}
               />

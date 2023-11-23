@@ -36,32 +36,25 @@ import {
   openDeleteCOAPopup,
 } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+
 
 const AllChartOfAccountsTable = () => {
   const dispatch = useDispatch();
   const CoasService = new COAAccountsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
   const {
     data: coasData,
     isLoading: coasLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_COAS", searchText], () =>
-    CoasService.getCoasAccounts(tenantId)
-  );
+  } = useSWR(["LIST_COAS", searchText], () => CoasService.getCoasAccounts());
   const dataSource = coasData?.result;
 
   const StateBadge = (props) => {
@@ -353,10 +346,7 @@ const AllChartOfAccountsTable = () => {
                   />{" "}
                   Create COA
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
                       router.push(`/configurations/add-chart-of-accounts`)
@@ -406,14 +396,7 @@ const AllChartOfAccountsTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create COA"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create COA"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
                 buttonLink={"/configurations/add-chart-of-accounts"}
               />
             </div>

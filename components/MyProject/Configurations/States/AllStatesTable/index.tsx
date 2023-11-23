@@ -42,27 +42,20 @@ const AllStatesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
   const statesService = new StatesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: statesData,
     isLoading: stateLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_STATES", searchText], () =>
-    statesService.getStates(tenantId)
-  );
+  } = useSWR(["LIST_STATES", searchText], () => statesService.getStates());
 
   const dataSource = statesData?.data;
 
@@ -324,10 +317,7 @@ const AllStatesTable = () => {
                   />{" "}
                   Add State
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -375,14 +365,7 @@ const AllStatesTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add State"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Add State"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Add State" : ""}
                 buttonLink={"/configurations/add-state"}
               />
             </div>

@@ -12,21 +12,12 @@ import { useState, useEffect } from "react";
 
 const DeleteSeriesPopup = ({ id }) => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
+   
 
   const seriesService = new SeriesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const { mutate: seriesMutate } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const popupStatus = useSelector(
@@ -40,7 +31,7 @@ const DeleteSeriesPopup = ({ id }) => {
   const handleDeleteSeries = async () => {
     console.log("IDDD", id);
     try {
-      await SeriesService.delete(tenantId, helperData);
+      await seriesService.deleteSeries(helperData);
       toast.success("Series Deleted Successfully");
 
       dispatch(closeDeleteSeriesPopup("delete"));

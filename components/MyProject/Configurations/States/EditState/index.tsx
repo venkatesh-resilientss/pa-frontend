@@ -12,18 +12,10 @@ import { checkTenant } from "constants/function";
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchStateDetails = (id) => StatesService.details(tenantId, id);
+   
+
+  const statesService = new StatesService();
+  const fetchStateDetails = (id) => statesService.stateDetails(id);
 
   const {
     data: stateData,
@@ -55,7 +47,7 @@ function EditState() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -72,7 +64,7 @@ function EditState() {
   const stateService = new StatesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates(tenantId)
+    stateService.getStates()
   );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
@@ -88,7 +80,8 @@ function EditState() {
       CountryID: data.country?.value,
     };
 
-    StatesService.edit(tenantId, id, backendFormat)
+    statesService
+      .editState(id, backendFormat)
       .then((res) => {
         toast.success("State Edited successfully");
         mutate(countryMutate());

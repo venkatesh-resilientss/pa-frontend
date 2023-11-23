@@ -8,17 +8,9 @@ import { checkTenant } from "constants/function";
 
 function AddDepartment() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const departmentService = new DepartmentsService();
+
   const {
     control,
     setError,
@@ -40,7 +32,8 @@ function AddDepartment() {
       isActive: activeStatus,
     };
 
-    DepartmentsService.create(tenantId, backendFormat)
+    departmentService
+      .createDepartment(backendFormat)
       .then((res) => {
         toast.success("Department Added successfully");
         reset();

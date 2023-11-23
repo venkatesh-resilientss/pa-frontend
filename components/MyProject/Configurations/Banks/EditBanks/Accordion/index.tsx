@@ -22,19 +22,10 @@ import { checkTenant } from "constants/function";
 
 function BankAccordion({ id }) {
   const { reset } = useForm();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const [open, setOpen] = useState("");
+   
 
+  const [open, setOpen] = useState("");
+  const bankService = new BankService();
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -62,7 +53,8 @@ function BankAccordion({ id }) {
       // SecondaryContactID:
     };
 
-    BankService.edit(tenantId, id, backendFormat)
+    bankService
+      .editBank(id, backendFormat)
       .then((res) => {
         toast.success("Bank Edited successfully");
         router.back();

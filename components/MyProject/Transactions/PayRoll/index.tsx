@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 function Payroll() {
   const router = useRouter();
   return (
-    <div>
+    <div className="mt-3">
       <DeletePayrollPopup />{" "}
       <div style={{ fontFamily: "Segoe UI" }}>
         <div
@@ -51,7 +51,9 @@ function Payroll() {
           </div>
         </div>
       </div>
-      <Stats />
+      <div className="my-2">
+        <Stats />
+      </div>
       <Tabs />
     </div>
   );

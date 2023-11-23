@@ -17,17 +17,9 @@ import { checkTenant } from "constants/function";
 
 const PeriodsBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const periodsService = new PeriodsService();
+
   const popupStatus = useSelector(
     (state: any) => state.configurations.periods.bulkUploadPopup.status
   );
@@ -61,7 +53,8 @@ const PeriodsBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    PeriodsService.uploadperiodslist(tenantId, fileName)
+    periodsService
+      .uploadperiodslist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

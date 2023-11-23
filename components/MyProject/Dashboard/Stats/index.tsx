@@ -8,30 +8,27 @@ import fluentMoneyHand from "assets/DashboardIcons/fluentMoneyHand.svg";
 import prospectClientIcon from "assets/DashboardIcons/prospectClientsIcon.svg";
 import { DashboardService } from "services";
 import useSWR from "swr";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { checkTenant } from "constants/function";
 
 function Stats() {
   const statsService = new DashboardService();
-  const [tenantId, setTenantId] = useState("");
+   
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  // useEffect(() => {
+  //   const getTenant = async () => {
+  //     const tenant = await checkTenant();
+  //     console.log(tenant, "tenant");
+  //     if (tenant) {
+  //       setTenantId(tenant.id);
+  //     }
+  //   };
+  //   getTenant();
+  // }, []);
   const {
     data: statsData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("GET_STATS", () => statsService.getStats(tenantId));
+  } = useSWR("GET_STATS", () => statsService.getStats());
   return (
     <div className="rounded mt-3 p-3" style={{ backgroundColor: "#EAEDFF" }}>
       <Row noGutters className="d-flex gap-2">

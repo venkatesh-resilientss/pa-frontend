@@ -1,4 +1,5 @@
 import axios, { AxiosPromise } from "axios";
+import jwt from "jsonwebtoken";
 // cookie
 import cookie from "js-cookie";
 import Moment from "moment";
@@ -22,6 +23,22 @@ abstract class APIService {
       "Content-Type": "application/json; charset=utf-8",
       "x-token": `${token}`,
     };
+  }
+
+  verifyToken(): boolean{
+    const token = cookie.get("accessToken");
+    if(token){
+      try{
+        const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
+        console.log(decoded);
+        return true;
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+    
+    return false;
   }
 
   // Setting access token in a cookie

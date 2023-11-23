@@ -12,19 +12,11 @@ function EditCurrency() {
   const router = useRouter();
 
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
+   
+  const currencyService = new CurrencyService();
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchCurrencyDetails = (id) => CurrencyService.details(tenantId, id);
+  const fetchCurrencyDetails = (id) =>
+    currencyService.currencyDetails(id);
 
   const {
     data: currencyData,
@@ -55,10 +47,8 @@ function EditCurrency() {
   }),
     [currencyData];
 
-  const currencyService = new CurrencyService();
-
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies(tenantId)
+    currencyService.getCurrencies()
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
@@ -73,7 +63,8 @@ function EditCurrency() {
       code: data.currencycode,
     };
 
-    CurrencyService.edit(tenantId, id, backendFormat)
+    currencyService
+      .editCurrency(id, backendFormat)
       .then((res) => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());

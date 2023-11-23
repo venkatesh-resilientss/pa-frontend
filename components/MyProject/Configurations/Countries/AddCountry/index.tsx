@@ -5,21 +5,12 @@ import { CountryService } from "services";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { checkTenant } from "constants/function";
 
 function AddCountry() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const countryService = new CountryService();
+
   const {
     control,
     setError,
@@ -39,7 +30,8 @@ function AddCountry() {
       is_active: activeStatus,
     };
 
-    CountryService.create(tenantId, backendFormat)
+    countryService
+      .createCountry(backendFormat)
       .then((res) => {
         toast.success("Country Added successfully");
         router.back();

@@ -39,26 +39,21 @@ const AllTaxCodesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
   const taxcodesService = new TaxCodesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: taxcodesData,
     isLoading: taxCodesLoading,
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_TAXCODES", searchText], () =>
-    taxcodesService.getTaxCodes(tenantId)
+    taxcodesService.getTaxCodes()
   );
 
   const dataSource = taxcodesData?.data;
@@ -322,10 +317,7 @@ const AllTaxCodesTable = () => {
                   />{" "}
                   Add Tax Code
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -375,12 +367,7 @@ const AllTaxCodesTable = () => {
               <NoDataPage
                 // buttonName={"Add Tax Code"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Tax Code"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Tax Code" : "No button"
                 }
                 buttonLink={"/configurations/add-tax-code"}
               />

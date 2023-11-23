@@ -10,17 +10,9 @@ import { checkTenant } from "constants/function";
 function AddChartOfAccounts() {
   const router = useRouter();
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const coaAccountsService = new COAAccountsService();
+
   const {
     control,
     setError,
@@ -42,7 +34,8 @@ function AddChartOfAccounts() {
       IsActive: activeStatus,
     };
 
-    COAAccountsService.create(tenantId, backendFormat)
+    coaAccountsService
+      .coaDetails(backendFormat)
       .then((res) => {
         toast.success("COA Added successfully");
         router.back();

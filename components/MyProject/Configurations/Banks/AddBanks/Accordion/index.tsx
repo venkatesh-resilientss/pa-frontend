@@ -18,23 +18,12 @@ import PhysicalAddressForm from "./PhysicalAddress";
 import DefaultAccountForm from "./DefaultAccount";
 import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
-import { checkTenant } from "constants/function";
 
 function BankAccordion() {
   const { reset } = useForm();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const [open, setOpen] = useState("");
 
+  const [open, setOpen] = useState("");
+  const bankService = new BankService();
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -63,7 +52,8 @@ function BankAccordion() {
       // SecondaryContactID:
     };
 
-    BankService.create(tenantId, backendFormat)
+    bankService
+      .createBank(backendFormat)
       .then((res) => {
         toast.success("Bank Added successfully");
         // reset();

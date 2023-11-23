@@ -34,22 +34,16 @@ import approvalLine from "../../../../../assets/myIcons/approvalLine.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
 
 const AllCurrencyTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
@@ -60,7 +54,7 @@ const AllCurrencyTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_CURRENCIES", searchText], () =>
-    currencyService.getCurrencies(tenantId)
+    currencyService.getCurrencies()
   );
   console.log(currencyData, "currencyData");
   const dataSource = currencyData?.result;
@@ -366,10 +360,7 @@ const AllCurrencyTable = () => {
                     />{" "}
                     Add Currency
                   </Button> */}
-                  {hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  ) && (
+                  {hasCreateConfiguration && (
                     <Button
                       onClick={() =>
                         router.push(`/configurations/add-currency`)
@@ -420,12 +411,7 @@ const AllCurrencyTable = () => {
                 <NoDataPage
                   // buttonName={"Create Currency"}
                   buttonName={
-                    hasPermission(
-                      "configuration_management",
-                      "create_configuration"
-                    )
-                      ? "Create Currency"
-                      : "No button"
+                    hasCreateConfiguration ? "Create Currency" : "No button"
                   }
                   buttonLink={"/configurations/add-currency"}
                 />

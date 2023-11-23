@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Row, Col } from "reactstrap";
+import { Row, Col, CardBody, Card } from "reactstrap";
 import { Button, Form, FormGroup, Label, Input, Popover } from "reactstrap";
 import DataTable from "react-data-table-component";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -20,7 +20,7 @@ const CreateAccountPayable = () => {
 
   const router = useRouter();
 
-  const columns = [
+  const columns :any= [
     {
       name: "S.No",
       selector: "S.No",
@@ -42,7 +42,6 @@ const CreateAccountPayable = () => {
     {
       name: "Account Number",
       selector: "AccountNumber",
-      width: 100,
       sortable: true,
       cell: (row) => (
         <input
@@ -389,6 +388,7 @@ const CreateAccountPayable = () => {
             }}
           >
             <Image src={plusIcon} alt="" />
+
             <span style={{ fontSize: "12px" }}> Add more lines</span>
           </Button>
           <Button
@@ -438,27 +438,19 @@ const CreateAccountPayable = () => {
     );
   };
   return (
-    <div>
+    <div className="my-3">
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div
-            style={{
-              padding: "24px 38px 38px 38px",
-              borderRadius: "12px",
-              gap: "25px",
-              color: "#030229",
-              fontWeight: 600,
-            }}
-          >
-            <div className="font-segoe-ui text-41 font-semibold leading-57 tracking-tighter text-left">
+        <div className="d-flex justify-content-between">
+          <div>
+            <div style={{ fontSize: "16px", fontWeight: "600" }}>
               All Account Payables
             </div>
 
-            <div className="w-2127.41 h-114">
+            <div>
               <div
                 style={{
                   fontFamily: "Segoe UI",
-                  fontSize: "26px",
+                  fontSize: "32px",
                   fontWeight: 600,
                   lineHeight: "50px",
                   textAlign: "left",
@@ -468,15 +460,7 @@ const CreateAccountPayable = () => {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: 3,
-              padding: "24px 38px 38px 38px",
-              borderRadius: "12px",
-            }}
-          >
+          <div className="d-flex my-auto " style={{ gap: "5px" }}>
             <Button
               onClick={() => router.back()}
               style={{
@@ -485,7 +469,6 @@ const CreateAccountPayable = () => {
                 backgroundColor: "transparent",
                 border: "1px solid #fff",
                 borderRadius: "4px",
-                cursor: "pointer",
               }}
               size="sm"
               outline
@@ -497,11 +480,11 @@ const CreateAccountPayable = () => {
                 height: "30px",
                 color: "#2D2C2C",
                 borderColor: "#00AEEF",
+                backgroundColor: "#ffffff",
                 borderWidth: "1px",
                 borderStyle: "solid",
               }}
               size="sm"
-              outline
             >
               Save as Draft
             </Button>
@@ -521,237 +504,347 @@ const CreateAccountPayable = () => {
           </div>
         </div>
       </div>
-      <hr style={{ marginTop: "-20px" }} />
+      <hr />
       <div
         style={{
           // padding: "30.42px 60.85px 0 60.85px",
           gap: "60.85px",
         }}
       >
-        <div
-          style={{
-            // width: "2793.39px",
-            // height: "293.85px",
-            padding: "24px 38px 38px 38px",
-            borderRadius: "12px",
-            gap: "25px",
-            backgroundColor: "#FFFFFF",
-            marginTop: "-20px",
-          }}
-        >
-          <div
-          //   style={{ height: "57px" }}
-          >
-            <Form>
-              <p style={{ color: "#030229", fontWeight: 600 }}>
-                Vendor information
-              </p>
-
-              <Row className="mt-2">
-                <Col sm="4">
-                  <FormGroup>
+        <div>
+          <div>
+            <Form
+              className="d-flex flex-column"
+              style={{ gap: "10px", fontSize: "12px", fontWeight: "400" }}
+            >
+              <Card style={{ border: "none" }}>
+                <CardBody>
+                  <div>
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        color: "#030229",
+                        fontSize: "16px",
+                        fontWeight: 600,
                       }}
                     >
-                      <Label style={{ color: "#030229" }}>Select vendor</Label>
-                      <Button
-                        style={{
-                          backgroundColor: "transparent",
-                          border: "1px solid #fff",
-                          padding: "8px 16px",
-                          borderRadius: "4px",
-                          marginTop: "-5px",
-                          color: "#000",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <Image src={plusIcon} alt="" />
-                        Add vendor
-                      </Button>
+                      Vendor information
                     </div>
-                    <Input
-                      name="select"
-                      type="select"
-                      placeholder="Select vendor "
-                    />
-                  </FormGroup>
-                </Col>
-                <Col sm="4">
-                  <FormGroup>
-                    <Label style={{ color: "#030229" }}>Vendor address</Label>
-                    <Input
-                      type="text"
-                      name="address"
-                      id="address"
-                      placeholder="Enter Vendor address"
-                    />
-                  </FormGroup>
-                </Col>
-                <Col sm="4">
-                  <FormGroup>
-                    <Label style={{ color: "#030229" }}>Vendor type</Label>
-                    <Input
-                      type="text"
-                      name="type"
-                      id="type"
-                      placeholder="Enter Vendor type"
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <div style={{ marginTop: "20px", backgroundColor: "#FFFFFF" }}>
-                <p style={{ color: "#030229", fontWeight: 600 }}>PO Details</p>
-                <Row className="mt-2">
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>PO Number</Label>
-                      <Input
-                        type="text"
-                        name="Date"
-                        id="exampleEmail1"
-                        placeholder="Enter email 1"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>PO Description</Label>
-                      <Input
-                        type="text"
-                        name="address"
-                        id="address"
-                        placeholder="Enter Vendor address"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>PO Amount</Label>
-                      <Input
-                        type="text"
-                        name="type"
-                        id="type"
-                        placeholder="Enter Vendor type"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>PO Date</Label>
-                      <Input
-                        type="date"
-                        name="date"
-                        id="exampleEmail1"
-                        placeholder="Enter email 1"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>
-                        PO Effective Date
-                      </Label>
-                      <Input
-                        type="date"
-                        name="POEffectiveDate"
-                        id="address"
-                        placeholder="Enter Vendor address"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>PO Expiry Date</Label>
-                      <Input
-                        type="date"
-                        name="POExpiryDate"
-                        id="type"
-                        placeholder="Enter Vendor type"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </div>
-              <div style={{ marginTop: "20px", backgroundColor: "#FFFFFF" }}>
-                <p style={{ color: "#030229", fontWeight: 600 }}>
-                  Other information
-                </p>
-                <Row className="mt-2">
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Client Name</Label>
-                      <Input
-                        type="select"
-                        name="ClientName"
-                        id="exampleEmail1"
-                        placeholder="Enter email 1"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Production</Label>
-                      <Input
-                        type="select"
-                        name="Production"
-                        id="address"
-                        placeholder="Enter Vendor address"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Bank</Label>
-                      <Input
-                        type="select"
-                        name="Bank"
-                        id="type"
-                        placeholder="Enter Vendor type"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Currency</Label>
-                      <Input
-                        type="select"
-                        name="Currency"
-                        id="exampleEmail1"
-                        placeholder="Enter email 1"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Department</Label>
-                      <Input
-                        type="select"
-                        name="Department"
-                        id="address"
-                        placeholder="Enter Vendor address"
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col sm="4">
-                    <FormGroup>
-                      <Label style={{ color: "#030229" }}>Period</Label>
-                      <Input
-                        type="select"
-                        name="Period"
-                        id="type"
-                        placeholder="Enter Vendor type"
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-              </div>
+
+                    <Row className="mt-2">
+                      <Col sm="4">
+                        <FormGroup>
+                          <div className="d-flex justify-content-between">
+                            <Label style={{ color: "#030229" }}>
+                              Select vendor
+                            </Label>
+                            <Button
+                              style={{
+                                backgroundColor: "transparent",
+                                border: "1px solid #fff",
+                                padding: "8px 16px",
+                                borderRadius: "4px",
+                                marginTop: "-5px",
+                                color: "#000",
+                                fontSize: "12px",
+                                fontWeight: "400",
+                              }}
+                            >
+                              <Image src={plusIcon} alt="" />
+                              Add vendor
+                            </Button>
+                          </div>
+                          <Input
+                            name="select"
+                            type="select"
+                            placeholder="Select vendor "
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Vendor address
+                          </Label>
+                          <Input
+                            type="text"
+                            name="address"
+                            id="address"
+                            placeholder="Enter Vendor address"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Vendor type
+                          </Label>
+                          <Input
+                            type="text"
+                            name="type"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                </CardBody>
+              </Card>
+              <Card style={{ border: "none" }}>
+                <CardBody>
+                  <div>
+                    <div
+                      style={{
+                        color: "#030229",
+                        fontSize: "16px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      PO Details
+                    </div>
+                    <Row className="mt-2">
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>PO Number</Label>
+                          <Input
+                            type="text"
+                            name="Date"
+                            id="exampleEmail1"
+                            placeholder="Enter email 1"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            PO Description
+                          </Label>
+                          <Input
+                            type="text"
+                            name="address"
+                            id="address"
+                            placeholder="Enter Vendor address"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>PO Amount</Label>
+                          <Input
+                            type="text"
+                            name="type"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>PO Date</Label>
+                          <Input
+                            type="date"
+                            name="date"
+                            id="exampleEmail1"
+                            placeholder="Enter email 1"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            PO Effective Date
+                          </Label>
+                          <Input
+                            type="date"
+                            name="POEffectiveDate"
+                            id="address"
+                            placeholder="Enter Vendor address"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            PO Expiry Date
+                          </Label>
+                          <Input
+                            type="date"
+                            name="POExpiryDate"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                            style={{ fontSize: "12px", fontWeight: "400" }}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                </CardBody>
+              </Card>
+              <Card style={{ border: "none" }}>
+                <CardBody>
+                  {" "}
+                  <div>
+                    <div
+                      style={{
+                        color: "#030229",
+                        fontSize: "16px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Other Information
+                    </div>
+
+                    <Row className="mt-2">
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Client Name
+                          </Label>
+                          <Input
+                            type="select"
+                            name="ClientName"
+                            id="exampleEmail1"
+                            placeholder="Enter email 1"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>Production</Label>
+                          <Input
+                            type="select"
+                            name="Production"
+                            id="address"
+                            placeholder="Enter Vendor address"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>Bank</Label>
+                          <Input
+                            type="select"
+                            name="Bank"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>Currency</Label>
+                          <Input
+                            type="select"
+                            name="Currency"
+                            id="exampleEmail1"
+                            placeholder="Enter email 1"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>Department</Label>
+                          <Input
+                            type="select"
+                            name="Department"
+                            id="address"
+                            placeholder="Enter Vendor address"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>Period</Label>
+                          <Input
+                            type="select"
+                            name="Period"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                </CardBody>
+              </Card>
+
+              <Card style={{ border: "none" }}>
+                <CardBody>
+                  {" "}
+                  <div>
+                    <div
+                      style={{
+                        color: "#030229",
+                        fontSize: "16px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Payment Info
+                    </div>
+
+                    <Row className="mt-2">
+                      <Col xl="3">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Combine Checks
+                          </Label>
+                          <div className="d-flex " style={{ gap: "10px" }}>
+                            <div className="d-flex" style={{ gap: "8px" }}>
+                              <input type="radio" /> <div>Yes</div>
+                            </div>
+                            <div className="d-flex" style={{ gap: "8px" }}>
+                              <input type="radio" /> <div>No</div>
+                            </div>
+                          </div>
+                        </FormGroup>
+                      </Col>
+                      <Col xl="3">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Payment Type
+                          </Label>
+                          <Input
+                            type="select"
+                            name="ClientName"
+                            id="exampleEmail1"
+                            placeholder="Enter email 1"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col xl="3">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Payment Number
+                          </Label>
+                          <Input name="Production" id="address" />
+                        </FormGroup>
+                      </Col>
+                      <Col xl="3">
+                        <FormGroup>
+                          <Label style={{ color: "#030229" }}>
+                            Payment Date
+                          </Label>
+                          <Input
+                            type="select"
+                            name="Bank"
+                            id="type"
+                            placeholder="Enter Vendor type"
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                </CardBody>
+              </Card>
             </Form>
           </div>
         </div>
@@ -777,11 +870,10 @@ const CreateAccountPayable = () => {
 
             <DataTable
               title={customTitle()}
-              // columns={columns}
+              columns={columns}
               data={data}
               //   pagination
               customStyles={customStyles}
-              columns={[]}
             />
           </div>
         </div>

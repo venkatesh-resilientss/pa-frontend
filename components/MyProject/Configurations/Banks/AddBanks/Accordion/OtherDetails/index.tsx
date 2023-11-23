@@ -5,22 +5,12 @@ import AsyncSelect from "react-select/async";
 import { useState, useEffect } from "react";
 import { LocationsService, SeriesService, SetsService } from "services";
 import useSWR from "swr";
-import { checkTenant } from "constants/function";
 
 function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
   const [set, setSet] = useState("");
@@ -28,7 +18,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -46,7 +36,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -63,9 +53,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () =>
-    setsService.getSets(tenantId)
-  );
+  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {

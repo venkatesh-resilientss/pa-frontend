@@ -9,7 +9,7 @@ import { checkTenant } from "constants/function";
 
 function AddSet() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
+   
 
   const {
     control,
@@ -21,16 +21,8 @@ function AddSet() {
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(false);
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const setsService = new SetsService();
+
   const handleRadioButton = (status) => {
     if (status === true) {
       setActiveStatus(true);
@@ -50,7 +42,8 @@ function AddSet() {
       isActive: activeStatus,
     };
 
-    SetsService.create(tenantId, backendFormat)
+    setsService
+      .createSet(backendFormat)
       .then((res) => {
         toast.success("Sets Added successfully");
         reset();

@@ -30,17 +30,20 @@ const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateUseerPermission = hasPermission(
+    "user_and_role_management",
+    "create_user"
+  );
+  const hasEditUserPermission = hasPermission(
+    "user_and_role_management",
+    "edit_user"
+  );
+  const hasDeactivateUserPermission = hasPermission(
+    "user_and_role_management",
+    "deactivate_user"
+  );
+
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
   };
@@ -54,7 +57,7 @@ const AllRoleTable = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await usersService.deleteUser(tenantId, id);
+      await usersService.deleteUser(id);
       // Optionally, you can update your local state or refetch data here
     } catch (error) {
       // Handle error, show a message, or log it
@@ -117,7 +120,7 @@ const AllRoleTable = () => {
   const clientService = new UsersService();
 
   const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
-    clientService.getUsers(tenantId)
+    clientService.getUsers()
   );
 
   const StateBadge = (props) => {
@@ -172,7 +175,7 @@ const AllRoleTable = () => {
                 action={() => { }}
               />
             </DropdownItem> */}
-            {hasPermission("user_and_role_management", "edit_user") && ( 
+            {hasEditUserPermission && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -184,8 +187,8 @@ const AllRoleTable = () => {
                   action={() => {}}
                 />
               </DropdownItem>
-            )} 
-            {hasPermission("user_and_role_management", "deactivate_user") && (
+            )}
+            {hasDeactivateUserPermission && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -197,7 +200,7 @@ const AllRoleTable = () => {
                   action={() => {}}
                 />
               </DropdownItem>
-          )}
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -324,14 +327,14 @@ const AllRoleTable = () => {
               >
                 <Plus size={16} /> Add User
               </button> */}
-              {/* {hasPermission("user_and_role_management", "create_user") && ( */}
+              {hasCreateUseerPermission && (
                 <button
                   className="btn btn-primary"
                   onClick={() => router.push("/settings/add-user")}
                 >
                   <Plus size={16} /> Add User
                 </button>
-              {/* )} */}
+              )}
             </div>
           </div>
         </CardBody>

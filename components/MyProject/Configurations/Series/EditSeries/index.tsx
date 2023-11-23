@@ -10,20 +10,11 @@ import { checkTenant } from "constants/function";
 
 function EditSeries() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
+   
 
   const { id } = router.query;
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchSeriesDetails = (id) => SeriesService.details(tenantId, id);
+
+  const fetchSeriesDetails = (id) => seriesService.seriesDetails(id);
 
   const {
     data: seriesData,
@@ -54,7 +45,7 @@ function EditSeries() {
   const seriesService = new SeriesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
@@ -69,7 +60,8 @@ function EditSeries() {
       code: data.Seriescode,
     };
 
-    SeriesService.edit(tenantId, id, backendFormat)
+    seriesService
+      .editSeries(id, backendFormat)
       .then((res) => {
         toast.success("Series Edited successfully");
         mutate(countryMutate());

@@ -36,23 +36,17 @@ import {
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
 
 const AllCountriesTable = () => {
   const countryService = new CountryService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const {
@@ -60,9 +54,7 @@ const AllCountriesTable = () => {
     isLoading: countryLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () =>
-    countryService.getCountries(tenantId)
-  );
+  } = useSWR(["LIST_USERS", searchText], () => countryService.getCountries());
 
   const dataSource = countryData?.data;
 
@@ -311,10 +303,7 @@ const AllCountriesTable = () => {
                   />{" "}
                   Add Country
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -363,12 +352,7 @@ const AllCountriesTable = () => {
               <NoDataPage
                 // buttonName={"Add Country"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Country"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Country" : "No button"
                 }
                 buttonLink={"/configurations/add-country"}
               />

@@ -10,6 +10,8 @@ import {
   Button,
   Input,
 } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { UserInfo } from "redux/slices/mySlices/roles";
 import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -25,7 +27,6 @@ import { useRouter } from "next/router";
 import { LocationsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import { useDispatch } from "react-redux";
 import {
   openBulkUploadLocationsPopup,
   openDeleteLocationPopup,
@@ -41,17 +42,11 @@ const AllLocationsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
   const locationsService = new LocationsService();
 
@@ -61,7 +56,7 @@ const AllLocationsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_LOCATIONS", searchText], () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
   const dataSource = locationsData?.result;
 
@@ -339,10 +334,7 @@ const AllLocationsTable = () => {
                   />{" "}
                   Add Location
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-location`)}
                     style={{
@@ -391,12 +383,7 @@ const AllLocationsTable = () => {
               <NoDataPage
                 // buttonName={"Create Location"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Location"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Location" : "No button"
                 }
                 buttonLink={"/configurations/add-location"}
               />

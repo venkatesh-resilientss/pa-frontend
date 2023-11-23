@@ -12,20 +12,12 @@ import { checkTenant } from "constants/function";
 
 function EditPeriod() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const periodsService = new PeriodsService();
+
   const { id } = router.query;
 
-  const fetchPeriodDetails = (id) => PeriodsService.details(tenantId, id);
+  const fetchPeriodDetails = (id) => periodsService.periodDetails(id);
 
   const {
     data: periodData,
@@ -54,10 +46,8 @@ function EditPeriod() {
   }),
     [periodData];
 
-  const periodService = new PeriodsService();
-
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodService.getPeriods(tenantId)
+    periodsService.getPeriods()
   );
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
@@ -73,7 +63,8 @@ function EditPeriod() {
       endDate: data.endDate,
     };
 
-    PeriodsService.edit(tenantId, id, backendFormat)
+    periodsService
+      .editPeriod(id, backendFormat)
       .then((res) => {
         toast.success("Period Edited successfully");
         mutate(bankMutate());

@@ -41,21 +41,16 @@ const AllVendorsTable = () => {
   const vendorsService = new VendorsService();
   const router = useRouter();
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const { data: vendorsData, isLoading: vendorsLoading } = useSWR(
-    "LIST_VENDORS",
-    () => vendorsService.getVendors(tenantId)
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
   );
+
+  const {
+    data: vendorsData,
+    isLoading: vendorsLoading,
+  } = useSWR("LIST_VENDORS", () => vendorsService.getVendors());
 
   const dataSource = vendorsData?.result;
 
@@ -193,7 +188,7 @@ const AllVendorsTable = () => {
 
     {
       headerName: "Options",
-      field: "id",
+      field: "ID",
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400", textAlign: "center" },
       headerClass: "custom-header-class",
@@ -328,10 +323,7 @@ const AllVendorsTable = () => {
                   />{" "}
                   Add Vendor
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-vendor`)}
                     style={{
@@ -382,12 +374,7 @@ const AllVendorsTable = () => {
               <NoDataPage
                 // buttonName={"Create Vendor"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Vendor"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Vendor" : "No button"
                 }
                 buttonLink={"/configurations/add-vendor"}
               />

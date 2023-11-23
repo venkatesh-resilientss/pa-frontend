@@ -12,21 +12,12 @@ import { useState, useEffect } from "react";
 
 const DeletePeriodPopup = ({ id }) => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const periodService = new PeriodsService();
 
   const { mutate: periodMutate } = useSWR("GET_PERIODS", () =>
-    periodService.getPeriods(tenantId)
+    periodService.getPeriods()
   );
 
   const popupStatus = useSelector(
@@ -39,7 +30,7 @@ const DeletePeriodPopup = ({ id }) => {
 
   const handleDeletePeriod = async () => {
     try {
-      await PeriodsService.delete(tenantId, helperData);
+      await periodService.deletePeriod(helperData);
       toast.success("Period Deleted Successfully");
       dispatch(closeDeletePeriodPopup("close"));
       periodMutate();

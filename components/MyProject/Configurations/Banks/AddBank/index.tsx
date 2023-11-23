@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { BankService } from "services";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import { checkTenant } from "constants/function";
 
 function AddBank() {
   const router = useRouter();
@@ -19,18 +18,8 @@ function AddBank() {
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
+  const bankService = new BankService();
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
   const onSubmit = (data) => {
     let backendFormat;
 
@@ -41,7 +30,8 @@ function AddBank() {
       location: data.location,
     };
 
-    BankService.create(tenantId, backendFormat)
+    bankService
+      .createBank(backendFormat)
       .then((res) => {
         toast.success("Bank Added successfully");
         router.back();

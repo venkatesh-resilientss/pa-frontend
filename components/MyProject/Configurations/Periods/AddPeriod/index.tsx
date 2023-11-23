@@ -13,19 +13,10 @@ import { checkTenant } from "constants/function";
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const router = useRouter();
+   
 
+  const router = useRouter();
+  const periodsService = new PeriodsService();
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
@@ -58,7 +49,8 @@ function AddPeriod() {
       is_active: activeStatus,
     };
 
-    PeriodsService.create(tenantId, backendFormat)
+    periodsService
+      .createPeriod(backendFormat)
       .then((res) => {
         toast.success("Period Added successfully");
         reset();

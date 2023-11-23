@@ -28,7 +28,7 @@ function Tabs(props) {
         className="bg-white "
         style={{ borderBottom: "1px solid", borderColor: "#DBDCDC" }}
       >
-        <NavItem>
+        <NavItem className="cursor-pointer">
           <NavLink
             style={{
               borderBottom: active === "1" ? "2px solid #293991" : "none",

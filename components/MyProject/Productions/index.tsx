@@ -7,6 +7,10 @@ import AssignRSSLPopup from "./PendingProductions/AssignRSSLPopup";
 import { hasPermission } from "commonFunctions/functions";
 function Productions() {
   const router = useRouter();
+  const hasCreateProductionPermission = hasPermission(
+    "production_management",
+    "create_production"
+  );
   return (
     <div style={{ fontFamily: "Segoe UI" }}>
       <div>
@@ -57,7 +61,7 @@ function Productions() {
               />{" "}
               New Production
             </Button> */}
-            {hasPermission("production_management", "create_production") && (
+            {hasCreateProductionPermission && (
               <Button
                 onClick={() => router.push(`/create-production`)}
                 color="info"

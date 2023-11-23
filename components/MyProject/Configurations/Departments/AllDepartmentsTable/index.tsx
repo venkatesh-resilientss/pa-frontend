@@ -44,17 +44,12 @@ const AllDepartmentsTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
   const departmentsService = new DepartmentsService();
 
   const {
@@ -63,7 +58,7 @@ const AllDepartmentsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_DEPARTMENTS", searchText], () =>
-    departmentsService.getDepartments(tenantId)
+    departmentsService.getDepartments()
   );
 
   const dataSource = departmentsData && departmentsData.result;
@@ -282,10 +277,7 @@ const AllDepartmentsTable = () => {
                   />{" "}
                   Create Department
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
                       router.push(`/configurations/add-department`)
@@ -336,12 +328,7 @@ const AllDepartmentsTable = () => {
               <NoDataPage
                 // buttonName={"Create Department"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Department"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Department" : "No button"
                 }
                 buttonLink={"/configurations/Create Department"}
               />

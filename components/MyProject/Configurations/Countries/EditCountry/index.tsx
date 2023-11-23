@@ -5,23 +5,14 @@ import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { checkTenant } from "constants/function";
 
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchCountryDetails = (id) => CountryService.details(tenantId, id);
+   
+
+  const fetchCountryDetails = (id) =>
+    countryService.countryDetails(id);
 
   const {
     data: countryData,
@@ -53,7 +44,7 @@ function EditCountry() {
   const countryService = new CountryService();
 
   const { mutate: countryMutate } = useSWR("LIST_PERIODS", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const [activeStatus, setActiveStatus] = useState(countryData?.IsActive);
@@ -67,7 +58,8 @@ function EditCountry() {
       is_active: activeStatus,
     };
 
-    CountryService.edit(tenantId, id, backendFormat)
+    countryService
+      .editCountry(id, backendFormat)
       .then((res) => {
         toast.success("Country Edited successfully");
         mutate(countryMutate());

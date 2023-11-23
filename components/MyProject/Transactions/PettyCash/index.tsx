@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 function PettyCash() {
   const router = useRouter();
   return (
-    <div>
+    <div className="mt-3">
       <DeletePettyCashPopup />
       <div style={{ fontFamily: "Segoe UI" }}>
         <div

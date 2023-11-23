@@ -11,24 +11,14 @@ import { checkTenant } from "constants/function";
 import { useState, useEffect } from "react";
 
 const DeleteBankPopup = ({ id }) => {
-  const [tenantId, setTenantId] = useState("");
+   
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
   const dispatch = useDispatch();
 
   const bankService = new BankService();
 
   const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks(tenantId)
+    bankService.getBanks()
   );
 
   const popupStatus = useSelector(
@@ -42,7 +32,7 @@ const DeleteBankPopup = ({ id }) => {
   const handleDeleteBank = async () => {
     console.log("IDDD", id);
     try {
-      await BankService.delete(tenantId, helperData);
+      await bankService.deleteBank(helperData);
       toast.success("Bank Deleted Successfully");
       dispatch(closeDeleteBanksPopup("close"));
       mutate(bankMutate());

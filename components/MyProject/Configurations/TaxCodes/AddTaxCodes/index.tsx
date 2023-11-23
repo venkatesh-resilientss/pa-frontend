@@ -16,19 +16,10 @@ function AddTaxCode() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-
+   
+  const taxCodeService = new TaxCodesService();
   const [activeStatus, setActiveStatus] = useState(false);
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const onSubmit = (data) => {
     let backendFormat;
 
@@ -38,7 +29,8 @@ function AddTaxCode() {
       is_active: activeStatus,
     };
 
-    TaxCodesService.create(tenantId, backendFormat)
+    taxCodeService
+      .createTaxCode(backendFormat)
       .then((res) => {
         toast.success("TaxCode Added successfully");
         reset();

@@ -1,4 +1,3 @@
-import axios from "axios";
 import APIService from "./api.service";
 import {
   CREATE_DEPARTMENTS,
@@ -9,8 +8,8 @@ import {
 } from "../lib/endpoints";
 
 class DepartmentsService extends APIService {
-  getDepartments(tenant_id:any): Promise<any> {
-    return this.get(`${GET_DEPARTMENTS(tenant_id)}`)
+  getDepartments(): Promise<any> {
+    return this.get(`${GET_DEPARTMENTS}`)
       .then((res) => {
         return res?.data;
       })
@@ -19,9 +18,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static create(tenant_id:any,data: any) {
-    return axios
-      .post(CREATE_DEPARTMENTS(tenant_id), data)
+  createDepartment(data: any) {
+    return this
+      .post(CREATE_DEPARTMENTS, data)
       .then((response) => {
         return response.data;
       })
@@ -31,14 +30,14 @@ class DepartmentsService extends APIService {
   }
 
 
-    static uploaddepartmentlist(tenant_id:any,fileName: any) {
+    uploaddepartmentlist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_DEPARTMENT_LIST(tenant_id), formData, {
+      return this.post(UPLOAD_DEPARTMENT_LIST, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -54,9 +53,9 @@ class DepartmentsService extends APIService {
       });
     }
 
-  static details(tenant_id:any,id: any) {
-    return axios
-      .get(DEPARTMENT_DETAIL_ENDPOINT(tenant_id,id))
+  departmentDetails(id: any) {
+    return this
+      .get(DEPARTMENT_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })
@@ -65,9 +64,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static delete(tenant_id:any,id: any) {
-    return axios
-      .delete(DELETE_DEPARTMENTS(tenant_id,id))
+  deleteDepartment(id: any) {
+    return this
+      .delete(DELETE_DEPARTMENTS(id))
       .then((response) => {
         return response?.data;
       })
@@ -76,9 +75,9 @@ class DepartmentsService extends APIService {
       });
   }
 
-  static edit(tenant_id:any,id: any, updatedData: any) {
-    return axios
-      .put(EDIT_DEPARTMENTS(tenant_id,id), updatedData)
+  editDepartment(id: any, updatedData: any) {
+    return this
+      .put(EDIT_DEPARTMENTS(id), updatedData)
       .then((response) => {
         return response?.data;
       })

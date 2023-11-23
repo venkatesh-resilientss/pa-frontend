@@ -10,7 +10,7 @@ function JournalEntry() {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="mt-3">
       <DeleteJournalEntryPopup />
       <div className="mt-2">
         <div

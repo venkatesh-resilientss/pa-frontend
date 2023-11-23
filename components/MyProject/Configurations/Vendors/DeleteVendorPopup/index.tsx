@@ -19,19 +19,10 @@ const DeleteVendorPopup = () => {
   const dispatch = useDispatch();
 
   const vendorService = new VendorsService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const { mutate: coaMutate } = useSWR("LIST_VENDORS", () =>
-    vendorService.getVendors(tenantId)
+    vendorService.getVendors()
   );
 
   const popupStatus = useSelector(
@@ -44,7 +35,7 @@ const DeleteVendorPopup = () => {
 
   const handleDeleteVendor = async () => {
     try {
-      await VendorsService.delete(tenantId, helperData);
+      await vendorService.deleteVendor(helperData);
       toast.success("Vendor Deleted Successfully");
       dispatch(closeDeleteVendorPopup("close"));
       mutate(coaMutate());

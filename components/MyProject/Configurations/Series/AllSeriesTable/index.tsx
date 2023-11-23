@@ -40,27 +40,20 @@ const AllSeriesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
   const seriesService = new SeriesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: seriesData,
     isLoading: seriesLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SERIES", searchText], () =>
-    seriesService.getSeries(tenantId)
-  );
+  } = useSWR(["LIST_SERIES", searchText], () => seriesService.getSeries());
 
   const dataSource = seriesData?.data;
 
@@ -327,10 +320,7 @@ const AllSeriesTable = () => {
                   />{" "}
                   Add Series
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-series`)}
                     style={{
@@ -378,14 +368,7 @@ const AllSeriesTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add Series"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Series"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Create Series" : ""}
                 buttonLink={"/configurations/add-series"}
               />
             </div>

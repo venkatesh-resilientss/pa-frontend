@@ -18,17 +18,9 @@ import { checkTenant } from "constants/function";
 
 function VendorAccordion() {
   const { reset } = useForm();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const vendorsService = new VendorsService();
+
   const [open, setOpen] = useState("");
 
   const toggle = (id) => {
@@ -68,7 +60,8 @@ function VendorAccordion() {
       // ParentID
     };
 
-    VendorsService.edit(tenantId, backendFormat)
+    vendorsService
+      .editVendor(backendFormat)
       .then((res) => {
         toast.success("Vendor Edit successfully");
         // reset();

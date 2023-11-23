@@ -17,7 +17,7 @@ import { checkTenant } from "constants/function";
 
 const StatesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
+   
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.states.bulkUploadPopup.status
@@ -26,18 +26,9 @@ const StatesBulkUploadPopup = () => {
   const helperData = useSelector(
     (state: any) => state.configurations.states.bulkUploadPopup.helperData
   );
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
 
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const statesService = new StatesService();
   const onDrop = useCallback((acceptedFiles) => {
     setUploadedFiles(acceptedFiles);
   }, []);
@@ -59,7 +50,8 @@ const StatesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    StatesService.uploadstateslist(tenantId, fileName)
+    statesService
+      .uploadstateslist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

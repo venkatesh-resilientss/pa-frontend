@@ -1,7 +1,6 @@
 import { Button } from "reactstrap";
 import Stats from "./Stats";
 import Tabs from "./Tabs";
-import Select from "react-select";
 import Plus from "assets/myIcons/plus.svg";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -10,8 +9,9 @@ import DeletePurchaseOrderPopup from "./DeletePurchaseOrderPopup";
 
 function PurchaseOrder() {
   const router = useRouter();
+
   return (
-    <div>
+    <div className="mt-3">
       <DeletePurchaseOrderPopup />
       <div style={{ fontFamily: "Segoe UI" }}>
         <div
@@ -52,7 +52,9 @@ function PurchaseOrder() {
           </div>
         </div>
       </div>
-      <Stats />
+      <div className="my-2">
+        <Stats />
+      </div>
       <Tabs />
     </div>
   );

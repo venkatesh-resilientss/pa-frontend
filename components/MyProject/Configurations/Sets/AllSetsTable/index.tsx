@@ -41,25 +41,20 @@ const AllSetsTable = () => {
   const setsService = new SetsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: setsData,
     isLoading: setsLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets(tenantId));
+  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets());
   const dataSource = setsData?.result;
 
   console.log(setsData, "setsData");
@@ -328,10 +323,7 @@ const AllSetsTable = () => {
                   />{" "}
                   Create Set
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-set`)}
                     style={{
@@ -379,14 +371,7 @@ const AllSetsTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create Set"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Set"
-                    : "No button"
-                }
+                buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
                 buttonLink={"/configurations/add-set"}
               />
             </div>

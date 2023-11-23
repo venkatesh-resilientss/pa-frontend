@@ -1,10 +1,9 @@
-import axios from 'axios';
 import APIService from './api.service';
 import { GET_PROJECTS } from '../lib/endpoints';
 
 class ProjectService extends APIService {
-  getProjects(tenant_id:any): Promise<any> {
-    return this.get(`${GET_PROJECTS(tenant_id)}`)
+  getProjects(): Promise<any> {
+    return this.get(`${GET_PROJECTS}`)
       .then((res) => {
         return res?.data;
       })

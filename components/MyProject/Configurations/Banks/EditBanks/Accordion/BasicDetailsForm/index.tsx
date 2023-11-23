@@ -25,17 +25,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   ];
 
   const [currency, setCurrency] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const currencyService = new CurrencyService();
 
   const {
@@ -43,7 +33,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {

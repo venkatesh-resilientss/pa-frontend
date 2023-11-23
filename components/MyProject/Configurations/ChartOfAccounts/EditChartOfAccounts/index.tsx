@@ -6,24 +6,15 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { COAAccountsService } from "services";
-import { checkTenant } from "constants/function";
 
 function EditChartOfAccounts() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const coaAccountsService = new COAAccountsService();
+
   const { id } = router.query;
 
-  const fetchCOADetails = (id) => COAAccountsService.details(tenantId, id);
+  const fetchCOADetails = (id) => coaAccountsService.coaDetails(id);
 
   const {
     data: coaData,
@@ -56,7 +47,7 @@ function EditChartOfAccounts() {
   const cOAAccountsService = new COAAccountsService();
 
   const { mutate: currencyMutate } = useSWR("LIST_COA", () =>
-    cOAAccountsService.getCoasAccounts(tenantId)
+    cOAAccountsService.getCoasAccounts()
   );
 
   const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
@@ -75,7 +66,8 @@ function EditChartOfAccounts() {
       postable: postable,
     };
 
-    COAAccountsService.edit(tenantId, id, backendFormat)
+    cOAAccountsService
+      .editCOA(id, backendFormat)
       .then((res) => {
         toast.success("COA Edited successfully");
         mutate(currencyMutate());

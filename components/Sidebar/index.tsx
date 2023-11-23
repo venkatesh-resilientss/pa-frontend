@@ -4,21 +4,28 @@ import Link from "next/link";
 import { sidebarRoutes } from "constants/common";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-const Sidebar = () => {
+import { Card } from "react-bootstrap";
+import { AuthService } from "services";
+const Sidebar = ({props}) => {
   const router = useRouter();
   const [showSidebar, setSidebar] = useState(true); // min - full;
   const toggleSidebar = () => {
     if (!showSidebar && childRoute) handleDropDownChange(parentRoute);
     setSidebar(!showSidebar);
   };
-  /**
-   *
-   */
   const [activeDropDown, setActiveDropDown] = useState(null);
   const [parentRoute, setParentRoute] = useState(null);
   const [childRoute, setChildRoute] = useState(null);
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
+  };
+  /**
+   * User Profile
+   */
+  const authService = new AuthService();
+  const handleLogout = () => {
+    authService.logout();
+    router.push("/");
   };
   useEffect(() => {
     /**get route names */
@@ -27,17 +34,12 @@ const Sidebar = () => {
     setParentRoute(`/${routeNames[0]}`);
     if (routeNames[1]) {
       setChildRoute(`/${routeNames[1]}`);
+      handleDropDownChange(`/${routeNames[0]}`);
     } else {
       setChildRoute(null);
     }
   }, [router.pathname]);
-  /**
-   * User Profile
-   */
-  const user = {
-    name: "Jhon Doe",
-    profileImg: "/profile-dummy.png",
-  };
+
   const IconLink = ({ title, children, placement }) => (
     <OverlayTrigger
       placement={placement}
@@ -67,7 +69,9 @@ const Sidebar = () => {
   const SideBarRoute = ({ route }) => {
     return (
       <div
-        className={`route-button my-2 ${parentRoute === route.path ? "active" : ""}`}
+        className={`route-button my-2 ${
+          parentRoute === route.path ? "active" : ""
+        }`}
       >
         {showSidebar ? (
           <div
@@ -129,7 +133,7 @@ const Sidebar = () => {
             onClick={() => {
               if (route.children) {
                 toggleSidebar();
-                setActiveDropDown(route.path)
+                setActiveDropDown(route.path);
               }
             }}
           >
@@ -204,7 +208,7 @@ const Sidebar = () => {
           <div
             onClick={() => {
               toggleSidebar();
-              handleDropDownChange(null)
+              handleDropDownChange(null);
             }}
             className="cursor-pointer"
           >
@@ -247,13 +251,53 @@ const Sidebar = () => {
         <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
           <div className="d-flex align-items-center">
             <div>
-              <img src={user.profileImg} width={22} className="me-2" alt="" />
+              <img
+                src={
+                  props.profileImg
+                    ? props.profileImg
+                    : "/icons/sample-profile.png"
+                }
+                width={22}
+                className="me-2"
+                alt=""
+              />
             </div>
-            {showSidebar ? <p>{user.name}</p> : ""}
+            {showSidebar ? <p>{props.name ? props.name : "-"}</p> : ""}
           </div>
-          <div className="cursor-pointer">
-            {<img src="/icons/more_horiz.svg" alt="" />}
-          </div>
+
+          <OverlayTrigger
+            placement={"right"}
+            trigger={"click"}
+            rootClose
+            overlay={
+              <Tooltip bsPrefix="custom-tooltip">
+                <Card>
+                  <div className="px-3 py-2 d-flex flex-column gap-1">
+                    <Link
+                      href="/my-profile"
+                      className="d-flex gap-2 align-item-center cursor-pointer"
+                    >
+                      <img src="/icons/profile.svg" width={14} alt="" />
+                      <p>My Profile</p>
+                    </Link>
+                    <div
+                      onClick={handleLogout}
+                      className="d-flex gap-2 align-item-center cursor-pointer"
+                    >
+                      <img src="/icons/logout.svg" width={14} alt="" />
+                      <p>Logout</p>
+                    </div>
+                  </div>
+                </Card>
+              </Tooltip>
+            }
+          >
+            <img
+              src="/icons/more_horiz.svg"
+              className="cursor-pointer"
+              alt=""
+            />
+          </OverlayTrigger>
         </div>
       </div>
     </div>

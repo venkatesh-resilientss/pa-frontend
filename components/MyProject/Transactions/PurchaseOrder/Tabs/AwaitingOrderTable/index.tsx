@@ -279,7 +279,12 @@ const AwaitingOrderTable = () => {
 
   return (
     <div className="my-5 m-auto" style={{ width: "100%" }}>
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4}  searchText={undefined}/>
+      <GridTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        pageSize={4}
+        searchText={undefined}
+      />
     </div>
   );
 };

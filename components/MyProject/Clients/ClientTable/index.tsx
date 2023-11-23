@@ -60,31 +60,28 @@ import { openDeleteClientPopup } from "redux/slices/mySlices/clients";
 import { ClientsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import GridTable from "components/grid-tables/gridTable";
-import { checkTenant } from "constants/function";
 
 const ClientsListTable = () => {
   const dispatch = useDispatch();
 
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const hasClientEditPermission = hasPermission(
+    "client_management",
+    "edit_client"
+  );
+  const hasDeactivateClientPermission = hasPermission(
+    "client_management",
+    "deactivate_client"
+  );
+
+
   const [clientModal, setClientModal] = useState(false);
   const toggle = () => setClientModal(!clientModal);
 
   const clientService = new ClientsService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients(tenantId)
+    clientService.getClients()
   );
 
   const addNewClientSoftwares = [
@@ -262,13 +259,13 @@ const ClientsListTable = () => {
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem> */}
-            {hasPermission("client_management", "edit_client") && (
+            {hasClientEditPermission && (
               <DropdownItem className="w-100">
                 <Edit size={14} className="me-50 cursor-pointer" />
                 <span className="align-middle">Edit</span>
               </DropdownItem>
             )}
-            {hasPermission("client_management", "deactivate_client") && (
+            {hasDeactivateClientPermission && (
               <DropdownItem className="w-100">
                 <Trash size={14} className="me-50 cursor-pointer" />
                 <span className="align-middle">Delete</span>

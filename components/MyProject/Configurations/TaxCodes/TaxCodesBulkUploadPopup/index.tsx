@@ -17,17 +17,8 @@ import { checkTenant } from "constants/function";
 
 const TaxCodesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const popupStatus = useSelector(
     (state: any) => state.configurations.taxcodes.bulkUploadPopup.status
   );
@@ -57,9 +48,10 @@ const TaxCodesBulkUploadPopup = () => {
     }
 
     const fileName = uploadedFiles[0];
-
+    const taxCodeService = new TaxCodesService();
     // Call the uploadbanklist function from your service with only the file name
-    TaxCodesService.uploadtaxcodeslist(tenantId, fileName)
+    taxCodeService
+      .uploadtaxcodeslist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

@@ -12,22 +12,13 @@ function EditDepartment() {
   const router = useRouter();
   const { id } = router.query;
   const departmentsService = new DepartmentsService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
-    DepartmentsService.details(tenantId, id)
+    departmentsService.departmentDetails(id)
   );
   const { mutate: userMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments(tenantId)
+    departmentsService.getDepartments()
   );
 
   const [editedData, setEditedData] = useState(departmentsData);
@@ -55,7 +46,7 @@ function EditDepartment() {
   const departmentService = new DepartmentsService();
 
   const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentService.getDepartments(tenantId)
+    departmentService.getDepartments()
   );
 
   const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
@@ -69,7 +60,8 @@ function EditDepartment() {
       is_active: activeStatus,
     };
 
-    DepartmentsService.edit(tenantId, id, backendFormat)
+    departmentService
+      .editDepartment(id, backendFormat)
       .then((res) => {
         toast.success("Department Edited successfully");
         mutate(departmentMutate());

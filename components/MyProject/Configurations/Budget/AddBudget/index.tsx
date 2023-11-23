@@ -19,7 +19,6 @@ import { checkTenant } from "constants/function";
 
 function AddBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -31,23 +30,12 @@ function AddBudget() {
 
   const currencyService = new CurrencyService();
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-
   const {
     data: currencyData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {
@@ -64,7 +52,7 @@ function AddBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -82,7 +70,7 @@ function AddBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -99,9 +87,7 @@ function AddBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () =>
-    setsService.getSets(tenantId)
-  );
+  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -118,7 +104,7 @@ function AddBudget() {
   const statsService = new DashboardService();
 
   const { data: statsData } = useSWR("GET_RECENET", () =>
-    statsService.getRecentProductions(tenantId)
+    statsService.getRecentProductions()
   );
 
   const productionSelectFormat = statsData?.data.map((b) => {
@@ -135,7 +121,7 @@ function AddBudget() {
   const budgetService = new BudgetService();
 
   const { data: budgetData } = useSWR("LIST_COMPANY", () =>
-    budgetService.getCompany(tenantId)
+    budgetService.getCompany()
   );
 
   const companySelectFormat = budgetData?.map((b) => {
@@ -175,7 +161,8 @@ function AddBudget() {
       is_active: activeStatus,
     };
 
-    BudgetService.create(tenantId, backendFormat)
+    budgetService
+      .createBudget(backendFormat)
       .then((res) => {
         toast.success("Budget Added successfully");
         router.back();
@@ -347,7 +334,7 @@ function AddBudget() {
                 className="react-select"
                 classNamePrefix="select"
                 loadOptions={loadCurrencyOptions}
-                placeholder="Select Series"
+                placeholder="Select Currency"
                 defaultOptions={currenciesSelectFormat}
               />
             )}

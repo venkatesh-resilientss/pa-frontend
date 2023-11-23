@@ -21,21 +21,13 @@ function AddState() {
   } = useForm();
 
   const [activeStatus, StateActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
+   
 
   const countryService = new CountryService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const statesService = new StatesService();
+
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -60,7 +52,8 @@ function AddState() {
       is_active: activeStatus,
     };
 
-    StatesService.create(tenantId, backendFormat)
+    statesService
+      .createState(backendFormat)
       .then((res) => {
         toast.success("State Added successfully");
         reset();

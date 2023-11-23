@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 function AccountPayable() {
   const router = useRouter();
   return (
-    <div>
+    <div className="mt-3">
       <DeleteAccountPayablePopup />
       <div style={{ fontFamily: "Segoe UI" }}>
         <div
@@ -52,6 +52,7 @@ function AccountPayable() {
           </div>
         </div>
       </div>
+
       <Tabs />
     </div>
   );

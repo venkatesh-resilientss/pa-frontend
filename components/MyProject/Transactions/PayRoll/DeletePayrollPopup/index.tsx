@@ -21,33 +21,36 @@ const DeletePayrollPopup = () => {
 
   return (
     <Modal
-      style={{ fontFamily: "Segoe UI" }}
       isOpen={popupStatus}
       toggle={() => dispatch(closeDeletePayrollPopup("delete"))}
-      className={"modal-dialog-centered modal-sm "}
+      className="custom-modal modal-dialog-centered"
     >
-      {/* <ModalHeader
-        className="bg-white"
-        toggle={() => dispatch(closeAssignRSSLPopup())}
-      ></ModalHeader> */}
       <ModalBody>
         <div className="d-flex justify-content-center">
           <Image
-            alt="infoImage"
             src={infoImage}
-            style={{ height: "30.93px", width: "30.93px", marginBottom: "8px" }}
+            style={{ height: "42.36px", width: "42.36px", marginBottom: "8px" }}
+            alt={""}
           />
         </div>
         <div
           className="text-black text-center"
-          style={{ fontSize: "14px", fontWeight: "600", marginBottom: "8px" }}
+          style={{
+            fontSize: "19.17px",
+            fontWeight: "600",
+            marginBottom: "8px",
+          }}
         >
           Are you sure you want to delete?{" "}
         </div>
 
         <div
           className=" text-center"
-          style={{ fontSize: "10px", fontWeight: "400", marginBottom: "8px" }}
+          style={{
+            fontSize: "13.69px",
+            fontWeight: "400",
+            marginBottom: "8px",
+          }}
         >
           This action will delete the information permanently. You cannot undo
           this action.{" "}
@@ -57,12 +60,23 @@ const DeletePayrollPopup = () => {
 
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
+            style={{ fontSize: "10.96px", fontWeight: "400" }}
             onClick={() => dispatch(closeDeletePayrollPopup("delete"))}
             color="white"
           >
             Cancel
           </Button>
-          <Button color="danger">Delete</Button>
+          <Button
+            style={{
+              fontSize: "10.96px",
+              fontWeight: "400",
+              backgroundColor: "#CF0C0C",
+              border: "none",
+            }}
+            // onClick={() => handleDeleteDepartment()}
+          >
+            Delete
+          </Button>
         </div>
       </ModalBody>
     </Modal>

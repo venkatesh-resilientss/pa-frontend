@@ -1,4 +1,3 @@
-  import axios from 'axios';
   import APIService from './api.service';
   // cookie
 import cookie from "js-cookie";
@@ -6,8 +5,8 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
 
   class UsersService extends APIService {
     static postUsers: any;
-    getUsers(tenant_id:any): Promise<any> {
-      return this.get(`${GET_USERS(tenant_id)}`)
+    getUsers(): Promise<any> {
+      return this.get(`${GET_USERS}`)
         .then((res) => {
           return res?.data;
         })
@@ -18,8 +17,8 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
 
   
 
-    postUsers(tenant_id:any,data): Promise<any> {
-      return this.post(`${CREATE_USERS(tenant_id)}`,data)
+    postUsers(data): Promise<any> {
+      return this.post(`${CREATE_USERS}`,data)
         .then((res) => {
           return res?.data;
         })
@@ -29,8 +28,8 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
     }
 
 
-    editUser(tenant_id:any,id,data): Promise<any> {
-      return this.put(EDIT_USERS(tenant_id,id),data)
+    editUser(id,data): Promise<any> {
+      return this.put(EDIT_USERS(id),data)
         .then((res) => {
           return res?.data;
         })
@@ -40,8 +39,8 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
     }
 
 
-  getuserbyid(tenant_id:any,id): Promise<any> {
-    return this.get(`${USERS_DETAIL_ENDPOINT(tenant_id,id)}`)
+  getuserbyid(id): Promise<any> {
+    return this.get(`${USERS_DETAIL_ENDPOINT(id)}`)
       .then((res) => {
         return res?.data;
       })
@@ -52,8 +51,8 @@ import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER }
 
 
 
-    deleteUser(tenant_id:any,role_id): Promise<any> {
-        return this.delete(`${DELETE_USER(tenant_id,role_id)}`)
+    deleteUser(role_id): Promise<any> {
+        return this.delete(`${DELETE_USER(role_id)}`)
           .then((res) => {
             return res?.data;
           })

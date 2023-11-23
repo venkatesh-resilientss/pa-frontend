@@ -1,10 +1,9 @@
-import axios from 'axios';
 import APIService from './api.service';
-import {CREATE_SETS, DELETE_SETS, EDIT_SERIES, GET_SETS, SETS_DETAIL_ENDPOINT,UPLOAD_SET_LIST} from '../lib/endpoints';
+import {CREATE_SETS, DELETE_SETS, EDIT_SETS, GET_SETS, SETS_DETAIL_ENDPOINT,UPLOAD_SET_LIST} from '../lib/endpoints';
 
 class SetsService extends APIService {
-  getSets(tenant_id:any): Promise<any> {
-    return this.get(`${GET_SETS(tenant_id)}`)
+  getSets(): Promise<any> {
+    return this.get(`${GET_SETS}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +12,9 @@ class SetsService extends APIService {
       });
   }
 
-  static create(tenant_id:any,data:any) {
-    return axios
-      .post(CREATE_SETS(tenant_id), data)
+  createSet(data:any) {
+    return this
+      .post(CREATE_SETS, data)
       .then((response) => {
         return response.data;
       })
@@ -24,14 +23,14 @@ class SetsService extends APIService {
       });
   }
 
-  static uploadsetlist(tenant_id:any,fileName: any) {
+  uploadsetlist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_SET_LIST(tenant_id), formData, {
+      return this.post(UPLOAD_SET_LIST, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -47,9 +46,9 @@ class SetsService extends APIService {
       });
     }
   
-  static delete(tenant_id:any,id: any) {
-    return axios
-      .delete(DELETE_SETS(tenant_id,id))
+  deleteSet(id: any) {
+    return this
+      .delete(DELETE_SETS(id))
       .then((response) => {
         return response?.data;
       })
@@ -58,9 +57,9 @@ class SetsService extends APIService {
       });
   }
 
-  static edit(tenant_id:any,id: any,data) {
-    return axios
-      .put(EDIT_SERIES(tenant_id,id),data)
+  editSet(id: any,data) {
+    return this
+      .put(EDIT_SETS(id),data)
       .then((response) => {
         return response?.data;
       })
@@ -69,9 +68,9 @@ class SetsService extends APIService {
       });
   }
 
-  static details(tenant_id:any,id: string) {
-    return axios
-      .get(SETS_DETAIL_ENDPOINT(tenant_id,id))
+  setsDetails(id: string) {
+    return this
+      .get(SETS_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })
