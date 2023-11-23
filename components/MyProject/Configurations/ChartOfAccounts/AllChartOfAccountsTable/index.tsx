@@ -94,7 +94,7 @@ const AllChartOfAccountsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -106,13 +106,13 @@ const AllChartOfAccountsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               onClick={() =>
                 router.push(
@@ -373,7 +373,7 @@ const AllChartOfAccountsTable = () => {
         </Card>
       </div>
       {coasLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -384,7 +384,7 @@ const AllChartOfAccountsTable = () => {
       ) : (
         <>
           {coasData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}

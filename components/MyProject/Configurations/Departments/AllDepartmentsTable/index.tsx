@@ -100,7 +100,7 @@ const AllDepartmentsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -112,13 +112,13 @@ const AllDepartmentsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               tag="a"
               href="/"
@@ -158,6 +158,14 @@ const AllDepartmentsTable = () => {
     {
       headerName: "Department Name",
       field: "Name",
+      sortable: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "Description",
+      field: "Description",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -304,7 +312,7 @@ const AllDepartmentsTable = () => {
         </Card>
       </div>
       {departmentLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -315,11 +323,11 @@ const AllDepartmentsTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={9}
+                pageSize={10}
                 searchText={searchText}
               />
             </div>

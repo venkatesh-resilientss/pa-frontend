@@ -83,7 +83,17 @@ body {
 p {
   margin: 0;
 }
-
+input{
+  border: 2px solid #C9C9C9;
+}
+input:focus{
+  // border: #dee2e6 !important;
+  box-shadow: none !important;
+}
+textarea:focus{
+  // border: #dee2e6 !important;
+  box-shadow: none !important;
+}
 
 /*
     Custom Styles

@@ -88,7 +88,7 @@ const AllSetsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -100,13 +100,13 @@ const AllSetsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               onClick={() =>
                 router.push(`/configurations/edit-set/${props.data.ID}`)
@@ -193,62 +193,7 @@ const AllSetsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      SetCode: "SET001",
-      SetName: "Product Set 1",
-      Description: "This is the first product set",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      SetCode: "SET002",
-      SetName: "Product Set 2",
-      Description: "This is the second product set",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      SetCode: "SET003",
-      SetName: "Product Set 3",
-      Description: "This is the third product set",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-    {
-      id: 4,
-      SetCode: "SET004",
-      SetName: "Product Set 4",
-      Description: "This is the fourth product set",
-      CreatedBy: "UserD",
-      UpdatedOn: "2023-04-10",
-      Status: "active",
-    },
-    {
-      id: 5,
-      SetCode: "SET005",
-      SetName: "Product Set 5",
-      Description: "This is the fifth product set",
-      CreatedBy: "UserE",
-      UpdatedOn: "2023-05-15",
-      Status: "inactive",
-    },
-    {
-      id: 6,
-      SetCode: "SET006",
-      SetName: "Product Set 6",
-      Description: "This is the sixth product set",
-      CreatedBy: "UserF",
-      UpdatedOn: "2023-06-20",
-      Status: "active",
-    },
-  ];
+ 
 
   return (
     <div>
@@ -348,7 +293,7 @@ const AllSetsTable = () => {
         </Card>
       </div>
       {setsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -359,7 +304,7 @@ const AllSetsTable = () => {
       ) : (
         <>
           {setsData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}

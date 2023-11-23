@@ -25,6 +25,7 @@ import infoImage from "assets/MyImages/info.svg";
 import router, { useRouter } from "next/router";
 import { hasPermission } from "commonFunctions/functions";
 import { checkTenant } from "constants/function";
+import { toast } from "react-toastify";
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -59,9 +60,11 @@ const AllRoleTable = () => {
     try {
       await usersService.deleteUser(id);
       // Optionally, you can update your local state or refetch data here
+      toast.success('User deleted successfully');
     } catch (error) {
       // Handle error, show a message, or log it
-      console.error("Error deleting user:", error);
+      // console.error("Error deleting user:", error);
+      toast.error('Error deleting user');
     } finally {
       toggleDeleteModal();
     }
@@ -85,7 +88,7 @@ const AllRoleTable = () => {
           className="text-black text-center"
           style={{ fontSize: "16px", fontWeight: "600", marginBottom: "8px" }}
         >
-          Are you sure you want to delete? {deleteModalId}
+          Are you sure you want to delete? 
         </div>
         <div
           className="text-center"
@@ -339,11 +342,11 @@ const AllRoleTable = () => {
           </div>
         </CardBody>
       </Card>
-      <div className="mt-4">
+      <div className="mt-3">
         <GridTable
           rowData={clientData?.data}
           columnDefs={columnDefs}
-          pageSize={9}
+          pageSize={10}
           searchText={searchText}
         />
       </div>

@@ -88,7 +88,7 @@ const AllSeriesTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -100,13 +100,13 @@ const AllSeriesTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
-                name={"View Details"}
+                name={"\ Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               tag="a"
               className="w-100"
@@ -199,53 +199,7 @@ const AllSeriesTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      SeriesCode: "SER001",
-      SeriesName: "Product Series 1",
-      Description: "This is the first product series",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      SeriesCode: "SER002",
-      SeriesName: "Product Series 2",
-      Description: "This is the second product series",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-    {
-      id: 4,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "inactive",
-    },
-    {
-      id: 5,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-  ];
+ 
 
   return (
     <div>
@@ -345,7 +299,7 @@ const AllSeriesTable = () => {
         </Card>
       </div>
       {seriesLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -356,7 +310,7 @@ const AllSeriesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}

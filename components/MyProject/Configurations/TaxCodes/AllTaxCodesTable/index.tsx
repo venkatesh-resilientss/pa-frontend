@@ -71,71 +71,65 @@ const AllTaxCodesTable = () => {
     );
   };
 
-  const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
-    const row = props.data;
-    const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
+  
+const ActionsButton = (props) => {
+  const id = `action-popover-${props.value}`;
+  const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
-      return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
-          <Image src={icon} alt={name} />
-          <p>{name}</p>
-        </div>
-      );
-    };
+  const toggle = () => {
+    setOpen(!open);
+  };
+  const Action = ({ icon, name, action }) => {
     return (
-      <div>
-        <UncontrolledDropdown>
-          <DropdownToggle tag="span">
-            <Image
-              src={actionIcon}
-              alt=""
-              width={14}
-              id={id}
-              style={{ marginLeft: "-100px" }}
-            />
-          </DropdownToggle>
-          <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={() =>
-                router.push(`/configurations/edit-taxcode/${props.data.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteTaxCodesPopup(props.data.ID));
-                }}
-              />
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+      <div onClick={action} className="d-flex align-items-center gap-2">
+        <Image src={icon} alt={name} />
+        <p>{name}</p>
       </div>
     );
   };
+  return (
+    <div className="cursor-pointer">
+      <UncontrolledDropdown>
+        <DropdownToggle tag="span">
+          <Image
+            src={actionIcon}
+            alt=""
+            width={14}
+            id={id}
+            style={{ marginLeft: "20px" }}
+          />
+        </DropdownToggle>
+        <DropdownMenu end container="body">
+          {/* <DropdownItem className="w-100">
+            <Action
+              icon={detailsIocn}
+              name={"View Details"}
+              action={() => {}}
+            />
+          </DropdownItem> */}
+          <DropdownItem
+            tag="a"
+            href="/"
+            className="w-100"
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(`/configurations/edit-taxcode/${props.data.ID}`);
+            }}
+          >
+            <Action icon={editIocn} name={"Edit"} action={() => {}} />
+          </DropdownItem>
+          <DropdownItem
+            tag="a"
+            className="w-100 cursor-pointer"
+            onClick={() => dispatch(openDeleteTaxCodesPopup(props.data?.ID))}
+          >
+            <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+          </DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
+    </div>
+  );
+};
   const columnDefs = [
     {
       headerName: "Tax Code",
@@ -197,48 +191,7 @@ const AllTaxCodesTable = () => {
       },
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      TaxCode: "TC001",
-      Description: "Sample Description 1",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-01",
-      Status: "active",
-    },
-    {
-      id: 2,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 4,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 5,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-  ];
+  
   return (
     <div>
       <div className="section">
@@ -343,7 +296,7 @@ const AllTaxCodesTable = () => {
       </div>
 
       {taxCodesLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -354,7 +307,7 @@ const AllTaxCodesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}

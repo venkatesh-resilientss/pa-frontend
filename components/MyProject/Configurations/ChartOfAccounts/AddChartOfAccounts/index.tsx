@@ -248,21 +248,6 @@ function AddChartOfAccounts() {
               </div>
             </div>
           </Col>
-          <Col>
-            <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Status </Label>
-              <div className="d-flex gap-1">
-                <div className="d-flex gap-1">
-                  <input type="radio" />
-                  <div>Active</div>
-                </div>
-                <div className="d-flex gap-1">
-                  <input type="radio" />
-                  <div>In-Active</div>
-                </div>
-              </div>
-            </div>
-          </Col>
         </Form>
       </div>
     </div>

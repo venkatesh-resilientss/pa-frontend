@@ -29,7 +29,7 @@ export default function NoDataPage({ buttonLink, buttonName }) {
           <div
             style={{ fontSize: "11.13px", fontWeight: "600", color: "#B0B0B0" }}
           >
-            Please create your first client to be able to work
+            {/* Please create your first client to be able to work */}
           </div>
         </div>
         {/* <Button

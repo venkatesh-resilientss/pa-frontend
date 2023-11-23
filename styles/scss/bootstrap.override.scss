@@ -16,3 +16,13 @@
 @import '../../node_modules/bootstrap/scss/images';
 @import '../../node_modules/bootstrap/scss/containers';
 @import '../../node_modules/bootstrap/scss/grid';
+
+
+.dropdown-menu{
+    --bs-dropdown-link-active-bg : #00AEEF;
+}
+
+.accordion{
+    --bs-accordion-active-bg : #79dbff;
+    --bs-accordion-btn-focus-box-shadow : none;
+}

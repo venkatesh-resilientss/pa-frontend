@@ -108,7 +108,7 @@ const AllCurrencyTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -120,13 +120,13 @@ const AllCurrencyTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -160,23 +160,6 @@ const AllCurrencyTable = () => {
     {
       headerName: "Currencies Name",
       field: "Name",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-    {
-      headerName: "Currencies Symbol",
-      field: "CurrencySymbol",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-    {
-      headerName: "Default Currency",
-      field: "Defaultcurrency",
-      cellRenderer: Currency,
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -221,68 +204,7 @@ const AllCurrencyTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      CurrenciesCode: "USD",
-      CurrenciesName: "US Dollar",
-      CurrenciesSymbol: "$",
-      Defaultcurrency: true,
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      CurrenciesCode: "EUR",
-      CurrenciesName: "Euro",
-      CurrenciesSymbol: "€",
-      Defaultcurrency: false,
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-14",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      CurrenciesCode: "GBP",
-      CurrenciesName: "British Pound",
-      CurrenciesSymbol: "£",
-      Defaultcurrency: true,
-      CreatedBy: "Bob Johnson",
-      UpdatedOn: "2023-11-15",
-      Status: "active",
-      id: 3,
-    },
-    {
-      CurrenciesCode: "JPY",
-      CurrenciesName: "Japanese Yen",
-      CurrenciesSymbol: "¥",
-      Defaultcurrency: false,
-      CreatedBy: "Alice Williams",
-      UpdatedOn: "2023-11-16",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      CurrenciesCode: "AUD",
-      CurrenciesName: "Australian Dollar",
-      CurrenciesSymbol: "A$",
-      Defaultcurrency: false,
-      CreatedBy: "Charlie Brown",
-      UpdatedOn: "2023-11-17",
-      Status: "active",
-      id: 5,
-    },
-    {
-      CurrenciesCode: "CAD",
-      CurrenciesName: "Canadian Dollar",
-      CurrenciesSymbol: "CA$",
-      Defaultcurrency: false,
-      CreatedBy: "Eva Davis",
-      UpdatedOn: "2023-11-18",
-      Status: "inactive",
-      id: 6,
-    },
-  ];
+  
 
   return (
     <>
@@ -387,7 +309,7 @@ const AllCurrencyTable = () => {
           </Card>
         </div>
         {currenciesLoading ? (
-          <div className="mt-2">
+          <div className="mt-3">
             <GridTable
               rowData={dataSource}
               columnDefs={columnDefs}
@@ -398,7 +320,7 @@ const AllCurrencyTable = () => {
         ) : (
           <>
             {currencyData?.result.length > 0 ? (
-              <div className="mt-2">
+              <div className="mt-3">
                 <GridTable
                   rowData={dataSource}
                   columnDefs={columnDefs}

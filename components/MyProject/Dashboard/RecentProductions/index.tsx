@@ -12,11 +12,16 @@ import ProjectCard from "./ProjectCard";
 import { BsCameraVideo } from "react-icons/bs";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
+import { hasPermission } from "commonFunctions/functions";
 
 function RecentProductions() {
   const dashboardService = new DashboardService();
   const [recentProductionsData, setRecentProductionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const hasCreateProductionPermission = hasPermission(
+    "production_management",
+    "create_production"
+  );
 
   useEffect(() => {
     const getTenant = async () => {
@@ -52,6 +57,7 @@ function RecentProductions() {
               placeholder="Search..."
             />
           </Form>
+          {hasCreateProductionPermission && (
           <Button color="primary">
             <BsCameraVideo style={{ color: "#FFFFFF" }} />
             <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
@@ -59,6 +65,7 @@ function RecentProductions() {
               New Production
             </span>
           </Button>
+          )}
         </div>
       </div>
 

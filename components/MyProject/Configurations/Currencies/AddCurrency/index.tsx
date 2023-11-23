@@ -141,7 +141,7 @@ function AddCurrency() {
               )}
             </div>
           </Col>
-          <div className="d-flex flex-column mt-2">
+          {/* <div className="d-flex flex-column mt-2">
             <Label className="form-lable-font">Status </Label>
             <div className="d-flex gap-1">
               <div className="d-flex gap-1">
@@ -167,7 +167,7 @@ function AddCurrency() {
                 <div>In-Active</div>
               </div>
             </div>
-          </div>
+          </div> */}
         </Form>
       </div>
     </div>

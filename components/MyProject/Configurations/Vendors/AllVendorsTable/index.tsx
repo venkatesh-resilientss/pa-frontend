@@ -89,7 +89,7 @@ const AllVendorsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -97,7 +97,7 @@ const AllVendorsTable = () => {
               alt=""
               width={14}
               id={id}
-              style={{ marginLeft: "-100px" }}
+              style={{ marginLeft: "20px" }}
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
@@ -110,18 +110,19 @@ const AllVendorsTable = () => {
             </DropdownItem>
             <DropdownItem
               tag="a"
+              href="/"
               className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-vendor/${props.data?.ID}`)
-              }
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/configurations/edit-vendor/${props.data.ID}`);
+              }}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
             <DropdownItem
               tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteVendorPopup(props.data?.ID))}
+              className="w-100 cursor-pointer"
+              onClick={() => dispatch(openDeleteVendorPopup(props.data?.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
@@ -194,62 +195,7 @@ const AllVendorsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      VendorCode: "001",
-      State: "AK",
-      VendorName: "Vendor A",
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      VendorCode: "002",
-      State: "AK",
-      VendorName: "Vendor B",
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-12",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      VendorCode: "003",
-      State: "AK",
-      VendorName: "Vendor C",
-      CreatedBy: "Mike Johnson",
-      UpdatedOn: "2023-11-11",
-      Status: "active",
-      id: 3,
-    },
-    {
-      VendorCode: "004",
-      State: "AK",
-      VendorName: "Vendor D",
-      CreatedBy: "Sara Williams",
-      UpdatedOn: "2023-11-10",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      VendorCode: "005",
-      VendorName: "Vendor E",
-      State: "AK",
-      CreatedBy: "David Brown",
-      UpdatedOn: "2023-11-09",
-      Status: "active",
-      id: 5,
-    },
-    {
-      VendorCode: "006",
-      VendorName: "Vendor F",
-      CreatedBy: "Emily Davis",
-      State: "AK",
-      UpdatedOn: "2023-11-08",
-      Status: "inactive",
-      id: 6,
-    },
-  ];
+
 
   return (
     <div>
@@ -349,7 +295,7 @@ const AllVendorsTable = () => {
       </div>
 
       {vendorsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -361,7 +307,7 @@ const AllVendorsTable = () => {
         <>
           {" "}
           {vendorsData && vendorsData?.result?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}

@@ -98,7 +98,7 @@ const AllLocationsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -110,13 +110,13 @@ const AllLocationsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -359,7 +359,7 @@ const AllLocationsTable = () => {
         </Card>
       </div>
       {locationsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -370,11 +370,11 @@ const AllLocationsTable = () => {
       ) : (
         <>
           {locationsData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={9}
+                pageSize={10}
                 searchText={searchText}
               />
             </div>

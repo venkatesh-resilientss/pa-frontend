@@ -44,12 +44,16 @@ const ForgotPassword = () => {
         toast.error(err?.error);
       });
   };
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="d-flex main-container-i overflow-hidden">
       <div className="d-flex w-100 h-100 justify-content-evenly">
         {/* left */}
         <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
-          <Image
+          <Image onDragStart={handleDragStart}
             src={"/forgot1.svg"}
             alt="logo"
             className="img-fluid mt-5"

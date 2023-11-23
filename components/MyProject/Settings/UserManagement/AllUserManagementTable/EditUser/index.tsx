@@ -187,7 +187,7 @@ function EditUser() {
       </div>
 
       <hr style={{ height: "2px" }} />
-      <div className="text-black mt-4 p-3">
+      <div className="text-black mt-2">
         <Form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
           <div className="d-flex gap-4">
             <Col xl="4">
