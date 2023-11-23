@@ -314,7 +314,7 @@ function AddUser() {
           </Col>
         </div>
 
-        <div className="d-flex flex-column mt-2">
+        {/* <div className="d-flex flex-column mt-2">
           <Label
             className="text-black"
             style={{ fontSize: "16px", fontWeight: "400" }}
@@ -345,7 +345,7 @@ function AddUser() {
               <div>In-Active</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </Form>
     </div>
   );

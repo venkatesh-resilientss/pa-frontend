@@ -30,11 +30,9 @@
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return this.post(UPLOAD_PERIODS_LIST, formData, {
-        headers: {
+      return this.post(UPLOAD_PERIODS_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })

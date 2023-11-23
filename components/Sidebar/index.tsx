@@ -157,7 +157,7 @@ const Sidebar = ({props}) => {
         {/* Route children */}
 
         {route.children && activeDropDown === route.path ? (
-          <>
+          <div className="sidebar-list">
             <div className="ps-3">
               <ul>
                 {route.children.map((child, i) => {
@@ -183,7 +183,7 @@ const Sidebar = ({props}) => {
                 })}
               </ul>
             </div>
-          </>
+          </div>
         ) : (
           ""
         )}
@@ -196,7 +196,7 @@ const Sidebar = ({props}) => {
         showSidebar ? "" : "minimized"
       }`}
     >
-      <div>
+      <div className="">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
           <div>
             {showSidebar ? (
@@ -225,7 +225,7 @@ const Sidebar = ({props}) => {
         </div>
         <hr />
         {/* Drop downs */}
-        <div className="px-2">
+        <div className="px-2 sidebar-body">
           {sidebarRoutes.map((route, i) => {
             return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
           })}

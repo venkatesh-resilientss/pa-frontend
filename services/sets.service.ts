@@ -1,5 +1,12 @@
-import APIService from './api.service';
-import {CREATE_SETS, DELETE_SETS, EDIT_SETS, GET_SETS, SETS_DETAIL_ENDPOINT,UPLOAD_SET_LIST} from '../lib/endpoints';
+import APIService from "./api.service";
+import {
+  CREATE_SETS,
+  DELETE_SETS,
+  EDIT_SETS,
+  GET_SETS,
+  SETS_DETAIL_ENDPOINT,
+  UPLOAD_SET_LIST,
+} from "../lib/endpoints";
 
 class SetsService extends APIService {
   getSets(): Promise<any> {
@@ -27,14 +34,12 @@ class SetsService extends APIService {
       // Create a FormData object
       const formData = new FormData();
 
-      // Append the file name to the FormData object with the specified field name
-      formData.append("file", fileName);
+    // Append the file name to the FormData object with the specified field name
+    formData.append("file", fileName);
 
-      return this.post(UPLOAD_SET_LIST, formData, {
-        headers: {
+      return this.post(UPLOAD_SET_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })

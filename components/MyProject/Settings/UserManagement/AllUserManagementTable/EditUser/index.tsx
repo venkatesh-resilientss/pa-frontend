@@ -127,7 +127,7 @@ function EditUser() {
       email: data.email,
       client_id: selectedClient?.value,
       roleID: selectedRole?.value,
-      IsActive: activeStatus,
+      IsActive: activeStatus === "active" ? true : false
     };
 
     usersService

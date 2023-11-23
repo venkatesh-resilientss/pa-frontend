@@ -54,10 +54,8 @@ class VendorsService extends APIService {
      formData.append("file", file);
 
      return this.post(UPLOAD_VENDORS_LIST, formData, {
-       headers: {
-         'Content-Type': 'multipart/form-data',
-       },
-     })
+      'Content-Type': 'multipart/form-data',
+    },)
      .then((response) => {
        return response.data;
      })

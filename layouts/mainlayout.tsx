@@ -55,6 +55,7 @@ const MainLayout: FC<IProps> = ({ children }) => {
     "settings",
     "singlesignon",
     "transactions",
+    "my-profile"
     // "/forgot-password",
     // "/login",
     // "/reset-password",

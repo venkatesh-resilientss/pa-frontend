@@ -28,7 +28,7 @@ export default function Profile() {
   const userService = new UsersService();
 
   const { data: usersData } = useSWR(["LIST_USERS",roleInfo ], () =>
-    userService.getuserbyid(roleInfo.id)
+    userService.getuserbyid(roleInfo.responseData.ID)
   );
 
   console.log("USERSDATA", usersData);

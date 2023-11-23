@@ -4,7 +4,6 @@ import cookie from "js-cookie";
 import { CREATE_USERS, EDIT_USERS, GET_USERS,USERS_DETAIL_ENDPOINT,DELETE_USER } from '../lib/endpoints';
 
   class UsersService extends APIService {
-    static postUsers: any;
     getUsers(): Promise<any> {
       return this.get(`${GET_USERS}`)
         .then((res) => {
