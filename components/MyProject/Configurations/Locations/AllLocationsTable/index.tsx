@@ -48,6 +48,15 @@ const AllLocationsTable = () => {
     "create_configuration"
   );
 
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const locationsService = new LocationsService();
 
   const {
@@ -117,6 +126,7 @@ const AllLocationsTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -126,6 +136,8 @@ const AllLocationsTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -133,6 +145,7 @@ const AllLocationsTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -200,62 +213,6 @@ const AllLocationsTable = () => {
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-    },
-  ];
-  const rowData = [
-    {
-      LocationCode: "001",
-      LocationName: "Location A",
-      Description: "Description",
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      LocationCode: "002",
-      LocationName: "Location B",
-      Description: "Description",
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-12",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      LocationCode: "003",
-      LocationName: "Location C",
-      Description: "Description",
-      CreatedBy: "Mike Johnson",
-      UpdatedOn: "2023-11-11",
-      Status: "active",
-      id: 3,
-    },
-    {
-      LocationCode: "004",
-      LocationName: "Location D",
-      Description: "Description",
-      CreatedBy: "Sara Williams",
-      UpdatedOn: "2023-11-10",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      LocationCode: "005",
-      LocationName: "Location E",
-      Description: "Description",
-      CreatedBy: "David Brown",
-      UpdatedOn: "2023-11-09",
-      Status: "active",
-      id: 5,
-    },
-    {
-      LocationCode: "006",
-      LocationName: "Location F",
-      Description: "Description",
-      CreatedBy: "Emily Davis",
-      UpdatedOn: "2023-11-08",
-      Status: "inactive",
-      id: 6,
     },
   ];
 

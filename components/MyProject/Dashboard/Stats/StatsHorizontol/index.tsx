@@ -10,6 +10,8 @@ const StatsHorizontal = ({
   stats,
   renderStats,
   statTitle,
+  statTooltip,
+
   className,
   statsMargin,
 }) => {
@@ -21,7 +23,6 @@ const StatsHorizontal = ({
           style={{ height: "60px" }}
         >
           <div>
-            {" "}
             <div className="d-flex  align-items-center" style={{ gap: "5px" }}>
               <div className="d-flex align-items-center">
                 <Image
@@ -66,9 +67,17 @@ const StatsHorizontal = ({
               overlay={
                 <Tooltip bsPrefix="custom-tooltip">
                   <Card>
-                    <div className="p-2 gap-1 d-flex">
-                      <p>{statTitle}</p> - <p>{stats}</p>
-                    </div> 
+                    <div className="p-2 mt-1 gap-1 d-flex">
+                      <p
+                        style={{
+                          fontSize: "10px",
+                          fontWeight: "400",
+                          color: "#4C4C61",
+                        }}
+                      >
+                        {statTooltip}
+                      </p>
+                    </div>
                   </Card>
                 </Tooltip>
               }

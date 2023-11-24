@@ -6,7 +6,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import { Card } from "react-bootstrap";
 import { AuthService } from "services";
-const Sidebar = ({props}) => {
+const Sidebar = ({ props }) => {
   const router = useRouter();
   const [showSidebar, setSidebar] = useState(true); // min - full;
   const toggleSidebar = () => {
@@ -251,7 +251,7 @@ const Sidebar = ({props}) => {
         <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
           <div className="d-flex align-items-center">
             <div>
-              <img
+              {/* <img
                 src={
                   props.profileImg
                     ? props.profileImg
@@ -260,6 +260,12 @@ const Sidebar = ({props}) => {
                 width={22}
                 className="me-2"
                 alt=""
+              /> */}
+              <img
+                className="rounded-circle me-3"
+                src={props.profileImg ? props.profileImg : "/newAvatar.svg"}
+                width="32"
+                height="32"
               />
             </div>
             {showSidebar ? <p>{props.name ? props.name : "-"}</p> : ""}

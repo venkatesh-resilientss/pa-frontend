@@ -155,7 +155,6 @@ function AddBudget() {
       production: data.production?.value,
       CurrencyID: data.currency?.value,
       series: data.series?.value,
-
       set: data.set.value,
       location: data.location.value,
       is_active: activeStatus,
@@ -426,8 +425,6 @@ function AddBudget() {
           )}
         </Col>
       </Row>
-
-      
     </div>
   );
 }

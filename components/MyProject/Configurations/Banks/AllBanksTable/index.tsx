@@ -45,6 +45,14 @@ const AllBanksTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const {
     data: bankData,
@@ -103,6 +111,7 @@ const AllBanksTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -119,6 +128,8 @@ const AllBanksTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -132,6 +143,7 @@ const AllBanksTable = () => {
                 }}
               />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

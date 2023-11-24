@@ -44,6 +44,15 @@ const AllCurrencyTable = () => {
     "create_configuration"
   );
 
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
@@ -127,6 +136,7 @@ const AllCurrencyTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -136,6 +146,8 @@ const AllCurrencyTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -143,6 +155,7 @@ const AllCurrencyTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

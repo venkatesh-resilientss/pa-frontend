@@ -23,10 +23,11 @@ import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import { useEffect, useState } from "react";
 // import { checkTenant } from "constants/function";
+import moment from "moment";
 
 const AllRoleTable = () => {
   const router = useRouter();
-  //  
+  //
 
   const roleservice = new RoleService();
   const hasCreateRolePermission = hasPermission(
@@ -78,7 +79,12 @@ const AllRoleTable = () => {
     {
       sortable: true,
       field: "CreatedDate",
-      cell: (row) => row.CreatedDate,
+      cellRenderer: (params) => {
+        const formattedDate = moment(params.CreatedDate).format(
+          "MM/DD/YYYY, HH:mm"
+        );
+        return <span>{formattedDate}</span>;
+      },
     },
 
     {
@@ -128,7 +134,7 @@ const AllRoleTable = () => {
                     <span className="align-middle">Edit Role</span>
                   </DropdownItem>
                 </Link>
-              )} 
+              )}
               {hasDeactivateRolePermission && (
                 <DropdownItem
                   className="w-100"

@@ -44,8 +44,9 @@ function EditCurrency() {
 
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
-  }),
-    [currencyData];
+    
+    setActiveStatus(currencyData?.IsActive);
+  },[currencyData]);
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
     currencyService.getCurrencies()
@@ -59,7 +60,7 @@ function EditCurrency() {
     backendFormat = {
       name: data.currencyname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.currencycode,
     };
 
@@ -235,6 +236,7 @@ function EditCurrency() {
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -246,6 +248,7 @@ function EditCurrency() {
                   type="radio"
                   name="ex1"
                   id="ex1-inactive"
+                  checked={!activeStatus}
                   onChange={() => {
                     setActiveStatus(false);
                   }}

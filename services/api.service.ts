@@ -42,7 +42,6 @@ abstract class APIService {
 
   // Setting access token in a cookie
   setAccessToken(token: any): void {
-    console.log(token, "tttttttttttt");
     cookie.set("accessToken", token, { expires: this.expiry.toDate() });
   }
 
@@ -54,6 +53,10 @@ abstract class APIService {
   purgeAuth(): void {
     cookie.remove("accessToken");
     cookie.remove("refreshToken");
+    cookie.remove('next-auth.callback-url');
+    cookie.remove('next-auth.csrf-token');
+    cookie.remove('session');
+
   }
 
   // Axios get method

@@ -37,16 +37,23 @@ import {
 } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
 
-
 const AllChartOfAccountsTable = () => {
   const dispatch = useDispatch();
   const CoasService = new COAAccountsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
   );
 
   const {
@@ -113,23 +120,27 @@ const AllChartOfAccountsTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
-            <DropdownItem
-              onClick={() =>
-                router.push(
-                  `/configurations/edit-chartofaccounts/${props.data.ID}`
-                )
-              }
-              className="w-100"
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                onClick={() =>
+                  router.push(
+                    `/configurations/edit-chartofaccounts/${props.data.ID}`
+                  )
+                }
+                className="w-100"
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -153,17 +164,17 @@ const AllChartOfAccountsTable = () => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
-    {
-      headerName: "Postable",
-      field: "Postable",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
+    // {
+    //   headerName: "Postable",
+    //   field: "Postable",
+    //   sortable: true,
+    //   resizable: true,
+    //   cellStyle: { fontSize: "14px", fontWeight: "400" },
+    //   headerClass: "custom-header-class",
+    // },
     {
       headerName: "COA Parent",
-      field: "COAParent",
+      field: "ParentID",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },

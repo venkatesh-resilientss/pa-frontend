@@ -42,8 +42,10 @@ function EditLocation() {
 
     locationData?.Description &&
       setValue("description", locationData?.Description);
-  }),
-    [locationData];
+
+    setActiveStatus(locationData?.IsActive)
+  },
+    [locationData]);
 
   const locationsService = new LocationsService();
 
@@ -59,7 +61,7 @@ function EditLocation() {
     backendFormat = {
       name: data.locationname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.locationcode,
     };
 
@@ -224,6 +226,7 @@ function EditLocation() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -235,6 +238,7 @@ function EditLocation() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}

@@ -180,31 +180,6 @@ function AddSet() {
             )}
           </div>
         </Col>
-        <div className="d-flex flex-column mt-1">
-          <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-                value="active"
-                onChange={() => handleRadioButton(true)}
-              />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                name="ex1"
-                id="ex1-inactive"
-                value="inactive"
-                onChange={() => handleRadioButton(false)}
-              />
-              <div>In-Active</div>
-            </div>
-          </div>
-        </div>
       </Form>
     </div>
   );

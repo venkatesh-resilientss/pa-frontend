@@ -142,12 +142,19 @@ div.error-message {
 .teamworkspaceplaceholder{
   // border: none;
   background: #F7F7F8 !important;
-  color: #030229 !important;
+  // color: #030229 !important;
 
 }
 .teamworkspaceplaceholder1{
   // border: none;
-  background: #F7F7F8 !important;
+  // background: #E9E9E9 !important;
+  color: black !important;
+
+}
+.teamworkspaceplaceholder1::placeholder {
+  font-weight: 400 !important;
+  line-height: 17px !important;
+  letter-spacing: -0.5px !important;
   color: #030229 !important;
 
 }

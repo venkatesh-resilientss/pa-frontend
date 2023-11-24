@@ -46,6 +46,14 @@ const AllSetsTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const dispatch = useDispatch();
 
@@ -107,6 +115,7 @@ const AllSetsTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               onClick={() =>
                 router.push(`/configurations/edit-set/${props.data.ID}`)
@@ -116,6 +125,8 @@ const AllSetsTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -123,6 +134,7 @@ const AllSetsTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

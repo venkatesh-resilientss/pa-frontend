@@ -193,7 +193,7 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">Desccription</Label>
+              <Label className="form-lable-font">Description</Label>
               <Controller
                 name="description"
                 rules={{ required: "Dscription  is required" }}
@@ -205,7 +205,7 @@ function AddState() {
                       fontWeight: "400",
                       height: "81px",
                     }}
-                    placeholder="Desccription"
+                    placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
                     type="textarea"

@@ -42,8 +42,8 @@ function EditTaxCode() {
 
     taxcodesData?.Description &&
       setValue("description", taxcodesData?.Description);
-  }),
-    [taxcodesData];
+    setActiveStatus(taxcodesData?.IsActive);
+  },[taxcodesData]);
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
     taxCodeService.getTaxCodes()
@@ -57,7 +57,7 @@ function EditTaxCode() {
     backendFormat = {
       code: data.taxcode,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
     };
 
     taxCodeService
@@ -194,6 +194,7 @@ function EditTaxCode() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -205,6 +206,7 @@ function EditTaxCode() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}

@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useMemo, useRef, useCallback } from "react";
 
-const GridTable = ({ rowData, columnDefs, pageSize,searchText }) => {
+const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
   const gridRef = useRef(null);
 
-  const [isGridReady,setIsGridReady] = useState(false);
-
+  const [isGridReady, setIsGridReady] = useState(false);
 
   /** Search */
-  useEffect(()=>{
+  useEffect(() => {
+    if (isGridReady) gridRef.current.api.setQuickFilter(searchText);
+  }, [searchText]);
+
+  /**Row update */
+  useEffect(() => {
     if(isGridReady)
-      gridRef.current.api.setQuickFilter(searchText);
-  },[searchText])
+      gridRef.current.api.setRowData(rowData);
+  }, [rowData]);
 
   const gridOptions = {
     // Enable pagination
@@ -22,7 +26,6 @@ const GridTable = ({ rowData, columnDefs, pageSize,searchText }) => {
   };
 
   const gridReady = useCallback(() => {
-
     setIsGridReady(true);
     /**
      * Initialize Pagination

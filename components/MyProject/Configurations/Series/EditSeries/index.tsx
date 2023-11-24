@@ -39,8 +39,8 @@ function EditSeries() {
     seriesData?.Code && setValue("Seriescode", seriesData?.Code);
 
     seriesData?.Description && setValue("description", seriesData?.Description);
-  }),
-    [seriesData];
+    setActiveStatus(seriesData?.IsActive);
+  },[seriesData]);
 
   const seriesService = new SeriesService();
 
@@ -56,7 +56,7 @@ function EditSeries() {
     backendFormat = {
       name: data.seriesname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.Seriescode,
     };
 
@@ -217,6 +217,7 @@ function EditSeries() {
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -228,6 +229,7 @@ function EditSeries() {
                   type="radio"
                   name="ex1"
                   id="ex1-inactive"
+                  checked={!activeStatus}
                   onChange={() => {
                     setActiveStatus(false);
                   }}

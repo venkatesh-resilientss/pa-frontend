@@ -44,6 +44,14 @@ const AllTaxCodesTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const taxcodesService = new TaxCodesService();
 
@@ -107,6 +115,7 @@ const ActionsButton = (props) => {
               action={() => {}}
             />
           </DropdownItem> */}
+          {hasEditConfigurationPermission && (
           <DropdownItem
             tag="a"
             href="/"
@@ -118,6 +127,8 @@ const ActionsButton = (props) => {
           >
             <Action icon={editIocn} name={"Edit"} action={() => {}} />
           </DropdownItem>
+          )}
+          {hasDeactivateConfiguration && (
           <DropdownItem
             tag="a"
             className="w-100 cursor-pointer"
@@ -125,6 +136,7 @@ const ActionsButton = (props) => {
           >
             <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
           </DropdownItem>
+          )}
         </DropdownMenu>
       </UncontrolledDropdown>
     </div>

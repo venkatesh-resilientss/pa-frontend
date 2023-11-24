@@ -45,6 +45,14 @@ const AllSeriesTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const seriesService = new SeriesService();
 
@@ -107,6 +115,7 @@ const AllSeriesTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -116,6 +125,8 @@ const AllSeriesTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -129,6 +140,7 @@ const AllSeriesTable = () => {
                 }}
               />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

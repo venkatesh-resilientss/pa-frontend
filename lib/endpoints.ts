@@ -7,13 +7,14 @@ const withoutTenantIdEndpoint = `${baseUrl}/api`
 
 export const RESET_PASSWORD = `${withoutTenantIdEndpoint}/reset-password`
 export const LOGIN = `${withoutTenantIdEndpoint}/login`; //Banks
+export const OKTA_LOGIN = `${baseUrl}/api/okta/login`;
 // export const TENANT_LOGIN =  `${withoutTenantIdEndpoint}users/tenants`
 export const TENANT_LOGIN = `${withoutTenantIdEndpoint}/tenants/search`
 export const GET_FORGETPASSWORD = `${withoutTenantIdEndpoint}/forgot-password`; //Forgot Password
 export const GET_TENANT = (prefix: any) => `${withoutTenantIdEndpoint}/tenants/name?name=${prefix}`;
 
 
-export const GET_COMPANIES = `${tenantIdEndpoint}/companies`; //Get Companies
+export const GET_COMPANIES = `${tenantIdEndpoint}/companies/`; //Get Companies
 
 export const GET_PROJECTS =  `${tenantIdEndpoint}/projects/` //Projects
 export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard Stats

@@ -4,7 +4,7 @@ import {AUTH_LOGIN} from '../constants/endpoints';
 import APIService from './api.service';
 import {
   LOGIN,
-  TENANT_LOGIN,GET_USER_FROM_TOKEN
+  TENANT_LOGIN,GET_USER_FROM_TOKEN, OKTA_LOGIN
 } from "lib/endpoints";
 class AuthService extends APIService {
 
@@ -34,6 +34,17 @@ class AuthService extends APIService {
         throw error.response;
       });
   }
+
+
+  oktaUserLogin(token: string): Promise<any> {
+  return this.post(`${OKTA_LOGIN}`, token)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error: any) => {
+      throw error.response.data;
+    });
+}
 
   authenticateUser(access: string): void {
     this.setAccessToken(access);

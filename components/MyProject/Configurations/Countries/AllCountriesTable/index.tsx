@@ -47,6 +47,15 @@ const AllCountriesTable = () => {
     "create_configuration"
   );
 
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const {
@@ -110,6 +119,7 @@ const AllCountriesTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -119,13 +129,16 @@ const AllCountriesTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
-            <DropdownItem
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
               tag="a"
               className="w-100"
               onClick={(e) => dispatch(openDeleteCountryPopup(props.data.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

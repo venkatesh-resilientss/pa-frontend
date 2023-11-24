@@ -47,6 +47,14 @@ const AllStatesTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const statesService = new StatesService();
 
@@ -109,6 +117,7 @@ const AllStatesTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -118,6 +127,8 @@ const AllStatesTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -131,6 +142,7 @@ const AllStatesTable = () => {
                 }}
               />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

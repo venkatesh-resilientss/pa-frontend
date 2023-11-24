@@ -34,7 +34,6 @@ function AddPeriod() {
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, setActiveStatus] = useState(false);
 
   const onSubmit = (data) => {
     console.log("DTA", data);
@@ -45,8 +44,7 @@ function AddPeriod() {
       name: data.periodname,
       description: data.description,
       start: data.startDate,
-      end: data.endDate,
-      is_active: activeStatus,
+      endDate: data.endDate,
     };
 
     periodsService

@@ -117,6 +117,8 @@ function EditUser() {
       setActiveStatus(eachclicntdata?.IsActive ? "active" : "inactive");
     }
   }, [eachclicntdata, userLoading, reset]);
+  
+  
   const usersService = new UsersService();
 
   const onSubmit = (data) => {

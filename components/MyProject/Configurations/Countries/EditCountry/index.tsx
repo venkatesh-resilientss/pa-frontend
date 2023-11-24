@@ -38,8 +38,8 @@ function EditCountry() {
     if (!countryData) return;
 
     countryData?.Name && setValue("countryname", countryData?.Name);
-  }),
-    [countryData];
+    setActiveStatus(countryData?.IsActive);
+  },[countryData]);
 
   const countryService = new CountryService();
 
@@ -55,7 +55,7 @@ function EditCountry() {
     backendFormat = {
       name: data.countryname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
     };
 
     countryService
@@ -161,6 +161,7 @@ function EditCountry() {
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -171,6 +172,7 @@ function EditCountry() {
                 <input
                   type="radio"
                   name="ex1"
+                  checked={!activeStatus}
                   id="ex1-inactive"
                   onChange={() => {
                     setActiveStatus(false);

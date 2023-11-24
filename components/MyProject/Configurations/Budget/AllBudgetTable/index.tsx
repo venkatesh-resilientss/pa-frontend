@@ -45,6 +45,14 @@ const AllBudgetTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const budgetService = new BudgetService();
 
@@ -105,6 +113,7 @@ const AllBudgetTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -114,6 +123,8 @@ const AllBudgetTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100"
@@ -121,6 +132,7 @@ const AllBudgetTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

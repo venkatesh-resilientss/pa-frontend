@@ -44,6 +44,14 @@ const AllPeriodsTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const periodsService = new PeriodsService();
 
@@ -106,16 +114,19 @@ const AllPeriodsTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() =>
                 router.push(`/configurations/edit-period/${props.data?.ID}`)
               }
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
-            <DropdownItem tag="a" className="w-100">
+            )}
+            {hasDeactivateConfiguration && (
+            <DropdownItem tag="a" className="w-100 cursor-pointer">
               <Action
                 icon={deleteIcon}
                 name={"Delete"}
@@ -124,6 +135,7 @@ const AllPeriodsTable = () => {
                 }}
               />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -212,39 +224,7 @@ const AllPeriodsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      PeriodName: "Q1 2023",
-      StartDate: "2023-01-01",
-      EndDate: "2023-03-31",
-      Description: "First quarter of 2023",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      PeriodName: "Q2 2023",
-      StartDate: "2023-04-01",
-      EndDate: "2023-06-30",
-      Description: "Second quarter of 2023",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-04-15",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      PeriodName: "Q3 2023",
-      StartDate: "2023-07-01",
-      EndDate: "2023-09-30",
-      Description: "Third quarter of 2023",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-07-15",
-      Status: "active",
-    },
-    // Add more data as needed
-  ];
+  
 
   return (
     <div>

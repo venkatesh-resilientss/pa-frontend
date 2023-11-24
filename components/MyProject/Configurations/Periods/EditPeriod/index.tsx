@@ -39,12 +39,13 @@ function EditPeriod() {
     if (!periodData) return;
 
     periodData?.Name && setValue("periodname", periodData?.Name);
-
+    
     periodData?.Description && setValue("description", periodData?.Description);
     periodData?.Start && setValue("startDate", periodData?.Start);
     periodData?.EndDate && setValue("endDate", periodData?.EndDate);
-  }),
-    [periodData];
+
+    setActiveStatus(periodData.IsActive);
+  },[periodData]);
 
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
     periodsService.getPeriods()
@@ -58,7 +59,7 @@ function EditPeriod() {
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
     };
@@ -232,6 +233,7 @@ function EditPeriod() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -242,6 +244,7 @@ function EditPeriod() {
               <input
                 type="radio"
                 name="ex1"
+                checked={!activeStatus}
                 id="ex1-inactive"
                 onChange={() => {
                   setActiveStatus(false);

@@ -9,7 +9,7 @@ import { COAAccountsService } from "services";
 
 function EditChartOfAccounts() {
   const router = useRouter();
-   
+
   const coaAccountsService = new COAAccountsService();
 
   const { id } = router.query;
@@ -32,6 +32,9 @@ function EditChartOfAccounts() {
     reset,
   } = useForm();
 
+  const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
+  const [postable, setPostable] = useState(coaData?.IsActive);
+
   useEffect(() => {
     if (!coaData) return;
 
@@ -41,8 +44,8 @@ function EditChartOfAccounts() {
     coaData?.Description && setValue("Description", coaData?.Description);
     coaData?.Type && setValue("AccountType", coaData?.Type);
     coaData?.Parent && setValue("COAParent", coaData?.Parent);
-  }),
-    [coaData];
+    setActiveStatus(coaData?.IsActive);
+  }, [coaData]);
 
   const cOAAccountsService = new COAAccountsService();
 
@@ -50,18 +53,15 @@ function EditChartOfAccounts() {
     cOAAccountsService.getCoasAccounts()
   );
 
-  const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
-  const [postable, setPostable] = useState(coaData?.IsActive);
-
   const onSubmit = (data) => {
     let backendFormat;
 
     backendFormat = {
       name: data.COAName,
       description: data.Description,
-      is_active: activeStatus,
+      IsActive: activeStatus,
       code: data.COACode,
-      parent: data.COAParent,
+      parent: parseInt(data.COAParent),
       accountType: data.AccountType,
       postable: postable,
     };
@@ -251,7 +251,7 @@ function EditChartOfAccounts() {
             )}
           </div>
         </Col>
-        <Col xl="4">
+        {/* <Col xl="4">
           <div className="d-flex flex-column mt-1">
             <Label
               className="text-black"
@@ -284,27 +284,41 @@ function EditChartOfAccounts() {
               </div>
             </div>
           </div>
-        </Col>
-        <Col>
-          <div className="d-flex flex-column mt-1">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12x", fontWeight: "400" }}
-            >
-              Status{" "}
-            </Label>
+        </Col> */}
+        <div className="d-flex flex-column mt-1">
+          <Label
+            className="text-black"
+            style={{ fontSize: "12px", fontWeight: "400" }}
+          >
+            Status{" "}
+          </Label>
+          <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <div className="d-flex gap-1">
-                <input type="radio" />
-                <div>Active</div>
-              </div>
-              <div className="d-flex gap-1">
-                <input type="radio" />
-                <div>In-Active</div>
-              </div>
+              <input
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                checked={activeStatus}
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
+              />
+              <div>Active</div>
+            </div>
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                name="ex1"
+                id="ex1-inactive"
+                checked={!activeStatus}
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
+              />
+              <div>In-Active</div>
             </div>
           </div>
-        </Col>
+        </div>
       </Form>
     </div>
   );

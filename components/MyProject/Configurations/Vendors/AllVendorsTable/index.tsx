@@ -46,6 +46,14 @@ const AllVendorsTable = () => {
     "configuration_management",
     "create_configuration"
   );
+  const hasEditConfigurationPermission = hasPermission(
+  "configuration_management",
+  "edit_configuration"
+);
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const {
     data: vendorsData,
@@ -108,6 +116,7 @@ const AllVendorsTable = () => {
                 action={() => {}}
               />
             </DropdownItem>
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               href="/"
@@ -119,6 +128,8 @@ const AllVendorsTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -126,6 +137,7 @@ const AllVendorsTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

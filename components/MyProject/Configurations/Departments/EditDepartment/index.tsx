@@ -32,6 +32,9 @@ function EditDepartment() {
     reset,
   } = useForm();
 
+  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
+    departmentService.getDepartments()
+  );
   useEffect(() => {
     if (!departmentsData) return;
 
@@ -40,24 +43,25 @@ function EditDepartment() {
 
     departmentsData?.Description &&
       setValue("description", departmentsData?.Description);
-  }),
-    [departmentsData];
+    setActiveStatus(departmentsData?.IsActive);
+  },[departmentsData]);
 
   const departmentService = new DepartmentsService();
 
-  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentService.getDepartments()
+  
+
+  // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
+  const [activeStatus, setActiveStatus] = useState(
+    departmentsData?.IsActive
   );
-
-  const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
-
   const onSubmit = (data) => {
     let backendFormat;
 
     backendFormat = {
       name: data.name,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
+      code : data.code
     };
 
     departmentService
@@ -213,36 +217,44 @@ function EditDepartment() {
           </div>
         </Col>
 
-        <div className="d-flex flex-column mt-1">
-          <Label className="text-black" style={{ fontWeight: "400" }}>
-            Status{" "}
-          </Label>
-          <div className="d-flex gap-1">
+        <div className="d-flex flex-column mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "16px", fontWeight: "400" }}
+            >
+              Status
+            </Label>
             <div className="d-flex gap-1">
-              <input
-                className="custom-radio-input"
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-                onChange={() => {
-                  setActiveStatus(true);
-                }}
-              />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                name="ex1"
-                id="ex1-inactive"
-                onChange={() => {
-                  setActiveStatus(false);
-                }}
-              />
-              <div>In-Active</div>
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  id="ex1-active"
+                  name="ex1"
+                  value="active"
+                  checked={activeStatus}
+                  onChange={() => {
+                    setActiveStatus(true);
+                  }}
+                   // Disable based on the edit mode
+                />
+                <div>Active</div>
+              </div>
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  name="ex1"
+                  id="ex1-inactive"
+                  value="inactive"
+                  checked={!activeStatus}
+                  onChange={() => {
+                    setActiveStatus(false);
+                  }}
+                   // Disable based on the edit mode
+                />
+                <div>Inactive</div>
+              </div>
             </div>
           </div>
-        </div>
       </Form>
     </div>
   );

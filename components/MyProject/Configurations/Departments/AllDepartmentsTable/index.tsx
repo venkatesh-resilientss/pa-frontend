@@ -49,6 +49,14 @@ const AllDepartmentsTable = () => {
     "configuration_management",
     "create_configuration"
   );
+    const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const departmentsService = new DepartmentsService();
 
@@ -119,6 +127,7 @@ const AllDepartmentsTable = () => {
                 action={() => {}}
               />
             </DropdownItem> */}
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               href="/"
@@ -132,6 +141,8 @@ const AllDepartmentsTable = () => {
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
@@ -141,6 +152,7 @@ const AllDepartmentsTable = () => {
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -182,7 +194,7 @@ const AllDepartmentsTable = () => {
 
     {
       headerName: "Updated On",
-      field: "UpdatedBy",
+      field: "UpdatedDate",
       cellRenderer: (params) => {
         const formattedDate = moment(params.value).format("YYYY-MM-DD");
         return <div>{formattedDate}</div>;

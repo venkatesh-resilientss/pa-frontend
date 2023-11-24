@@ -31,7 +31,7 @@ const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
     "create_user"
@@ -61,10 +61,11 @@ const AllRoleTable = () => {
       await usersService.deleteUser(id);
       // Optionally, you can update your local state or refetch data here
       toast.success('User deleted successfully');
+      clientMutate()
     } catch (error) {
       // Handle error, show a message, or log it
       // console.error("Error deleting user:", error);
-      toast.error('Error deleting user');
+      toast.error("Error deleting user");
     } finally {
       toggleDeleteModal();
     }
@@ -88,7 +89,7 @@ const AllRoleTable = () => {
           className="text-black text-center"
           style={{ fontSize: "16px", fontWeight: "600", marginBottom: "8px" }}
         >
-          Are you sure you want to delete? 
+          Are you sure you want to delete?
         </div>
         <div
           className="text-center"
@@ -122,7 +123,7 @@ const AllRoleTable = () => {
 
   const clientService = new UsersService();
 
-  const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
+  const { data: clientData, mutate : clientMutate } = useSWR(["LIST_CLIENTS", searchText], () =>
     clientService.getUsers()
   );
 
@@ -150,7 +151,7 @@ const AllRoleTable = () => {
     );
 
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image src={actionIcon} alt="" width={14} id={id} />
@@ -218,7 +219,7 @@ const AllRoleTable = () => {
             src={
               props.data.profile_image
                 ? props.data.profile_image
-                : "/icons/sample-profile.png"
+                : "/newAvatar.svg"
             }
             alt="Profile"
             width={30}
@@ -242,6 +243,7 @@ const AllRoleTable = () => {
       cellRenderer: MemberRenderer,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      resizable: true,
       getQuickFilterText: (params) => {
         const res = `${params.data.adminname}${params.data.email}`;
         return res;
