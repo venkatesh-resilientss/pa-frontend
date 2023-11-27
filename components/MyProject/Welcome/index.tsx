@@ -131,18 +131,13 @@ const Welcome = () => {
       password: values.password,
     };
 
-    authService
-      .userSignIN(payload)
-      .then((res: any) => {
-        //for local
-        // window.location.href = `http://${tenantName}.lvh.me:3000/?accessToken=${res?.token}`;
+    authService.userSignIN(payload).then((res: any) => {
+      //for local
+      // window.location.href = `http://${tenantName}.lvh.me:3000/?accessToken=${res?.token}`;
 
-        // for live url1
-        window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
-      })
-      .catch((err: any) => {
-        toast.error(err?.error);
-      });
+      // for live url1
+      window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
+    });
   };
 
   const signInSubmit = async (payload: any) => {
