@@ -283,6 +283,17 @@ export const sidebarRoutes = [
     ],
   },
   {
+    name: "Payroll",
+    icon: "/icons/configurationIcon.svg",
+    path: "/payroll",
+    children: [
+      {
+        name: "Projects",
+        path: "/projects"
+      }
+    ]
+  },
+  {
     name: "Settings",
     icon: "/icons/settingIcon.svg",
     path: "/settings",
