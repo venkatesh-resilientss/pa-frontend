@@ -1,0 +1,2 @@
+name,code,accountnumber,routingnumber,description,fax,countryId,currencyid,physicaladdressid,mailingaddressid,primarycontactID,secondaryaddressid,tenant_id
+vamsi1,221,32003122557,32003122557,sample description1,3021,4,4,4,4,4,4,1
