@@ -38,7 +38,6 @@ function FeesForm({ control, errors }) {
   };
 
   const removeForm = (form) => {
-    console.log('form', form)
     if (form === 0) {
       return
     }
