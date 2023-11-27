@@ -15,8 +15,6 @@ interface IProps {
   children: any;
 }
 const MainLayout: FC<IProps> = ({ children }) => {
-   
-
   useEffect(() => {
     const date = new Date();
     const getTenant = async () => {
@@ -55,7 +53,8 @@ const MainLayout: FC<IProps> = ({ children }) => {
     "settings",
     "singlesignon",
     "transactions",
-    "my-profile"
+    "my-profile",
+    "edit-production",
     // "/forgot-password",
     // "/login",
     // "/reset-password",

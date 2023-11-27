@@ -25,6 +25,8 @@ const AssignRSSLPopup = () => {
     (state: any) => state.productions.assignRSSLPopup.helperData
   );
 
+  console.log("helperData", helperData);
+
   const { register, handleSubmit } = useForm();
 
   const users = [
@@ -35,15 +37,11 @@ const AssignRSSLPopup = () => {
 
   return (
     <Modal
-      style={{ fontFamily: "Segoe UI" }}
+      style={{ width: "402px", maxWidth: "402px" }}
       isOpen={popupStatus}
-      // toggle={() => dispatch(closeAssignRSSLPopup())}
-      className={"modal-dialog-centered modal-sm "}
+      toggle={() => dispatch(closeAssignRSSLPopup("close"))}
+      className={"modal-dialog-centered  "}
     >
-      {/* <ModalHeader
-        className="bg-white"
-        toggle={() => dispatch(closeAssignRSSLPopup())}
-      ></ModalHeader> */}
       <ModalBody>
         <div
           className="text-black"
@@ -53,38 +51,58 @@ const AssignRSSLPopup = () => {
         </div>
         <hr style={{ height: "2px" }} />
 
-        <Form>
-          <Label
-            className="text-black"
-            style={{ fontSize: "14px", fontWeight: "400" }}
+        <div className="d-flex flex-column" style={{ gap: "10px" }}>
+          <Form>
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Client Name
+            </Label>
+            <Input
+              disabled
+              {...register}
+              defaultValue={helperData?.Client?.Name}
+            />
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Production Name
+            </Label>
+            <Input disabled {...register} defaultValue={helperData?.Name} />
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              RSSL User
+            </Label>
+            <ReactSelect options={users} {...register} isClearable />
+          </Form>
+          <div
+            className="d-flex justify-content-end"
+            style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Client Name
-          </Label>
-          <Input disabled {...register} defaultValue={helperData?.client} />
-          <Label
-            className="text-black"
-            style={{ fontSize: "14px", fontWeight: "400" }}
-          >
-            Production Name
-          </Label>
-          <Input
-            disabled
-            {...register}
-            defaultValue={helperData?.production_name}
-          />
-          <Label
-            className="text-black"
-            style={{ fontSize: "14px", fontWeight: "400" }}
-          >
-            RSSL User
-          </Label>
-          <ReactSelect options={users} {...register} isClearable />
-
-          <div className="d-flex justify-content-end gap-1 mt-2">
-            <Button>Cancel</Button>
-            <Button color="info">Submit</Button>
+            <Button
+              // style={{ height: "19px" }}
+              onClick={() => dispatch(closeAssignRSSLPopup("close"))}
+              size="sm"
+              color="white"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              style={{
+                // height: "24px",
+                backgroundColor: "#00AEEF",
+                borderColor: "#00AEEF",
+              }}
+            >
+              Submit
+            </Button>
           </div>
-        </Form>
+        </div>
       </ModalBody>
     </Modal>
   );

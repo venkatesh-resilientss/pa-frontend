@@ -9,9 +9,7 @@ import useSWR from "swr";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  UserInfo,
-} from "redux/slices/mySlices/roles";
+import { UserInfo } from "redux/slices/mySlices/roles";
 
 export default function Profile() {
   const roleInfo = useSelector(UserInfo);
@@ -22,6 +20,7 @@ export default function Profile() {
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -49,7 +48,15 @@ export default function Profile() {
     callBack(countrySelectFormat);
   };
 
-  const [value, setValue] = useState();
+  useEffect(() => {
+    if (!usersData) return;
+
+    usersData?.Name && setValue("firstName", usersData?.data?.first_name);
+    usersData?.Code && setValue("code", usersData?.Code);
+
+    usersData?.Description && setValue("description", usersData?.Description);
+  }),
+    [usersData];
 
   return (
     <Card className="mt-4">
@@ -79,9 +86,7 @@ export default function Profile() {
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
                       placeholder="First Name"
-                      defaultValue={usersData?.first_name}
                       invalid={errors.firstName && true}
-                      disabled
                       {...field}
                     />
                   )}

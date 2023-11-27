@@ -21,10 +21,18 @@ export const GET_TENANT = (prefix: any) =>
 
 export const GET_COMPANIES = `${tenantIdEndpoint}/companies/`; //Get Companies
 
-export const GET_PROJECTS = `${tenantIdEndpoint}/projects/`; //Projects
+export const GET_PROJECTS =  `${tenantIdEndpoint}/projects/` //Projects
+export const GET_PO_APPROVERS = (id: any) => `${tenantIdEndpoint}/approvers/level-po?id=${id}` //GET_PurchaseOrder_APPROVERS
+export const GET_AP_APPROVERS = (id: any) => `${tenantIdEndpoint}/approvers/level-ap?id=${id}` //GET_PurchaseOrder_APPROVERS
+
+
+export const CREATE_PROJECT =  `${tenantIdEndpoint}/projects/`; //Create projects
 export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard Stats
 export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
+export const CREATE_APPROVERS =  `${tenantIdEndpoint}/approvers/` //Projects
+
+
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 

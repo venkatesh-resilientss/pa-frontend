@@ -39,12 +39,12 @@ const AllTaxCodesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -79,69 +79,70 @@ const AllTaxCodesTable = () => {
     );
   };
 
-  
-const ActionsButton = (props) => {
-  const id = `action-popover-${props.value}`;
-  const [open, setOpen] = useState(false);
+  const ActionsButton = (props) => {
+    const id = `action-popover-${props.value}`;
+    const [open, setOpen] = useState(false);
 
-  const toggle = () => {
-    setOpen(!open);
-  };
-  const Action = ({ icon, name, action }) => {
+    const toggle = () => {
+      setOpen(!open);
+    };
+    const Action = ({ icon, name, action }) => {
+      return (
+        <div onClick={action} className="d-flex align-items-center gap-2">
+          <Image src={icon} alt={name} />
+          <p>{name}</p>
+        </div>
+      );
+    };
     return (
-      <div onClick={action} className="d-flex align-items-center gap-2">
-        <Image src={icon} alt={name} />
-        <p>{name}</p>
-      </div>
-    );
-  };
-  return (
-    <div className="cursor-pointer">
-      <UncontrolledDropdown>
-        <DropdownToggle tag="span">
-          <Image
-            src={actionIcon}
-            alt=""
-            width={14}
-            id={id}
-            style={{ marginLeft: "20px" }}
-          />
-        </DropdownToggle>
-        <DropdownMenu end container="body">
-          {/* <DropdownItem className="w-100">
+      <div className="cursor-pointer">
+        <UncontrolledDropdown>
+          <DropdownToggle tag="span">
+            <Image
+              src={actionIcon}
+              alt=""
+              width={14}
+              id={id}
+              style={{ marginLeft: "20px" }}
+            />
+          </DropdownToggle>
+          <DropdownMenu end container="body">
+            {/* <DropdownItem className="w-100">
             <Action
               icon={detailsIocn}
               name={"View Details"}
               action={() => {}}
             />
           </DropdownItem> */}
-          {hasEditConfigurationPermission && (
-          <DropdownItem
-            tag="a"
-            href="/"
-            className="w-100"
-            onClick={(e) => {
-              e.preventDefault();
-              router.push(`/configurations/edit-taxcode/${props.data.ID}`);
-            }}
-          >
-            <Action icon={editIocn} name={"Edit"} action={() => {}} />
-          </DropdownItem>
-          )}
-          {hasDeactivateConfiguration && (
-          <DropdownItem
-            tag="a"
-            className="w-100 cursor-pointer"
-            onClick={() => dispatch(openDeleteTaxCodesPopup(props.data?.ID))}
-          >
-            <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-          </DropdownItem>
-          )}
-        </DropdownMenu>
-      </UncontrolledDropdown>
-    </div>
-  );
-};
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/configurations/edit-taxcode/${props.data.ID}`);
+                }}
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() =>
+                  dispatch(openDeleteTaxCodesPopup(props.data?.ID))
+                }
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
+            )}
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </div>
+    );
+  };
   const columnDefs = [
     {
       headerName: "Tax Code",
@@ -203,7 +204,7 @@ const ActionsButton = (props) => {
       },
     },
   ];
-  
+
   return (
     <div>
       <div className="section">

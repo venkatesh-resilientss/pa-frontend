@@ -101,7 +101,15 @@ const AllAccountPayablesTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-account-payable/${props.data?.ID}`,
+                });
+              }}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -109,22 +117,24 @@ const AllAccountPayablesTable = () => {
               />
             </DropdownItem>
             <DropdownItem
-              tag="a"
-              href="/"
+              // tag="a"
+              // href="/"
               className="w-100"
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   router.push({
-              //     pathname: `/configurations/edit-department/${props.data?.ID}`,
-              //   });
-              // }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-account-payable/${props.data?.ID}`,
+                });
+              }}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
             <DropdownItem
               className="w-100"
               onClick={() =>
-                router.push("/transactions/approve-account-payables")
+                router.push(
+                  `/transactions/approve-account-payables/${props?.data?.ID}`
+                )
               }
             >
               <Action icon={approveIcon} name={"Approve"} action={() => {}} />

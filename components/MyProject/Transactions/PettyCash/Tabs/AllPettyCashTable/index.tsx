@@ -100,7 +100,15 @@ const AllPettyCashTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-petty-cash/${props.data?.ID}`,
+                });
+              }}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -111,18 +119,22 @@ const AllPettyCashTable = () => {
               tag="a"
               href="/"
               className="w-100"
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   router.push({
-              //     pathname: `/configurations/edit-department/${props.data?.ID}`,
-              //   });
-              // }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-petty-cash/${props.data?.ID}`,
+                });
+              }}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
             <DropdownItem
               className="w-100"
-              onClick={() => router.push("/transactions/approve-petty-cash")}
+              onClick={() =>
+                router.push(
+                  `/transactions/approve-petty-cash/${props?.data?.ID}`
+                )
+              }
             >
               <Action icon={approveIcon} name={"Approve"} action={() => {}} />
             </DropdownItem>

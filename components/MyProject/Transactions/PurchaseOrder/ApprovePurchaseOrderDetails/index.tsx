@@ -17,10 +17,12 @@ import { useRouter } from "next/router";
 import RejectPurchaseOrderPopup from "./RejectPurchaseOrderPopup";
 import ApprovePurchaseOrderPopup from "./ApprovePurchaseOrderPopup";
 import {
+  openAddVendorPopup,
   openApprovePurchaseOrderPopup,
   openRejectPurchaseOrderPopup,
 } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
+import AsyncSelect from "react-select/async";
 
 const ApprovePurchaseOrder = () => {
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -29,7 +31,7 @@ const ApprovePurchaseOrder = () => {
 
   const dispatch = useDispatch();
 
-  const columns :any= [
+  const columns: any = [
     {
       name: "S.No",
       selector: "S.No",
@@ -195,7 +197,7 @@ const ApprovePurchaseOrder = () => {
               type="button"
               style={{
                 backgroundColor: "transparent",
-                border: "1px solid #fff",
+                border: "none",
                 padding: "8px 16px",
                 borderRadius: "4px",
                 color: "#000",
@@ -347,7 +349,7 @@ const ApprovePurchaseOrder = () => {
                 <Button
                   style={{
                     backgroundColor: "transparent",
-                    border: "1px solid #fff",
+                    border: "none",
                     padding: "8px 16px",
                     borderRadius: "4px",
                     color: "#000",
@@ -447,7 +449,7 @@ const ApprovePurchaseOrder = () => {
     );
   };
   return (
-    <div>
+    <div className="my-3">
       <ApprovePurchaseOrderPopup />
       <RejectPurchaseOrderPopup />
       <div>
@@ -467,7 +469,7 @@ const ApprovePurchaseOrder = () => {
                   textAlign: "left",
                 }}
               >
-                Create New Purchase order
+                Approve New Purchase order
               </div>
             </div>
           </div>
@@ -478,7 +480,7 @@ const ApprovePurchaseOrder = () => {
                 height: "30px",
                 color: "#2D2C2C",
                 backgroundColor: "transparent",
-                border: "1px solid #fff",
+                border: "none",
                 borderRadius: "4px",
               }}
               size="sm"
@@ -531,7 +533,7 @@ const ApprovePurchaseOrder = () => {
             >
               <Card style={{ border: "none" }}>
                 <CardBody>
-                  <div>
+                  <div className="d-flex flex-column" style={{ gap: "10px" }}>
                     <div
                       style={{
                         color: "#030229",
@@ -542,33 +544,47 @@ const ApprovePurchaseOrder = () => {
                       Vendor information
                     </div>
 
-                    <Row className="mt-2">
+                    <Row className="">
                       <Col sm="4">
                         <FormGroup>
                           <div className="d-flex justify-content-between">
-                            <Label style={{ color: "#030229" }}>
+                            <Label style={{ color: "#030229", height: "17px" }}>
                               Select vendor
                             </Label>
                             <Button
+                              onClick={() =>
+                                dispatch(openAddVendorPopup("open"))
+                              }
+                              className="d-flex align-items-center"
                               style={{
                                 backgroundColor: "transparent",
-                                border: "1px solid #fff",
-                                padding: "8px 16px",
+                                border: "none",
                                 borderRadius: "4px",
-                                marginTop: "-5px",
                                 color: "#000",
                                 fontSize: "12px",
                                 fontWeight: "400",
+                                height: "17px",
+                                gap: "5px",
                               }}
                             >
                               <Image src={plusIcon} alt="" />
-                              Add vendor
+                              Add Vendor
                             </Button>
                           </div>
-                          <Input
-                            name="select"
-                            type="select"
-                            placeholder="Select vendor "
+                          <AsyncSelect
+                            isClearable={true}
+                            className="react-select"
+                            classNamePrefix="select"
+                            // loadOptions={loadSeriesOptions}
+                            placeholder="Select Vendor"
+                            // defaultOptions={seriesSelectFormat}
+                            styles={{
+                              control: (provided) => ({
+                                ...provided,
+                                height: "34px",
+                                minHeight: "34px",
+                              }),
+                            }}
                           />
                         </FormGroup>
                       </Col>
@@ -582,7 +598,11 @@ const ApprovePurchaseOrder = () => {
                             name="address"
                             id="address"
                             placeholder="Enter Vendor address"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "400",
+                              height: "34px",
+                            }}
                           />
                         </FormGroup>
                       </Col>
@@ -596,7 +616,11 @@ const ApprovePurchaseOrder = () => {
                             name="type"
                             id="type"
                             placeholder="Enter Vendor type"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
+                            style={{
+                              fontSize: "12px",
+                              fontWeight: "400",
+                              height: "34px",
+                            }}
                           />
                         </FormGroup>
                       </Col>
@@ -606,7 +630,7 @@ const ApprovePurchaseOrder = () => {
               </Card>
               <Card style={{ border: "none" }}>
                 <CardBody>
-                  <div>
+                  <div className="d-flex flex-column" style={{ gap: "10px" }}>
                     <div
                       style={{
                         color: "#030229",
@@ -616,93 +640,123 @@ const ApprovePurchaseOrder = () => {
                     >
                       PO Details
                     </div>
-                    <Row className="mt-2">
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>PO Number</Label>
-                          <Input
-                            type="text"
-                            name="Date"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            PO Description
-                          </Label>
-                          <Input
-                            type="text"
-                            name="address"
-                            id="address"
-                            placeholder="Enter Vendor address"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>PO Amount</Label>
-                          <Input
-                            type="text"
-                            name="type"
-                            id="type"
-                            placeholder="Enter Vendor type"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>PO Date</Label>
-                          <Input
-                            type="date"
-                            name="date"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            PO Effective Date
-                          </Label>
-                          <Input
-                            type="date"
-                            name="POEffectiveDate"
-                            id="address"
-                            placeholder="Enter Vendor address"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            PO Expiry Date
-                          </Label>
-                          <Input
-                            type="date"
-                            name="POExpiryDate"
-                            id="type"
-                            placeholder="Enter Vendor type"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                    <div>
+                      {" "}
+                      <Row>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              PO Number
+                            </Label>
+                            <Input
+                              type="text"
+                              placeholder="Enter PO Number"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              PO Description
+                            </Label>
+                            <Input
+                              type="text"
+                              name="address"
+                              id="address"
+                              placeholder="Enter PO Description"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              PO Amount
+                            </Label>
+                            <Input
+                              type="number"
+                              name="type"
+                              id="type"
+                              placeholder="Enter PO Amount"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>PO Date</Label>
+                            <Input
+                              type="date"
+                              name="date"
+                              id="exampleEmail1"
+                              placeholder="Enter email 1"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              PO Effective Date
+                            </Label>
+                            <Input
+                              type="date"
+                              name="POEffectiveDate"
+                              id="address"
+                              placeholder="Enter Vendor address"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              PO Expiry Date
+                            </Label>
+                            <Input
+                              type="date"
+                              name="POExpiryDate"
+                              id="type"
+                              placeholder="Enter Vendor type"
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: "400",
+                                height: "34px",
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
                 </CardBody>
               </Card>
               <Card style={{ border: "none" }}>
                 <CardBody>
-                  {" "}
-                  <div>
+                  <div className="d-flex flex-column" style={{ gap: "10px" }}>
                     <div
                       style={{
                         color: "#030229",
@@ -713,78 +767,139 @@ const ApprovePurchaseOrder = () => {
                       Other Information
                     </div>
 
-                    <Row className="mt-2">
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            Client Name
-                          </Label>
-                          <Input
-                            type="select"
-                            name="ClientName"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Production</Label>
-                          <Input
-                            type="select"
-                            name="Production"
-                            id="address"
-                            placeholder="Enter Vendor address"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Bank</Label>
-                          <Input
-                            type="select"
-                            name="Bank"
-                            id="type"
-                            placeholder="Enter Vendor type"
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Currency</Label>
-                          <Input
-                            type="select"
-                            name="Currency"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Department</Label>
-                          <Input
-                            type="select"
-                            name="Department"
-                            id="address"
-                            placeholder="Enter Vendor address"
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Period</Label>
-                          <Input
-                            type="select"
-                            name="Period"
-                            id="type"
-                            placeholder="Enter Vendor type"
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                    <div>
+                      <Row>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              Client Name
+                            </Label>
+
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Client"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              Production
+                            </Label>
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Production"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>Bank</Label>
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Bank"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>Currency</Label>
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Currency"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>
+                              Department
+                            </Label>
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Department"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col sm="4">
+                          <FormGroup>
+                            <Label style={{ color: "#030229" }}>Period</Label>
+                            <AsyncSelect
+                              isClearable={true}
+                              className="react-select"
+                              classNamePrefix="select"
+                              // loadOptions={loadSeriesOptions}
+                              placeholder="Select Period"
+                              // defaultOptions={seriesSelectFormat}
+                              styles={{
+                                control: (provided) => ({
+                                  ...provided,
+                                  height: "34px",
+                                  minHeight: "34px",
+                                }),
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
                 </CardBody>
               </Card>
@@ -849,103 +964,41 @@ const ApprovePurchaseOrder = () => {
           </Button>
         </div>
         <hr />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "calc(100% - 58px)",
-            height: "106px",
-            padding: "0px 24px",
-            gap: "24px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "calc(100% - 8px)",
-              height: "106px",
-              gap: "8px",
-            }}
-          >
-            <FormGroup>
-              <Label style={{ color: "#030229" }}>Additional Notes</Label>
-              <Input
-                type="text"
-                name="AdditionalNote"
-                id="AdditionalNote"
-                style={{
-                  height: "80px",
-                  width: "500px",
-                  borderColor: "#CCCCCC",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                }}
-                placeholder="Enter AdditionalNote"
-              />
-            </FormGroup>
-          </div>
-          <div
-            style={
-              {
-                //   display: "flex",
-                //   justifyContent: "space-between",
-                //   alignItems: "center",
-                //   width: "fit-content",
-                //   height: "63px",
-                //   gap: "8px",
-              }
-            }
-          >
-            <FormGroup>
+        <Row>
+          <Col xl="8">
+            <Label style={{ color: "#030229" }}>Additional Notes</Label>
+            <Input
+              type="textarea"
+              name="AdditionalNote"
+              id="AdditionalNote"
+              style={{
+                height: "80px",
+                width: "500px",
+                borderColor: "#CCCCCC",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                backgroundColor: "#F5F5F5",
+                fontSize: "14px",
+                fontWeight: "400",
+              }}
+              placeholder="Enter AdditionalNote"
+            />
+          </Col>
+          <Col xl="4" className="d-flex flex-column">
+            <div>
+              {" "}
               <Label style={{ color: "#030229" }}>
                 <Image
                   src={attchFileIcon}
                   alt=""
-                  style={{ marginLeft: "90px" }}
+                  style={{ height: "14px", width: "14px" }}
                 />
-                Attchments
+                Attachments
               </Label>
-              <div
-                style={{
-                  height: "38px",
-                  width: "500px",
-                  borderRadius: "3%",
-                  borderColor: "#CCCCCC",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  marginLeft: "18%",
-                }}
-                placeholder="Enter AdditionalNote"
-              >
-                <span
-                  style={{
-                    color: "#030229",
-                    fontWeight: 400,
-                    fontSize: "12px",
-                    margin: "10px",
-                  }}
-                >
-                  Star-Lights-LLxlm
-                </span>
-                <Button
-                  outline
-                  size="sm"
-                  style={{
-                    float: "right",
-                    margin: "5px",
-
-                    textAlign: "center",
-                  }}
-                >
-                  upload
-                </Button>
-              </div>
-            </FormGroup>
-          </div>
-        </div>
+              <FileUpload />
+            </div>
+          </Col>
+        </Row>
 
         <hr />
         <div style={{ display: "flex", justifyContent: "end", gap: 4 }}>
@@ -982,3 +1035,68 @@ const ApprovePurchaseOrder = () => {
 };
 
 export default ApprovePurchaseOrder;
+
+import { useRef } from "react";
+
+const FileUpload = () => {
+  const fileInputRef = useRef(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    setSelectedFileName(selectedFile ? selectedFile.name : "");
+  };
+
+  return (
+    <div>
+      {/* Hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
+      <div
+        className="d-flex justify-content-between cursor-pointer"
+        onClick={handleUploadButtonClick}
+        style={{
+          width: "400px",
+          height: "38px",
+          paddingTop: "8px",
+          paddingBottom: "8px",
+          paddingRight: "12px",
+          paddingLeft: "12px",
+          fontSize: "12px",
+          fontWeight: "400",
+          borderRadius: "4px",
+          border: "1px solid",
+          borderColor: "#CCCCCC",
+          backgroundColor: "#F5F5F5",
+        }}
+      >
+        {!selectedFileName && <p>Click To Upload</p>}
+        {selectedFileName && <p> {selectedFileName}</p>}
+        <div
+          style={{
+            paddingTop: "2px",
+            paddingBottom: "2px",
+            paddingRight: "4px",
+            paddingLeft: "4px",
+            borderRadius: "4px",
+          }}
+          className="border"
+        >
+          Upload{" "}
+        </div>
+      </div>
+
+      {/* Display selected file name */}
+    </div>
+  );
+};

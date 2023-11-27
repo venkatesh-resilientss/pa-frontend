@@ -352,23 +352,15 @@ input::placeholder {
   height: 30px;
 }
 
+.custom-vendor-popup{
+  width: 603px;
+   height: 484px;
 /* Add this CSS in your stylesheet or style block */
-
+}
 .selected-options-count {
   font-size: 14px;
   color: #555;
   margin-bottom: 8px;
 }
 
-/* Additional styling for the select field */
-.react-select-container {
-  width: 200px; /* Adjust the width as needed */
-}
 
-.react-select__control {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-/* Adjust the styles for other parts of the select as needed */

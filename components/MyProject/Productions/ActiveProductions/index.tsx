@@ -20,11 +20,15 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
+import AssignRSSLPopup from "../PendingProductions/AssignRSSLPopup";
+import { useRouter } from "next/router";
 
 const ActiveProductionsCard = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const router = useRouter();
 
   const options = [
     { value: "Client is All" },
@@ -69,7 +73,7 @@ const ActiveProductionsCard = () => {
               alt=""
               width={14}
               id={id}
-              style={{ marginLeft: "-80px" }}
+              style={{ marginLeft: "20px" }}
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
@@ -80,27 +84,20 @@ const ActiveProductionsCard = () => {
                 action={() => {}}
               />
             </DropdownItem>
+
             <DropdownItem
-              tag="a"
-              href="/"
               className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(openAssignRSSLPopup("data"));
-              }}
+              onClick={(e) => router.push(`/edit-production/${props.data.id}`)}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
+            <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
-                action={() => {}}
+                action={(e) => {
+                  dispatch(openAssignRSSLPopup("data"));
+                }}
               />
             </DropdownItem>
           </DropdownMenu>
@@ -176,7 +173,7 @@ const ActiveProductionsCard = () => {
     },
     {
       headerName: "Actions",
-      field: "id",
+      field: "",
       cellRenderer: ActionsButton,
       cellStyle: {
         textAlign: "center",
@@ -372,7 +369,12 @@ const ActiveProductionsCard = () => {
           </div>
         </Col>
       </Row>
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined} />
+      <GridTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        pageSize={4}
+        searchText={undefined}
+      />
     </div>
   );
 };

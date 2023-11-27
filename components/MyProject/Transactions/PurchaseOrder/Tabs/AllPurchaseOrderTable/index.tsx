@@ -8,6 +8,8 @@ import approveIcon from "assets/myIcons/check_circle.svg";
 
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
+import { Tooltip } from "reactstrap";
+
 import {
   Popover,
   PopoverBody,
@@ -23,6 +25,12 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 const AllPurchaseTable = () => {
+  // State to manage tooltip visibility
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  // Function to toggle tooltip visibility
+  const toggleTooltip = () => setTooltipOpen(!tooltipOpen);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -100,7 +108,15 @@ const AllPurchaseTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-purchase-order/1`,
+                });
+              }}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -109,12 +125,12 @@ const AllPurchaseTable = () => {
             </DropdownItem>
             <DropdownItem
               className="w-100"
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   router.push({
-              //     pathname: `/configurations/edit-department/${props.data?.ID}`,
-              //   });
-              // }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-purchase-order/1`,
+                });
+              }}
             >
               <Action icon={editIcon} name={"Edit"} action={() => {}} />
             </DropdownItem>
@@ -122,7 +138,9 @@ const AllPurchaseTable = () => {
             <DropdownItem
               className="w-100"
               onClick={() =>
-                router.push("/transactions/approve-purchase-order")
+                router.push(
+                  `/transactions/approve-purchase-order/${props?.data?.ID}`
+                )
               }
             >
               <Action icon={approveIcon} name={"Approve"} action={() => {}} />
@@ -140,6 +158,7 @@ const AllPurchaseTable = () => {
       </div>
     );
   };
+
   const columnDefs = [
     {
       headerName: "PO Number",
@@ -153,10 +172,13 @@ const AllPurchaseTable = () => {
       headerName: " PO Description",
       field: "description",
       sortable: true,
+
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
+
+      headerClass: "custom-header-class ",
     },
+
     {
       headerName: "Vendor",
       field: "vendor",

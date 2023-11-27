@@ -21,6 +21,8 @@ import {
   openRejectJornalEntryPopup,
 } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
+import { useForm, Controller } from "react-hook-form";
+import AsyncSelect from "react-select/async";
 
 const ApproveJournalEntryDetails = () => {
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -28,7 +30,16 @@ const ApproveJournalEntryDetails = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const columns :any= [
+  const {
+    control,
+    setError,
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const columns: any = [
     {
       name: "S.No",
       selector: "S.No",
@@ -265,21 +276,26 @@ const ApproveJournalEntryDetails = () => {
   const customTitle = () => {
     return (
       <>
-        <div style={{ marginTop: "12px" }}>
-          <Row gutter={[16, 16]}>
-            <Col span={12}>
+        <div
+          className="d-flex flex-column justify-content-center "
+          style={{ height: "46px" }}
+        >
+          <Row>
+            <Col xl="6">
               <div
-                style={{
-                  display: "flex",
-                  gap: 30,
-                }}
+                className="d-flex align-items-center "
+                style={{ gap: "10px" }}
               >
-                <p>Total amount</p>
+                <div style={{ fontSize: "24px", fontWeight: "600" }}>
+                  Total Amount{" "}
+                </div>
                 <input
-                  value={"$100"}
+                  defaultValue={"$100"}
                   style={{
                     width: "100px",
                     height: "25px",
+                    fontSize: "21px",
+                    fontWeight: "600",
                     borderColor: "#CCCCCC",
                     borderWidth: "1px",
                     borderStyle: "solid",
@@ -287,10 +303,9 @@ const ApproveJournalEntryDetails = () => {
                   }}
                 />
 
-                <div className="flex-column">
+                <div className=" flex flex-column" style={{ gap: "4px" }}>
                   <p
                     style={{
-                      marginTop: "-18px",
                       fontSize: "12px",
                       color: "#030229",
                       fontWeight: 600,
@@ -301,22 +316,21 @@ const ApproveJournalEntryDetails = () => {
                   <p
                     style={{
                       backgroundColor: "#B5DEF0",
-                      fontSize: "11px",
+                      fontSize: "12px",
+                      fontWeight: "400",
                       width: "43px",
                       height: "24px",
                       padding: "4px 8px",
                       borderRadius: "4px",
-                      gap: "10px",
-                      marginTop: "-3px",
                     }}
                   >
-                    draft
+                    Draft
                   </p>
                 </div>
-                <div className="flex-column">
+
+                <div className=" flex flex-column" style={{ gap: "4px" }}>
                   <p
                     style={{
-                      marginTop: "-18px",
                       fontSize: "12px",
                       color: "#030229",
                       fontWeight: 600,
@@ -327,42 +341,110 @@ const ApproveJournalEntryDetails = () => {
                   <p
                     style={{
                       backgroundColor: "#EBEBEB",
-                      fontSize: "11px",
-                      width: "43px",
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      width: "77px",
                       height: "25px",
                       padding: "4px 8px",
                       borderRadius: "4px",
                       gap: "10px",
-                      marginTop: "-3px",
                     }}
                   >
                     $00.00
                   </p>
                 </div>
+
+                <div className=" flex flex-column" style={{ gap: "4px" }}>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Transaction no.
+                  </p>
+                  <p
+                    style={{
+                      backgroundColor: "#EBEBEB",
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      width: "77px",
+                      height: "25px",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      gap: "10px",
+                    }}
+                  >
+                    -
+                  </p>
+                </div>
               </div>
             </Col>
-            <Col span={12}>
-              <div style={{ textAlign: "right", gap: 3 }}>
-                <Button
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "1px solid #fff",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    color: "#000",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Image src={plusIcon} alt="" />
-                  Add more lines
-                </Button>
+            <Col
+              xl="6"
+              className="d-flex justify-content-end align-items-center"
+              style={{ gap: "6px" }}
+            >
+              <Button
+                className=""
+                // onClick={() => dispatch(openAddMoreLinesPopup("id"))}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  color: "#000",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "400",
+                }}
+              >
+                <Image
+                  src={plusIcon}
+                  alt=""
+                  style={{ width: "14px", height: "14px" }}
+                />{" "}
+                Add more lines{" "}
+              </Button>
 
-                <Button outline>
-                  <span style={{ color: "#4C4C61", fontWeight: 400 }}>
-                    <Image src={ImportExcelIcon} alt="" /> Import excel
-                  </span>
-                </Button>
-              </div>
+              <Button
+                style={{
+                  color: "#4C4C61",
+                  fontSize: "14px",
+                  backgroundColor: "#ffff",
+                  fontWeight: 400,
+                  height: "34px",
+                  border: "none",
+                }}
+              >
+                <Image
+                  src={CopyIcon}
+                  alt=""
+                  style={{ width: "14px", height: "14px" }}
+                />{" "}
+                Paste Values
+              </Button>
+
+              {/* <Button
+              // onClick={() =>
+              //   // dispatch(openImportFromExcelPurchaseOrderPopup("id"))
+              // }
+              style={{
+                color: "#4C4C61",
+                fontSize: "14px",
+                backgroundColor: "#ffff",
+                fontWeight: 400,
+                height: "34px",
+              }}
+            >
+              <Image
+                src={ImportExcelIcon}
+                alt=""
+                style={{ width: "14px", height: "14px" }}
+              />{" "}
+              Import Excel
+            </Button> */}
             </Col>
           </Row>
         </div>
@@ -477,7 +559,7 @@ const ApproveJournalEntryDetails = () => {
                 height: "30px",
                 color: "#2D2C2C",
                 backgroundColor: "transparent",
-                border: "1px solid #fff",
+                border: "none",
                 borderRadius: "4px",
               }}
               size="sm"
@@ -531,7 +613,7 @@ const ApproveJournalEntryDetails = () => {
             >
               <Card style={{ border: "none" }}>
                 <CardBody>
-                  <div>
+                  <div className="d-flex flex-column" style={{ gap: "10px" }}>
                     <div
                       style={{
                         color: "#030229",
@@ -541,94 +623,207 @@ const ApproveJournalEntryDetails = () => {
                     >
                       Journal Entry Details
                     </div>
-
-                    <Row className="mt-2">
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>JE Number</Label>
-                          <Input
-                            name="select"
-                            placeholder="10892929 "
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            JE Description
-                          </Label>
-                          <Input
-                            type="text"
-                            name="address"
-                            id="address"
-                            placeholder="Enter Description"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>Amount</Label>
-                          <Input
-                            type="text"
-                            name="type"
-                            id="type"
-                            placeholder="Enter Amount"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            Transaction Date
-                          </Label>
-                          <Input
-                            type="date"
-                            name="type"
-                            id="type"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            JE Effective Date
-                          </Label>
-                          <Input
-                            type="date"
-                            name="type"
-                            id="type"
-                            placeholder="Enter Amount"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>{" "}
-                      <Col sm="4">
-                        <FormGroup>
-                          <Label style={{ color: "#030229" }}>
-                            JE Posted Date
-                          </Label>
-                          <Input
-                            type="date"
-                            name="type"
-                            id="type"
-                            placeholder="Enter Amount"
-                            style={{ fontSize: "12px", fontWeight: "400" }}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                    <div>
+                      {" "}
+                      <div
+                        className="d-flex flex-column"
+                        style={{ gap: "10px" }}
+                      >
+                        <Row>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>
+                              JE Number
+                            </Label>
+                            <Controller
+                              name="JENumber"
+                              rules={{
+                                required: "JE Number is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="text"
+                                  invalid={errors.JENumber && true}
+                                  {...field}
+                                  placeholder="Enter JE Number"
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.JENumber && (
+                              <span style={{ color: "red" }}>
+                                {errors.JENumber.message as React.ReactNode}
+                              </span>
+                            )}
+                          </Col>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>
+                              JE Description
+                            </Label>
+                            <Controller
+                              name="JEDescription"
+                              rules={{
+                                required: "JE Description is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="text"
+                                  invalid={errors.JEDescription && true}
+                                  {...field}
+                                  placeholder="Enter JE Description"
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.JEDescription && (
+                              <span style={{ color: "red" }}>
+                                {
+                                  errors.JEDescription
+                                    .message as React.ReactNode
+                                }
+                              </span>
+                            )}
+                          </Col>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>Amount</Label>
+                            <Controller
+                              name="Amount"
+                              rules={{
+                                required: " Amount is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="text"
+                                  invalid={errors.Amount && true}
+                                  {...field}
+                                  placeholder="Enter  Amount"
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.Amount && (
+                              <span style={{ color: "red" }}>
+                                {errors.Amount.message as React.ReactNode}
+                              </span>
+                            )}
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>PO Date</Label>
+                            <Controller
+                              name="transactionDate"
+                              rules={{
+                                required: "Transaction Date is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="date"
+                                  invalid={errors.transactionDate && true}
+                                  {...field}
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.transactionDate && (
+                              <span style={{ color: "red" }}>
+                                {
+                                  errors.transactionDate
+                                    .message as React.ReactNode
+                                }
+                              </span>
+                            )}
+                          </Col>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>
+                              JE Effective Date
+                            </Label>
+                            <Controller
+                              name="JEEffectiveDate"
+                              rules={{
+                                required: "JE Effective Date is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="date"
+                                  invalid={errors.JEEffectiveDate && true}
+                                  {...field}
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.JEEffectiveDate && (
+                              <span style={{ color: "red" }}>
+                                {
+                                  errors.JEEffectiveDate
+                                    .message as React.ReactNode
+                                }
+                              </span>
+                            )}
+                          </Col>
+                          <Col sm="4">
+                            <Label style={{ color: "#030229" }}>
+                              JE POSTED Date
+                            </Label>
+                            <Controller
+                              name="JEPOSTEDDate"
+                              rules={{
+                                required: "JE POSTED Date is required",
+                              }}
+                              control={control}
+                              render={({ field }) => (
+                                <Input
+                                  type="date"
+                                  invalid={errors.JEPOSTEDDate && true}
+                                  {...field}
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    height: "34px",
+                                  }}
+                                />
+                              )}
+                            />
+                            {errors.JEPOSTEDDate && (
+                              <span style={{ color: "red" }}>
+                                {errors.JEPOSTEDDate.message as React.ReactNode}
+                              </span>
+                            )}{" "}
+                          </Col>
+                        </Row>
+                      </div>
+                    </div>
                   </div>
                 </CardBody>
               </Card>
 
               <Card style={{ border: "none" }}>
                 <CardBody>
-                  {" "}
-                  <div>
+                  <div className="d-flex flex-column" style={{ gap: "10px" }}>
                     <div
                       style={{
                         color: "#030229",
@@ -639,78 +834,200 @@ const ApproveJournalEntryDetails = () => {
                       Other Information
                     </div>
 
-                    <Row className="mt-2">
-                      <Col sm="4">
-                        <FormGroup>
+                    <div className="d-flex flex-column" style={{ gap: "10px" }}>
+                      <Row>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>
                             Client Name
                           </Label>
-                          <Input
-                            type="select"
-                            name="ClientName"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
+                          <Controller
+                            name="client"
+                            rules={{ required: "Client is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Client"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
+                          {errors.client && (
+                            <span style={{ color: "red" }}>
+                              {errors.client.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>Production</Label>
-                          <Input
-                            type="select"
-                            name="Production"
-                            id="address"
-                            placeholder="Enter Vendor address"
+                          <Controller
+                            name="production"
+                            rules={{ required: "Production is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Production"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
+                          {errors.production && (
+                            <span style={{ color: "red" }}>
+                              {errors.production.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>Bank</Label>
-                          <Input
-                            type="select"
-                            name="Bank"
-                            id="type"
-                            placeholder="Enter Vendor type"
+                          <Controller
+                            name="bank"
+                            rules={{ required: "Bank is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Bank"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col sm="4">
-                        <FormGroup>
+                          {errors.bank && (
+                            <span style={{ color: "red" }}>
+                              {errors.bank.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>Currency</Label>
-                          <Input
-                            type="select"
-                            name="Currency"
-                            id="exampleEmail1"
-                            placeholder="Enter email 1"
+                          <Controller
+                            name="currency"
+                            rules={{ required: "Currency is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Currency"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
+                          {errors.currency && (
+                            <span style={{ color: "red" }}>
+                              {errors.currency.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>Department</Label>
-                          <Input
-                            type="select"
-                            name="Department"
-                            id="address"
-                            placeholder="Enter Vendor address"
+                          <Controller
+                            name="department"
+                            rules={{ required: "Department is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Department"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                      <Col sm="4">
-                        <FormGroup>
+                          {errors.department && (
+                            <span style={{ color: "red" }}>
+                              {errors.department.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                        <Col sm="4">
                           <Label style={{ color: "#030229" }}>Period</Label>
-                          <Input
-                            type="select"
-                            name="Period"
-                            id="type"
-                            placeholder="Enter Vendor type"
+                          <Controller
+                            name="period"
+                            rules={{ required: "Period is required" }}
+                            control={control}
+                            render={({ field }) => (
+                              <AsyncSelect
+                                {...field}
+                                isClearable={true}
+                                className="react-select"
+                                classNamePrefix="select"
+                                // loadOptions={loadSeriesOptions}
+                                placeholder="Select Period"
+                                // defaultOptions={seriesSelectFormat}
+                                styles={{
+                                  control: (provided) => ({
+                                    ...provided,
+                                    height: "34px",
+                                    minHeight: "34px",
+                                  }),
+                                }}
+                              />
+                            )}
                           />
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                          {errors.period && (
+                            <span style={{ color: "red" }}>
+                              {errors.period.message as React.ReactNode}
+                            </span>
+                          )}
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
                 </CardBody>
               </Card>
@@ -746,165 +1063,176 @@ const ApproveJournalEntryDetails = () => {
             />
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "end",
-            gap: 4,
-            marginTop: "20px",
-          }}
+
+        <Col
+          xl="12"
+          className="d-flex justify-content-end"
+          style={{ gap: "6px" }}
         >
           <Button
+            className=""
+            // onClick={() => dispatch(openAddMoreLinesPopup("id"))}
             style={{
               backgroundColor: "transparent",
-              border: "1px solid #fff",
+              border: "none",
               padding: "8px 16px",
               borderRadius: "4px",
               color: "#000",
               cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "400",
             }}
           >
-            <Image src={plusIcon} alt="" />
-            Add more lines
+            <Image
+              src={plusIcon}
+              alt=""
+              style={{ width: "14px", height: "14px" }}
+            />{" "}
+            Add more lines{" "}
           </Button>
 
-          <Button outline>
-            <span style={{ color: "#4C4C61", fontWeight: 400 }}>
-              <Image src={ImportExcelIcon} alt="" /> Import excel
-            </span>
-          </Button>
-        </div>
-        <hr />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "calc(100% - 58px)",
-            height: "106px",
-            padding: "0px 24px",
-            gap: "24px",
-          }}
-        >
-          <div
+          <Button
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "calc(100% - 8px)",
-              height: "106px",
-              gap: "8px",
+              color: "#4C4C61",
+              fontSize: "14px",
+              backgroundColor: "transparent",
+              fontWeight: 400,
+              height: "34px",
+              border: "none",
             }}
           >
-            <FormGroup>
-              <Label style={{ color: "#030229" }}>Additional Notes</Label>
-              <Input
-                type="text"
-                name="AdditionalNote"
-                id="AdditionalNote"
-                style={{
-                  height: "80px",
-                  width: "500px",
-                  borderColor: "#CCCCCC",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                }}
-                placeholder="Enter AdditionalNote"
-              />
-            </FormGroup>
-          </div>
-          <div
-            style={
-              {
-                //   display: "flex",
-                //   justifyContent: "space-between",
-                //   alignItems: "center",
-                //   width: "fit-content",
-                //   height: "63px",
-                //   gap: "8px",
-              }
-            }
+            <Image
+              src={CopyIcon}
+              alt=""
+              style={{ width: "14px", height: "14px" }}
+            />{" "}
+            Paste Values
+          </Button>
+
+          {/* <Button
+            // onClick={() =>
+            //   // dispatch(openImportFromExcelPurchaseOrderPopup("id"))
+            // }
+            style={{
+              color: "#4C4C61",
+              fontSize: "14px",
+              backgroundColor: "#ffff",
+              fontWeight: 400,
+              height: "34px",
+            }}
           >
-            <FormGroup>
+            <Image
+              src={ImportExcelIcon}
+              alt=""
+              style={{ width: "14px", height: "14px" }}
+            />{" "}
+            Import Excel
+          </Button> */}
+        </Col>
+
+        <hr />
+
+        <Row>
+          <Col xl="8">
+            <Label style={{ color: "#030229" }}>Additional Notes</Label>
+            <Input
+              type="textarea"
+              name="AdditionalNote"
+              id="AdditionalNote"
+              style={{
+                height: "80px",
+                width: "500px",
+                borderColor: "#CCCCCC",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                fontSize: "14px",
+                fontWeight: "400",
+              }}
+              placeholder="Enter Additional Note"
+            />
+          </Col>
+          <Col xl="4" className="d-flex flex-column">
+            <div>
+              {" "}
               <Label style={{ color: "#030229" }}>
                 <Image
                   src={attchFileIcon}
                   alt=""
-                  style={{ marginLeft: "90px" }}
+                  style={{ height: "14px", width: "14px" }}
                 />
-                Attchments
+                Attachments
               </Label>
-              <div
-                style={{
-                  height: "38px",
-                  width: "500px",
-                  borderRadius: "3%",
-                  borderColor: "#CCCCCC",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  marginLeft: "18%",
-                }}
-                placeholder="Enter AdditionalNote"
-              >
-                <span
-                  style={{
-                    color: "#030229",
-                    fontWeight: 400,
-                    fontSize: "12px",
-                    margin: "10px",
-                  }}
-                >
-                  Star-Lights-LLxlm
-                </span>
-                <Button
-                  outline
-                  size="sm"
-                  style={{
-                    float: "right",
-                    margin: "5px",
-
-                    textAlign: "center",
-                  }}
-                >
-                  upload
-                </Button>
-              </div>
-            </FormGroup>
-          </div>
-        </div>
-
-        <hr />
-        <div style={{ display: "flex", justifyContent: "end", gap: 4 }}>
-          <Button
-            style={{
-              height: "30px",
-              color: "#2D2C2C",
-              borderColor: "#00AEEF",
-              borderWidth: "1px",
-              borderStyle: "solid",
-            }}
-            size="sm"
-            outline
-          >
-            Save as Draft
-          </Button>
-          <Button
-            style={{
-              height: "30px",
-              borderColor: "#00AEEF",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              backgroundColor: "#00AEEF",
-              color: "#FFF",
-            }}
-            size="sm"
-          >
-            Post
-          </Button>
-        </div>
+              <FileUpload />
+            </div>
+          </Col>
+        </Row>
       </div>
     </div>
   );
 };
 
 export default ApproveJournalEntryDetails;
+
+import { useRef } from "react";
+
+const FileUpload = () => {
+  const fileInputRef = useRef(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+
+    setSelectedFileName(selectedFile ? selectedFile.name : "");
+  };
+
+  return (
+    <div>
+      {/* Hidden file input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
+      <div
+        className="d-flex justify-content-between cursor-pointer"
+        onClick={handleUploadButtonClick}
+        style={{
+          width: "400px",
+          height: "38px",
+          paddingTop: "8px",
+          paddingBottom: "8px",
+          paddingRight: "12px",
+          paddingLeft: "12px",
+          fontSize: "12px",
+          fontWeight: "400",
+          borderRadius: "4px",
+          border: "1px solid",
+          borderColor: "#CCCCCC",
+        }}
+      >
+        {!selectedFileName && <p>Click To Upload</p>}
+        {selectedFileName && <p> {selectedFileName}</p>}
+        <div
+          style={{
+            paddingTop: "2px",
+            paddingBottom: "2px",
+            paddingRight: "4px",
+            paddingLeft: "4px",
+            borderRadius: "4px",
+          }}
+          className="border"
+        >
+          Upload{" "}
+        </div>
+      </div>
+
+      {/* Display selected file name */}
+    </div>
+  );
+};

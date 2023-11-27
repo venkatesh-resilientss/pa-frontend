@@ -99,7 +99,15 @@ const AllPayrollTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-payroll/${props.data?.ID}`,
+                });
+              }}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -110,18 +118,20 @@ const AllPayrollTable = () => {
               tag="a"
               href="/"
               className="w-100"
-              // onClick={(e) => {
-              //   e.preventDefault();
-              //   router.push({
-              //     pathname: `/configurations/edit-department/${props.data?.ID}`,
-              //   });
-              // }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-payroll/${props.data?.ID}`,
+                });
+              }}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>
             <DropdownItem
               className="w-100"
-              onClick={() => router.push("/transactions/approve-payroll")}
+              onClick={() =>
+                router.push(`/transactions/approve-payroll/${props?.data?.ID}`)
+              }
             >
               <Action icon={approveIcon} name={"Approve"} action={() => {}} />
             </DropdownItem>

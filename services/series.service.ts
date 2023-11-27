@@ -12,7 +12,7 @@
         });
     }
 
-    createSeries(data:any) {
+    createSeries(data:any): Promise<any> {
       return this
         .post(CREATE_SERIES, data)
         .then((response) => {
@@ -45,7 +45,7 @@
       });
     }
 
-    deleteSeries(id: any) {
+    deleteSeries(id: any): Promise<any> {
       return this
         .delete(DELETE_SERIES(id))
         .then((response) => {
@@ -57,7 +57,7 @@
     }
 
 
-     editSeries(id: any,data) {
+     editSeries(id: any,data): Promise<any> {
       return this
         .put(EDIT_SERIES(id),data)
         .then((response) => {

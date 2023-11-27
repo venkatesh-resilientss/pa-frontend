@@ -46,9 +46,7 @@ function EditSet() {
     setService.getSets()
   );
 
-  const [activeStatus, setActiveStatus] = useState(
-    setData?.IsActive
-  );
+  const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
 
   const onSubmit = (data) => {
     let backendFormat;
@@ -57,7 +55,7 @@ function EditSet() {
       name: data.name,
       description: data.description,
       isActive: activeStatus === "active" ? true : false,
-      code : data.code
+      code: data.code,
     };
 
     setService

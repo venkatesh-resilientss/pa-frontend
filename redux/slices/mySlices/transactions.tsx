@@ -1,30 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  addVendorPopup: { status: false, helperData: null },
+  addMoreLinePopup: { status: false, helperData: null },
+
   purchaseOrder: {
     deletePurchaseOrderPopup: { status: false, helperData: null },
     approvePurchaseOrderPopup: { status: false, helperData: null },
     rejectPurchaseOrderPopup: { status: false, helperData: null },
+    purchaseOrderImportFromExcelPopup: { status: false, helperData: null },
   },
   journalEntry: {
     deleteJournalEntryPopup: { status: false, helperData: null },
     approveJournalEntryPopup: { status: false, helperData: null },
     rejectJournalEntryPopup: { status: false, helperData: null },
+    addMoreLinePopup: { status: false, helperData: null },
   },
   pettyCash: {
     deletePettyCashPopup: { status: false, helperData: null },
     approvePettyCashPopup: { status: false, helperData: null },
     rejectPettyCashPopup: { status: false, helperData: null },
+    addMoreLinePopup: { status: false, helperData: null },
   },
   payroll: {
     deletePayRollPopup: { status: false, helperData: null },
     approvePayRollPopup: { status: false, helperData: null },
     rejectPayRollPopup: { status: false, helperData: null },
+    addMoreLinePopup: { status: false, helperData: null },
   },
   accountPayable: {
     deleteAccountPayablePopup: { status: false, helperData: null },
     approveAccountPayablePopup: { status: false, helperData: null },
     rejectAccountPayablePopup: { status: false, helperData: null },
+    addMoreLinePopup: { status: false, helperData: null },
   },
 };
 
@@ -32,6 +40,29 @@ const transactionsSlice = createSlice({
   initialState,
   name: "transactions",
   reducers: {
+    //**Add Vendor */
+
+    openAddVendorPopup(state, action) {
+      state.addVendorPopup.helperData = action.payload;
+      state.addVendorPopup.status = true;
+    },
+
+    closeAddVendorPopup(state, action) {
+      state.addVendorPopup.status = false;
+      state.addVendorPopup.helperData = null;
+    },
+
+    //**Add More Lines Popup */
+
+    openAddMoreLinesPopup(state, action) {
+      state.addMoreLinePopup.helperData = action.payload;
+      state.addMoreLinePopup.status = true;
+    },
+
+    closeAddMoreLinesPopup(state, action) {
+      state.addMoreLinePopup.status = false;
+      state.addMoreLinePopup.helperData = null;
+    },
     //**Purchase Order */
 
     //Delete
@@ -68,6 +99,19 @@ const transactionsSlice = createSlice({
     closeRejectPurchaseOrderPopup(state, action) {
       state.purchaseOrder.rejectPurchaseOrderPopup.status = false;
       state.purchaseOrder.rejectPurchaseOrderPopup.helperData = null;
+    },
+
+    //ImportFrom Excel popup
+
+    openImportFromExcelPurchaseOrderPopup(state, action) {
+      state.purchaseOrder.purchaseOrderImportFromExcelPopup.helperData =
+        action.payload;
+      state.purchaseOrder.purchaseOrderImportFromExcelPopup.status = true;
+    },
+
+    closeImportFromExcelPurchaseOrderPopup(state, action) {
+      state.purchaseOrder.purchaseOrderImportFromExcelPopup.status = false;
+      state.purchaseOrder.purchaseOrderImportFromExcelPopup.helperData = null;
     },
 
     //**Journal ENtry */
@@ -108,6 +152,18 @@ const transactionsSlice = createSlice({
       state.journalEntry.rejectJournalEntryPopup.helperData = null;
     },
 
+    //**Add More Lines Popup */
+
+    openAddMoreLinesToJournalEntryPopup(state, action) {
+      state.journalEntry.addMoreLinePopup.helperData = action.payload;
+      state.journalEntry.addMoreLinePopup.status = true;
+    },
+
+    closeAddMoreLinesToJournalEntryPopup(state, action) {
+      state.journalEntry.addMoreLinePopup.status = false;
+      state.journalEntry.addMoreLinePopup.helperData = null;
+    },
+
     //**Petty CAsh */
 
     //Delete
@@ -146,6 +202,18 @@ const transactionsSlice = createSlice({
       state.pettyCash.rejectPettyCashPopup.helperData = null;
     },
 
+    //**Add More Lines Popup */
+
+    openAddMoreLinesToPettyCashPopup(state, action) {
+      state.pettyCash.addMoreLinePopup.helperData = action.payload;
+      state.pettyCash.addMoreLinePopup.status = true;
+    },
+
+    closeAddMoreLinesToPettyCashPopup(state, action) {
+      state.pettyCash.addMoreLinePopup.status = false;
+      state.pettyCash.addMoreLinePopup.helperData = null;
+    },
+
     //**payroll */
 
     //Delete
@@ -182,6 +250,18 @@ const transactionsSlice = createSlice({
     closeRejectPayrollPopup(state, action) {
       state.payroll.rejectPayRollPopup.status = false;
       state.payroll.rejectPayRollPopup.helperData = null;
+    },
+
+    //**Add More Lines Popup */
+
+    openAddMoreLinesToPayrollPopup(state, action) {
+      state.payroll.addMoreLinePopup.helperData = action.payload;
+      state.payroll.addMoreLinePopup.status = true;
+    },
+
+    closeAddMoreLinesToPayrollPopup(state, action) {
+      state.payroll.addMoreLinePopup.status = false;
+      state.payroll.addMoreLinePopup.helperData = null;
     },
 
     //**Account Payable */
@@ -224,6 +304,18 @@ const transactionsSlice = createSlice({
       state.accountPayable.rejectAccountPayablePopup.status = false;
       state.accountPayable.rejectAccountPayablePopup.helperData = null;
     },
+
+    //**Add More Lines Popup */
+
+    openAddMoreLinesToAccountPayablePopup(state, action) {
+      state.accountPayable.addMoreLinePopup.helperData = action.payload;
+      state.accountPayable.addMoreLinePopup.status = true;
+    },
+
+    closeAddMoreLinesToAccountPayablePopup(state, action) {
+      state.accountPayable.addMoreLinePopup.status = false;
+      state.accountPayable.addMoreLinePopup.helperData = null;
+    },
   },
 });
 
@@ -258,6 +350,20 @@ export const {
   closeRejectPettyCashPopup,
   openRejectPettyCashPopup,
   closeRejectAccountPayablePopup,
+  openAddVendorPopup,
+  closeAddVendorPopup,
+  openAddMoreLinesPopup,
+  closeAddMoreLinesPopup,
+  openImportFromExcelPurchaseOrderPopup,
+  closeImportFromExcelPurchaseOrderPopup,
+  openAddMoreLinesToAccountPayablePopup,
+  closeAddMoreLinesToAccountPayablePopup,
+  openAddMoreLinesToJournalEntryPopup,
+  closeAddMoreLinesToJournalEntryPopup,
+  openAddMoreLinesToPayrollPopup,
+  closeAddMoreLinesToPayrollPopup,
+  openAddMoreLinesToPettyCashPopup,
+  closeAddMoreLinesToPettyCashPopup,
 } = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;
