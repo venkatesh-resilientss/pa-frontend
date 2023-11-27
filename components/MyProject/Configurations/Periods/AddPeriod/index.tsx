@@ -13,7 +13,7 @@ import { checkTenant } from "constants/function";
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-   
+
 
   const router = useRouter();
   const periodsService = new PeriodsService();
@@ -36,7 +36,6 @@ function AddPeriod() {
 
 
   const onSubmit = (data) => {
-    console.log("DTA", data);
 
     let backendFormat;
 
@@ -202,7 +201,7 @@ function AddPeriod() {
               </div>
             </Col>
 
-            
+
           </Form>
         </div>
       </div>

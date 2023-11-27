@@ -30,7 +30,6 @@ abstract class APIService {
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
-        console.log(decoded);
         return true;
       } catch (err) {
         console.log(err);

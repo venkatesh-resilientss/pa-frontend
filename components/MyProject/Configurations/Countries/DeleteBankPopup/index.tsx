@@ -11,7 +11,7 @@ import Image from "next/image";
 
 const DeleteBankPopup = ({ id }) => {
   const dispatch = useDispatch();
-   
+
 
   const bankService = new BankService();
 
@@ -28,7 +28,7 @@ const DeleteBankPopup = ({ id }) => {
   );
 
   const handleDeleteBank = async () => {
-    console.log("IDDD", id);
+
     try {
       await bankService.deleteBank(helperData);
       toast.success("Bank Deleted Successfully");

@@ -14,7 +14,7 @@ import {
 } from "redux/slices/mySlices/roles";
 
 export default function Profile() {
-   const roleInfo = useSelector(UserInfo);
+  const roleInfo = useSelector(UserInfo);
 
   const {
     control,
@@ -27,11 +27,10 @@ export default function Profile() {
 
   const userService = new UsersService();
 
-  const { data: usersData } = useSWR(["LIST_USERS",roleInfo ], () =>
+  const { data: usersData } = useSWR(["LIST_USERS", roleInfo], () =>
     userService.getuserbyid(roleInfo.responseData.ID)
   );
 
-  console.log("USERSDATA", usersData);
 
   const countryService = new CountryService();
 
@@ -133,8 +132,8 @@ export default function Profile() {
                       placeholder="Enter phone number"
                       defaultValue={usersData?.phone}
 
-                      //   value={value}
-                      //   onChange={setValue}
+                    //   value={value}
+                    //   onChange={setValue}
                     />
                   )}
                 />
@@ -210,8 +209,8 @@ export default function Profile() {
                     className="react-select"
                     classNamePrefix="select"
                     placeholder="Select City"
-                    // loadOptions={loadSeriesOptions}
-                    // defaultOptions={seriesSelectFormat}
+                  // loadOptions={loadSeriesOptions}
+                  // defaultOptions={seriesSelectFormat}
                   />
                 )}
               />

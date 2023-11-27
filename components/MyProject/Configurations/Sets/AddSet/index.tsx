@@ -9,7 +9,7 @@ import { checkTenant } from "constants/function";
 
 function AddSet() {
   const router = useRouter();
-   
+
 
   const {
     control,
@@ -30,7 +30,6 @@ function AddSet() {
       setActiveStatus(false);
     }
   };
-  console.log(activeStatus, "activeStatus");
 
   const onSubmit = (data) => {
     let backendFormat;

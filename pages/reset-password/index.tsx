@@ -24,8 +24,6 @@ const ResetPassword = () => {
   const router = useRouter();
   const { token, email } = router.query;
 
-  console.log(router.query);
-
   const togglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };

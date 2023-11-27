@@ -35,7 +35,6 @@ function BankAccordion() {
 
   const onSubmit = (data) => {
     let backendFormat;
-    console.log(data);
 
     backendFormat = {
       Name: data.bankName,

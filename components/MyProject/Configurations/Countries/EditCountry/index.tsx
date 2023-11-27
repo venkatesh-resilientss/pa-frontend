@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
-   
+
 
   const fetchCountryDetails = (id) =>
     countryService.countryDetails(id);
@@ -32,14 +32,14 @@ function EditCountry() {
     reset,
   } = useForm();
 
-  console.log("countryData", countryData);
+
 
   useEffect(() => {
     if (!countryData) return;
 
     countryData?.Name && setValue("countryname", countryData?.Name);
     setActiveStatus(countryData?.IsActive);
-  },[countryData]);
+  }, [countryData]);
 
   const countryService = new CountryService();
 

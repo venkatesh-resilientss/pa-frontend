@@ -65,7 +65,6 @@ const AllChartOfAccountsTable = () => {
   const dataSource = coasData?.result;
 
   const StateBadge = (props) => {
-    console.log("PROPS", props.value);
 
     const sateDir = {
       true: "success",
@@ -129,7 +128,7 @@ const AllChartOfAccountsTable = () => {
                 }
                 className="w-100"
               >
-                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
               </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
@@ -138,7 +137,7 @@ const AllChartOfAccountsTable = () => {
                 className="w-100"
                 onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
               >
-                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
               </DropdownItem>
             )}
           </DropdownMenu>

@@ -187,12 +187,12 @@ function ClientTabs(props) {
                   disabled={true}
                   placeholder="Enter Client Name"
                   type="text"
-                  value={clientData.name}
+                  value={clientData?.name}
                   onChange={(e) =>
                     setClientData({ ...clientData, name: e.target.value })
                   }
                 />
-                {/* {err && !clientData.name.trim() && (
+                {/* {err && !clientData?.name.trim() && (
                   <small className="text-danger">Enter Client Name</small>
                 )} */}
               </Col>
@@ -206,12 +206,12 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter Client Code"
-                  value={clientData.code}
+                  value={clientData?.code}
                   onChange={(e) =>
                     setClientData({ ...clientData, code: e.target.value })
                   }
                 />
-                {/* {err && !clientData.code.trim() && (
+                {/* {err && !clientData?.code.trim() && (
                   <small className="text-danger">Enter Client Code</small>
                 )} */}
               </Col>
@@ -227,7 +227,7 @@ function ClientTabs(props) {
                   disabled={true}
                   placeholder="Enter Legal Name"
                   type="text"
-                  value={clientData.legalName}
+                  value={clientData?.legalName}
                   onChange={(e) =>
                     setClientData({ ...clientData, legalName: e.target.value })
                   }
@@ -244,12 +244,12 @@ function ClientTabs(props) {
                   disabled={true}
                   placeholder="Enter FEIN"
                   type="number"
-                  value={clientData.FEIN}
+                  value={clientData?.FEIN}
                   onChange={(e) =>
                     setClientData({ ...clientData, FEIN: e.target.value })
                   }
                 />
-                {/* {err && !clientData.FEIN.trim() && (
+                {/* {err && !clientData?.FEIN.trim() && (
                   <small className="text-danger">Enter FEIN</small>
                 )} */}
               </Col>
@@ -264,7 +264,7 @@ function ClientTabs(props) {
                   disabled={true}
                   type="text"
                   placeholder="Routing Number"
-                  value={clientData.FEIN}
+                  value={clientData?.FEIN}
                   onChange={(e) =>
                     setClientData({ ...clientData, FEIN: e.target.value })
                   }
@@ -279,7 +279,7 @@ function ClientTabs(props) {
                   styles={selectStyle}
                   placeholder="Select Bank"
                   value={
-                    banks.find((e) => e.label === clientData.bankName) || null
+                    banks.find((e) => e.label === clientData?.bankName) || null
                   }
                   options={banks}
                   name="banks"
@@ -299,7 +299,7 @@ function ClientTabs(props) {
                   disabled={true}
                   type="text"
                   placeholder="Enter Account Number"
-                  value={clientData.accountNumber}
+                  value={clientData?.accountNumber}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -332,7 +332,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Address"
                     type="text"
-                    value={clientData.pAdd1}
+                    value={clientData?.pAdd1}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -352,7 +352,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Address"
                     type="text"
-                    value={clientData.pAdd2}
+                    value={clientData?.pAdd2}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -372,7 +372,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Zip Code"
                     type="text"
-                    value={clientData.pZip1}
+                    value={clientData?.pZip1}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -394,7 +394,7 @@ function ClientTabs(props) {
                     classNamePrefix="selectCountry1"
                     placeholder="Select Country"
                     styles={selectStyle}
-                    value={clientData.pCountry}
+                    value={clientData?.pCountry}
                     options={countryData}
                     name="countries1"
                     onChange={(e: any) =>
@@ -415,9 +415,9 @@ function ClientTabs(props) {
                     classNamePrefix="selectState1"
                     placeholder="Select State"
                     styles={selectStyle}
-                    value={clientData.pState}
-                    options={(clientData.pCountry
-                      ? State.getStatesOfCountry(clientData.pCountry.value)
+                    value={clientData?.pState}
+                    options={(clientData?.pCountry
+                      ? State.getStatesOfCountry(clientData?.pCountry.value)
                       : []
                     ).map((state) => ({
                       value: state.isoCode,
@@ -443,13 +443,13 @@ function ClientTabs(props) {
                     placeholder="Select City"
                     styles={selectStyle}
                     value={
-                      banks.find((e) => e.label === clientData.pCity) || null
+                      banks.find((e) => e.label === clientData?.pCity) || null
                     }
-                    options={(clientData.pCountry && clientData.pState
+                    options={(clientData?.pCountry && clientData?.pState
                       ? City.getCitiesOfState(
-                          clientData.pCountry.value,
-                          clientData.pState.value
-                        )
+                        clientData?.pCountry.value,
+                        clientData?.pState.value
+                      )
                       : []
                     ).map((city) => ({
                       value: city.name,
@@ -485,7 +485,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Address"
                     type="text"
-                    value={clientData.iAdd1}
+                    value={clientData?.iAdd1}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -505,7 +505,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Address"
                     type="text"
-                    value={clientData.iAdd2}
+                    value={clientData?.iAdd2}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -525,7 +525,7 @@ function ClientTabs(props) {
                     disabled={true}
                     placeholder="Enter Zip Code"
                     type="text"
-                    value={clientData.iZip}
+                    value={clientData?.iZip}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -547,7 +547,7 @@ function ClientTabs(props) {
                     classNamePrefix="selectCountry2"
                     placeholder="Select Country"
                     styles={selectStyle}
-                    value={clientData.iCountry}
+                    value={clientData?.iCountry}
                     options={countryData}
                     name="countries1"
                     onChange={(e: any) =>
@@ -568,9 +568,9 @@ function ClientTabs(props) {
                     classNamePrefix="selectState2"
                     placeholder="Select State"
                     styles={selectStyle}
-                    value={clientData.iState}
-                    options={(clientData.iCountry
-                      ? State.getStatesOfCountry(clientData.iCountry.value)
+                    value={clientData?.iState}
+                    options={(clientData?.iCountry
+                      ? State.getStatesOfCountry(clientData?.iCountry.value)
                       : []
                     ).map((state) => ({
                       value: state.isoCode,
@@ -596,13 +596,13 @@ function ClientTabs(props) {
                     placeholder="Select City"
                     styles={selectStyle}
                     value={
-                      banks.find((e) => e.label === clientData.iCity) || null
+                      banks.find((e) => e.label === clientData?.iCity) || null
                     }
-                    options={(clientData.iCountry && clientData.iState
+                    options={(clientData?.iCountry && clientData?.iState
                       ? City.getCitiesOfState(
-                          clientData.iCountry.value,
-                          clientData.iState.value
-                        )
+                        clientData?.iCountry.value,
+                        clientData?.iState.value
+                      )
                       : []
                     ).map((city) => ({
                       value: city.name,
@@ -637,7 +637,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter POC Name"
-                  value={clientData.pContactName}
+                  value={clientData?.pContactName}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -656,7 +656,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter Role"
-                  value={clientData.pTitle}
+                  value={clientData?.pTitle}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -676,7 +676,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter Office Number"
-                  value={clientData.pOffice}
+                  value={clientData?.pOffice}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -698,7 +698,7 @@ function ClientTabs(props) {
                   inputClass="react-tel-input w-100"
                   country={"us"}
                   placeholder="Enter Mobile Number"
-                  value={clientData.pCell}
+                  value={clientData?.pCell}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -719,7 +719,7 @@ function ClientTabs(props) {
                   disabled={true}
                   type="email"
                   placeholder="Enter Email"
-                  value={clientData.pEmail}
+                  value={clientData?.pEmail}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -741,7 +741,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter POC Name"
-                  value={clientData.sContactName}
+                  value={clientData?.sContactName}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -760,7 +760,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter Role"
-                  value={clientData.sTitle}
+                  value={clientData?.sTitle}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -780,7 +780,7 @@ function ClientTabs(props) {
                 <Input
                   disabled={true}
                   placeholder="Enter Office Number"
-                  value={clientData.sOffice}
+                  value={clientData?.sOffice}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -802,7 +802,7 @@ function ClientTabs(props) {
                   inputClass="react-tel-input w-100"
                   country={"us"}
                   placeholder="Enter Mobile Number"
-                  value={clientData.sCell}
+                  value={clientData?.sCell}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,
@@ -823,7 +823,7 @@ function ClientTabs(props) {
                   disabled={true}
                   type="email"
                   placeholder="Enter Email"
-                  value={clientData.sEmail}
+                  value={clientData?.sEmail}
                   onChange={(e) =>
                     setClientData({
                       ...clientData,

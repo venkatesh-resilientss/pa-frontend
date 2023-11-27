@@ -14,7 +14,7 @@ const DeleteTaxCodePopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const taxCodeService = new TaxCodesService();
-   
+
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
     taxCodeService.getTaxCodes()
@@ -29,7 +29,7 @@ const DeleteTaxCodePopup = ({ id }) => {
   );
 
   const handleDeleteTaxCode = async () => {
-    console.log("IDDD", id);
+
 
     try {
       await taxCodeService.deleteTaxCode(helperData);

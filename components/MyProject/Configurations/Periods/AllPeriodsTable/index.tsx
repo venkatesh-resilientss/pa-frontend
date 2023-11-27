@@ -39,12 +39,12 @@ const AllPeriodsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -78,7 +78,6 @@ const AllPeriodsTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -115,26 +114,26 @@ const AllPeriodsTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() =>
-                router.push(`/configurations/edit-period/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() =>
+                  router.push(`/configurations/edit-period/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem tag="a" className="w-100 cursor-pointer">
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeletePeriodPopup(props.data.ID));
-                }}
-              />
-            </DropdownItem>
+              <DropdownItem tag="a" className="w-100 cursor-pointer">
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeletePeriodPopup(props.data.ID));
+                  }}
+                />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -224,7 +223,7 @@ const AllPeriodsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  
+
 
   return (
     <div>

@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const DeleteSetPopup = ({ id }) => {
   const dispatch = useDispatch();
-   
+
 
   const setService = new SetsService();
 
@@ -32,7 +32,7 @@ const DeleteSetPopup = ({ id }) => {
   );
 
   const handleDeleteSet = async () => {
-    console.log("IDDD", id);
+
     try {
       await setService.deleteSet(helperData);
       toast.success("Set Deleted Successfully");

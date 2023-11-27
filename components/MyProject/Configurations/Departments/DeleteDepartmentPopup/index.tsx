@@ -14,7 +14,7 @@ const DeleteDepartmentPopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
-   
+
 
   const {
     data: departmentsData,
@@ -44,7 +44,6 @@ const DeleteDepartmentPopup = ({ id }) => {
   };
 
   const { register, handleSubmit } = useForm();
-  console.log(popupStatus, "popupStatus");
   return (
     <Modal
       isOpen={popupStatus}

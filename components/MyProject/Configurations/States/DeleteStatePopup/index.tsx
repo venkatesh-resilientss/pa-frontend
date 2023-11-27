@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const DeleteStatePopup = ({ id }) => {
   const dispatch = useDispatch();
-   
+
 
   const stateService = new StatesService();
 
@@ -29,7 +29,7 @@ const DeleteStatePopup = ({ id }) => {
   );
 
   const handleDeleteState = async () => {
-    console.log("IDDD", id);
+
     try {
       await stateService.deleteState(helperData);
       toast.success("State Deleted Successfully");

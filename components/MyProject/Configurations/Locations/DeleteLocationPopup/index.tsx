@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const DeleteLocationPopup = ({ id }) => {
   const dispatch = useDispatch();
-   
+
 
   const locationService = new LocationsService();
 
@@ -33,7 +33,6 @@ const DeleteLocationPopup = ({ id }) => {
   );
 
   const handleDeleteLocation = async () => {
-    console.log("IDDD", id);
     try {
       await locationService.deleteLocation(helperData);
       toast.success("Location Deleted Successfully");

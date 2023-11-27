@@ -11,7 +11,7 @@ import { checkTenant } from "constants/function";
 import { useState, useEffect } from "react";
 
 const DeleteBankPopup = ({ id }) => {
-   
+
 
   const dispatch = useDispatch();
 
@@ -30,7 +30,6 @@ const DeleteBankPopup = ({ id }) => {
   );
 
   const handleDeleteBank = async () => {
-    console.log("IDDD", id);
     try {
       await bankService.deleteBank(helperData);
       toast.success("Bank Deleted Successfully");

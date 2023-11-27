@@ -100,7 +100,6 @@ const AllRoleTable = () => {
     {
       field: "Options",
       cellRenderer: (row) => {
-        console.log(row, "DATA");
         return (
           <UncontrolledDropdown>
             <DropdownToggle tag="span">

@@ -14,7 +14,6 @@ const DashboardLayout: FC<IProps> = ({ children }) => {
   useEffect(() => {
     const getTenant = async () => {
       const tenant = await checkTenant();
-      console.log(tenant, "tenant");
       if (tenant) {
         authService.getUserFromToken().then((res) => {
           setUserData({

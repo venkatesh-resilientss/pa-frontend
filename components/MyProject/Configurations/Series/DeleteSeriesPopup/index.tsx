@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const DeleteSeriesPopup = ({ id }) => {
   const dispatch = useDispatch();
-   
+
 
   const seriesService = new SeriesService();
 
@@ -29,7 +29,7 @@ const DeleteSeriesPopup = ({ id }) => {
   );
 
   const handleDeleteSeries = async () => {
-    console.log("IDDD", id);
+
     try {
       await seriesService.deleteSeries(helperData);
       toast.success("Series Deleted Successfully");

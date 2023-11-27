@@ -12,7 +12,7 @@ import { checkTenant } from "constants/function";
 function EditUser() {
   const router = useRouter();
   const { id } = router.query;
-   
+
 
   const getUserdetails = (id) => usersService.getuserbyid(id);
 
@@ -31,9 +31,9 @@ function EditUser() {
   );
   const clientOptions = Array.isArray(clientData)
     ? clientData.map((client) => ({
-        value: client.ID,
-        label: client.Name,
-      }))
+      value: client.ID,
+      label: client.Name,
+    }))
     : [];
 
   const roleservice = new RoleService();
@@ -42,9 +42,9 @@ function EditUser() {
   );
   const roleOptions = Array.isArray(rolesdata)
     ? rolesdata.map((role) => ({
-        value: role.ID,
-        label: role.RoleName,
-      }))
+      value: role.ID,
+      label: role.RoleName,
+    }))
     : [];
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -60,9 +60,9 @@ function EditUser() {
 
   const projectOptions = Array.isArray(projectsdata)
     ? projectsdata.map((project) => ({
-        value: project.ID,
-        label: project.Name,
-      }))
+      value: project.ID,
+      label: project.Name,
+    }))
     : [];
 
   const roleSelectStyles = {
@@ -117,8 +117,8 @@ function EditUser() {
       setActiveStatus(eachclicntdata?.IsActive ? "active" : "inactive");
     }
   }, [eachclicntdata, userLoading, reset]);
-  
-  
+
+
   const usersService = new UsersService();
 
   const onSubmit = (data) => {
@@ -135,7 +135,6 @@ function EditUser() {
     usersService
       .editUser(id, backendFormat)
       .then((res) => {
-        console.log(backendFormat);
         router.push("/settings/usermanagement");
         toast.success("User Updated successfully");
         reset();

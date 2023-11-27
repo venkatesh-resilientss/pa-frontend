@@ -23,7 +23,6 @@ function AddChartOfAccounts() {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data, "data");
 
     let backendFormat;
 

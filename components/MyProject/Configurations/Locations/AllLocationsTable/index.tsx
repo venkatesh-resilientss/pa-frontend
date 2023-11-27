@@ -42,13 +42,13 @@ const AllLocationsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
 
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -91,7 +91,7 @@ const AllLocationsTable = () => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
 
-    console.log("PROPS", props);
+
 
     const [open, setOpen] = useState(false);
 
@@ -127,24 +127,24 @@ const AllLocationsTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) =>
-                router.push(`/configurations/edit-location/${props.data.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-location/${props.data.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>

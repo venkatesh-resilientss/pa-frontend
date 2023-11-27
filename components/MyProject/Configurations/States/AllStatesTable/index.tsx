@@ -42,12 +42,12 @@ const AllStatesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -81,7 +81,7 @@ const AllStatesTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
+
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -118,30 +118,30 @@ const AllStatesTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-state/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-state/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteStatePopup(props.data.ID));
-                }}
-              />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeleteStatePopup(props.data.ID));
+                  }}
+                />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>

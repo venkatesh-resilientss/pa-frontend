@@ -38,13 +38,13 @@ import NoDataPage from "components/NoDataPage";
 const AllCurrencyTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
 
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -65,7 +65,6 @@ const AllCurrencyTable = () => {
   } = useSWR(["LIST_CURRENCIES", searchText], () =>
     currencyService.getCurrencies()
   );
-  console.log(currencyData, "currencyData");
   const dataSource = currencyData?.result;
 
   const AddCurrency = (e) => {
@@ -76,7 +75,6 @@ const AllCurrencyTable = () => {
   };
 
   const Currency = (props) => {
-    console.log(props.data.Defaultcurrency, "kkkkk");
 
     return (
       <>
@@ -137,24 +135,24 @@ const AllCurrencyTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) =>
-                router.push(`/configurations/edit-currencies/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-currencies/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) => dispatch(openDeleteCurrencyPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) => dispatch(openDeleteCurrencyPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -217,7 +215,7 @@ const AllCurrencyTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  
+
 
   return (
     <>

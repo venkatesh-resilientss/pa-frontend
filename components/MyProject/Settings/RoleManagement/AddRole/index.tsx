@@ -53,7 +53,6 @@ function AddRole() {
       roleservice
         .getrole_by_id(router.query.role_id)
         .then((res) => {
-          console.log("res", res);
           setRole_name(res.RoleName);
           setRole_id(res.RoleId);
 
@@ -93,7 +92,6 @@ function AddRole() {
   }, [router]);
 
   useEffect(() => {
-    console.log("set pemissio klnnn", permissionSet);
   }, [permissionSet]);
   // const convertToPayload = (permissionSet) => {
   //   const payload = {};
@@ -151,7 +149,6 @@ function AddRole() {
       toast.error("Please enter roleId and role name");
       return;
     }
-    console.log(permissionSet, "permissionSet");
     // return;
     let payload: any = {
       CreatedBy: 2,
@@ -164,7 +161,6 @@ function AddRole() {
       const convertedPayload = convertToNewFormat(permissionSet);
       // const convertedPayload = convertToPayload(permissionSet);
       payload.permissions = convertedPayload;
-      console.log(convertedPayload, "permisssionsettttt");
     }
 
     roleservice
@@ -195,7 +191,6 @@ function AddRole() {
       const convertedPayload = convertToNewFormat(permissionSet);
       // const convertedPayload = convertToPayload(permissionSet);
       payload.permissions = convertedPayload;
-      console.log(convertedPayload, "permisssionsettttt");
     }
 
     roleservice
@@ -396,7 +391,6 @@ function AddRole() {
           <hr className="hrline" />
           <div className="mt-2">
             {Object.entries(permissionSet).map(([key, value]) => {
-              console.log(key, value, "key value");
               return (
                 <CustomPermissions
                   key={`custompermission-set-${key}`}

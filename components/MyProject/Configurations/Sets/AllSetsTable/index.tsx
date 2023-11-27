@@ -41,12 +41,12 @@ const AllSetsTable = () => {
   const setsService = new SetsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -65,7 +65,7 @@ const AllSetsTable = () => {
   } = useSWR(["LIST_SETS", searchText], () => setsService.getSets());
   const dataSource = setsData?.result;
 
-  console.log(setsData, "setsData");
+
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -116,24 +116,24 @@ const AllSetsTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              onClick={() =>
-                router.push(`/configurations/edit-set/${props.data.ID}`)
-              }
-              tag="a"
-              className="w-100 cursor-pointer"
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                onClick={() =>
+                  router.push(`/configurations/edit-set/${props.data.ID}`)
+                }
+                tag="a"
+                className="w-100 cursor-pointer"
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -205,7 +205,7 @@ const AllSetsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
- 
+
 
   return (
     <div>

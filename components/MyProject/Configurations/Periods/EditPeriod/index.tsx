@@ -65,7 +65,6 @@ function EditPeriod() {
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
 
   const onSubmit = (data) => {
-    console.log("hereeeeeeeeeeeee");
     let backendFormat;
 
     backendFormat = {

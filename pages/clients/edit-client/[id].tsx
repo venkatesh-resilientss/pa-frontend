@@ -63,7 +63,7 @@ function Clients() {
 
   return (
     <>
-      {clientData.name ? (
+      {clientData?.name ? (
         <div style={{ fontFamily: "Segoe UI" }} className="p-4 text-black">
           <div className="d-flex justify-content-between">
             <div className="d-flex gap-1">
@@ -74,7 +74,7 @@ function Clients() {
 
               <div>
                 <div style={{ fontSize: "30px", fontWeight: "700" }}>
-                  {clientData.name}
+                  {clientData?.name}
                 </div>
                 {/* <div>
                   endemol.rssl.io | Client Admin Name | Client Admin Email

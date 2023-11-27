@@ -73,7 +73,7 @@ const LoginPage = () => {
   //       })
   //     }
   //   }
-  console.log(Error, "Error");
+
 
   const handleToggle = () => {
     if (type === "password") {
@@ -171,7 +171,7 @@ const LoginPage = () => {
                                   borderColor: "transparent !important",
                                 }}
                                 className="w-80 p-3 border border-gray-300 rounded"
-                                // onChange={() => clearErrors('tenant')}
+                              // onChange={() => clearErrors('tenant')}
                               />
                             )}
                           />
@@ -220,7 +220,7 @@ const LoginPage = () => {
                                   borderColor: "transparent !important",
                                 }}
                                 className="w-80 p-3 border border-gray-300 rounded"
-                                // onChange={() => clearErrors('email')}
+                              // onChange={() => clearErrors('email')}
                               />
                             )}
                           />
