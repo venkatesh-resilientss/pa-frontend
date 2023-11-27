@@ -3,22 +3,30 @@ import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import Select from "react-select";
+import { StatesService } from "services";
+import useSWR from "swr";
+
 
 function BasicDetailsForm({ control, watch, onSubmit, errors }) {
-  const {
-    // control,
-    setError,
-    handleSubmit,
-    register,
-    reset,
-  } = useForm();
-
+  const {handleSubmit} = useForm();
   const options = [
     { value: "cheque", label: "Cheque" },
     { value: "wireTransfer", label: "Wire Transfer" },
     { value: "manualCheque", label: "Manual Cheque" },
     { value: "eft", label: "EFT" },
   ];
+  const statesService = new StatesService();
+  const { data: statesData } = useSWR("LIST_STATES", () =>
+    statesService.getStates()
+  );
+
+  const stateSelectOptions = statesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+      countryId : b.CountryID
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -96,10 +104,11 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Select
+                <AsyncSelect
                   {...field}
-                  options={options}
+                  defaultOptions={options}
                   placeholder="Select an option"
+                  isClearable={true}
                 />
               )}
             />
@@ -241,12 +250,14 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
                 required: "Work State is required",
               }}
               control={control}
+              defaultValue={null}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Work State"
-                  invalid={errors.workState && true}
+                <AsyncSelect
+                  name="workState"
+                  defaultOptions={stateSelectOptions}
+                  placeholder="Select State"
                   {...field}
+                  isClearable={true}
                 />
               )}
             />
@@ -350,7 +361,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               ACH Bank Acoount Number{" "}
             </Label>
             <Controller
-              name="accountNumber"
+              name="achAccountNumber"
               rules={{
                 required: "ACH Bank Acoount Number is required",
               }}

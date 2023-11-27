@@ -158,28 +158,6 @@ const AllRoleTable = () => {
             <Image src={actionIcon} alt="" width={14} id={id} />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => router.push(`/settings/edit-user/${id}`)}
-            >
-              <Action
-                icon={"/icons/edit_square.svg"}
-                name={"Edit"}
-                action={() => { }}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => handleDeleteClick(id)}
-            >
-              <Action
-                icon={"/icons/delete.svg"}
-                name={"Delete"}
-                action={() => { }}
-              />
-            </DropdownItem> */}
             {hasEditUserPermission && (
               <DropdownItem
                 tag="a"
@@ -188,7 +166,7 @@ const AllRoleTable = () => {
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
-                  name={"Edit"}
+                  name={"Edit User"}
                   action={() => {}}
                 />
               </DropdownItem>
@@ -220,7 +198,7 @@ const AllRoleTable = () => {
             src={
               props.data.profile_image
                 ? props.data.profile_image
-                : "default.svg"
+                : "/default.svg"
             }
             alt="Profile"
             width={30}
@@ -314,7 +292,7 @@ const AllRoleTable = () => {
         <CardBody>
           <div className="d-flex justify-content-between">
             <div>
-              <p className="m-2" style={{ fontWeight: "bold" }}>
+              <p className="m-2" style={{ fontWeight: "600" }}>
                 User Management
               </p>
             </div>

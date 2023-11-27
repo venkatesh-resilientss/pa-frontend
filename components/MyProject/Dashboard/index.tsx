@@ -12,12 +12,10 @@ function Dashboard() {
     <div>
       <Stats />
       <Row className="match-height my-4">
-        <Col xl="4">
+        <Col xl="12">
           <Clients />
         </Col>
-        <Col xl="8">
-          <FlightStatusTrackerTable />
-        </Col>
+        
       </Row>
       <RecentProductions />
       <HelpCenter />

@@ -3,7 +3,8 @@ import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import Select from "react-select";
-
+import useSWR from "swr";
+import { StatesService } from "services";
 function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   const {
     // control,
@@ -12,13 +13,31 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
     register,
     reset,
   } = useForm();
-
-  const options = [
+  const statesService = new StatesService();
+  const paymentOptions = [
     { value: "cheque", label: "Cheque" },
     { value: "wireTransfer", label: "Wire Transfer" },
     { value: "manualCheque", label: "Manual Cheque" },
     { value: "eft", label: "EFT" },
   ];
+  const entityOptions = [
+    {
+      value : 34, label : 'E'
+    }
+  ]
+  const { data: statesData } = useSWR("LIST_STATES", () =>
+    statesService.getStates()
+  );
+
+  const stateSelectOptions = statesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  
+
   return (
     <div className="text-black">
       <Form
@@ -98,7 +117,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={options}
+                  options={paymentOptions}
                   placeholder="Select an option"
                 />
               )}
@@ -180,13 +199,14 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             <Controller
               name="entityType"
               rules={{
-                required: " Entity Type is required",
+                required: "Entity Type is required",
+                validate : value => value > 0 || 'Enter number' 
               }}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Entity Type"
+                  placeholder="Enter entity"
                   invalid={errors.entityType && true}
                   {...field}
                 />
@@ -242,11 +262,10 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Work State"
-                  invalid={errors.workState && true}
+                <Select
                   {...field}
+                  options={stateSelectOptions}
+                  placeholder="Select state"
                 />
               )}
             />
@@ -322,7 +341,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               ACH Bank Routing Number{" "}
             </Label>
             <Controller
-              name="routingNumber"
+              name="achRoutingNumber"
               rules={{
                 required: "  ACH Bank Routing Number is required",
               }}
@@ -350,7 +369,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               ACH Bank Acoount Number{" "}
             </Label>
             <Controller
-              name="accountNumber"
+              name="achAccountNumber"
               rules={{
                 required: "ACH Bank Acoount Number is required",
               }}
@@ -381,7 +400,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             <Controller
               name="payeeName"
               rules={{
-                required: " Payee Name is required",
+                required: "Payee Name is required",
               }}
               control={control}
               render={({ field }) => (
@@ -399,6 +418,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               </span>
             )}
           </Col>
+
         </Row>
       </Form>
     </div>

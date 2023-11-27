@@ -109,13 +109,6 @@ const AllVendorsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
-            </DropdownItem>
             {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
@@ -154,7 +147,7 @@ const AllVendorsTable = () => {
     },
     {
       headerName: "Vendor Name",
-      field: "VendorName",
+      field: "Name",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },

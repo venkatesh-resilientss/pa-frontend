@@ -58,7 +58,7 @@ function RecentProductions() {
             />
           </Form>
           {hasCreateProductionPermission && (
-          <Button color="primary">
+          <Button color="primary" className="py-1 px-3">
             <BsCameraVideo style={{ color: "#FFFFFF" }} />
             <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
               {" "}

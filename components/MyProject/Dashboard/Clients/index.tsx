@@ -52,33 +52,16 @@ function Clients() {
         </div>
 
         <div className="d-flex gap-1">
-          {/* <Button
-            size="sm"
-            color="info"
-            style={{
-              fontSize: "14px",
-              color: "#FFFFFF",
-              backgroundColor: "#00AEEF",
-              margin: "4px",
-              padding: "5px",
-              width: "120px",
-            }}
-            onClick={() => router.push(`/clients/create-client`)}
-          >
-            <Users size={12} /> Create Client
-          </Button> */}
+          
 
           {hasCreateClientPermission && (
             <Button
-              size="sm"
+              size="sm" className="py-1 px-3"
               color="info"
               style={{
                 fontSize: "14px",
                 color: "#FFFFFF",
                 backgroundColor: "#00AEEF",
-                margin: "4px",
-                padding: "5px",
-                width: "120px",
               }}
               onClick={() => router.push(`/clients/create-client`)}
             >
@@ -88,16 +71,19 @@ function Clients() {
         </div>
       </div>
 
-      <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
-        {!isLoading &&
-          clientsData.map((client, i) => {
-            return (
-              <Col xl="12" key={`new-onboarded-client-${i}`}>
-                <ClientsCard data={client} />
-              </Col>
-            );
-          })}
-      </div>
+    <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
+  {!isLoading && (
+    <Row className="mt-2">
+      {clientsData.map((client, i) => (
+        <Col key={`new-onboarded-client-${i}`} md="4" className="mb-3">
+          <ClientsCard data={client} />
+        </Col>
+      ))}
+    </Row>
+  )}
+</div>
+
+      
     </div>
   );
 }

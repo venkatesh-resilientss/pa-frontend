@@ -176,6 +176,7 @@ const FlightStatusTrackerTable = () => {
   ];
 
   return (
+    <>
     <Card className="col-12" style={{ height: "100%" }}>
       <div className="text-black p-3">
         <div className="d-flex mb-3 justify-content-between align-items-center">
@@ -189,6 +190,7 @@ const FlightStatusTrackerTable = () => {
         <GridTable rowData={rowData} columnDefs={colDef} pageSize={4} searchText={undefined} />
       </div>
     </Card>
+    </>
   );
 };
 

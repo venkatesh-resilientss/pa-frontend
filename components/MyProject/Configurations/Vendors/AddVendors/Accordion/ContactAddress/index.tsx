@@ -1,10 +1,25 @@
 import { useForm, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import { StatesService } from "services";
+import useSWR from "swr";
+import Select from 'react-select'
+
 
 function ContactAddressForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
+  const statesService = new StatesService();
+  const { data: statesData } = useSWR("LIST_STATES", () =>
+    statesService.getStates()
+  );
 
+  const stateSelectOptions = statesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+      countryId : b.CountryID
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -86,10 +101,9 @@ function ContactAddressForm({ onSubmit, control, watch, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
+                <Select
+                  options={stateSelectOptions}
                   placeholder="Enter State"
-                  invalid={errors.contactAddressState && true}
                   {...field}
                 />
               )}

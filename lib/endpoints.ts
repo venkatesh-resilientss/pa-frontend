@@ -171,3 +171,8 @@ export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
+
+
+//addresss
+export const ADDRESSES = `${tenantIdEndpoint}/addresses/`;
+export const EDIT_ADDRESSES = (id:any) => `${tenantIdEndpoint}/addresses/${id}`;

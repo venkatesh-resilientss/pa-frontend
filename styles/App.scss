@@ -224,10 +224,8 @@ div.error-message {
 }
 
 input.search {
-  width: 260px;
-  height: "38px";
   display: block;
-  padding: 9px 4px 9px 40px;
+  padding: 6px 5px 6px 39px;
   background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
   background-size: 20px;
   border-radius: 10.141px;
@@ -363,4 +361,20 @@ input::placeholder {
   margin-bottom: 8px;
 }
 
+/* Additional styling for the select field */
+.react-select-container {
+  width: 200px; /* Adjust the width as needed */
+}
 
+.react-select__control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.disabled-link {
+  color: #00c708;
+  /* Set the desired color for disabled links */
+  pointer-events: none;
+  /* Disable pointer events to make the link unclickable */
+}
