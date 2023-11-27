@@ -32,10 +32,12 @@ class APIService {
     cookie.remove("accessToken")
     cookie.remove("refreshToken")
   }
+
   // Setting access token in a cookie
   setAccessToken(token: string): void {
     cookie.set("accessToken", token, { expires: this.expiry.toDate() })
   }
+
   // Setting refresh token in a cookie
   setRefreshToken(token: string): void {
     cookie.set("refreshToken", token, { expires: this.expiry.toDate() })

@@ -3,9 +3,9 @@ import {
   UserInfo,
 } from "redux/slices/mySlices/roles";
 export const hasPermission = (category, action) => {
+  // console.log(roleInfo,'common function',category,action)
+  try {
     const roleInfo = useSelector(UserInfo);
-    console.log(roleInfo,'common function',category,action)
-    try {
         if (roleInfo.responseData.AccessType == "full_access") {
             return true
         } else {

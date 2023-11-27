@@ -3,6 +3,10 @@ export const baseUrl = process.env.NEXT_PUBLIC_APP_ENV === "production"? process
 export const GET_COMPANIES = (tenant_id) => `${baseUrl}/api/${tenant_id}/companies`; //Get Companies
 
 export const GET_PROJECTS = (tenant_id) => `${baseUrl}/api/${tenant_id}/projects/` //Projects
+export const DELETE_PROJECTS = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/clients/${id}`; //DELETE projects
+export const EDIT_PROJECTS = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/clients/${id}`; //EDIT projects
+export const PROJECTS_DETAIL_ENDPOINT = (tenant_id: any,id:any) =>
+  `${baseUrl}/api/${tenant_id}/clients/${id}`; //projects Details
 
 
 export const RESET_PASSWORD =  `${baseUrl}/api/reset-password`
@@ -127,7 +131,7 @@ export const USERS_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/
 
 
 export const GET_ROLE_BY_ID = (id:any,tenant_id:any) => `${baseUrl}/api/${tenant_id}/roles/${id}` //Users
-export const GET_USER_FROM_TOKEN  = (tenant_id) => `${baseUrl}/api/${tenant_id}/users/userinfo`; //GET USER FROM TOKEN
+export const GET_USER_FROM_TOKEN  = (tenant_id:any) => `${baseUrl}/api/${tenant_id}/users/userinfo`; //GET USER FROM TOKEN
 
 export const GET_TENANT = (prefix: any) => `${baseUrl}/api/tenants/name?name=${prefix}`;
 //bulupload api's
