@@ -19,7 +19,6 @@ import { checkTenant } from "constants/function";
 
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
-  
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -28,6 +27,7 @@ function EditBudget() {
   const [location, setLocation] = useState("");
   const [company, setCompany] = useState("");
   const [set, setSet] = useState("");
+  const [uploadExcel, setUploadExcel]: any = useState({});
 
   const currencyService = new CurrencyService();
   const { id } = router.query;
@@ -126,41 +126,55 @@ function EditBudget() {
     budgetService.getCompany()
   );
 
-  const companySelectFormat = budgetData?.data.map((b) => {
+  const companySelectFormat = budgetData?.map((b) => {
     return {
       value: b.id,
-      label: b.name,
+      label: b.Name,
     };
   });
 
   const loadCompanyOptions = (values, callBack) => {
     callBack(companySelectFormat);
   };
+  const fetchBudgetDetails = (id) => budgetService.budgetDetails(id);
 
+  const { data: budgetData1 } = useSWR(id ? ["BUDGET_DETAILS", id] : null, () =>
+    fetchBudgetDetails(id)
+  );
   const {
     control,
     setError,
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
+  useEffect(() => {
+    if (!budgetData1) return;
 
+    budgetData1?.Name && setValue("name", budgetData1?.Name);
+    budgetData1?.Code && setValue("code", budgetData1?.Code);
+
+    setActiveStatus(budgetData1?.IsActive);
+  }, [budgetData, budgetData1]);
   const onSubmit = (data) => {
     let backendFormat;
 
     backendFormat = {
-      code: data.taxcode,
-      name: data.name,
-      description: data?.description,
-      // company: data.company.value,
-      production: data?.production?.value,
-      currency: data?.currency?.value,
-      series: data?.series?.value,
-
-      set: data?.set?.value,
-      location: data?.location?.value,
-      is_active: activeStatus,
+      Code: data?.code,
+      Name: data?.name,
+      Description: data?.description,
+      CompanyID: data?.company?.value,
+      ProjectID: data?.production?.value,
+      CurrencyID: data?.currency?.value,
+      SeriesID: parseInt(data?.series?.value),
+      SetID: data?.set?.value,
+      LocationID: data?.location?.value,
+      BankID: 0,
+      Amount: 0.0,
+      budgetFile: uploadExcel.name,
+      IsActive: activeStatus,
     };
 
     budgetService
@@ -470,6 +484,20 @@ function EditBudget() {
         </Col>
       </Row>
 
+      <Row className="mt-2">
+        <Col xl="3">
+          <Label className="form-lable-font">Upload Budget File</Label>
+          <div className="d-flex flex-column gap-2 w-100">
+            <input
+              type="file"
+              accept=".xls, xlsx"
+              className="remove-value"
+              onChange={(e: any) => setUploadExcel(e.target.files[0])}
+            />
+          </div>
+        </Col>
+      </Row>
+
       <div className="d-flex flex-column mt-1">
         <Label
           className="text-black"
@@ -477,28 +505,39 @@ function EditBudget() {
         >
           Status{" "}
         </Label>
-        <div className="d-flex gap-1">
+        <div className="d-flex flex-column mt-1">
+          <Label
+            className="text-black"
+            style={{ fontSize: "12px", fontWeight: "400" }}
+          >
+            Status{" "}
+          </Label>
           <div className="d-flex gap-1">
-            <input
-              type="radio"
-              id="ex1-active"
-              name="ex1"
-              onChange={() => {
-                setActiveStatus(true);
-              }}
-            />
-            <div>Active</div>
-          </div>
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              name="ex1"
-              id="ex1-inactive"
-              onChange={() => {
-                setActiveStatus(false);
-              }}
-            />
-            <div>In-Active</div>
+            <div className="d-flex gap-1">
+              <input
+                style={{ fontSize: "12px", fontWeight: "400" }}
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                checked={activeStatus}
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
+              />
+              <div>Active</div>
+            </div>
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                name="ex1"
+                checked={!activeStatus}
+                id="ex1-inactive"
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
+              />
+              <div>In-Active</div>
+            </div>
           </div>
         </div>
       </div>

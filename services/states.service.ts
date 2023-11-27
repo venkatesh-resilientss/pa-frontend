@@ -1,5 +1,5 @@
 import APIService from './api.service';
-import {CREATE_STATES, DELETE_STATES, EDIT_SERIES, GET_STATES, STATES_DETAIL_ENDPOINT,UPLOAD_STATES_LIST} from '../lib/endpoints';
+import {CREATE_STATES, DELETE_STATES, EDIT_STATES, GET_STATES, STATES_DETAIL_ENDPOINT,UPLOAD_STATES_LIST} from '../lib/endpoints';
 
 class StatesService extends APIService {
   getStates(): Promise<any> {
@@ -59,7 +59,7 @@ class StatesService extends APIService {
 
   editState(id: any,data) {
     return this
-      .put(EDIT_SERIES(id),data)
+      .put(EDIT_STATES(id),data)
       .then((response) => {
         return response?.data;
       })

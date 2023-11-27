@@ -60,8 +60,8 @@ const AllRoleTable = () => {
     try {
       await usersService.deleteUser(id);
       // Optionally, you can update your local state or refetch data here
-      toast.success('User deleted successfully');
-      clientMutate()
+      toast.success("User deleted successfully");
+      clientMutate();
     } catch (error) {
       // Handle error, show a message, or log it
       // console.error("Error deleting user:", error);
@@ -123,8 +123,9 @@ const AllRoleTable = () => {
 
   const clientService = new UsersService();
 
-  const { data: clientData, mutate : clientMutate } = useSWR(["LIST_CLIENTS", searchText], () =>
-    clientService.getUsers()
+  const { data: clientData, mutate: clientMutate } = useSWR(
+    ["LIST_CLIENTS", searchText],
+    () => clientService.getUsers()
   );
 
   const StateBadge = (props) => {
@@ -219,7 +220,7 @@ const AllRoleTable = () => {
             src={
               props.data.profile_image
                 ? props.data.profile_image
-                : "/newAvatar.svg"
+                : "default.svg"
             }
             alt="Profile"
             width={30}

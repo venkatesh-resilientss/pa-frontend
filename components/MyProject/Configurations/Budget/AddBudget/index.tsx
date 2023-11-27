@@ -27,6 +27,7 @@ function AddBudget() {
   const [location, setLocation] = useState("");
   const [company, setCompany] = useState("");
   const [set, setSet] = useState("");
+  const [uploadExcel, setUploadExcel]: any = useState({});
 
   const currencyService = new CurrencyService();
 
@@ -148,16 +149,18 @@ function AddBudget() {
     let backendFormat;
 
     backendFormat = {
-      code: data.taxcode,
-      name: data.name,
-      description: data.description,
-      company: data.company?.value,
-      production: data.production?.value,
-      CurrencyID: data.currency?.value,
-      series: data.series?.value,
-      set: data.set.value,
-      location: data.location.value,
-      is_active: activeStatus,
+      Code: data?.code,
+      Name: data?.name,
+      Description: data?.description,
+      CompanyID: data?.company?.value,
+      ProjectID: data?.production?.value,
+      CurrencyID: data?.currency?.value,
+      SeriesID: parseInt(data?.series?.value),
+      SetID: data?.set?.value,
+      LocationID: data?.location?.value,
+      BankID: 0,
+      Amount: 0.0,
+      budgetFile: uploadExcel.name,
     };
 
     budgetService
@@ -424,6 +427,19 @@ function AddBudget() {
             </span>
           )}
         </Col>
+        <Row className="mt-2">
+          <Col xl="3">
+            <Label className="form-lable-font">Upload Budget File</Label>
+            <div className="d-flex flex-column gap-2 w-100">
+              <input
+                type="file"
+                accept=".xls, xlsx"
+                className="remove-value"
+                onChange={(e: any) => setUploadExcel(e.target.files[0])}
+              />
+            </div>
+          </Col>
+        </Row>
       </Row>
     </div>
   );

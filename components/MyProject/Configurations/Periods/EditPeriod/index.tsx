@@ -9,10 +9,21 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { checkTenant } from "constants/function";
+import moment from "moment";
 
 function EditPeriod() {
   const router = useRouter();
-   
+  const [startDate, setStartDate] = useState(moment().toDate());
+  const [endDate, setEndDate] = useState(moment().toDate());
+
+  const handleStartDateChange = (date) => {
+    setStartDate(moment(date).toDate());
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(moment(date).toDate());
+  };
+
   const periodsService = new PeriodsService();
 
   const { id } = router.query;
@@ -39,13 +50,13 @@ function EditPeriod() {
     if (!periodData) return;
 
     periodData?.Name && setValue("periodname", periodData?.Name);
-    
+
     periodData?.Description && setValue("description", periodData?.Description);
-    periodData?.Start && setValue("startDate", periodData?.Start);
-    periodData?.EndDate && setValue("endDate", periodData?.EndDate);
+    handleStartDateChange(periodData?.Start);
+    handleEndDateChange(periodData?.EndDate);
 
     setActiveStatus(periodData.IsActive);
-  },[periodData]);
+  }, [periodData]);
 
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
     periodsService.getPeriods()
@@ -54,6 +65,7 @@ function EditPeriod() {
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
 
   const onSubmit = (data) => {
+    console.log("hereeeeeeeeeeeee");
     let backendFormat;
 
     backendFormat = {
@@ -161,11 +173,16 @@ function EditPeriod() {
             <Controller
               name="startDate"
               control={control}
-              rules={{ required: "End Date  is required" }}
+              rules={{ required: "Start Date is required" }}
               render={({ field }) => (
                 <DatePicker
                   placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  selected={startDate}
+                  onChange={(date) => {
+                    handleStartDateChange(date);
+                    field.onChange(date);
+                  }}
+                  dateFormat="yyyy-MM-dd"
                 />
               )}
             />
@@ -181,11 +198,16 @@ function EditPeriod() {
             <Controller
               name="endDate"
               control={control}
-              rules={{ required: "End Date  is required" }}
+              rules={{ required: "End Date is required" }}
               render={({ field }) => (
                 <DatePicker
+                  selected={endDate}
+                  onChange={(date) => {
+                    handleEndDateChange(date);
+                    field.onChange(date);
+                  }}
                   placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  dateFormat="yyyy-MM-dd"
                 />
               )}
             />

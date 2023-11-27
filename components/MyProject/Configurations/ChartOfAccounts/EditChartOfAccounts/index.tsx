@@ -43,7 +43,7 @@ function EditChartOfAccounts() {
 
     coaData?.Description && setValue("Description", coaData?.Description);
     coaData?.Type && setValue("AccountType", coaData?.Type);
-    coaData?.Parent && setValue("COAParent", coaData?.Parent);
+    coaData?.ParentID && setValue("COAParent", coaData?.ParentID);
     setActiveStatus(coaData?.IsActive);
   }, [coaData]);
 
@@ -61,7 +61,7 @@ function EditChartOfAccounts() {
       description: data.Description,
       IsActive: activeStatus,
       code: data.COACode,
-      parent: parseInt(data.COAParent),
+      parentID: parseInt(data.COAParent),
       accountType: data.AccountType,
       postable: postable,
     };
@@ -136,7 +136,9 @@ function EditChartOfAccounts() {
             <Label>COA Name</Label>
             <Controller
               name="COAName"
-              rules={{ required: "COA Name  is required" }}
+              rules={{
+                required: "COA Parent  is required",
+              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -186,7 +188,7 @@ function EditChartOfAccounts() {
               rules={{ required: "COA Parent  is required" }}
               render={({ field }) => (
                 <Input
-                  placeholder="COA Parent"
+                  placeholder="COAParent"
                   invalid={errors.COAParent && true}
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   {...field}

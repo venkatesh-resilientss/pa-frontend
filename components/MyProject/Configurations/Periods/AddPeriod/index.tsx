@@ -18,11 +18,11 @@ function AddPeriod() {
   const router = useRouter();
   const periodsService = new PeriodsService();
   const handleStartDateChange = (date) => {
-    setStartDate(date);
+    setStartDate(moment(date).toDate());
   };
 
   const handleEndDateChange = (date) => {
-    setEndDate(date);
+    setEndDate(moment(date).toDate());
   };
 
   const {
@@ -43,8 +43,8 @@ function AddPeriod() {
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      start: data.startDate,
-      endDate: data.endDate,
+      start: startDate,
+      endDate: endDate,
     };
 
     periodsService
@@ -148,7 +148,7 @@ function AddPeriod() {
                     placeholderText="Select Start date"
                     selected={startDate}
                     onChange={handleStartDateChange}
-                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                    dateFormat="yyyy-MM-dd" // Set the desired date format
                   />
                 )}
               />
@@ -167,7 +167,7 @@ function AddPeriod() {
                     placeholderText="Select End date"
                     selected={endDate}
                     onChange={handleEndDateChange}
-                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx"
+                    dateFormat="yyyy-MM-dd"
                   />
                 )}
               />

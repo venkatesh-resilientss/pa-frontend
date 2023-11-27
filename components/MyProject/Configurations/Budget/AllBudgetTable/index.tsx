@@ -40,12 +40,12 @@ const AllBudgetTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-   
+
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
@@ -114,24 +114,24 @@ const AllBudgetTable = () => {
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={() =>
-                router.push(`/configurations/edit-budget/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={() =>
+                  router.push(`/configurations/edit-budget/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
+              </DropdownItem>
             )}
             {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteBudgetPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => dispatch(openDeleteBudgetPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
             )}
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -142,7 +142,7 @@ const AllBudgetTable = () => {
   const columnDefs = [
     {
       headerName: "Budget Code",
-      field: "Cdde",
+      field: "Code",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
