@@ -13,6 +13,16 @@ import moment from "moment";
 
 function EditPeriod() {
   const router = useRouter();
+  const [startDate, setStartDate] = useState(moment().toDate());
+  const [endDate, setEndDate] = useState(moment().toDate());
+
+  const handleStartDateChange = (date) => {
+    setStartDate(moment(date).toDate());
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(moment(date).toDate());
+  };
 
   const periodsService = new PeriodsService();
 
@@ -42,10 +52,11 @@ function EditPeriod() {
     periodData?.Name && setValue("periodname", periodData?.Name);
 
     periodData?.Description && setValue("description", periodData?.Description);
-    periodData?.Start && setValue("startDate", periodData?.Start);
-    periodData?.EndDate && setValue("endDate", periodData?.EndDate);
-  }),
-    [periodData];
+    handleStartDateChange(periodData?.Start);
+    handleEndDateChange(periodData?.EndDate);
+
+    setActiveStatus(periodData.IsActive);
+  }, [periodData]);
 
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
     periodsService.getPeriods()
@@ -59,7 +70,7 @@ function EditPeriod() {
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
     };
@@ -164,9 +175,13 @@ function EditPeriod() {
               rules={{ required: "Start Date is required" }}
               render={({ field }) => (
                 <DatePicker
-                  {...field}
                   placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  selected={startDate}
+                  onChange={(date) => {
+                    handleStartDateChange(date);
+                    field.onChange(date);
+                  }}
+                  dateFormat="yyyy-MM-dd"
                 />
               )}
             />
@@ -185,6 +200,11 @@ function EditPeriod() {
               rules={{ required: "End Date is required" }}
               render={({ field }) => (
                 <DatePicker
+                  selected={endDate}
+                  onChange={(date) => {
+                    handleEndDateChange(date);
+                    field.onChange(date);
+                  }}
                   placeholderText="Select a date"
                   dateFormat="yyyy-MM-dd"
                 />
@@ -207,7 +227,6 @@ function EditPeriod() {
                     fontWeight: "400",
                     height: "81px",
                   }}
-                  type="textarea"
                   placeholder="Description"
                   invalid={errors.description && true}
                   {...field}
@@ -239,7 +258,6 @@ function EditPeriod() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
-                defaultChecked={periodData?.IsActive}
               />
               <div>Active</div>
             </div>
@@ -249,7 +267,6 @@ function EditPeriod() {
                 name="ex1"
                 checked={!activeStatus}
                 id="ex1-inactive"
-                defaultChecked={!periodData?.IsActive}
                 onChange={() => {
                   setActiveStatus(false);
                 }}
