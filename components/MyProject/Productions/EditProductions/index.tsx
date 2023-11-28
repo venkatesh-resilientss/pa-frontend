@@ -3,14 +3,15 @@ import { Button, Col, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ProjectService, UsersService } from "services";
+import { toast } from "react-toastify";
+import useSWR from "swr";
 
 function EditProductions() {
   const router = useRouter();
-  const { id } = router.query;
 
-  const [purchaseOrderValue, setPurchaseOrderValue] = useState(false);
-  const [accountPayableValue, setAccountPayableValue] = useState(false);
+  const { id } = router.query;
 
   const {
     control,
@@ -18,8 +19,42 @@ function EditProductions() {
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
+
+  const clientService = new UsersService();
+
+  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
+    clientService.getUsers()
+  );
+
+  const userSelectFormat = clientData?.data.map((b) => {
+    return {
+      value: b.id,
+      label: b.adminname,
+    };
+  });
+
+  const loadUserOptions = (values, callBack) => {
+    callBack(userSelectFormat);
+  };
+
+  const projectService = new ProjectService();
+
+  const { data: projectData } = useSWR(["PROJECT_DETAILS", id], () =>
+    projectService.projectDetails(id)
+  );
+
+  useEffect(() => {
+    if (!projectData) return;
+
+    projectData?.Name && setValue("productionName", projectData?.Name);
+    projectData?.Code && setValue("productionCode", projectData?.Code);
+  }, [projectData]);
+
+  const [purchaseOrderValue, setPurchaseOrderValue] = useState(false);
+  const [accountPayableValue, setAccountPayableValue] = useState(false);
 
   const [selectedPurchaseOrderValues, setSelectedPurchaseOrderValues] =
     useState(["", ""]);
@@ -44,8 +79,42 @@ function EditProductions() {
     setSelectedPurchaseOrderValues([...selectedPurchaseOrderValues, ""]);
   };
 
+  const projectsService = new ProjectService();
+
+  const onSubmit = (data) => {
+    let backendFormat = {
+      code: data.productionCode,
+      Name: data.productionName,
+    };
+
+    projectsService
+      .editProject(id, backendFormat)
+      .then((res) => {
+        router.back();
+        toast.success("Productions Updated successfully");
+        reset();
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+  };
+
   const handleAddAccountPayableField = () => {
     setSelectedAPValues([...selectedAPValues, ""]);
+  };
+
+  const [editMode, setEditMode] = useState(false);
+
+  const handleToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  const [saveClicked, setSaveClicked] = useState(false);
+
+  const handleSaveClick = () => {
+    setSaveClicked(true);
+
+    handleSubmit(onSubmit)();
   };
 
   return (
@@ -85,6 +154,7 @@ function EditProductions() {
             Dismiss
           </Button>
           <Button
+            onClick={editMode ? handleSaveClick : handleToggleEditMode}
             style={{
               height: "30px",
               color: "#ffffff",
@@ -95,7 +165,7 @@ function EditProductions() {
             }}
             size="sm"
           >
-            Save
+            {editMode && !saveClicked ? "Save" : "Edit"}
           </Button>
         </div>
       </div>
@@ -115,11 +185,13 @@ function EditProductions() {
               control={control}
               render={({ field }) => (
                 <Input
+                  {...field}
                   type="text"
                   name="address"
                   id="address"
                   placeholder="Enter Production Code"
                   invalid={errors.productionCode && true}
+                  disabled={!editMode}
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
@@ -142,11 +214,13 @@ function EditProductions() {
               control={control}
               render={({ field }) => (
                 <Input
+                  {...field}
                   type="text"
                   name="address"
                   id="address"
                   placeholder="Enter Production Name"
                   invalid={errors.productionName && true}
+                  disabled={!editMode}
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
@@ -210,6 +284,7 @@ function EditProductions() {
                   <Col xl="3">
                     <Label>Level {index + 1} Approver</Label>
                     <AsyncSelect
+                      isDisabled={!editMode}
                       isClearable={true}
                       className="react-select"
                       classNamePrefix="select"
@@ -261,6 +336,7 @@ function EditProductions() {
                 <Label>Level {index + 1} Approver</Label>
                 <AsyncSelect
                   isClearable={true}
+                  isDisabled={!editMode}
                   className="react-select"
                   classNamePrefix="select"
                   // loadOptions={loadSeriesOptions}
@@ -304,18 +380,19 @@ function EditProductions() {
         <Col sm="4">
           <Label style={{ color: "#030229" }}>User</Label>
           <Controller
-            name="production"
-            rules={{ required: "Production is required" }}
+            name="user"
+            rules={{ required: "User is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
+                isDisabled={!editMode}
                 isClearable={true}
                 className="react-select"
                 classNamePrefix="select"
-                // loadOptions={loadSeriesOptions}
+                loadOptions={loadUserOptions}
                 placeholder="Select User"
-                // defaultOptions={seriesSelectFormat}
+                defaultOptions={userSelectFormat}
                 styles={{
                   control: (provided) => ({
                     ...provided,
@@ -326,9 +403,9 @@ function EditProductions() {
               />
             )}
           />
-          {errors.production && (
+          {errors.user && (
             <span style={{ color: "red" }}>
-              {errors.production.message as React.ReactNode}
+              {errors.user.message as React.ReactNode}
             </span>
           )}
         </Col>

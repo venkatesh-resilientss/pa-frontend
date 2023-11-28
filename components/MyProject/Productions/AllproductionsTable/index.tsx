@@ -102,7 +102,7 @@ const AllProductionsTable = () => {
 
             <DropdownItem
               className="w-100"
-              onClick={(e) => router.push(`/edit-production/${props.data.id}`)}
+              onClick={(e) => router.push(`/edit-production/${props.data.ID}`)}
             >
               <Action icon={editIocn} name={"Edit"} action={() => {}} />
             </DropdownItem>

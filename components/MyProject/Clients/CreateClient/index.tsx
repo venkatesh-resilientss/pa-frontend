@@ -7,7 +7,7 @@ import { Form } from "reactstrap";
 import { Country, State, City } from "country-state-city";
 import PhoneInput from "react-phone-input-2";
 import Select from "react-select";
-import { ClientsService } from "services";
+import { AuthService, ClientsService } from "services";
 import useSWR from "swr";
 import { toast } from "react-toastify";
 
@@ -75,9 +75,13 @@ function CreateClient() {
   };
 
   const clientService = new ClientsService();
+  const authService = new AuthService();
 
   const { data: softwares } = useSWR("LIST_SOFTWARES", () =>
     clientService.getSoftwares()
+  );
+  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
+    authService.getUserFromToken()
   );
 
   const [steps, setSteps] = useState(steps1Data);
@@ -850,12 +854,15 @@ function CreateClient() {
                   legalName: LegalName,
                   code: Code,
                   FEIN,
+                  software: SoftwareID,
                 } = clientData;
                 const resp = await clientService.createClient({
                   Name,
                   LegalName,
                   Code,
                   FEIN: Number(FEIN) || 0,
+                  SoftwareID,
+                  CreatedBy: userData?.data?.ID || 0,
                   meta: clientData,
                 });
                 router.push(`/clients/edit-client/${resp.ID}`);

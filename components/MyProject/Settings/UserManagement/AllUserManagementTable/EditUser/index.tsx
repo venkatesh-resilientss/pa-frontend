@@ -13,7 +13,6 @@ function EditUser() {
   const router = useRouter();
   const { id } = router.query;
 
-
   const getUserdetails = (id) => usersService.getuserbyid(id);
 
   const {
@@ -23,7 +22,7 @@ function EditUser() {
     mutate: userMutate,
   } = useSWR(id ? ["USER_DETAILS", id] : null, () => getUserdetails(id));
 
-  const [editMode, setEditMode] = useState(false); // Initial edit mode state
+  const [editMode, setEditMode] = useState(false);
 
   const clientService = new ClientsService();
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
@@ -31,9 +30,9 @@ function EditUser() {
   );
   const clientOptions = Array.isArray(clientData)
     ? clientData.map((client) => ({
-      value: client.ID,
-      label: client.Name,
-    }))
+        value: client.ID,
+        label: client.Name,
+      }))
     : [];
 
   const roleservice = new RoleService();
@@ -42,9 +41,9 @@ function EditUser() {
   );
   const roleOptions = Array.isArray(rolesdata)
     ? rolesdata.map((role) => ({
-      value: role.ID,
-      label: role.RoleName,
-    }))
+        value: role.ID,
+        label: role.RoleName,
+      }))
     : [];
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -60,9 +59,9 @@ function EditUser() {
 
   const projectOptions = Array.isArray(projectsdata)
     ? projectsdata.map((project) => ({
-      value: project.ID,
-      label: project.Name,
-    }))
+        value: project.ID,
+        label: project.Name,
+      }))
     : [];
 
   const roleSelectStyles = {
@@ -118,7 +117,6 @@ function EditUser() {
     }
   }, [eachclicntdata, userLoading, reset]);
 
-
   const usersService = new UsersService();
 
   const onSubmit = (data) => {
@@ -129,7 +127,7 @@ function EditUser() {
       email: data.email,
       client_id: selectedClient?.value,
       roleID: selectedRole?.value,
-      IsActive: activeStatus === "active" ? true : false
+      IsActive: activeStatus === "active" ? true : false,
     };
 
     usersService

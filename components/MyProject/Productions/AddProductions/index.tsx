@@ -59,8 +59,6 @@ function AddProductions() {
     productionService.getPOApprovers(id)
   );
 
-  console.log("DTATATATA", poData);
-
   const poSelectFormat = poData?.data.map((b) => {
     return {
       value: b.ID,

@@ -30,7 +30,6 @@ export default function Profile() {
     userService.getuserbyid(roleInfo.responseData.ID)
   );
 
-
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRIES", () =>
@@ -51,10 +50,16 @@ export default function Profile() {
   useEffect(() => {
     if (!usersData) return;
 
-    usersData?.Name && setValue("firstName", usersData?.data?.first_name);
-    usersData?.Code && setValue("code", usersData?.Code);
+    usersData?.first_name && setValue("firstName", usersData.first_name);
+    usersData?.last_name && setValue("lastName", usersData.last_name);
 
-    usersData?.Description && setValue("description", usersData?.Description);
+    usersData?.phone && setValue("contactNumber", usersData?.phone);
+
+    usersData?.email && setValue("email", usersData?.email);
+
+    usersData?.Address && setValue("address", usersData?.Address.Line1);
+    usersData?.Address.Zipcode &&
+      setValue("zipCode", usersData?.Address.Zipcode);
   }),
     [usersData];
 
@@ -137,8 +142,8 @@ export default function Profile() {
                       placeholder="Enter phone number"
                       defaultValue={usersData?.phone}
 
-                    //   value={value}
-                    //   onChange={setValue}
+                      //   value={value}
+                      //   onChange={setValue}
                     />
                   )}
                 />
@@ -214,8 +219,8 @@ export default function Profile() {
                     className="react-select"
                     classNamePrefix="select"
                     placeholder="Select City"
-                  // loadOptions={loadSeriesOptions}
-                  // defaultOptions={seriesSelectFormat}
+                    // loadOptions={loadSeriesOptions}
+                    // defaultOptions={seriesSelectFormat}
                   />
                 )}
               />

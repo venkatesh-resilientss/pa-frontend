@@ -77,7 +77,7 @@ const ClientsListTable = () => {
 
   const clientService = new ClientsService();
 
-  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
+  const { data: clientData, mutate } = useSWR("LIST_CLIENTS", () =>
     clientService.getClients()
   );
 
@@ -176,9 +176,9 @@ const ClientsListTable = () => {
       cell: (row) => (
         <div>
           {row?.IsActive ? (
-            <Badge color={"light-success"}>Active</Badge>
+            <Badge color={"success"}>Active</Badge>
           ) : (
-            <Badge color={"light-danger"}>In-Active</Badge>
+            <Badge color={"danger"}>In-Active</Badge>
           )}
         </div>
       ),
@@ -237,6 +237,7 @@ const ClientsListTable = () => {
                   try {
                     e.preventDefault();
                     await clientService.deleteClient(row.ID);
+                    mutate();
                   } catch (er) {
                     toast.error(er?.error || er || "Error deleting client");
                   }

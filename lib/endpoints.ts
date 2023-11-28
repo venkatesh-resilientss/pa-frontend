@@ -24,6 +24,11 @@ export const GET_COMPANIES = `${tenantIdEndpoint}/companies/`; //Get Companies
 export const GET_PROJECTS =  `${tenantIdEndpoint}/projects/` //Projects
 export const GET_PO_APPROVERS = (id: any) => `${tenantIdEndpoint}/approvers/level-po?id=${id}` //GET_PurchaseOrder_APPROVERS
 export const GET_AP_APPROVERS = (id: any) => `${tenantIdEndpoint}/approvers/level-ap?id=${id}` //GET_PurchaseOrder_APPROVERS
+export const EDIT_PROJECTS = (id: any) => `${tenantIdEndpoint}/projects/${id}`; //EDIT Projects
+export const PROJECT_DETAIL_ENDPOINT = (id: any) =>
+  `${tenantIdEndpoint}/projects/${id}`;
+
+
 
 
 export const CREATE_PROJECT =  `${tenantIdEndpoint}/projects/`; //Create projects
