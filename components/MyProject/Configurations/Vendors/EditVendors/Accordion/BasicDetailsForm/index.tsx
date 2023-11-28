@@ -5,6 +5,7 @@ import AsyncSelect from "react-select/async";
 import Select from "react-select";
 import { StatesService } from "services";
 import useSWR from "swr";
+import { useState } from "react";
 
 
 function BasicDetailsForm({ control, watch, onSubmit, errors }) {
@@ -19,7 +20,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates()
   );
-
+  
   const stateSelectOptions = statesData?.data.map((b) => {
     return {
       value: b.ID,

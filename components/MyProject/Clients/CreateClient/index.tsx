@@ -272,9 +272,9 @@ function CreateClient() {
               <Input
                 type="text"
                 placeholder="Routing Number"
-                value={clientData.FEIN}
+                value={clientData.routing}
                 onChange={(e) =>
-                  setClientData({ ...clientData, FEIN: e.target.value })
+                  setClientData({ ...clientData, routing: e.target.value })
                 }
               />
             </Col>

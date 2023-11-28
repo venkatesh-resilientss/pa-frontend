@@ -84,22 +84,25 @@ function VendorAccordion() {
     // key -  PrimaryAddress
     data.Line1 && setValue("contactAddress1", data.Line1);
     data.Line2 && setValue("contactAddress2", data.Line2);
-    data.StateID && setValue("contactAddressState", data.StateID);
+    data.State && setValue("contactAddressState", {value : data.State.ID , label : data.State.Name});
     data.Zipcode && setValue("contactAddressPostalCode", data.Zipcode);
+    data.CityName && setValue('contactAddressCity',data.CityName)
   };
   const setBillingAdress = (data) => {
     // key -  MailingAddress
     data.Line1 && setValue("billingAddress1", data.Line1);
     data.Line2 && setValue("billingAddress2", data.Line2);
-    data.StateID && setValue("billingAddress2", data.StateID);
+    data.State && setValue("billingAddressState", {value : data.State.ID, label : data.State.Name});
     data.Zipcode && setValue("billingAddressPostalCode", data.Zipcode);
+    data.CityName && setValue('billingAddressCity',data.CityName)
   };
   const setMailingAdress = (data) => {
     // key -  BillingAddress
     data.Line1 && setValue("mailingAddress1", data.Line1);
     data.Line2 && setValue("mailingAddress2", data.Line2);
-    data.StateID && setValue("mailingAddressState", data.StateID);
+    data.State && setValue("mailingAddressState", {value : data.State.ID, label : data.State.Name});
     data.Zipcode && setValue("mailingAddressPostalCode", data.Zipcode);
+    data.CityName && setValue('mailingAddressCity',data.CityName)
   };
 
   const onSubmit = (data) => {

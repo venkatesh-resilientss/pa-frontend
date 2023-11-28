@@ -228,7 +228,8 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
           </Col>
 
           <Col xl="4">
-            <Label className="form-lable-font">Currency</Label>
+            <Label className="form-lable-font"
+            style={{ fontSize: "12px", fontWeight: "400" }}>Currency</Label>
             <Controller
               name={"currency"}
               rules={{ required: "Currency is required" }}

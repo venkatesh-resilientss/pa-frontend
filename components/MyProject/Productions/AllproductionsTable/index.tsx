@@ -185,7 +185,7 @@ const AllProductionsTable = () => {
     {
       headerName: "Actions",
       field: "ID",
-      // cellRenderer: ActionsButton,
+      cellRenderer: ActionsButton,
       cellStyle: {
         textAlign: "center",
       },

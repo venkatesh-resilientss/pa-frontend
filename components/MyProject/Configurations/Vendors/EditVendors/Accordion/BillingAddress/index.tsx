@@ -31,7 +31,7 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Address Line 1
+              Address Line 1
             </Label>
             <Controller
               name="billingAddress1"
@@ -61,7 +61,7 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Address Line 2
+              Address Line 2
             </Label>
             <Controller
               name="billingAddress2"

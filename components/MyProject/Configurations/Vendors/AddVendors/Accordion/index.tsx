@@ -37,59 +37,26 @@ function VendorAccordion() {
     let backendFormat;
     const contactAddressPaylaod = {
       "cityName": data.contactAddressCity,
-      // "contactEmailID": "string",
-      // "contactName": "string",
-      // "contactPhone": "string",
-      // "contactPhoneCode": "string",
       "countryID": data.contactAddressState.countryId,
-      // "createdBy": 0,
-      // "createdDate": "string",
-      // "deletedBy": 0,
-      // "id": 0,
       "line1": data.contactAddress1,
       "line2":data.contactAddress2,
       "stateID": data.contactAddressState.value,
-      // "tenant_id": 0,
-      // "updatedBy": 0,
-      // "updatedDate": "string",
       "zipcode": parseInt(data.contactAddressPostalCode)
     };
     const mailingAddressPaylaod = {
       "cityName": data.mailingAddressCity,
-      // "contactEmailID": "string",
-      // "contactName": "string",
-      // "contactPhone": "string",
-      // "contactPhoneCode": "string",
       "countryID": data.mailingAddressState.countryID,
-      // "createdBy": 0,
-      // "createdDate": "string",
-      // "deletedBy": 0,
-      // "id": 0,
       "line1": data.mailingAddress1,
       "line2":data.mailingAddress2,
       "stateID": data.mailingAddress2.value,
-      // "tenant_id": 0,
-      // "updatedBy": 0,
-      // "updatedDate": "string",
       "zipcode": parseInt(data.mailingAddressPostalCode)
     };
     const billingAddressPaylaod = {
       "cityName": data.billingAddressCity,
-      // "contactEmailID": "string",
-      // "contactName": "string",
-      // "contactPhone": "string",
-      // "contactPhoneCode": "string",
       "countryID": data.billingAddressState.countryId,
-      // "createdBy": 0,
-      // "createdDate": "string",
-      // "deletedBy": 0,
-      // "id": 0,
       "line1": data.billingAddress1,
       "line2":data.billingAddress2,
       "stateID": data.billingAddressState.value,
-      // "tenant_id": 0,
-      // "updatedBy": 0,
-      // "updatedDate": "string",
       "zipcode": parseInt(data.billingAddressPostalCode)
     }
 
@@ -143,7 +110,7 @@ function VendorAccordion() {
           .then((res) => {
             toast.success("Vendor Added successfully");
             // reset();
-            // router.back();
+            router.back();
           })
           .catch((error) => {
             toast.error(error?.error);

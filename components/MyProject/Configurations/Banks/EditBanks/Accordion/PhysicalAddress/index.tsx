@@ -1,9 +1,25 @@
 import { useForm, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
+import AsyncSelect from "react-select/async";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import useSWR from "swr";
+import { StatesService } from "services";
 
+const stateService = new StatesService();
 function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
+
+  const {data:states, mutate: stateMutate } = useSWR("LIST_STATES", () =>
+    stateService.getStates()
+  );
+
+  const statesDropdownoptions = states?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+      country : b.Country
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -113,12 +129,15 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
                 required: " State is required",
               }}
               control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter State"
-                  invalid={errors.physicalAddressState && true}
+               render={({ field }) => (
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  // loadOptions={loadStateOptions}
+                  placeholder="Select State"
+                  defaultOptions={statesDropdownoptions}
                 />
               )}
             />

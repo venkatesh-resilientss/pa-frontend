@@ -11,7 +11,7 @@ import ContactAddressForm from "./DefaultAccount";
 import MailingAddressForm from "./MailingAddress";
 import BillingAddressForm from "./PhysicalAddress";
 import { useForm } from "react-hook-form";
-import { BankService, VendorsService } from "services";
+import { BankService, VendorsService ,AddressService} from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import PhysicalAddressForm from "./PhysicalAddress";
@@ -24,6 +24,7 @@ function BankAccordion() {
 
   const [open, setOpen] = useState("");
   const bankService = new BankService();
+  const addressService = new AddressService();
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -34,33 +35,102 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
-    let backendFormat;
+    const pysicalAddressPaylaod = {
+          "cityName": data.physicalAddressCity,
+          "countryID": data.physicalAddressState.country.ID,
+          "line1": data.physicalAddress1,
+          "line2":data.physicalAddress2,
+          "stateID": data.physicalAddressState.value,
+          "zipcode": parseInt(data.physicalAddressPostalCode)
+        }
+    const mailingAddress = {
+          "cityName": data.physicalAddressCity,
+          "countryID": data.mailingAddressState.country.ID,
+          "line1": data.mailingAddress1,
+          "line2":data.mailingAddress2,
+          "stateID": data.mailingAddressState.value,
+          "zipcode": parseInt(data.mailingAddressPostalCode)
+        }
 
-    backendFormat = {
-      Name: data.bankName,
-      Code: data.bankCode,
-      AccountNumber: data.accountNumber,
-      RoutingNumber: data.routingNumber,
-      Description: data.description,
-      Fax: data.fax,
-      // CountryID:
-      CurrencyID: data.currency?.value,
-      // PhysicalAddressID:
-      // MailingAddressID:
-      // PrimaryContactID:
-      // SecondaryContactID:
-    };
-
-    bankService
-      .createBank(backendFormat)
-      .then((res) => {
-        toast.success("Bank Added successfully");
-        // reset();
-        router.back();
+    addressService
+      .createAddress(pysicalAddressPaylaod) //creating pysical address
+      .then((pysicalAddressResponse) => {
+        addressService.createAddress(mailingAddress) //creating mailing address
+          .then((mailingAddressResponse) => {
+            const bankPayload = {
+                "accountNumber": parseInt(data.accountNumber),
+                "code": data.bankCode,
+                "countryID": data.physicalAddressState.country.ID,
+                "currencyID":data.currency.value,
+                "description": data.description,
+                "fax": data.mailingFax,
+                "mailingAddressID": mailingAddressResponse.ID,
+                "name": data.bankName,
+                "physicalAddressID": pysicalAddressResponse.ID,
+                // "primaryContactID": 0,
+              "routingNumber": parseInt(data.routingNumber),
+              "SetID": parseInt(data.set.value),
+              "LocationID": parseInt(data.location.value),
+              "SeriesID": parseInt(data.series.value),
+              "DefaultAmountCash": parseInt(data.defaultAccountCash),
+              "DefaultAccountClearing": parseInt(data.defaultAccountClearing),
+              "DefaultAccountDeposit": parseInt(data.defaultAccountDeposit),
+              "DefaultAccountDiscount": parseInt(data.defaultAccountDiscount)
+                // "secondaryContactID": 0,
+            }
+        bankService
+      .createBank(bankPayload)
+          .then((bankRes) => {
+            toast.success("Bank created successfully")
+             const bankConfigPayload = {
+                  "bankID": parseInt(bankRes.ID),
+                  "checkCopies": parseInt(data.checkCopies),
+                  "checkRangeEnd": parseInt(data.checkRangeEnd),
+                  "checkRangeStart": parseInt(data.checkRangeStart),
+                  "eftCopies": parseInt(data.eftCopies),
+                  "eftRangeEnd": parseInt(data.eftRangeEnd),
+                  "eftRangeStart": parseInt(data.eftRangeStart),
+                  "wireTransferRangeEnd": parseInt(data.wireTransaferRangeEnd),
+                  "wireTransferRangeStart": parseInt(data.wireTransaferRangeStart),
+                  "wireTransferCopies": parseInt(data.wireTransferCopies)
+                }
+            bankService.createBankConfig(bankConfigPayload)
+              .then((bankConfigRes) => {
+                  const bankAchPayload = {
+                          "bankID": parseInt(bankRes.ID),
+                          "certificate": data.certificate,
+                          "dataFormat": data.dataFormat,
+                          "host": data.host,
+                          "inboundPath": data.inboundPath,
+                          "outboundPath": data.outboundPath,
+                          "password": data.password,
+                          "username": data.userName
+                        }
+                 bankService.createBankAch(bankAchPayload)
+                   .then(() => {
+                     router.back();
+                    })
+                    .catch((error) => {
+                      toast.error(error?.error);
+                    });  
       })
       .catch((error) => {
         toast.error(error?.error);
       });
+        
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+
   };
 
   const router = useRouter();

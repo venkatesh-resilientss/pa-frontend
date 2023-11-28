@@ -264,9 +264,9 @@ function ClientTabs(props) {
                   disabled={true}
                   type="text"
                   placeholder="Routing Number"
-                  value={clientData?.FEIN}
+                  value={clientData?.routing}
                   onChange={(e) =>
-                    setClientData({ ...clientData, FEIN: e.target.value })
+                    setClientData({ ...clientData, routing: e.target.value })
                   }
                 />
               </Col>
@@ -447,9 +447,9 @@ function ClientTabs(props) {
                     }
                     options={(clientData?.pCountry && clientData?.pState
                       ? City.getCitiesOfState(
-                        clientData?.pCountry.value,
-                        clientData?.pState.value
-                      )
+                          clientData?.pCountry.value,
+                          clientData?.pState.value
+                        )
                       : []
                     ).map((city) => ({
                       value: city.name,
@@ -600,9 +600,9 @@ function ClientTabs(props) {
                     }
                     options={(clientData?.iCountry && clientData?.iState
                       ? City.getCitiesOfState(
-                        clientData?.iCountry.value,
-                        clientData?.iState.value
-                      )
+                          clientData?.iCountry.value,
+                          clientData?.iState.value
+                        )
                       : []
                     ).map((city) => ({
                       value: city.name,

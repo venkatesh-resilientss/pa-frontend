@@ -175,4 +175,8 @@ export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
 //addresss
 export const ADDRESSES = `${tenantIdEndpoint}/addresses/`;
-export const EDIT_ADDRESSES = (id:any) => `${tenantIdEndpoint}/addresses/${id}`;
+export const EDIT_ADDRESSES = (id: any) => `${tenantIdEndpoint}/addresses/${id}`;
+export const BANK_CONFIG = `${tenantIdEndpoint}/bankconfigs/`;
+export const BANK_CONFIG_details=(id) => `${tenantIdEndpoint}/bankconfigs/${id}`;
+export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
+export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;

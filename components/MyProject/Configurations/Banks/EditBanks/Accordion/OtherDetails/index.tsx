@@ -7,9 +7,9 @@ import { LocationsService, SeriesService, SetsService } from "services";
 import useSWR from "swr";
 import { checkTenant } from "constants/function";
 
-function OtherDetailsForm({ onSubmit, control, watch, errors }) {
+function OtherDetailsForm({ onSubmit, control, watch, errors,isActive }) {
   const { register, handleSubmit } = useForm();
-  const [activeStatus, setActiveStatus] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(isActive);
 
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
@@ -167,6 +167,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
               <input
                 type="radio"
                 id="ex1-active"
+                checked={activeStatus}
                 name="ex1"
                 onChange={() => {
                   setActiveStatus(true);
@@ -177,6 +178,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
             <div className="d-flex gap-1">
               <input
                 type="radio"
+                checked={activeStatus===false}
                 name="ex1"
                 id="ex1-inactive"
                 onChange={() => {

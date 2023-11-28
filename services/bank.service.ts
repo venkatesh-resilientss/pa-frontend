@@ -1,5 +1,5 @@
 import APIService from "./api.service";
-import { BANKS_DETAIL_ENDPOINT, CREATE_BANK, DELETE_BANKS, EDIT_BANKS, GET_BANKS,UPLOAD_BANK_LIST } from "../lib/endpoints";
+import { BANKS_DETAIL_ENDPOINT, CREATE_BANK, DELETE_BANKS, EDIT_BANKS, GET_BANKS,UPLOAD_BANK_LIST,ADDRESSES,BANK_CONFIG,BANK_CONFIG_details,BANK_ACHES,BANK_ACH_DETAILS } from "../lib/endpoints";
 
 class BankService extends APIService {
   getBanks(): Promise<any> {
@@ -12,9 +12,70 @@ class BankService extends APIService {
       });
   }
 
+  getBankDeatils(): Promise<any> {
+    return this.get(`${GET_BANKS}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
   createBank(data:any) {
     return this
       .post(CREATE_BANK, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+
+  createBankConfig(data:any) {
+    return this
+      .post(BANK_CONFIG, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  getBankConfigDetails(id:any) {
+    return this
+      .get(BANK_CONFIG_details(id))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  getBankAchDetails(id:any) {
+    return this
+      .get(BANK_ACH_DETAILS(id))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  updateBankAchDetails(id:any,data:any) {
+    return this
+      .post(BANK_ACH_DETAILS(id),data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  createBankAch(data:any) {
+    return this
+      .post(BANK_ACHES,data)
       .then((response) => {
         return response.data;
       })
