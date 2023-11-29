@@ -1,6 +1,6 @@
 "use client";
 import { Row, Col, Button } from "reactstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AiOutlineLock } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { Image } from "react-bootstrap";
@@ -46,13 +46,6 @@ const Welcome = () => {
     setShowPassword(showPassword ? false : true);
   };
 
-  useEffect(() => {
-    const token: any = router.query.accessToken;
-    if (token) {
-      authService.authenticateUser(token);
-      router.push("/dashboard");
-    }
-  }, [router.query.accessToken]);
   const formSubmit = async (values: any) => {
     const payload: any = {
       email: email,
@@ -60,11 +53,17 @@ const Welcome = () => {
     };
 
     authService.userSignIN(payload).then((res: any) => {
-      //for local
-      // window.location.href = `http://${tenantName}.lvh.me:3000/?accessToken=${res?.token}`;
+      console.log(res);
+      authService.authenticateUser(res?.token);
 
-      // for live url1
-      window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
+      // router.push("/dashboard");
+      //for local
+      window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
+
+      // for live
+      // window.location.href = `http://${tenantName}.devpa.resilientss.com/dashboard`;
+      //http://dev.pa.resilientss.com/
+      // http://dev.pa.resilientss.com/dashboard
     });
   };
 
@@ -87,13 +86,17 @@ const Welcome = () => {
       <div className="d-flex w-100 h-100 justify-content-evenly">
         {/* left */}
         <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
+          <div >
           <Image
-            src={"/login.png"}
+            src={"/SideImage.png"}
             alt="logo"
             className="img-fluid mt-5"
-            width={400}
-            height={600}
+            // width={400}
+            fluid
+            style={{ maxWidth: '100%', height: 'auto' }}
           />
+          </div>
+          <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', color: '#ffffff', marginLeft:'-400px', marginTop:'300px'}}>
           <div className="d-flex align-items-center justify-content-center">
             <div className="text-container text-center">
               <div className="d-flex align-items-start">
@@ -106,6 +109,7 @@ const Welcome = () => {
                 <p className="software">SOFTWARE</p>
               </div>
             </div>
+          </div>
           </div>
         </div>
 
@@ -156,9 +160,9 @@ const Welcome = () => {
                       // loading={loading}
                       className="f-16 mt-2"
                       style={{
-                        width: "134px",
+                        width: "380px",
                         height: "55px",
-                        background: "#00AEEF",
+                        background: "#283891",
                         border: "#00AEEF",
                         borderRadius: "12px",
                         fontSize: "16px",
@@ -202,37 +206,43 @@ const Welcome = () => {
                     </Button>
                   </div>
                   <div
-                    className="d-flex flex-column align-items-center justify-content-center"
-                    style={{
-                      marginTop: "140px",
-                      fontSize: "12px",
-                      color: "#030229",
-                    }}
-                  >
-                    <p className="privacy-text">
-                      If you need help, contact support
-                    </p>
-                    <p className="privacy-text">
-                      Please email support or call{" "}
-                      <a style={{ color: "#030229" }} href="tel:805-428-8024">
-                        805-428-8024
-                      </a>{" "}
-                    </p>
-                    <p className="privacy-text">
-                      Powered by Resilient Software Solutions LLC
-                    </p>
-                  </div>
-                  <div
-                    className="d-flex justify-content-between"
-                    style={{ marginTop: "10px", color: "#030229" }}
-                  >
-                    <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
-                      Terms & conditions
-                    </a>{" "}
-                    <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
-                      Privacy Policy
-                    </a>{" "}
-                  </div>
+                  className="d-flex flex-column align-items-center justify-content-center"
+                  style={{
+                    marginTop: "50px",
+                    fontSize: "12px",
+                    color: "#656472",
+                  }}
+                >
+                  <p className="privacy-text">
+                    Have Questions or Suggestions?
+                  </p>
+                  <p className="privacy-text">
+    Please{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
+      email
+    </a>{" "}
+    support or call{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
+      805-428-8024
+    </a>
+  </p>
+                  <p className="privacy-text">
+                    Powered by Resilient Software Solutions LLC
+                  </p>
+                </div>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ marginTop: "10px", color: "#030229" }}
+                >
+                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginLeft:"90px" }}>
+                    Terms & conditions
+                  </a>{" "}
+                  <span style={{ fontSize: "12px", color: "#030229" }}>|</span>
+                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginRight:"100px" }}>
+                    Privacy Policy
+                  </a>{" "}
+                </div>
+                 
                 </form>
               </div>
             </div>
