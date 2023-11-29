@@ -7,7 +7,7 @@ function AccountingInformationForm({ control, errors }) {
   const form = [
     { name: 'rsslCompany', label: 'RSSL Company', type: 'select', placeholder: 'Enter RSSL Company' },
     { name: 'rsslInvoiceAddress', label: 'RSSL Invoice Address', type: 'select', placeholder: 'Enter RSSL Invoice Address' },
-    { name: 'rsslBank', label: 'RSSL Bank', type: 'select', placeholder: 'Enter RSSL Bank' }
+    { name: 'rsslBank', label: 'RSSL Bank', required: false, type: 'select', placeholder: 'Enter RSSL Bank' }
   ]
 
   return (
