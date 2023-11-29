@@ -1,10 +1,9 @@
-import axios from 'axios';
 import APIService from './api.service';
-import {CREATE_STATES, DELETE_STATES, EDIT_SERIES, GET_STATES, STATES_DETAIL_ENDPOINT,UPLOAD_STATES_LIST} from '../lib/endpoints';
+import {CREATE_STATES, DELETE_STATES, EDIT_STATES, GET_STATES, STATES_DETAIL_ENDPOINT,UPLOAD_STATES_LIST} from '../lib/endpoints';
 
 class StatesService extends APIService {
-  getStates(tenant_id:any): Promise<any> {
-    return this.get(`${GET_STATES(tenant_id)}`)
+  getStates(): Promise<any> {
+    return this.get(`${GET_STATES}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +12,9 @@ class StatesService extends APIService {
       });
   }
 
-  static create(tenant_id:any,data:any) {
-    return axios
-      .post(CREATE_STATES(tenant_id), data)
+  createState(data:any) {
+    return this
+      .post(CREATE_STATES, data)
       .then((response) => {
         return response.data;
       })
@@ -25,18 +24,16 @@ class StatesService extends APIService {
   }
 
 
-      static uploadstateslist(tenant_id:any,fileName: any) {
+      uploadstateslist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_STATES_LIST(tenant_id), formData, {
-        headers: {
+      return this.post(UPLOAD_STATES_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })
@@ -48,9 +45,9 @@ class StatesService extends APIService {
       });
     }
 
-  static delete(tenant_id:any,id: any) {
-    return axios
-      .delete(DELETE_STATES(tenant_id,id))
+  deleteState(id: any) {
+    return this
+      .delete(DELETE_STATES(id))
       .then((response) => {
         return response?.data;
       })
@@ -60,9 +57,9 @@ class StatesService extends APIService {
   }
 
 
-  static edit(tenant_id:any,id: any,data) {
-    return axios
-      .put(EDIT_SERIES(tenant_id,id),data)
+  editState(id: any,data) {
+    return this
+      .put(EDIT_STATES(id),data)
       .then((response) => {
         return response?.data;
       })
@@ -72,9 +69,9 @@ class StatesService extends APIService {
   }
 
 
-  static details(tenant_id:any,id: string) {
-    return axios
-      .get(STATES_DETAIL_ENDPOINT(tenant_id,id))
+  stateDetails(id: string) {
+    return this
+      .get(STATES_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })

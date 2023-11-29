@@ -45,18 +45,20 @@ const ForgotPassword = () => {
         toast.error(err?.error);
       });
   };
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+  };
   return (
     <div className="d-flex main-container-i overflow-hidden">
       <div className="d-flex w-100 h-100 justify-content-evenly">
         {/* left */}
-        <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
           <Image
             src={"/ForgotSide.png"}
             alt="ForgotSide"
             className="img-fluid mt-5 forgotScreen1"
             fluid
-            width={1150}
-             
+            width={1150}             
           />
           <div style={{position:'absolute',top:"20%",left:"50%",transform:'translate(-50%,-50%)',textAlign:'center',color:'#ffffff', marginLeft:'-400px',marginTop:'300px'}}>
           <div className="d-flex align-items-center justify-content-center">

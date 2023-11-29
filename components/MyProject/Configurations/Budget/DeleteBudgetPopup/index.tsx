@@ -12,22 +12,12 @@ import { useState, useEffect } from "react";
 
 const DeleteBudgetPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
+   
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
   const budgetService = new BudgetService();
 
   const { mutate: budgetMutate } = useSWR("LIST_BUDGETS", () =>
-    budgetService.getBudgets(tenantId)
+    budgetService.getBudgets()
   );
 
   const popupStatus = useSelector(
@@ -39,10 +29,9 @@ const DeleteBudgetPopup = () => {
   );
 
   const handleDeleteBudget = async () => {
-    const tenant = await checkTenant();
 
     try {
-      await BudgetService.delete(tenant.id, helperData);
+      await budgetService.deleteBudget( helperData);
       toast.success("Budget Deleted Successfully");
       dispatch(closeDeleteBudgetPopup("close"));
       mutate(budgetMutate());

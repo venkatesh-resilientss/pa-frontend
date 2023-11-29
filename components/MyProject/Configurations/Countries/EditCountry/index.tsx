@@ -5,23 +5,14 @@ import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { checkTenant } from "constants/function";
 
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchCountryDetails = (id) => CountryService.details(tenantId, id);
+
+
+  const fetchCountryDetails = (id) =>
+    countryService.countryDetails(id);
 
   const {
     data: countryData,
@@ -41,19 +32,19 @@ function EditCountry() {
     reset,
   } = useForm();
 
-  console.log("countryData", countryData);
+
 
   useEffect(() => {
     if (!countryData) return;
 
     countryData?.Name && setValue("countryname", countryData?.Name);
-  }),
-    [countryData];
+    setActiveStatus(countryData?.IsActive);
+  }, [countryData]);
 
   const countryService = new CountryService();
 
   const { mutate: countryMutate } = useSWR("LIST_PERIODS", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const [activeStatus, setActiveStatus] = useState(countryData?.IsActive);
@@ -64,10 +55,11 @@ function EditCountry() {
     backendFormat = {
       name: data.countryname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
     };
 
-    CountryService.edit(tenantId, id, backendFormat)
+    countryService
+      .editCountry(id, backendFormat)
       .then((res) => {
         toast.success("Country Edited successfully");
         mutate(countryMutate());
@@ -169,6 +161,7 @@ function EditCountry() {
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -179,6 +172,7 @@ function EditCountry() {
                 <input
                   type="radio"
                   name="ex1"
+                  checked={!activeStatus}
                   id="ex1-inactive"
                   onChange={() => {
                     setActiveStatus(false);

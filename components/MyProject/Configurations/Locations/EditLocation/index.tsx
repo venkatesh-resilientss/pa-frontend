@@ -10,18 +10,11 @@ import { checkTenant } from "constants/function";
 function EditLocation() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchLocationDetails = (id) => LocationsService.details(tenantId, id);
+   
+  const locationService = new LocationsService();
+
+  const fetchLocationDetails = (id) =>
+    locationService.locationDetails(id);
 
   const {
     data: locationData,
@@ -49,13 +42,15 @@ function EditLocation() {
 
     locationData?.Description &&
       setValue("description", locationData?.Description);
-  }),
-    [locationData];
+
+    setActiveStatus(locationData?.IsActive)
+  },
+    [locationData]);
 
   const locationsService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
@@ -66,11 +61,12 @@ function EditLocation() {
     backendFormat = {
       name: data.locationname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.locationcode,
     };
 
-    LocationsService.edit(tenantId, id, backendFormat)
+    locationsService
+      .editLocation(id, backendFormat)
       .then((res) => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());
@@ -230,6 +226,7 @@ function EditLocation() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -241,6 +238,7 @@ function EditLocation() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}

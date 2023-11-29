@@ -12,17 +12,8 @@ import { useState, useEffect } from "react";
 
 const DeleteLocationPopup = ({ id }) => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+
   const locationService = new LocationsService();
 
   const {
@@ -30,7 +21,7 @@ const DeleteLocationPopup = ({ id }) => {
     isLoading: userLoading,
     error: userError,
     mutate: locationMutate,
-  } = useSWR("LIST_LOCATIONS", () => locationService.getLocations(tenantId));
+  } = useSWR("LIST_LOCATIONS", () => locationService.getLocations());
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.locations.deleteLocationPopup.status
@@ -42,9 +33,8 @@ const DeleteLocationPopup = ({ id }) => {
   );
 
   const handleDeleteLocation = async () => {
-    console.log("IDDD", id);
     try {
-      await LocationsService.delete(tenantId, helperData);
+      await locationService.deleteLocation(helperData);
       toast.success("Location Deleted Successfully");
       dispatch(closeDeleteLocationPopup("close"));
       mutate(locationMutate());

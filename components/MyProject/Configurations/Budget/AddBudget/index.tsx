@@ -19,7 +19,6 @@ import { checkTenant } from "constants/function";
 
 function AddBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
 
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -28,26 +27,16 @@ function AddBudget() {
   const [location, setLocation] = useState("");
   const [company, setCompany] = useState("");
   const [set, setSet] = useState("");
+  const [uploadExcel, setUploadExcel]: any = useState({});
 
   const currencyService = new CurrencyService();
-
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
 
   const {
     data: currencyData,
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {
@@ -64,7 +53,7 @@ function AddBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -82,7 +71,7 @@ function AddBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -99,9 +88,7 @@ function AddBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () =>
-    setsService.getSets(tenantId)
-  );
+  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -118,7 +105,7 @@ function AddBudget() {
   const statsService = new DashboardService();
 
   const { data: statsData } = useSWR("GET_RECENET", () =>
-    statsService.getRecentProductions(tenantId)
+    statsService.getRecentProductions()
   );
 
   const productionSelectFormat = statsData?.data.map((b) => {
@@ -135,7 +122,7 @@ function AddBudget() {
   const budgetService = new BudgetService();
 
   const { data: budgetData } = useSWR("LIST_COMPANY", () =>
-    budgetService.getCompany(tenantId)
+    budgetService.getCompany()
   );
 
   const companySelectFormat = budgetData?.map((b) => {
@@ -162,20 +149,22 @@ function AddBudget() {
     let backendFormat;
 
     backendFormat = {
-      code: data.taxcode,
-      name: data.name,
-      description: data.description,
-      company: data.company?.value,
-      production: data.production?.value,
-      CurrencyID: data.currency?.value,
-      series: data.series?.value,
-
-      set: data.set.value,
-      location: data.location.value,
-      is_active: activeStatus,
+      Code: data?.code,
+      Name: data?.name,
+      Description: data?.description,
+      CompanyID: data?.company?.value,
+      ProjectID: data?.production?.value,
+      CurrencyID: data?.currency?.value,
+      SeriesID: parseInt(data?.series?.value),
+      SetID: data?.set?.value,
+      LocationID: data?.location?.value,
+      BankID: 0,
+      Amount: 0.0,
+      budgetFile: uploadExcel.name,
     };
 
-    BudgetService.create(tenantId, backendFormat)
+    budgetService
+      .createBudget(backendFormat)
       .then((res) => {
         toast.success("Budget Added successfully");
         router.back();
@@ -347,7 +336,7 @@ function AddBudget() {
                 className="react-select"
                 classNamePrefix="select"
                 loadOptions={loadCurrencyOptions}
-                placeholder="Select Series"
+                placeholder="Select Currency"
                 defaultOptions={currenciesSelectFormat}
               />
             )}
@@ -438,35 +427,20 @@ function AddBudget() {
             </span>
           )}
         </Col>
+        <Row className="mt-2">
+          <Col xl="3">
+            <Label className="form-lable-font">Upload Budget File</Label>
+            <div className="d-flex flex-column gap-2 w-100">
+              <input
+                type="file"
+                accept=".xls, xlsx"
+                className="remove-value"
+                onChange={(e: any) => setUploadExcel(e.target.files[0])}
+              />
+            </div>
+          </Col>
+        </Row>
       </Row>
-
-      <div className="d-flex flex-column mt-1">
-        <Label className="form-lable-font">Status </Label>
-        <div className="d-flex gap-1">
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              id="ex1-active"
-              name="ex1"
-              onChange={() => {
-                setActiveStatus(true);
-              }}
-            />
-            <div>Active</div>
-          </div>
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              name="ex1"
-              id="ex1-inactive"
-              onChange={() => {
-                setActiveStatus(false);
-              }}
-            />
-            <div>In-Active</div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

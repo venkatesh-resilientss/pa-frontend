@@ -1,9 +1,23 @@
 import { useForm, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
-
+import Select from 'react-select'
+import { StatesService } from "services";
+import useSWR from "swr";
 function BillingAddressForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
+  const statesService = new StatesService();
+  const { data: statesData } = useSWR("LIST_STATES", () =>
+    statesService.getStates()
+  );
+
+  const stateSelectOptions = statesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+      countryId : b.CountryID
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -16,7 +30,7 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Address Line 1
+              Address Line 1
             </Label>
             <Controller
               name="billingAddress1"
@@ -46,12 +60,12 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Address Line 2
+              Address Line 2
             </Label>
             <Controller
               name="billingAddress2"
               rules={{
-                required: "  Contact Address Line 2 is required",
+                required: "Contact Address Line 2 is required",
               }}
               control={control}
               render={({ field }) => (
@@ -81,14 +95,13 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
             <Controller
               name="billingAddressState"
               rules={{
-                required: " State is required",
+                required: "State is required",
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
+                <Select
+                  options={stateSelectOptions}
                   placeholder="Enter State"
-                  invalid={errors.billingAddressState && true}
                   {...field}
                 />
               )}
@@ -139,7 +152,7 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
             <Controller
               name="billingAddressCity"
               rules={{
-                required: "  City is required",
+                required: "City is required",
               }}
               control={control}
               render={({ field }) => (
@@ -156,7 +169,7 @@ function BillingAddressForm({ onSubmit, control, watch, errors }) {
                 {errors.billingAddressCity.message as React.ReactNode}
               </span>
             )}
-          </Col>
+          </Col> 
         </Row>
       </Form>
     </div>

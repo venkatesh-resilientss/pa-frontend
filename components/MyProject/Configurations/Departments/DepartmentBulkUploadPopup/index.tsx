@@ -18,17 +18,8 @@ import { checkTenant } from "constants/function";
 const DepartmentBulkUploadPopup = () => {
   const dispatch = useDispatch();
 
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const departmentsService = new DepartmentsService();
 
   const {
@@ -36,9 +27,7 @@ const DepartmentBulkUploadPopup = () => {
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments(tenantId)
-  );
+  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.bulkUploadPopup.status
@@ -78,7 +67,8 @@ const DepartmentBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    DepartmentsService.uploaddepartmentlist(tenantId, fileName)
+    departmentsService
+      .uploaddepartmentlist(fileName)
       .then((result) => {
         reloadDepartmentTable();
         // Handle success

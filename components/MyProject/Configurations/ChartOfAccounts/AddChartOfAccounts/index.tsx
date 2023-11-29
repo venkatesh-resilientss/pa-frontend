@@ -10,17 +10,9 @@ import { checkTenant } from "constants/function";
 function AddChartOfAccounts() {
   const router = useRouter();
   const [activeStatus, setActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const coaAccountsService = new COAAccountsService();
+
   const {
     control,
     setError,
@@ -31,18 +23,20 @@ function AddChartOfAccounts() {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data, "data");
 
     let backendFormat;
 
     backendFormat = {
       name: data.COAName,
       code: data.COACode,
-      parent: data.COAParent,
+      parentID: parseInt(data.COAParent),
       IsActive: activeStatus,
+      description: data.Description,
+      type: data.AccountType,
     };
 
-    COAAccountsService.create(tenantId, backendFormat)
+    coaAccountsService
+      .createCOA(backendFormat)
       .then((res) => {
         toast.success("COA Added successfully");
         router.back();
@@ -226,7 +220,7 @@ function AddChartOfAccounts() {
               )}
             </div>
           </Col>
-          <Col xl="4">
+          {/* <Col xl="4">
             <div className="d-flex flex-column mt-1">
               <Label className="form-lable-font">Postable </Label>
               <div className="d-flex gap-1">
@@ -254,22 +248,7 @@ function AddChartOfAccounts() {
                 </div>
               </div>
             </div>
-          </Col>
-          <Col>
-            <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Status </Label>
-              <div className="d-flex gap-1">
-                <div className="d-flex gap-1">
-                  <input type="radio" />
-                  <div>Active</div>
-                </div>
-                <div className="d-flex gap-1">
-                  <input type="radio" />
-                  <div>In-Active</div>
-                </div>
-              </div>
-            </div>
-          </Col>
+          </Col> */}
         </Form>
       </div>
     </div>

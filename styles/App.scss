@@ -1,6 +1,7 @@
 // Bootstrap Override
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+@import "react-phone-input-2/lib/style.css";
 @import "./scss/bootstrap.override.scss";
 @import "react-toastify/dist/ReactToastify.css";
 
@@ -16,9 +17,9 @@
 @import "./scss/sidebar";
 
 @font-face {
-  font-family: 'Segoe UI';
-  src: url('../fonts/segoe-ui/Segoe\ UI.woff') format('woff2'),
-    url('../fonts/segoe-ui/Segoe\ UI.woff') format('woff');
+  font-family: "Segoe UI";
+  src: url("../fonts/segoe-ui/Segoe\ UI.woff") format("woff2"),
+    url("../fonts/segoe-ui/Segoe\ UI.woff") format("woff");
   font-style: normal;
   /* Normal style */
   font-weight: normal;
@@ -26,9 +27,9 @@
 }
 
 @font-face {
-  font-family: 'Segoe UI';
-  src: url('../fonts//segoe-ui/Segoe\ UI\ Bold.woff') format('woff2'),
-    url('../fonts/segoe-ui/Segoe\ UI\ Bold.woff') format('woff');
+  font-family: "Segoe UI";
+  src: url("../fonts//segoe-ui/Segoe\ UI\ Bold.woff") format("woff2"),
+    url("../fonts/segoe-ui/Segoe\ UI\ Bold.woff") format("woff");
   font-style: normal;
   /* Normal style */
   font-weight: bold;
@@ -36,25 +37,24 @@
 }
 
 @font-face {
-  font-family: 'Segoe UI';
-  src: url('../fonts//segoe-ui/Segoe\ UI\ Italic.woff') format('woff2'),
-    url('../fonts/segoe-ui/Segoe\ UI\ Bold\ Italic.woff') format('woff');
+  font-family: "Segoe UI";
+  src: url("../fonts//segoe-ui/Segoe\ UI\ Italic.woff") format("woff2"),
+    url("../fonts/segoe-ui/Segoe\ UI\ Bold\ Italic.woff") format("woff");
   font-style: italic;
   /* Italic style */
   font-weight: normal;
   /* Normal weight */
 }
 
-
-
-.button-props{
-    background-color: #00AEEF;
-    color: #FFFFFF;
-    font-size: "35px";
+.button-props {
+  background-color: #00aeef;
+  color: #ffffff;
+  font-size: "35px";
 }
-.client-card-bg{
-    background-color: #E7EFFF;
+.client-card-bg {
+  background-color: #e7efff;
 }
+
 .project-card-bg{
   background-color: #E7EFFF;
 }
@@ -63,15 +63,14 @@
     font-size:18px;
     font-weight: 600;
 }
-.font-size-32{
-    font-size: 32px;
+.font-size-32 {
+  font-size: 32px;
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #f9fafb;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .bold-text {
@@ -86,7 +85,17 @@ body {
 p {
   margin: 0;
 }
-
+input {
+  border: 2px solid #c9c9c9;
+}
+input:focus {
+  // border: #dee2e6 !important;
+  box-shadow: none !important;
+}
+textarea:focus {
+  // border: #dee2e6 !important;
+  box-shadow: none !important;
+}
 
 /*
     Custom Styles
@@ -96,15 +105,13 @@ p {
 }
 .tenantteamforgotpass {
   color: #030229;
-  ;
   font-weight: 400 !important;
   line-height: 13px !important;
   letter-spacing: -0.5px !important;
   text-align: center !important;
   cursor: pointer;
   font-size: 16px !important;
-  text-decoration:none !important;
-
+  text-decoration: none !important;
 }
 div.error-message {
   width: 320px;
@@ -120,29 +127,31 @@ div.error-message {
   letter-spacing: -0.5px !important;
   color: #c9c9c9 !important;
 }
-.teamworkspaceformpassword{
-  background: #F7F7F8 !important;
+.teamworkspaceformpassword {
+  background: #f7f7f8 !important;
   color: #030229 !important;
-
 }
 .teamworkspaceplaceholder::placeholder {
   font-weight: 400 !important;
   line-height: 17px !important;
   letter-spacing: -0.5px !important;
   color: #c9c9c9 !important;
-
 }
-.teamworkspaceplaceholder{
+.teamworkspaceplaceholder {
   // border: none;
-  background: #F7F7F8 !important;
-  color: #030229 !important;
-
+  background: #f7f7f8 !important;
+  // color: #030229 !important;
 }
-.teamworkspaceplaceholder1{
+.teamworkspaceplaceholder1 {
   // border: none;
-  background: #F7F7F8 !important;
+  // background: #E9E9E9 !important;
+  color: black !important;
+}
+.teamworkspaceplaceholder1::placeholder {
+  font-weight: 400 !important;
+  line-height: 17px !important;
+  letter-spacing: -0.5px !important;
   color: #030229 !important;
-
 }
 
 .intutive{
@@ -167,7 +176,6 @@ font-size: 41px !important;
 letter-spacing: 3px !important;
 line-height: 43px !important;
 font-weight: 300 !important;
-
 }
 
 // index page -login
@@ -191,7 +199,7 @@ font-weight: 300 !important;
   background: transparent;
   color: #626873;
 }
-.email-text{
+.email-text {
   font-size: 16px;
   font-weight: 400;
 }
@@ -199,7 +207,7 @@ font-weight: 300 !important;
 .bg-tenantsignup {
   background: #283891;
 }
-.welcome-text{
+.welcome-text {
   font-weight: 700;
   font-size: 24px;
   font-style: bold;
@@ -217,90 +225,85 @@ font-weight: 300 !important;
 }
 
 .custom-badge.danger {
-  color: #BE0F0F;
-  background-color: #FEE1E3;
+  color: #be0f0f;
+  background-color: #fee1e3;
 }
 
 input.search {
+  display: block;
+  padding: 6px 5px 6px 39px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+  border-radius: 10.141px;
+  border: 2.535px solid #ececec;
+  margin-right: 10px;
+}
+
+input.searchConfig {
   width: 260px;
   height: "38px";
   display: block;
   padding: 9px 4px 9px 40px;
   background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
   background-size: 20px;
-  border-radius: 10.141px;
-  border: 2.535px solid #ECECEC;
-  margin-right: 10px;
 
-}
-
-input.searchConfig {
-  width: 260px;
-    height: "38px";
-  display: block;
-  padding: 9px 4px 9px 40px;
-  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
-  background-size: 20px;
-  
   border-radius: 4.006px;
-  border: 1.001px solid #ECECEC; 
+  border: 1.001px solid #ececec;
   margin-right: 10px;
-
 }
 
 .btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #00AEEF;
-  --bs-btn-border-color: #00AEEF;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #26afb8;
-  --bs-btn-hover-border-color: #00AEEF;
+  --bs-btn-hover-border-color: #00aeef;
   --bs-btn-focus-shadow-rgb: 0, 137, 145;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00AEEF;
-  --bs-btn-active-border-color: #00AEEF;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00AEEF;
-  --bs-btn-disabled-border-color: #00AEEF;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
 }
 
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
-.open>.dropdown-toggle.btn-primary {
+.open > .dropdown-toggle.btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #00AEEF;
-  --bs-btn-border-color: #00AEEF;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #00AEEF;
-  --bs-btn-hover-border-color: #00AEEF;
+  --bs-btn-hover-bg: #00aeef;
+  --bs-btn-hover-border-color: #00aeef;
   --bs-btn-focus-shadow-rgb: 0, 137, 145;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00AEEF;
-  --bs-btn-active-border-color: #00AEEF;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00AEEF;
-  --bs-btn-disabled-border-color: #00AEEF;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
 }
 
 .form-check-input:checked {
-  background-color: #00AEEF !important;
-  border-color: #00AEEF !important;
+  background-color: #00aeef !important;
+  border-color: #00aeef !important;
 }
 
 .hrline {
   margin: auto;
-  color: #C1C1C1;
+  color: #c1c1c1;
 }
 
 .custom-radio-input {
   /* Set the color you want for the radio button */
   color: #000;
 }
-
 
 .custom-radio-input:checked::before {
   /* Set the color of the dot when the radio button is checked */
@@ -311,23 +314,22 @@ footer {
   background-color: #f8f9fa;
   padding: 10px;
   text-align: center;
-  border-top: 1.001px solid #D7D7D7;
+  border-top: 1.001px solid #d7d7d7;
 }
 
 /// !!!CAUTION!!! Dont Remove this (Ag Grid Table Header Text Styling)
 .custom-header-class {
-  font-size: 14px; 
-  font-weight: 400; 
+  font-size: 14px;
+  font-weight: 400;
 }
 
-.ag-theme-alpine .ag-row{
-
-  border-bottom: 2px solid #D9D9D9 !important;
+.ag-theme-alpine .ag-row {
+  border-bottom: 2px solid #d9d9d9 !important;
 }
 
 // Card match height
 .match-height {
-  > [class*='col'] {
+  > [class*="col"] {
     display: flex;
     flex-flow: column;
 
@@ -337,24 +339,45 @@ footer {
   }
 }
 
-
 /* Add this to your CSS */
 .custom-modal {
   height: 215px;
   width: 342px;
 }
 
-.form-lable-font{
+.form-lable-font {
   font-size: 16px;
 }
 input::placeholder {
-  color: #C9C9C9 !important;
+  color: #c9c9c9 !important;
 }
-
 
 .custom-datepicker {
-  height: 30px
+  height: 30px;
 }
+
+.custom-vendor-popup{
+  width: 603px;
+   height: 484px;
+/* Add this CSS in your stylesheet or style block */
+}
+.selected-options-count {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* Additional styling for the select field */
+.react-select-container {
+  width: 200px; /* Adjust the width as needed */
+}
+
+.react-select__control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 .reseTpassword{
   max-width: 100%;
   height: auto;
@@ -427,3 +450,4 @@ cursor: pointer;
  color: #030229;
  font-size: 16px;
 }
+

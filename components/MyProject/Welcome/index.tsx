@@ -12,6 +12,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthService } from "services";
 import { toast } from "react-toastify";
+import { signIn, signOut, useSession } from "next-auth/client";
+import { Session } from "inspector";
+import { Session as NextAuthSession } from "next-auth";
 
 const authService = new AuthService();
 
@@ -24,12 +27,79 @@ const Welcome = () => {
   const [tenantName, setTenantName] = useState("");
   const [tenantSlug, setTenantSlug] = useState("");
 
+  const [session, loading] = useSession();
+
+  useEffect(() => {
+    if (session && session.user) {
+      const oktaUserDetails = session as NextAuthSession;
+
+      const tokenPayload = {
+        token: oktaUserDetails.accessToken as string,
+      };
+
+      const oktaEMail = oktaUserDetails.user.email;
+
+      // Call the oktaUserLogin method with the modified payload
+      authService
+        .oktaUserLogin(JSON.stringify(tokenPayload))
+        .then((response) => {
+          authService
+            .tenantSignIn({ email: oktaEMail })
+            .then((res) => {
+              // window.location.href = `http://${res.Name}.lvh.me:3000/?accessToken=${response.token}`;
+
+              // for live url
+              window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${response.token}`;
+            })
+            .catch((err: any) => {
+              toast.error(err?.error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error during Okta user login:", error);
+          // Handle errors if any
+        });
+    } else {
+      // Handle the case where session or user is undefined
+      console.log("User details not available");
+    }
+  }, [session]);
+
+  const handleButtonClick: React.MouseEventHandler<HTMLButtonElement> = (
+    event
+  ) => {
+    if (session) {
+      signOut();
+    } else {
+      signIn();
+    }
+  };
+
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").email("Email is invalid"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Email is invalid")
+      .test(
+        "valid-email",
+        "Email must contain @ and end with .com",
+        (value) => {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+      ),
     password: Yup.string().required("Password is required"),
   });
+
   const validationEmailSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").email("Email is invalid"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Email is invalid")
+      .test(
+        "valid-email",
+        "Email must contain @ and end with .com",
+        (value) => {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+      ),
   });
 
   const {
@@ -41,7 +111,9 @@ const Welcome = () => {
       singleinput ? validationEmailSchema : validationSchema
     ),
   });
-
+  const handleDragStart = (e) => {
+    e.preventDefault();
+  };
   const togglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };
@@ -60,11 +132,12 @@ const Welcome = () => {
       //for local
       window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
 
-      // for live
-      // window.location.href = `http://${tenantName}.devpa.resilientss.com/dashboard`;
-      //http://dev.pa.resilientss.com/
-      // http://dev.pa.resilientss.com/dashboard
-    });
+        // for live url
+        window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
+      })
+      .catch((err) => {
+        toast.error(err.error);
+      });
   };
 
   const signInSubmit = async (payload: any) => {
@@ -180,7 +253,7 @@ const Welcome = () => {
                     }}
                   />
 
-                  <div className="d-flex items-center justify-start">
+                  {/* <div className="d-flex items-center justify-start" >
                     <Button
                       className="flex p-3 mt-3 border"
                       style={{
@@ -193,18 +266,58 @@ const Welcome = () => {
                     >
                       <div className="d-flex flex-row text-center align-items-center justify-content-center">
                         <AiOutlineLock size={18} style={{ color: "#A8A8A8" }} />
-                        <span
+                        <span  onClick={handleButtonClick}
                           className="ms-2"
                           style={{
                             color: "#030229",
                             fontWeight: 400,
                           }}
                         >
-                          Use single sign-on (SSO) instead
+                         {session ? "Okta Logout" : "Use single sign-on (SSO) instead"}
                         </span>
                       </div>
+
+                      
                     </Button>
+                  </div> */}
+
+                  <div className="d-flex items-center justify-start">
+                    {!session && (
+                      <Button
+                        className="flex p-3 mt-3 border"
+                        style={{
+                          backgroundColor: "#EAF7FC",
+                          width: "380px",
+                          height: "55px",
+                          border: "#C6C6C6",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <div className="d-flex flex-row text-center align-items-center justify-content-center">
+                          <AiOutlineLock
+                            size={18}
+                            style={{ color: "#A8A8A8" }}
+                          />
+                          <span
+                            onClick={handleButtonClick}
+                            className="ms-2"
+                            style={{
+                              color: "#030229",
+                              fontWeight: 400,
+                            }}
+                          >
+                            Use single sign-on (SSO) instead
+                          </span>
+                        </div>
+                      </Button>
+                    )}
                   </div>
+
+                  {/* <form className="d-flex mt-4" >
+                    <button className={session ? "btn btn-secondary" : "btn btn-primary"} onClick={handleButtonClick}>
+                      {session ? "Okta Logout" : "Use single sign-on (SSO) instead"}
+                    </button>
+                  </form> */}
                   <div
                   className="d-flex flex-column align-items-center justify-content-center"
                   style={{
@@ -258,6 +371,7 @@ const Welcome = () => {
                 height={43}
               />
               <p className="welcome-text mt-3">Welcome to RSSL</p>
+
               <div className="register-form" style={{ maxWidth: "421px" }}>
                 <form onSubmit={handleSubmit(formSubmit)}>
                   <div className="form-group mb-2">
@@ -393,8 +507,11 @@ const Welcome = () => {
                     </Button>
                   </div>
                   <div
-                    className="d-flex flex-column align-items-center justify-content-center mt-3"
-                    style={{ fontSize: "12px", color: "#030229" }}
+                    className="d-flex mt-4 flex-column align-items-center justify-content-center"
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                    }}
                   >
                     <p className="privacy-text">
                       If you need help, contact support
@@ -409,19 +526,17 @@ const Welcome = () => {
                       Powered by Resilient Software Solutions LLC
                     </p>
                   </div>
-                  <Row style={{ marginTop: "10px", color: "#030229" }}>
-                    <Col style={{ marginLeft: "10px" }}>
-                      <a
-                        href="#"
-                        style={{ fontSize: "12px", color: "#030229" }}
-                      >
-                        Terms & conditions
-                      </a>{" "}
-                    </Col>
-                    <Col style={{ fontSize: "12px", marginLeft: "30%" }}>
+                  <div
+                    className="d-flex justify-content-between"
+                    style={{ marginTop: "10px", color: "#030229" }}
+                  >
+                    <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
+                      Terms & conditions
+                    </a>{" "}
+                    <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
                       Privacy Policy
-                    </Col>
-                  </Row>
+                    </a>{" "}
+                  </div>
                 </form>
               </div>
             </div>

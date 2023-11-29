@@ -22,30 +22,32 @@ import GridTable from "components/grid-tables/gridTable";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import { useEffect, useState } from "react";
-import { checkTenant } from "constants/function";
+// import { checkTenant } from "constants/function";
+import moment from "moment";
 
 const AllRoleTable = () => {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
+  //
 
   const roleservice = new RoleService();
-
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const hasCreateRolePermission = hasPermission(
+    "user_and_role_management",
+    "create_role"
+  );
+  const hasEditrolePermission = hasPermission(
+    "user_and_role_management",
+    "edit_role"
+  );
+  const hasDeactivateRolePermission = hasPermission(
+    "user_and_role_management",
+    "deactivate_role"
+  );
 
   const {
     data: rolesdata,
     isLoading: rolesLoading,
     mutate: mutateRoles,
-  } = useSWR("LIST_ROLES", () => roleservice.getRoles(tenantId));
+  } = useSWR("LIST_ROLES", () => roleservice.getRoles());
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -77,7 +79,12 @@ const AllRoleTable = () => {
     {
       sortable: true,
       field: "CreatedDate",
-      cell: (row) => row.CreatedDate,
+      cellRenderer: (params) => {
+        const formattedDate = moment(params.CreatedDate).format(
+          "MM/DD/YYYY, HH:mm"
+        );
+        return <span>{formattedDate}</span>;
+      },
     },
 
     {
@@ -93,7 +100,6 @@ const AllRoleTable = () => {
     {
       field: "Options",
       cellRenderer: (row) => {
-        console.log(row, "DATA");
         return (
           <UncontrolledDropdown>
             <DropdownToggle tag="span">
@@ -113,7 +119,7 @@ const AllRoleTable = () => {
                   <span className="align-middle">View Details</span>
                 </DropdownItem>
               </Link>
-              {hasPermission("user_and_role_management", "edit_role") && (
+              {hasEditrolePermission && (
                 <Link
                   href={`/settings/roles?q=edit_role&role_id=${row.data.ID}`}
                   style={{
@@ -128,7 +134,7 @@ const AllRoleTable = () => {
                   </DropdownItem>
                 </Link>
               )}
-              {hasPermission("user_and_role_management", "deactivate_role") && (
+              {hasDeactivateRolePermission && (
                 <DropdownItem
                   className="w-100"
                   onClick={() => deleteRole(row.data.ID)}
@@ -146,7 +152,7 @@ const AllRoleTable = () => {
 
   const deleteRole = (role_id) => {
     roleservice
-      .delete_role(tenantId, role_id)
+      .delete_role(role_id)
       .then((res) => {
         mutateRoles();
         toast.success("Role delelted successfully");
@@ -180,7 +186,7 @@ const AllRoleTable = () => {
                   placeholder="Search..."
                 />
               </Form>
-              {hasPermission("user_and_role_management", "create_role") && (
+              {hasCreateRolePermission && (
                 <button
                   className="btn btn-primary"
                   onClick={() => router.push("/settings/roles?q=create_role")}
@@ -215,7 +221,9 @@ const AllRoleTable = () => {
           ) : (
             <div>
               <NoDataPage
-                buttonName={"Create Role"}
+                buttonName={
+                  hasCreateRolePermission ? "Create Role" : "No button"
+                }
                 buttonLink={"/settings/add-role"}
               />
             </div>

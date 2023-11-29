@@ -1,4 +1,5 @@
 import axios, { AxiosPromise } from "axios";
+import jwt from "jsonwebtoken";
 // cookie
 import cookie from "js-cookie";
 import Moment from "moment";
@@ -24,9 +25,22 @@ abstract class APIService {
     };
   }
 
+  verifyToken(): boolean {
+    const token = cookie.get("accessToken");
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
+        return true;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    return false;
+  }
+
   // Setting access token in a cookie
   setAccessToken(token: any): void {
-    console.log(token,"tttttttttttt")
     cookie.set("accessToken", token, { expires: this.expiry.toDate() });
   }
 
@@ -38,6 +52,10 @@ abstract class APIService {
   purgeAuth(): void {
     cookie.remove("accessToken");
     cookie.remove("refreshToken");
+    cookie.remove('next-auth.callback-url');
+    cookie.remove('next-auth.csrf-token');
+    cookie.remove('session');
+
   }
 
   // Axios get method
@@ -50,7 +68,12 @@ abstract class APIService {
       method: "POST",
       url,
       data,
-      headers: headers ? headers : this.getAxiosHeaders(),
+      headers: headers
+        ? {
+            ...this.getAxiosHeaders(),
+            ["Content-Type"]: headers["Content-Type"],
+          }
+        : this.getAxiosHeaders(),
     });
   }
   // Axios put method

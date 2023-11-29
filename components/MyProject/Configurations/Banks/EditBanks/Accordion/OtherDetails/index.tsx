@@ -7,28 +7,19 @@ import { LocationsService, SeriesService, SetsService } from "services";
 import useSWR from "swr";
 import { checkTenant } from "constants/function";
 
-function OtherDetailsForm({ onSubmit, control, watch, errors }) {
+function OtherDetailsForm({ onSubmit, control, watch, errors,isActive }) {
   const { register, handleSubmit } = useForm();
-  const [activeStatus, setActiveStatus] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(isActive);
 
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
   const [set, setSet] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries(tenantId)
+    seriesService.getSeries()
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -46,7 +37,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -63,9 +54,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () =>
-    setsService.getSets(tenantId)
-  );
+  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -178,6 +167,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
               <input
                 type="radio"
                 id="ex1-active"
+                checked={activeStatus}
                 name="ex1"
                 onChange={() => {
                   setActiveStatus(true);
@@ -188,6 +178,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
             <div className="d-flex gap-1">
               <input
                 type="radio"
+                checked={activeStatus===false}
                 name="ex1"
                 id="ex1-inactive"
                 onChange={() => {

@@ -1,10 +1,9 @@
-import axios from "axios";
 import APIService from "./api.service";
-import { BANKS_DETAIL_ENDPOINT, CREATE_BANK, DELETE_BANKS, EDIT_BANKS, GET_BANKS,UPLOAD_BANK_LIST } from "../lib/endpoints";
+import { BANKS_DETAIL_ENDPOINT, CREATE_BANK, DELETE_BANKS, EDIT_BANKS, GET_BANKS,UPLOAD_BANK_LIST,ADDRESSES,BANK_CONFIG,BANK_CONFIG_details,BANK_ACHES,BANK_ACH_DETAILS } from "../lib/endpoints";
 
 class BankService extends APIService {
-  getBanks(tenant_id:any): Promise<any> {
-    return this.get(`${GET_BANKS(tenant_id)}`)
+  getBanks(): Promise<any> {
+    return this.get(`${GET_BANKS}`)
       .then((res) => {
         return res?.data;
       })
@@ -13,9 +12,70 @@ class BankService extends APIService {
       });
   }
 
-  static create(data:any,tenant_id:any) {
-    return axios
-      .post(CREATE_BANK(tenant_id), data)
+  getBankDeatils(): Promise<any> {
+    return this.get(`${GET_BANKS}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+  createBank(data:any) {
+    return this
+      .post(CREATE_BANK, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+
+  createBankConfig(data:any) {
+    return this
+      .post(BANK_CONFIG, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  getBankConfigDetails(id:any) {
+    return this
+      .get(BANK_CONFIG_details(id))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  getBankAchDetails(id:any) {
+    return this
+      .get(BANK_ACH_DETAILS(id))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  updateBankAchDetails(id:any,data:any) {
+    return this
+      .post(BANK_ACH_DETAILS(id),data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  createBankAch(data:any) {
+    return this
+      .post(BANK_ACHES,data)
       .then((response) => {
         return response.data;
       })
@@ -24,7 +84,7 @@ class BankService extends APIService {
       });
   }
   // static uploadbanklist(data:any) {
-  //   return axios
+  //   return this
   //     .post(UPLOAD_BANK_LIST, data)
   //     .then((response) => {
   //       return response.data;
@@ -35,18 +95,16 @@ class BankService extends APIService {
   // }
 
   
-    static uploadbanklist(tenant_id:any,fileName: any) {
+    uploadbanklist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_BANK_LIST(tenant_id), formData, {
-        headers: {
+      return this.post(UPLOAD_BANK_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })
@@ -58,9 +116,9 @@ class BankService extends APIService {
       });
     }
 
-  static delete(tenant_id:any,id: any) {
-    return axios
-      .delete(DELETE_BANKS(tenant_id,id))
+  deleteBank(id: any) {
+    return this
+      .delete(DELETE_BANKS(id))
       .then((response) => {
         return response?.data;
       })
@@ -69,9 +127,9 @@ class BankService extends APIService {
       });
   }
 
-  static edit(tenant_id:any,id: any,data) {
-    return axios
-      .put(EDIT_BANKS(tenant_id,id),data)
+  editBank(id: any,data) {
+    return this
+      .put(EDIT_BANKS(id),data)
       .then((response) => {
         return response?.data;
       })
@@ -80,9 +138,9 @@ class BankService extends APIService {
       });
   }
 
-  static details(tenant_id:any,id: any) {
-    return axios
-      .get(BANKS_DETAIL_ENDPOINT(tenant_id,id))
+  bankDetails(id: any) {
+    return this
+      .get(BANKS_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })

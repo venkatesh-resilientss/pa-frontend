@@ -15,19 +15,10 @@ const DeleteCOAPopup = () => {
 
   const coaService = new COAAccountsService();
 
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const { mutate: coaMutate } = useSWR("LIST_COAS", () =>
-    coaService.getCoasAccounts(tenantId)
+    coaService.getCoasAccounts()
   );
 
   const popupStatus = useSelector(
@@ -40,7 +31,7 @@ const DeleteCOAPopup = () => {
 
   const handleDeleteCOA = async () => {
     try {
-      await COAAccountsService.delete(tenantId, helperData);
+      await coaService.deleteCOA(helperData);
       toast.success("COA Deleted Successfully");
       dispatch(closeDeleteCOAPopup("close"));
       mutate(coaMutate());

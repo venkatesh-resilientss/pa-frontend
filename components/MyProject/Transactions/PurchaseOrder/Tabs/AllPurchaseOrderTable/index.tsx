@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import GridTable from "components/grid-tables/gridTable";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
+import editIcon from "assets/myIcons/edit_square.svg";
 import deleteIcon from "assets/myIcons/delete.svg";
-import approveIcon from "assets/myIcons/approveIcon.svg";
+import approveIcon from "assets/myIcons/check_circle.svg";
 
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
+import { Tooltip } from "reactstrap";
+
 import {
   Popover,
   PopoverBody,
@@ -20,8 +22,16 @@ import {
 } from "reactstrap";
 import { openDeletePurchaseOrderPopup } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 const AllPurchaseTable = () => {
+  // State to manage tooltip visibility
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  // Function to toggle tooltip visibility
+  const toggleTooltip = () => setTooltipOpen(!tooltipOpen);
+
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const StateBadge = (props) => {
@@ -73,6 +83,7 @@ const AllPurchaseTable = () => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
+
     const toggle = () => {
       setOpen(!open);
     };
@@ -86,16 +97,26 @@ const AllPurchaseTable = () => {
     };
     return (
       <div>
-        <UncontrolledDropdown style={{ width: "112px", height: "98px" }}>
+        <UncontrolledDropdown>
           <DropdownToggle tag="span">
-            <Image src={actionIcon} alt="" width={14} id={id} />
+            <Image
+              src={actionIcon}
+              alt=""
+              width={14}
+              id={id}
+              style={{ marginLeft: "20px" }}
+            />
           </DropdownToggle>
-          <DropdownMenu
-            end
-            container="body"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            <DropdownItem className="w-100">
+          <DropdownMenu end container="body">
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-purchase-order/1`,
+                });
+              }}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -103,29 +124,32 @@ const AllPurchaseTable = () => {
               />
             </DropdownItem>
             <DropdownItem
-              tag="a"
-              href="/"
               className="w-100"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/transactions/edit-purchase-order/1`,
+                });
+              }}
             >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              <Action icon={editIcon} name={"Edit"} action={() => {}} />
             </DropdownItem>
+
             <DropdownItem
-              tag="a"
-              href="/"
               className="w-100"
-              onClick={(e) => e.preventDefault()}
+              onClick={() =>
+                router.push(
+                  `/transactions/approve-purchase-order/${props?.data?.ID}`
+                )
+              }
             >
               <Action icon={approveIcon} name={"Approve"} action={() => {}} />
             </DropdownItem>
             <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => {
-                e.preventDefault(),
-                  dispatch(openDeletePurchaseOrderPopup("delete"));
-              }}
+              className="w-100 cursor-pointer"
+              onClick={() =>
+                dispatch(openDeletePurchaseOrderPopup(props.data?.ID))
+              }
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
@@ -134,6 +158,7 @@ const AllPurchaseTable = () => {
       </div>
     );
   };
+
   const columnDefs = [
     {
       headerName: "PO Number",
@@ -147,10 +172,13 @@ const AllPurchaseTable = () => {
       headerName: " PO Description",
       field: "description",
       sortable: true,
+
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
+
+      headerClass: "custom-header-class ",
     },
+
     {
       headerName: "Vendor",
       field: "vendor",
@@ -191,16 +219,12 @@ const AllPurchaseTable = () => {
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Action",
-      field: "id",
+      headerName: "Actions",
+      field: "ID",
       cellRenderer: ActionsButton,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-
-      cellStyle: {
-        textAlign: "center",
-      },
     },
-    // Add more columns as needed
   ];
 
   const rowData = [
@@ -331,7 +355,12 @@ const AllPurchaseTable = () => {
 
   return (
     <div className="my-5 m-auto" style={{ width: "100%" }}>
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined} />
+      <GridTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        pageSize={10}
+        searchText={undefined}
+      />
     </div>
   );
 };

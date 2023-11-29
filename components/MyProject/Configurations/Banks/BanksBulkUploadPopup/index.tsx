@@ -13,22 +13,11 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BankService } from "services";
-import { checkTenant } from "constants/function";
 
 const BanksBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
 
+  const bankService = new BankService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.bulkUploadPopup.status
   );
@@ -62,7 +51,8 @@ const BanksBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    BankService.uploadbanklist(tenantId, fileName)
+    bankService
+      .uploadbanklist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

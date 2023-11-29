@@ -12,19 +12,11 @@ function EditCurrency() {
   const router = useRouter();
 
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
+   
+  const currencyService = new CurrencyService();
 
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchCurrencyDetails = (id) => CurrencyService.details(tenantId, id);
+  const fetchCurrencyDetails = (id) =>
+    currencyService.currencyDetails(id);
 
   const {
     data: currencyData,
@@ -52,13 +44,12 @@ function EditCurrency() {
 
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
-  }),
-    [currencyData];
-
-  const currencyService = new CurrencyService();
+    
+    setActiveStatus(currencyData?.IsActive);
+  },[currencyData]);
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies(tenantId)
+    currencyService.getCurrencies()
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
@@ -69,11 +60,12 @@ function EditCurrency() {
     backendFormat = {
       name: data.currencyname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.currencycode,
     };
 
-    CurrencyService.edit(tenantId, id, backendFormat)
+    currencyService
+      .editCurrency(id, backendFormat)
       .then((res) => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());
@@ -244,6 +236,7 @@ function EditCurrency() {
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -255,6 +248,7 @@ function EditCurrency() {
                   type="radio"
                   name="ex1"
                   id="ex1-inactive"
+                  checked={!activeStatus}
                   onChange={() => {
                     setActiveStatus(false);
                   }}

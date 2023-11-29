@@ -18,17 +18,9 @@ import { checkTenant } from "constants/function";
 
 const SeriesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
+  const seriesService = new SeriesService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.series.bulkUploadPopup.status
   );
@@ -60,7 +52,8 @@ const SeriesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    SeriesService.uploadserieslist(tenantId, fileName)
+    seriesService
+      .uploadserieslist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
@@ -74,10 +67,10 @@ const SeriesBulkUploadPopup = () => {
         toast.error("Failed to insert data.");
       });
   };
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/series_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/series_sample.csv";
     window.open(url);
-  }
+  };
   return (
     <Modal
       isOpen={popupStatus}

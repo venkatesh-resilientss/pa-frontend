@@ -13,19 +13,10 @@ import useSWR from "swr";
 function AddUser() {
   //get cleints
   const clientService = new ClientsService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients(tenantId)
+    clientService.getClients()
   );
 
   const clientOptions = Array.isArray(clientData)
@@ -38,7 +29,7 @@ function AddUser() {
   //get roles
   const roleservice = new RoleService();
   const { data: rolesdata } = useSWR("LIST_ROLES", () =>
-    roleservice.getRoles(tenantId)
+    roleservice.getRoles()
   );
 
   const roleOptions = Array.isArray(rolesdata)
@@ -52,7 +43,7 @@ function AddUser() {
 
   const projectservice = new ProjectService();
   const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
-    projectservice.getProjects(tenantId)
+    projectservice.getProjects()
   );
 
   const projectOptions = Array.isArray(projectsdata)
@@ -82,6 +73,7 @@ function AddUser() {
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(false);
+  const usersService = new UsersService();
 
   const onSubmit = (data) => {
     let backendFormat;
@@ -96,7 +88,8 @@ function AddUser() {
       is_active: activeStatus,
     };
 
-    UsersService.create(tenantId, backendFormat)
+    usersService
+      .postUsers(backendFormat)
       .then((res) => {
         toast.success("User Added successfully");
         router.push("/settings/usermanagement");
@@ -104,7 +97,7 @@ function AddUser() {
       })
       .catch((error) => {
         toast.error(error?.error);
-      });
+      }) as Promise<any>;
   };
 
   return (
@@ -321,7 +314,7 @@ function AddUser() {
           </Col>
         </div>
 
-        <div className="d-flex flex-column mt-2">
+        {/* <div className="d-flex flex-column mt-2">
           <Label
             className="text-black"
             style={{ fontSize: "16px", fontWeight: "400" }}
@@ -352,7 +345,7 @@ function AddUser() {
               <div>In-Active</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </Form>
     </div>
   );

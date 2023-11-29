@@ -6,24 +6,15 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { COAAccountsService } from "services";
-import { checkTenant } from "constants/function";
 
 function EditChartOfAccounts() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const coaAccountsService = new COAAccountsService();
+
   const { id } = router.query;
 
-  const fetchCOADetails = (id) => COAAccountsService.details(tenantId, id);
+  const fetchCOADetails = (id) => coaAccountsService.coaDetails(id);
 
   const {
     data: coaData,
@@ -41,6 +32,9 @@ function EditChartOfAccounts() {
     reset,
   } = useForm();
 
+  const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
+  const [postable, setPostable] = useState(coaData?.IsActive);
+
   useEffect(() => {
     if (!coaData) return;
 
@@ -49,18 +43,15 @@ function EditChartOfAccounts() {
 
     coaData?.Description && setValue("Description", coaData?.Description);
     coaData?.Type && setValue("AccountType", coaData?.Type);
-    coaData?.Parent && setValue("COAParent", coaData?.Parent);
-  }),
-    [coaData];
+    coaData?.ParentID && setValue("COAParent", coaData?.ParentID);
+    setActiveStatus(coaData?.IsActive);
+  }, [coaData]);
 
   const cOAAccountsService = new COAAccountsService();
 
   const { mutate: currencyMutate } = useSWR("LIST_COA", () =>
-    cOAAccountsService.getCoasAccounts(tenantId)
+    cOAAccountsService.getCoasAccounts()
   );
-
-  const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
-  const [postable, setPostable] = useState(coaData?.IsActive);
 
   const onSubmit = (data) => {
     let backendFormat;
@@ -68,14 +59,15 @@ function EditChartOfAccounts() {
     backendFormat = {
       name: data.COAName,
       description: data.Description,
-      is_active: activeStatus,
+      IsActive: activeStatus,
       code: data.COACode,
-      parent: data.COAParent,
+      parentID: parseInt(data.COAParent),
       accountType: data.AccountType,
       postable: postable,
     };
 
-    COAAccountsService.edit(tenantId, id, backendFormat)
+    cOAAccountsService
+      .editCOA(id, backendFormat)
       .then((res) => {
         toast.success("COA Edited successfully");
         mutate(currencyMutate());
@@ -144,7 +136,9 @@ function EditChartOfAccounts() {
             <Label>COA Name</Label>
             <Controller
               name="COAName"
-              rules={{ required: "COA Name  is required" }}
+              rules={{
+                required: "COA Parent  is required",
+              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -194,7 +188,7 @@ function EditChartOfAccounts() {
               rules={{ required: "COA Parent  is required" }}
               render={({ field }) => (
                 <Input
-                  placeholder="COA Parent"
+                  placeholder="COAParent"
                   invalid={errors.COAParent && true}
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   {...field}
@@ -259,7 +253,7 @@ function EditChartOfAccounts() {
             )}
           </div>
         </Col>
-        <Col xl="4">
+        {/* <Col xl="4">
           <div className="d-flex flex-column mt-1">
             <Label
               className="text-black"
@@ -292,27 +286,41 @@ function EditChartOfAccounts() {
               </div>
             </div>
           </div>
-        </Col>
-        <Col>
-          <div className="d-flex flex-column mt-1">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12x", fontWeight: "400" }}
-            >
-              Status{" "}
-            </Label>
+        </Col> */}
+        <div className="d-flex flex-column mt-1">
+          <Label
+            className="text-black"
+            style={{ fontSize: "12px", fontWeight: "400" }}
+          >
+            Status{" "}
+          </Label>
+          <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <div className="d-flex gap-1">
-                <input type="radio" />
-                <div>Active</div>
-              </div>
-              <div className="d-flex gap-1">
-                <input type="radio" />
-                <div>In-Active</div>
-              </div>
+              <input
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                checked={activeStatus}
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
+              />
+              <div>Active</div>
+            </div>
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                name="ex1"
+                id="ex1-inactive"
+                checked={!activeStatus}
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
+              />
+              <div>In-Active</div>
             </div>
           </div>
-        </Col>
+        </div>
       </Form>
     </div>
   );

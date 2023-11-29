@@ -69,7 +69,7 @@ const PendingProductionsTable = () => {
               alt=""
               width={14}
               id={id}
-              style={{ marginLeft: "-100px" }}
+              style={{ marginLeft: "20px" }}
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
@@ -364,7 +364,12 @@ const PendingProductionsTable = () => {
         </Col>
       </Row>
 
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined} />
+      <GridTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        pageSize={4}
+        searchText={undefined}
+      />
     </div>
   );
 };

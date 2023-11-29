@@ -27,8 +27,6 @@ const ResetPassword = () => {
   const router = useRouter();
   const { token, email } = router.query;
 
-  console.log(router.query);
-
   const togglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };
@@ -92,6 +90,10 @@ const ResetPassword = () => {
       formik.values.email = email;
     }
   });
+
+  const handleDragStart = (e) => {
+    e.preventDefault();
+  };
 
   return (
     <div className="d-flex main-container-i overflow-hidden">

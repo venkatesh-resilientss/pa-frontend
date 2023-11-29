@@ -13,21 +13,12 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CountryService } from "services";
-import { checkTenant } from "constants/function";
 
 const CountriesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const countryService = new CountryService();
+
   const popupStatus = useSelector(
     (state: any) => state.configurations.countries.bulkUploadPopup.status
   );
@@ -59,7 +50,8 @@ const CountriesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    CountryService.uploadcouuntrieslist(tenantId, fileName)
+    countryService
+      .uploadcouuntrieslist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");
@@ -74,10 +66,10 @@ const CountriesBulkUploadPopup = () => {
       });
   };
 
-  const handleDownload = ()=>{
-    const url = '/upload-sample-files/countries_sample.csv';
+  const handleDownload = () => {
+    const url = "/upload-sample-files/countries_sample.csv";
     window.open(url);
-  }
+  };
 
   return (
     <Modal

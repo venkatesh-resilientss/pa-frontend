@@ -12,18 +12,10 @@ import { checkTenant } from "constants/function";
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchStateDetails = (id) => StatesService.details(tenantId, id);
+   
+
+  const statesService = new StatesService();
+  const fetchStateDetails = (id) => statesService.stateDetails(id);
 
   const {
     data: stateData,
@@ -48,14 +40,13 @@ function EditState() {
     stateData?.Description && setValue("description", stateData?.Description);
     stateData?.Country.Name && setValue("country", stateData?.Country.Name);
     stateData?.Code && setValue("Statecode", stateData?.Code);
-    stateData?.Country.Name && setValue("country", stateData?.Country.Name);
-  }),
-    [stateData];
+    setActiveStatus(stateData?.IsActive)
+  },[stateData]);
 
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -72,7 +63,7 @@ function EditState() {
   const stateService = new StatesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates(tenantId)
+    stateService.getStates()
   );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
@@ -83,12 +74,13 @@ function EditState() {
     backendFormat = {
       name: data.Statename,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       code: data.Statecode,
       CountryID: data.country?.value,
     };
 
-    StatesService.edit(tenantId, id, backendFormat)
+    statesService
+      .editState(id, backendFormat)
       .then((res) => {
         toast.success("State Edited successfully");
         mutate(countryMutate());
@@ -237,7 +229,7 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Desccription
+                Description
               </Label>
               <Controller
                 name="description"
@@ -250,7 +242,7 @@ function EditState() {
                       fontWeight: "400",
                       height: "81px",
                     }}
-                    placeholder="Desccription"
+                    placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
                     type="textarea"
@@ -278,6 +270,7 @@ function EditState() {
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   type="radio"
                   id="ex1-active"
+                  checked={activeStatus}
                   name="ex1"
                   onChange={() => {
                     setActiveStatus(true);
@@ -290,6 +283,7 @@ function EditState() {
                   type="radio"
                   name="ex1"
                   id="ex1-inactive"
+                  checked={!activeStatus}
                   onChange={() => {
                     setActiveStatus(false);
                   }}

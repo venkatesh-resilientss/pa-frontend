@@ -36,23 +36,26 @@ import {
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
 
 const AllCountriesTable = () => {
   const countryService = new CountryService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const {
@@ -60,9 +63,7 @@ const AllCountriesTable = () => {
     isLoading: countryLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () =>
-    countryService.getCountries(tenantId)
-  );
+  } = useSWR(["LIST_USERS", searchText], () => countryService.getCountries());
 
   const dataSource = countryData?.data;
 
@@ -82,7 +83,7 @@ const AllCountriesTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
+
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -99,7 +100,7 @@ const AllCountriesTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -111,29 +112,33 @@ const AllCountriesTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem>
+            {/* <DropdownItem>
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-country/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteCountryPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-country/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => dispatch(openDeleteCountryPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -311,10 +316,7 @@ const AllCountriesTable = () => {
                   />{" "}
                   Add Country
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -339,7 +341,7 @@ const AllCountriesTable = () => {
         </Card>
       </div>
       {countryLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -350,7 +352,7 @@ const AllCountriesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -363,12 +365,7 @@ const AllCountriesTable = () => {
               <NoDataPage
                 // buttonName={"Add Country"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Country"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Country" : "No button"
                 }
                 buttonLink={"/configurations/add-country"}
               />

@@ -9,8 +9,8 @@ import { checkTenant } from "constants/function";
 
 function AddSeries() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-
+   
+  const seriesService = new SeriesService();
   const {
     control,
     handleSubmit,
@@ -18,16 +18,7 @@ function AddSeries() {
     reset,
     formState: { errors },
   } = useForm();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const [activeStatus, SeriesActiveStatus] = useState(false);
 
   const onSubmit = (data) => {
@@ -40,7 +31,8 @@ function AddSeries() {
       is_active: activeStatus,
     };
 
-    SeriesService.create(tenantId, backendFormat)
+    seriesService
+      .createSeries(backendFormat)
       .then((res) => {
         toast.success("Series Added successfully");
         reset();
@@ -180,33 +172,7 @@ function AddSeries() {
               </div>
             </Col>
 
-            <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Status </Label>
-              <div className="d-flex gap-1">
-                <div className="d-flex gap-1">
-                  <input
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    onChange={() => {
-                      SeriesActiveStatus(true);
-                    }}
-                  />
-                  <div>Active</div>
-                </div>
-                <div className="d-flex gap-1">
-                  <input
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    onChange={() => {
-                      SeriesActiveStatus(false);
-                    }}
-                  />
-                  <div>In-Active</div>
-                </div>
-              </div>
-            </div>
+            
           </Form>
         </div>
       </div>

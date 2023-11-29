@@ -40,27 +40,28 @@ const AllSeriesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const seriesService = new SeriesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: seriesData,
     isLoading: seriesLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SERIES", searchText], () =>
-    seriesService.getSeries(tenantId)
-  );
+  } = useSWR(["LIST_SERIES", searchText], () => seriesService.getSeries());
 
   const dataSource = seriesData?.data;
 
@@ -78,7 +79,6 @@ const AllSeriesTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -95,7 +95,7 @@ const AllSeriesTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -107,35 +107,39 @@ const AllSeriesTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
-                name={"View Details"}
+                name={"\ Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-series/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteSeriesPopup(props.data?.ID));
-                }}
-              />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-series/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeleteSeriesPopup(props.data?.ID));
+                  }}
+                />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -206,53 +210,7 @@ const AllSeriesTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      SeriesCode: "SER001",
-      SeriesName: "Product Series 1",
-      Description: "This is the first product series",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      SeriesCode: "SER002",
-      SeriesName: "Product Series 2",
-      Description: "This is the second product series",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-    {
-      id: 4,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "inactive",
-    },
-    {
-      id: 5,
-      SeriesCode: "SER003",
-      SeriesName: "Product Series 3",
-      Description: "This is the third product series",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-  ];
+
 
   return (
     <div>
@@ -327,10 +285,7 @@ const AllSeriesTable = () => {
                   />{" "}
                   Add Series
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-series`)}
                     style={{
@@ -355,7 +310,7 @@ const AllSeriesTable = () => {
         </Card>
       </div>
       {seriesLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -366,7 +321,7 @@ const AllSeriesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -378,14 +333,7 @@ const AllSeriesTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add Series"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Series"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Create Series" : ""}
                 buttonLink={"/configurations/add-series"}
               />
             </div>

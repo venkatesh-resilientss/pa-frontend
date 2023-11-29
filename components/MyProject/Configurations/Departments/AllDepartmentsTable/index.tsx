@@ -44,17 +44,20 @@ const AllDepartmentsTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const departmentsService = new DepartmentsService();
 
   const {
@@ -63,7 +66,7 @@ const AllDepartmentsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_DEPARTMENTS", searchText], () =>
-    departmentsService.getDepartments(tenantId)
+    departmentsService.getDepartments()
   );
 
   const dataSource = departmentsData && departmentsData.result;
@@ -105,7 +108,7 @@ const AllDepartmentsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -117,35 +120,39 @@ const AllDepartmentsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push({
-                  pathname: `/configurations/edit-department/${props.data?.ID}`,
-                });
-              }}
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() =>
-                dispatch(openDeleteDepartmentPopup(props.data?.ID))
-              }
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push({
+                    pathname: `/configurations/edit-department/${props.data?.ID}`,
+                  });
+                }}
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() =>
+                  dispatch(openDeleteDepartmentPopup(props.data?.ID))
+                }
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -169,6 +176,14 @@ const AllDepartmentsTable = () => {
       headerClass: "custom-header-class",
     },
     {
+      headerName: "Description",
+      field: "Description",
+      sortable: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+    },
+    {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
@@ -179,7 +194,7 @@ const AllDepartmentsTable = () => {
 
     {
       headerName: "Updated On",
-      field: "UpdatedBy",
+      field: "UpdatedDate",
       cellRenderer: (params) => {
         const formattedDate = moment(params.value).format("YYYY-MM-DD");
         return <div>{formattedDate}</div>;
@@ -282,10 +297,7 @@ const AllDepartmentsTable = () => {
                   />{" "}
                   Create Department
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
                       router.push(`/configurations/add-department`)
@@ -312,7 +324,7 @@ const AllDepartmentsTable = () => {
         </Card>
       </div>
       {departmentLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -323,11 +335,11 @@ const AllDepartmentsTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={9}
+                pageSize={10}
                 searchText={searchText}
               />
             </div>
@@ -336,12 +348,7 @@ const AllDepartmentsTable = () => {
               <NoDataPage
                 // buttonName={"Create Department"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Department"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Department" : "No button"
                 }
                 buttonLink={"/configurations/Create Department"}
               />

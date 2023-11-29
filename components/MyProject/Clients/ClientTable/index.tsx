@@ -60,65 +60,26 @@ import { openDeleteClientPopup } from "redux/slices/mySlices/clients";
 import { ClientsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import GridTable from "components/grid-tables/gridTable";
-import { checkTenant } from "constants/function";
+import { toast } from "react-toastify";
 
 const ClientsListTable = () => {
   const dispatch = useDispatch();
 
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const [clientModal, setClientModal] = useState(false);
-  const toggle = () => setClientModal(!clientModal);
+  const hasClientEditPermission = hasPermission(
+    "client_management",
+    "edit_client"
+  );
+  const hasDeactivateClientPermission = hasPermission(
+    "client_management",
+    "deactivate_client"
+  );
 
   const clientService = new ClientsService();
 
-  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients(tenantId)
+  const { data: clientData, mutate } = useSWR("LIST_CLIENTS", () =>
+    clientService.getClients()
   );
-
-  const addNewClientSoftwares = [
-    {
-      name: "Production Accounting",
-      value: "Production Accounting",
-      type: "radio",
-    },
-    {
-      name: "Payroll",
-      value: "Payroll",
-      type: "radio",
-    },
-    {
-      name: "Commercial Accounting",
-      value: "Commercial Accounting",
-      type: "radio",
-    },
-    {
-      name: "ACA",
-      value: "ACA",
-      type: "radio",
-    },
-    {
-      name: "Production Calendar",
-      value: "Production Calendar",
-      type: "radio",
-    },
-    {
-      name: "Script Keeper",
-      value: "Script Keeper",
-      type: "radio",
-    },
-  ];
 
   const columns = [
     {
@@ -215,9 +176,9 @@ const ClientsListTable = () => {
       cell: (row) => (
         <div>
           {row?.IsActive ? (
-            <Badge color={"light-success"}>Active</Badge>
+            <Badge color={"success"}>Active</Badge>
           ) : (
-            <Badge color={"light-danger"}>In-Active</Badge>
+            <Badge color={"danger"}>In-Active</Badge>
           )}
         </div>
       ),
@@ -230,26 +191,27 @@ const ClientsListTable = () => {
           <DropdownToggle tag="span">
             <MoreVertical size={17} className="cursor-pointer" />
           </DropdownToggle>
-          <DropdownMenu end container="body">
+          <DropdownMenu end container="body" className="py-0">
             <DropdownItem
               tag="a"
               href="/"
               className="w-100"
               onClick={(e) => {
-                e.preventDefault(), router.push(`/client-details`);
+                e.preventDefault(),
+                  router.push(`/clients/edit-client/${row.ID}`);
               }}
             >
               <File size={14} className="me-50" />
-              <span className="align-middle">View Details</span>
+              <span className="align-middle p-1">View Details</span>
             </DropdownItem>
             <DropdownItem
               tag="a"
               href="/"
-              className="w-100"
+              className="w-100 "
               onClick={(e) => e.preventDefault()}
             >
-              <FcFilmReel size={14} className="me-50" />
-              <span className="align-middle">View Productions</span>
+              <FcFilmReel size={14} className="me-50 " />
+              <span className="align-middle p-1">View Productions</span>
             </DropdownItem>
             {/* <DropdownItem className="w-100">
               <Edit size={14} className="me-50" />
@@ -262,16 +224,27 @@ const ClientsListTable = () => {
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem> */}
-            {hasPermission("client_management", "edit_client") && (
+            {hasClientEditPermission && (
               <DropdownItem className="w-100">
                 <Edit size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Edit</span>
+                <span className="align-middle p-1">Edit</span>
               </DropdownItem>
             )}
-            {hasPermission("client_management", "deactivate_client") && (
-              <DropdownItem className="w-100">
+            {hasDeactivateClientPermission && (
+              <DropdownItem
+                className="w-100"
+                onClick={async (e) => {
+                  try {
+                    e.preventDefault();
+                    await clientService.deleteClient(row.ID);
+                    mutate();
+                  } catch (er) {
+                    toast.error(er?.error || er || "Error deleting client");
+                  }
+                }}
+              >
                 <Trash size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Delete</span>
+                <span className="align-middle p-1">Delete</span>
               </DropdownItem>
             )}
           </DropdownMenu>
@@ -294,7 +267,7 @@ const ClientsListTable = () => {
           {hasPermission("client_management", "create_client") && (
             <Button
               className="my-1 my-sm-0 button-props border-0 "
-              onClick={toggle}
+              onClick={() => router.push("/clients/create-client")}
             >
               <Users size={14} /> Create Client
             </Button>
@@ -314,40 +287,6 @@ const ClientsListTable = () => {
           </div>
         }
       />
-      <Modal isOpen={clientModal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add New Client</ModalHeader>
-        <ModalBody>
-          <p>Softwares</p>
-          <Form>
-            <div className="d-flex flex-wrap gap-2">
-              {addNewClientSoftwares.map((software) => (
-                <FormGroup check>
-                  <Input
-                    id="checkbox2"
-                    type="checkbox"
-                    value={software.value}
-                  />{" "}
-                  <Label check>{software.name}</Label>
-                </FormGroup>
-              ))}
-            </div>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggle}>
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              toggle();
-              router.push("/clients/create-client");
-            }}
-          >
-            Create
-          </Button>
-        </ModalFooter>
-      </Modal>
     </div>
   );
 };

@@ -10,30 +10,28 @@ import {
 } from "reactstrap";
 import ProjectCard from "./ProjectCard";
 import { BsCameraVideo } from "react-icons/bs";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { Controller } from "react-hook-form";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
-import { checkTenant } from "constants/function";
+import { hasPermission } from "commonFunctions/functions";
 
 function RecentProductions() {
   const dashboardService = new DashboardService();
   const [recentProductionsData, setRecentProductionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const hasCreateProductionPermission = hasPermission(
+    "production_management",
+    "create_production"
+  );
 
   useEffect(() => {
     const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        dashboardService.getRecentProductions(tenant.id).then((res) => {
+        dashboardService.getRecentProductions().then((res) => {
           setIsLoading(res.isLoading);
           if (res.data) {
             // console.log(res.data)
             setRecentProductionsData(res.data);
           }
         });
-      }
     };
     getTenant();
   }, []);
@@ -59,13 +57,15 @@ function RecentProductions() {
               placeholder="Search..."
             />
           </Form>
-          <Button color="primary">
+          {hasCreateProductionPermission && (
+          <Button color="primary" className="py-1 px-3">
             <BsCameraVideo style={{ color: "#FFFFFF" }} />
             <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
               {" "}
               New Production
             </span>
           </Button>
+          )}
         </div>
       </div>
 

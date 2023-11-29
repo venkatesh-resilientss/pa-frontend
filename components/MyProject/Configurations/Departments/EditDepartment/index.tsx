@@ -12,22 +12,12 @@ function EditDepartment() {
   const router = useRouter();
   const { id } = router.query;
   const departmentsService = new DepartmentsService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
-    DepartmentsService.details(tenantId, id)
+    departmentsService.departmentDetails(id)
   );
   const { mutate: userMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments(tenantId)
+    departmentsService.getDepartments()
   );
 
   const [editedData, setEditedData] = useState(departmentsData);
@@ -41,6 +31,9 @@ function EditDepartment() {
     reset,
   } = useForm();
 
+  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
+    departmentService.getDepartments()
+  );
   useEffect(() => {
     if (!departmentsData) return;
 
@@ -49,17 +42,17 @@ function EditDepartment() {
 
     departmentsData?.Description &&
       setValue("description", departmentsData?.Description);
-  }),
-    [departmentsData];
+    setActiveStatus(departmentsData?.IsActive);
+  },[departmentsData]);
 
   const departmentService = new DepartmentsService();
 
-  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentService.getDepartments(tenantId)
+  
+
+  // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
+  const [activeStatus, setActiveStatus] = useState(
+    departmentsData?.IsActive
   );
-
-  const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
-
   const onSubmit = (data) => {
     let backendFormat;
 
@@ -69,7 +62,8 @@ function EditDepartment() {
       is_active: activeStatus,
     };
 
-    DepartmentsService.edit(tenantId, id, backendFormat)
+    departmentService
+      .editDepartment(id, backendFormat)
       .then((res) => {
         toast.success("Department Edited successfully");
         mutate(departmentMutate());

@@ -13,25 +13,16 @@ import { checkTenant } from "constants/function";
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const router = useRouter();
 
+
+  const router = useRouter();
+  const periodsService = new PeriodsService();
   const handleStartDateChange = (date) => {
-    setStartDate(date);
+    setStartDate(moment(date).toDate());
   };
 
   const handleEndDateChange = (date) => {
-    setEndDate(date);
+    setEndDate(moment(date).toDate());
   };
 
   const {
@@ -43,22 +34,20 @@ function AddPeriod() {
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, setActiveStatus] = useState(false);
 
   const onSubmit = (data) => {
-    console.log("DTA", data);
 
     let backendFormat;
 
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      start: data.startDate,
-      end: data.endDate,
-      is_active: activeStatus,
+      start: startDate,
+      endDate: endDate,
     };
 
-    PeriodsService.create(tenantId, backendFormat)
+    periodsService
+      .createPeriod(backendFormat)
       .then((res) => {
         toast.success("Period Added successfully");
         reset();
@@ -158,7 +147,7 @@ function AddPeriod() {
                     placeholderText="Select Start date"
                     selected={startDate}
                     onChange={handleStartDateChange}
-                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                    dateFormat="yyyy-MM-dd" // Set the desired date format
                   />
                 )}
               />
@@ -177,7 +166,7 @@ function AddPeriod() {
                     placeholderText="Select End date"
                     selected={endDate}
                     onChange={handleEndDateChange}
-                    dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx"
+                    dateFormat="yyyy-MM-dd"
                   />
                 )}
               />
@@ -212,38 +201,7 @@ function AddPeriod() {
               </div>
             </Col>
 
-            <div className="d-flex flex-column mt-1">
-              <Label
-                className="text-black"
-                style={{ fontSize: "16px", fontWeight: "400" }}
-              >
-                Status{" "}
-              </Label>
-              <div className="d-flex gap-1">
-                <div className="d-flex gap-1">
-                  <input
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    onChange={() => {
-                      setActiveStatus(true);
-                    }}
-                  />
-                  <div>Active</div>
-                </div>
-                <div className="d-flex gap-1">
-                  <input
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    onChange={() => {
-                      setActiveStatus(false);
-                    }}
-                  />
-                  <div>In-Active</div>
-                </div>
-              </div>
-            </div>
+
           </Form>
         </div>
       </div>

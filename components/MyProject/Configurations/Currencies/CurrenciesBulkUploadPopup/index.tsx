@@ -17,17 +17,9 @@ import { checkTenant } from "constants/function";
 
 const CurrenciesBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
+  const currencyService = new CurrencyService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.currency.bulkUploadPopup.status
   );
@@ -59,7 +51,8 @@ const CurrenciesBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    CurrencyService.uploadcurrencylist(tenantId, fileName)
+    currencyService
+      .uploadcurrencylist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

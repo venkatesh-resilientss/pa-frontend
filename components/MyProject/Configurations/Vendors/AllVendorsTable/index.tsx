@@ -41,21 +41,24 @@ const AllVendorsTable = () => {
   const vendorsService = new VendorsService();
   const router = useRouter();
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const { data: vendorsData, isLoading: vendorsLoading } = useSWR(
-    "LIST_VENDORS",
-    () => vendorsService.getVendors(tenantId)
+   
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
   );
+  const hasEditConfigurationPermission = hasPermission(
+  "configuration_management",
+  "edit_configuration"
+);
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
+  const {
+    data: vendorsData,
+    isLoading: vendorsLoading,
+  } = useSWR("LIST_VENDORS", () => vendorsService.getVendors());
 
   const dataSource = vendorsData?.result;
 
@@ -94,7 +97,7 @@ const AllVendorsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -102,34 +105,32 @@ const AllVendorsTable = () => {
               alt=""
               width={14}
               id={id}
-              style={{ marginLeft: "-100px" }}
+              style={{ marginLeft: "20px" }}
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-vendor/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+            {hasEditConfigurationPermission && (
             <DropdownItem
               tag="a"
               href="/"
               className="w-100"
-              onClick={(e) => dispatch(openDeleteVendorPopup(props.data?.ID))}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/configurations/edit-vendor/${props.data.ID}`);
+              }}
+            >
+              <Action icon={editIocn} name={"Edit"} action={() => {}} />
+            </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+            <DropdownItem
+              tag="a"
+              className="w-100 cursor-pointer"
+              onClick={() => dispatch(openDeleteVendorPopup(props.data?.ID))}
             >
               <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
             </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -146,7 +147,7 @@ const AllVendorsTable = () => {
     },
     {
       headerName: "Vendor Name",
-      field: "VendorName",
+      field: "Name",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -193,68 +194,13 @@ const AllVendorsTable = () => {
 
     {
       headerName: "Options",
-      field: "id",
+      field: "ID",
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400", textAlign: "center" },
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      VendorCode: "001",
-      State: "AK",
-      VendorName: "Vendor A",
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      VendorCode: "002",
-      State: "AK",
-      VendorName: "Vendor B",
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-12",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      VendorCode: "003",
-      State: "AK",
-      VendorName: "Vendor C",
-      CreatedBy: "Mike Johnson",
-      UpdatedOn: "2023-11-11",
-      Status: "active",
-      id: 3,
-    },
-    {
-      VendorCode: "004",
-      State: "AK",
-      VendorName: "Vendor D",
-      CreatedBy: "Sara Williams",
-      UpdatedOn: "2023-11-10",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      VendorCode: "005",
-      VendorName: "Vendor E",
-      State: "AK",
-      CreatedBy: "David Brown",
-      UpdatedOn: "2023-11-09",
-      Status: "active",
-      id: 5,
-    },
-    {
-      VendorCode: "006",
-      VendorName: "Vendor F",
-      CreatedBy: "Emily Davis",
-      State: "AK",
-      UpdatedOn: "2023-11-08",
-      Status: "inactive",
-      id: 6,
-    },
-  ];
+
 
   return (
     <div>
@@ -328,10 +274,7 @@ const AllVendorsTable = () => {
                   />{" "}
                   Add Vendor
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-vendor`)}
                     style={{
@@ -357,7 +300,7 @@ const AllVendorsTable = () => {
       </div>
 
       {vendorsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -369,7 +312,7 @@ const AllVendorsTable = () => {
         <>
           {" "}
           {vendorsData && vendorsData?.result?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -382,12 +325,7 @@ const AllVendorsTable = () => {
               <NoDataPage
                 // buttonName={"Create Vendor"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Vendor"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Vendor" : "No button"
                 }
                 buttonLink={"/configurations/add-vendor"}
               />

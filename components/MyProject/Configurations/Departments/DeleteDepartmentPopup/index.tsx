@@ -14,25 +14,14 @@ const DeleteDepartmentPopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+
   const {
     data: departmentsData,
     isLoading: userLoading,
     error: userError,
     mutate: departmentMutate,
-  } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments(tenantId)
-  );
+  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.deleteDepartmentPopup.status
@@ -45,7 +34,7 @@ const DeleteDepartmentPopup = ({ id }) => {
 
   const handleDeleteDepartment = async () => {
     try {
-      await DepartmentsService.delete(tenantId, helperData);
+      await departmentsService.deleteDepartment(helperData);
       toast.success("Department Deleted Successfully");
       dispatch(closeDeleteDepartmentPopup(id));
       mutate(departmentMutate());
@@ -55,7 +44,6 @@ const DeleteDepartmentPopup = ({ id }) => {
   };
 
   const { register, handleSubmit } = useForm();
-  console.log(popupStatus, "popupStatus");
   return (
     <Modal
       isOpen={popupStatus}

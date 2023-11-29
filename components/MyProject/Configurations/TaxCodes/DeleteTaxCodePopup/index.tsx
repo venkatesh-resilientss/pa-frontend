@@ -14,19 +14,10 @@ const DeleteTaxCodePopup = ({ id }) => {
   const dispatch = useDispatch();
 
   const taxCodeService = new TaxCodesService();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes(tenantId)
+    taxCodeService.getTaxCodes()
   );
 
   const popupStatus = useSelector(
@@ -38,11 +29,10 @@ const DeleteTaxCodePopup = ({ id }) => {
   );
 
   const handleDeleteTaxCode = async () => {
-    console.log("IDDD", id);
-    const tenant = await checkTenant();
+
 
     try {
-      await TaxCodesService.delete(tenant.id, helperData);
+      await taxCodeService.deleteTaxCode(helperData);
       toast.success("TaxCode Deleted Successfully");
       dispatch(closeDeleteTaxCodesPopup("close"));
       mutate(taxCodeMutate());

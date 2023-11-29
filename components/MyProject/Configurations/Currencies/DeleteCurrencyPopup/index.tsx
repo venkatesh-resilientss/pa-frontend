@@ -12,21 +12,12 @@ import { useState, useEffect } from "react";
 
 const DeleteCurrencyPopup = ({ id }) => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
   const currencyService = new CurrencyService();
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies(tenantId)
+    currencyService.getCurrencies()
   );
 
   const popupStatus = useSelector(
@@ -39,7 +30,7 @@ const DeleteCurrencyPopup = ({ id }) => {
 
   const handleDeleteCurrency = async () => {
     try {
-      await CurrencyService.delete(tenantId, helperData);
+      await currencyService.deleteCurrency(helperData);
       toast.success("Currency Deleted Successfully");
       dispatch(closeDeleteCurrencyPopup("close"));
       mutate(currencyMutate());

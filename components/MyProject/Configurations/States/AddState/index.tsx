@@ -21,21 +21,13 @@ function AddState() {
   } = useForm();
 
   const [activeStatus, StateActiveStatus] = useState(false);
-  const [tenantId, setTenantId] = useState("");
+   
 
   const countryService = new CountryService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const statesService = new StatesService();
+
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries(tenantId)
+    countryService.getCountries()
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -60,7 +52,8 @@ function AddState() {
       is_active: activeStatus,
     };
 
-    StatesService.create(tenantId, backendFormat)
+    statesService
+      .createState(backendFormat)
       .then((res) => {
         toast.success("State Added successfully");
         reset();
@@ -200,7 +193,7 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">Desccription</Label>
+              <Label className="form-lable-font">Description</Label>
               <Controller
                 name="description"
                 rules={{ required: "Dscription  is required" }}
@@ -212,7 +205,7 @@ function AddState() {
                       fontWeight: "400",
                       height: "81px",
                     }}
-                    placeholder="Desccription"
+                    placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
                     type="textarea"
@@ -227,34 +220,7 @@ function AddState() {
             </div>
           </Col>
 
-          <div className="d-flex flex-column mt-1">
-            <Label className="form-lable-font">Status </Label>
-            <div className="d-flex gap-1">
-              <div className="d-flex gap-1">
-                <input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  type="radio"
-                  id="ex1-active"
-                  name="ex1"
-                  onChange={() => {
-                    StateActiveStatus(true);
-                  }}
-                />
-                <div>Active</div>
-              </div>
-              <div className="d-flex gap-1">
-                <input
-                  type="radio"
-                  name="ex1"
-                  id="ex1-inactive"
-                  onChange={() => {
-                    StateActiveStatus(false);
-                  }}
-                />
-                <div>In-Active</div>
-              </div>
-            </div>
-          </div>
+          
         </Form>
       </div>
     </>

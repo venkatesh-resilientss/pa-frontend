@@ -9,23 +9,26 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { checkTenant } from "constants/function";
+import moment from "moment";
 
 function EditPeriod() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+  const [startDate, setStartDate] = useState(moment().toDate());
+  const [endDate, setEndDate] = useState(moment().toDate());
+
+  const handleStartDateChange = (date) => {
+    setStartDate(moment(date).toDate());
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(moment(date).toDate());
+  };
+
+  const periodsService = new PeriodsService();
+
   const { id } = router.query;
 
-  const fetchPeriodDetails = (id) => PeriodsService.details(tenantId, id);
+  const fetchPeriodDetails = (id) => periodsService.periodDetails(id);
 
   const {
     data: periodData,
@@ -49,15 +52,14 @@ function EditPeriod() {
     periodData?.Name && setValue("periodname", periodData?.Name);
 
     periodData?.Description && setValue("description", periodData?.Description);
-    periodData?.Start && setValue("startDate", periodData?.Start);
-    periodData?.EndDate && setValue("endDate", periodData?.EndDate);
-  }),
-    [periodData];
+    handleStartDateChange(periodData?.Start);
+    handleEndDateChange(periodData?.EndDate);
 
-  const periodService = new PeriodsService();
+    setActiveStatus(periodData.IsActive);
+  }, [periodData]);
 
   const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodService.getPeriods(tenantId)
+    periodsService.getPeriods()
   );
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
@@ -68,12 +70,13 @@ function EditPeriod() {
     backendFormat = {
       name: data.periodname,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
     };
 
-    PeriodsService.edit(tenantId, id, backendFormat)
+    periodsService
+      .editPeriod(id, backendFormat)
       .then((res) => {
         toast.success("Period Edited successfully");
         mutate(bankMutate());
@@ -169,11 +172,16 @@ function EditPeriod() {
             <Controller
               name="startDate"
               control={control}
-              rules={{ required: "End Date  is required" }}
+              rules={{ required: "Start Date is required" }}
               render={({ field }) => (
                 <DatePicker
                   placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  selected={startDate}
+                  onChange={(date) => {
+                    handleStartDateChange(date);
+                    field.onChange(date);
+                  }}
+                  dateFormat="yyyy-MM-dd"
                 />
               )}
             />
@@ -189,11 +197,16 @@ function EditPeriod() {
             <Controller
               name="endDate"
               control={control}
-              rules={{ required: "End Date  is required" }}
+              rules={{ required: "End Date is required" }}
               render={({ field }) => (
                 <DatePicker
+                  selected={endDate}
+                  onChange={(date) => {
+                    handleEndDateChange(date);
+                    field.onChange(date);
+                  }}
                   placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                  dateFormat="yyyy-MM-dd"
                 />
               )}
             />
@@ -241,6 +254,7 @@ function EditPeriod() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -251,6 +265,7 @@ function EditPeriod() {
               <input
                 type="radio"
                 name="ex1"
+                checked={!activeStatus}
                 id="ex1-inactive"
                 onChange={() => {
                   setActiveStatus(false);

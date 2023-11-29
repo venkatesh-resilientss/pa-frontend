@@ -8,17 +8,9 @@ import { checkTenant } from "constants/function";
 
 function AddDepartment() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const departmentService = new DepartmentsService();
+
   const {
     control,
     setError,
@@ -40,7 +32,8 @@ function AddDepartment() {
       isActive: activeStatus,
     };
 
-    DepartmentsService.create(tenantId, backendFormat)
+    departmentService
+      .createDepartment(backendFormat)
       .then((res) => {
         toast.success("Department Added successfully");
         reset();
@@ -182,7 +175,7 @@ function AddDepartment() {
           </div>
         </Col>
 
-        <div className="d-flex flex-column mt-1">
+        {/* <div className="d-flex flex-column mt-1">
           <Label className="form-lable-font">Status </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
@@ -209,7 +202,7 @@ function AddDepartment() {
               <div>In-Active</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </Form>
     </div>
   );

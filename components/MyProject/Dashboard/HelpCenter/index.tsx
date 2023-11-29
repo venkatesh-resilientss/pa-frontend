@@ -6,10 +6,12 @@ import helpcenter3 from 'assets/DashboardIcons/helpcenter3.svg'
 
 function HelpCenter() {
   return (
-    <div style={{ marginBottom: '4rem' }}>
-      <div className='my-1 mt-2' style={{ fontSize: '18px', fontWeight: '600', color: '#030229' }}>
+    <>
+    <div className='my-1 mt-2 mb-2' style={{ fontSize: '18px', fontWeight: '600', color: '#030229' }}>
         Help Center
       </div>
+    <div style={{ marginBottom: '4rem' }}>
+      
       <Row className='mt-2'>
         <Col xl='4'>
           <HelpCenterCard
@@ -39,6 +41,8 @@ function HelpCenter() {
         </Col>
       </Row>
     </div>
+    </>
+    
   )
 }
 

@@ -119,22 +119,23 @@ const ClientsCard = ({ data }) => {
       </div>
 
       <div className="d-flex gap-1 mt-2">
-        {data.softwares.map((software, i) => {
-          <div
-            style={{
-              fontSize: "10px",
-              fontWeight: "400",
-              backgroundColor: "#B5DEF0",
-              width: "auto",
-              color: "#030229",
-              padding: "4px",
-              borderRadius: "5%",
-            }}
-          >
-            {software.software_name}
-          </div>;
-        })}
-      </div>
+  {data.softwares.map((software, i) => (
+    <div
+      key={i}
+      style={{
+        fontSize: "10px",
+        fontWeight: "400",
+        backgroundColor: "#B5DEF0",
+        width: "auto",
+        color: "#030229",
+        padding: "4px",
+        borderRadius: "5%",
+      }}
+    >
+      {software.software_name}
+    </div>
+  ))}
+</div>
     </Card>
   );
 };

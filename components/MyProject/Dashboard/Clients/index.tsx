@@ -16,7 +16,6 @@ import { DashboardService } from "services";
 import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
 
 function Clients() {
   const router = useRouter();
@@ -24,19 +23,19 @@ function Clients() {
 
   const [clientsData, setClientsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const hasCreateClientPermission = hasPermission(
+    "client_management",
+    "create_client"
+  );
 
   useEffect(() => {
     const getTenant = async () => {
-      const tenant = await checkTenant();
-      console.log(tenant, "tenant");
-      if (tenant) {
-        dashboardService.getOnBoardedClients(tenant.id).then((res) => {
+        dashboardService.getOnBoardedClients().then((res) => {
           if (res.data) {
             setClientsData(res.data);
             setIsLoading(false);
           }
         });
-      }
     };
     getTenant();
   }, []);
@@ -53,33 +52,16 @@ function Clients() {
         </div>
 
         <div className="d-flex gap-1">
-          {/* <Button
-            size="sm"
-            color="info"
-            style={{
-              fontSize: "14px",
-              color: "#FFFFFF",
-              backgroundColor: "#00AEEF",
-              margin: "4px",
-              padding: "5px",
-              width: "120px",
-            }}
-            onClick={() => router.push(`/clients/create-client`)}
-          >
-            <Users size={12} /> Create Client
-          </Button> */}
+          
 
-          {hasPermission("client_management", "create_client") && (
+          {hasCreateClientPermission && (
             <Button
-              size="sm"
+              size="sm" className="py-1 px-3"
               color="info"
               style={{
                 fontSize: "14px",
                 color: "#FFFFFF",
                 backgroundColor: "#00AEEF",
-                margin: "4px",
-                padding: "5px",
-                width: "120px",
               }}
               onClick={() => router.push(`/clients/create-client`)}
             >
@@ -89,16 +71,19 @@ function Clients() {
         </div>
       </div>
 
-      <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
-        {!isLoading &&
-          clientsData.map((client, i) => {
-            return (
-              <Col xl="12" key={`new-onboarded-client-${i}`}>
-                <ClientsCard data={client} />
-              </Col>
-            );
-          })}
-      </div>
+    <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
+  {!isLoading && (
+    <Row className="mt-2">
+      {clientsData.map((client, i) => (
+        <Col key={`new-onboarded-client-${i}`} md="4" className="mb-3">
+          <ClientsCard data={client} />
+        </Col>
+      ))}
+    </Row>
+  )}
+</div>
+
+      
     </div>
   );
 }

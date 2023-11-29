@@ -12,18 +12,8 @@ import { checkTenant } from "constants/function";
 function EditUser() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const getUserdetails = (id) => UsersService.details(tenantId, id);
+
+  const getUserdetails = (id) => usersService.getuserbyid(id);
 
   const {
     data: eachclicntdata,
@@ -32,11 +22,11 @@ function EditUser() {
     mutate: userMutate,
   } = useSWR(id ? ["USER_DETAILS", id] : null, () => getUserdetails(id));
 
-  const [editMode, setEditMode] = useState(false); // Initial edit mode state
+  const [editMode, setEditMode] = useState(false);
 
   const clientService = new ClientsService();
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients(tenantId)
+    clientService.getClients()
   );
   const clientOptions = Array.isArray(clientData)
     ? clientData.map((client) => ({
@@ -47,7 +37,7 @@ function EditUser() {
 
   const roleservice = new RoleService();
   const { data: rolesdata } = useSWR("LIST_ROLES", () =>
-    roleservice.getRoles(tenantId)
+    roleservice.getRoles()
   );
   const roleOptions = Array.isArray(rolesdata)
     ? rolesdata.map((role) => ({
@@ -64,7 +54,7 @@ function EditUser() {
 
   const projectservice = new ProjectService();
   const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
-    projectservice.getProjects(tenantId)
+    projectservice.getProjects()
   );
 
   const projectOptions = Array.isArray(projectsdata)
@@ -102,7 +92,7 @@ function EditUser() {
         firstname: eachclicntdata?.first_name || "",
         middlename: eachclicntdata?.middle_name || "",
         email: eachclicntdata?.email || "",
-        is_active: eachclicntdata?.IsActive ? "active" : "inactive",
+        IsActive: eachclicntdata?.IsActive ? "active" : "inactive",
         // Add other fields with their default values
       });
 
@@ -127,6 +117,8 @@ function EditUser() {
     }
   }, [eachclicntdata, userLoading, reset]);
 
+  const usersService = new UsersService();
+
   const onSubmit = (data) => {
     let backendFormat = {
       last_name: data.lastname,
@@ -135,12 +127,12 @@ function EditUser() {
       email: data.email,
       client_id: selectedClient?.value,
       roleID: selectedRole?.value,
-      is_active: activeStatus,
+      IsActive: activeStatus === "active" ? true : false,
     };
 
-    UsersService.edit(tenantId, id, backendFormat)
+    usersService
+      .editUser(id, backendFormat)
       .then((res) => {
-        console.log(backendFormat);
         router.push("/settings/usermanagement");
         toast.success("User Updated successfully");
         reset();
@@ -194,7 +186,7 @@ function EditUser() {
       </div>
 
       <hr style={{ height: "2px" }} />
-      <div className="text-black mt-4 p-3">
+      <div className="text-black mt-2">
         <Form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
           <div className="d-flex gap-4">
             <Col xl="4">

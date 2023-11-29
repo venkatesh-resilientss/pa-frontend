@@ -41,28 +41,31 @@ const AllSetsTable = () => {
   const setsService = new SetsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: setsData,
     isLoading: setsLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets(tenantId));
+  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets());
   const dataSource = setsData?.result;
 
-  console.log(setsData, "setsData");
+
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -93,7 +96,7 @@ const AllSetsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -105,29 +108,33 @@ const AllSetsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              onClick={() =>
-                router.push(`/configurations/edit-set/${props.data.ID}`)
-              }
-              tag="a"
-              className="w-100 cursor-pointer"
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                onClick={() =>
+                  router.push(`/configurations/edit-set/${props.data.ID}`)
+                }
+                tag="a"
+                className="w-100 cursor-pointer"
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -198,62 +205,7 @@ const AllSetsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      SetCode: "SET001",
-      SetName: "Product Set 1",
-      Description: "This is the first product set",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      SetCode: "SET002",
-      SetName: "Product Set 2",
-      Description: "This is the second product set",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      SetCode: "SET003",
-      SetName: "Product Set 3",
-      Description: "This is the third product set",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-    {
-      id: 4,
-      SetCode: "SET004",
-      SetName: "Product Set 4",
-      Description: "This is the fourth product set",
-      CreatedBy: "UserD",
-      UpdatedOn: "2023-04-10",
-      Status: "active",
-    },
-    {
-      id: 5,
-      SetCode: "SET005",
-      SetName: "Product Set 5",
-      Description: "This is the fifth product set",
-      CreatedBy: "UserE",
-      UpdatedOn: "2023-05-15",
-      Status: "inactive",
-    },
-    {
-      id: 6,
-      SetCode: "SET006",
-      SetName: "Product Set 6",
-      Description: "This is the sixth product set",
-      CreatedBy: "UserF",
-      UpdatedOn: "2023-06-20",
-      Status: "active",
-    },
-  ];
+
 
   return (
     <div>
@@ -328,10 +280,7 @@ const AllSetsTable = () => {
                   />{" "}
                   Create Set
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-set`)}
                     style={{
@@ -356,7 +305,7 @@ const AllSetsTable = () => {
         </Card>
       </div>
       {setsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -367,7 +316,7 @@ const AllSetsTable = () => {
       ) : (
         <>
           {setsData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -379,14 +328,7 @@ const AllSetsTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create Set"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Set"
-                    : "No button"
-                }
+                buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
                 buttonLink={"/configurations/add-set"}
               />
             </div>

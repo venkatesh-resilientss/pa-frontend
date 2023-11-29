@@ -42,27 +42,28 @@ const AllStatesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const statesService = new StatesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: statesData,
     isLoading: stateLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_STATES", searchText], () =>
-    statesService.getStates(tenantId)
-  );
+  } = useSWR(["LIST_STATES", searchText], () => statesService.getStates());
 
   const dataSource = statesData?.data;
 
@@ -80,7 +81,7 @@ const AllStatesTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
+
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -97,7 +98,7 @@ const AllStatesTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -109,35 +110,39 @@ const AllStatesTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-state/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteStatePopup(props.data.ID));
-                }}
-              />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-state/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeleteStatePopup(props.data.ID));
+                  }}
+                />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -324,10 +329,7 @@ const AllStatesTable = () => {
                   />{" "}
                   Add State
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -352,7 +354,7 @@ const AllStatesTable = () => {
         </Card>
       </div>
       {stateLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -363,7 +365,7 @@ const AllStatesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -375,14 +377,7 @@ const AllStatesTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add State"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Add State"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Add State" : ""}
                 buttonLink={"/configurations/add-state"}
               />
             </div>

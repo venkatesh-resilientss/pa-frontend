@@ -39,26 +39,29 @@ const AllTaxCodesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const taxcodesService = new TaxCodesService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: taxcodesData,
     isLoading: taxCodesLoading,
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_TAXCODES", searchText], () =>
-    taxcodesService.getTaxCodes(tenantId)
+    taxcodesService.getTaxCodes()
   );
 
   const dataSource = taxcodesData?.data;
@@ -77,8 +80,6 @@ const AllTaxCodesTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
-    const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
 
@@ -94,7 +95,7 @@ const AllTaxCodesTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -102,40 +103,41 @@ const AllTaxCodesTable = () => {
               alt=""
               width={14}
               id={id}
-              style={{ marginLeft: "-100px" }}
+              style={{ marginLeft: "20px" }}
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={() =>
-                router.push(`/configurations/edit-taxcode/${props.data.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteTaxCodesPopup(props.data.ID));
+            {/* <DropdownItem className="w-100">
+            <Action
+              icon={detailsIocn}
+              name={"View Details"}
+              action={() => {}}
+            />
+          </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/configurations/edit-taxcode/${props.data.ID}`);
                 }}
-              />
-            </DropdownItem>
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() =>
+                  dispatch(openDeleteTaxCodesPopup(props.data?.ID))
+                }
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -202,48 +204,7 @@ const AllTaxCodesTable = () => {
       },
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      TaxCode: "TC001",
-      Description: "Sample Description 1",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-01",
-      Status: "active",
-    },
-    {
-      id: 2,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 4,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-    {
-      id: 5,
-      TaxCode: "TC002",
-      Description: "Sample Description 2",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-01",
-      Status: "inactive",
-    },
-  ];
+
   return (
     <div>
       <div className="section">
@@ -322,10 +283,7 @@ const AllTaxCodesTable = () => {
                   />{" "}
                   Add Tax Code
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -351,7 +309,7 @@ const AllTaxCodesTable = () => {
       </div>
 
       {taxCodesLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -362,7 +320,7 @@ const AllTaxCodesTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -375,12 +333,7 @@ const AllTaxCodesTable = () => {
               <NoDataPage
                 // buttonName={"Add Tax Code"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Tax Code"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Tax Code" : "No button"
                 }
                 buttonLink={"/configurations/add-tax-code"}
               />

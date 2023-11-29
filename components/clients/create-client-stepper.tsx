@@ -48,7 +48,7 @@ const CustomStepper = ({ handlePrev, handleNext, steps, activeStep }) => {
               style={{ width: "30px", height: "30px" }}
             />
             <span>{step.label.split(" ")[0]}</span>
-            <span>{step.label.split(" ")[1]}</span>
+            <span style={{ height: "18px" }}>{step.label.split(" ")[1]}</span>
           </div>
           {/* </div> */}
           <div>

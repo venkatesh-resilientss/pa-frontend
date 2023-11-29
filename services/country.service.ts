@@ -1,10 +1,9 @@
-  import axios from 'axios';
   import APIService from './api.service';
   import {COUNTRIES_DETAIL_ENDPOINT, CREATE_COUNTRIES, DELETE_COUNTRIES, EDIT_COUNTRIES, GET_COUNTRIES,UPLOAD_COUNTRIES_LIST} from '../lib/endpoints';
 
   class CountryService extends APIService {
-    getCountries(tenant_id:any): Promise<any> {
-      return this.get(`${GET_COUNTRIES(tenant_id)}`)
+    getCountries(): Promise<any> {
+      return this.get(`${GET_COUNTRIES}`)
         .then((res) => {
           return res?.data;
         })
@@ -13,9 +12,9 @@
         });
     }
 
-    static create(tenant_id:any,data:any) {
-      return axios
-        .post(CREATE_COUNTRIES(tenant_id), data)
+    createCountry(data:any) {
+      return this
+        .post(CREATE_COUNTRIES, data)
         .then((response) => {
           return response.data;
         })
@@ -25,18 +24,16 @@
     }
 
 
-      static uploadcouuntrieslist(tenant_id:any,fileName: any) {
+      uploadcouuntrieslist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_COUNTRIES_LIST(tenant_id), formData, {
-        headers: {
+      return this.post(UPLOAD_COUNTRIES_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })
@@ -48,9 +45,9 @@
       });
     }
 
-    static delete(tenant_id:any,id: any) {
-      return axios
-        .delete(DELETE_COUNTRIES(tenant_id,id))
+    deleteCountry(id: any) {
+      return this
+        .delete(DELETE_COUNTRIES(id))
         .then((response) => {
           return response?.data;
         })
@@ -59,9 +56,9 @@
         });
     }
 
-    static edit(tenant_id:any,id: any,data) {
-      return axios
-        .put(EDIT_COUNTRIES(tenant_id,id),data)
+    editCountry(id: any,data) {
+      return this
+        .put(EDIT_COUNTRIES(id),data)
         .then((response) => {
           return response?.data;
         })
@@ -70,9 +67,9 @@
         });
     }
 
-    static details(tenant_id:any,id: string) {
-      return axios
-        .get(COUNTRIES_DETAIL_ENDPOINT(tenant_id,id))
+    countryDetails(id: string) {
+      return this
+        .get(COUNTRIES_DETAIL_ENDPOINT(id))
         .then((response) => {
           return response.data;
         })

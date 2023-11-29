@@ -5,21 +5,12 @@ import { CountryService } from "services";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { checkTenant } from "constants/function";
 
 function AddCountry() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const countryService = new CountryService();
+
   const {
     control,
     setError,
@@ -39,7 +30,8 @@ function AddCountry() {
       is_active: activeStatus,
     };
 
-    CountryService.create(tenantId, backendFormat)
+    countryService
+      .createCountry(backendFormat)
       .then((res) => {
         toast.success("Country Added successfully");
         router.back();
@@ -124,34 +116,7 @@ function AddCountry() {
               </div>
             </Col>
 
-            <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Status </Label>
-              <div className="d-flex gap-1">
-                <div className="d-flex gap-1">
-                  <input
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                    type="radio"
-                    id="ex1-active"
-                    name="ex1"
-                    onChange={() => {
-                      setActiveStatus(true);
-                    }}
-                  />
-                  <div>Active</div>
-                </div>
-                <div className="d-flex gap-1">
-                  <input
-                    type="radio"
-                    name="ex1"
-                    id="ex1-inactive"
-                    onChange={() => {
-                      setActiveStatus(false);
-                    }}
-                  />
-                  <div>In-Active</div>
-                </div>
-              </div>
-            </div>
+            
           </Form>
         </div>
       </div>

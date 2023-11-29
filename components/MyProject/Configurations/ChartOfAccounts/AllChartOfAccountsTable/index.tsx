@@ -36,36 +36,35 @@ import {
   openDeleteCOAPopup,
 } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
 
 const AllChartOfAccountsTable = () => {
   const dispatch = useDispatch();
   const CoasService = new COAAccountsService();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const {
     data: coasData,
     isLoading: coasLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_COAS", searchText], () =>
-    CoasService.getCoasAccounts(tenantId)
-  );
+  } = useSWR(["LIST_COAS", searchText], () => CoasService.getCoasAccounts());
   const dataSource = coasData?.result;
 
   const StateBadge = (props) => {
-    console.log("PROPS", props.value);
 
     const sateDir = {
       true: "success",
@@ -101,7 +100,7 @@ const AllChartOfAccountsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -113,30 +112,34 @@ const AllChartOfAccountsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              onClick={() =>
-                router.push(
-                  `/configurations/edit-chartofaccounts/${props.data.ID}`
-                )
-              }
-              className="w-100"
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                onClick={() =>
+                  router.push(
+                    `/configurations/edit-chartofaccounts/${props.data.ID}`
+                  )
+                }
+                className="w-100"
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -160,17 +163,17 @@ const AllChartOfAccountsTable = () => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
-    {
-      headerName: "Postable",
-      field: "Postable",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
+    // {
+    //   headerName: "Postable",
+    //   field: "Postable",
+    //   sortable: true,
+    //   resizable: true,
+    //   cellStyle: { fontSize: "14px", fontWeight: "400" },
+    //   headerClass: "custom-header-class",
+    // },
     {
       headerName: "COA Parent",
-      field: "COAParent",
+      field: "ParentID",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -353,10 +356,7 @@ const AllChartOfAccountsTable = () => {
                   />{" "}
                   Create COA
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
                       router.push(`/configurations/add-chart-of-accounts`)
@@ -383,7 +383,7 @@ const AllChartOfAccountsTable = () => {
         </Card>
       </div>
       {coasLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -394,7 +394,7 @@ const AllChartOfAccountsTable = () => {
       ) : (
         <>
           {coasData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -406,14 +406,7 @@ const AllChartOfAccountsTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create COA"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create COA"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
                 buttonLink={"/configurations/add-chart-of-accounts"}
               />
             </div>

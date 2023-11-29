@@ -1,10 +1,9 @@
-import axios from 'axios';
 import APIService from './api.service';
 import {CREATE_LOCATIONS, DELETE_LOCATION, EDIT_LOCATION, GET_LOCATIONS, LOCATION_DETAIL_ENDPOINT,UPLOAD_LOCATION_LIST} from '../lib/endpoints';
 
 class LocationsService extends APIService {
-  getLocations(tenant_id:any): Promise<any> {
-    return this.get(`${GET_LOCATIONS(tenant_id)}`)
+  getLocations(): Promise<any> {
+    return this.get(`${GET_LOCATIONS}`)
       .then((res) => {
         return res?.data;
       })
@@ -14,9 +13,9 @@ class LocationsService extends APIService {
   }
 
 
-  static create(tenant_id:any,data:any) {
-    return axios
-      .post(CREATE_LOCATIONS(tenant_id), data)
+  createLocation(data:any) {
+    return this
+      .post(CREATE_LOCATIONS, data)
       .then((response) => {
         return response.data;
       })
@@ -25,18 +24,16 @@ class LocationsService extends APIService {
       });
   }
 
-   static uploadlocationlist(tenant_id:any,fileName: any) {
+  uploadlocationlist(fileName: any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return axios.post(UPLOAD_LOCATION_LIST(tenant_id), formData, {
-        headers: {
+      return this.post(UPLOAD_LOCATION_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
-        },
-      })
+        },)
       .then((response) => {
         return response.data;
       })
@@ -48,9 +45,9 @@ class LocationsService extends APIService {
       });
     }
 
-  static delete(tenant_id:any,id: any) {
-    return axios
-      .delete(DELETE_LOCATION(tenant_id,id))
+  deleteLocation(id: any) {
+    return this
+      .delete(DELETE_LOCATION(id))
       .then((response) => {
         return response?.data;
       })
@@ -59,9 +56,9 @@ class LocationsService extends APIService {
       });
   }
 
-  static edit(tenant_id:any,id: any,data) {
-    return axios
-      .put(EDIT_LOCATION(tenant_id,id),data)
+  editLocation(id: any,data) {
+    return this
+      .put(EDIT_LOCATION(id),data)
       .then((response) => {
         return response?.data;
       })
@@ -71,9 +68,9 @@ class LocationsService extends APIService {
   }
 
 
-  static details(tenant_id:any,id: string) {
-    return axios
-      .get(LOCATION_DETAIL_ENDPOINT(tenant_id,id))
+  locationDetails(id: string) {
+    return this
+      .get(LOCATION_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })

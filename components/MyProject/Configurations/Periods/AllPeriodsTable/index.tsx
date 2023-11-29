@@ -39,17 +39,20 @@ const AllPeriodsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const periodsService = new PeriodsService();
 
   const {
@@ -57,9 +60,7 @@ const AllPeriodsTable = () => {
     isLoading: periodLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_USERS", searchText], () =>
-    periodsService.getPeriods(tenantId)
-  );
+  } = useSWR(["LIST_USERS", searchText], () => periodsService.getPeriods());
 
   const dataSource = periodData?.data;
 
@@ -77,7 +78,6 @@ const AllPeriodsTable = () => {
   };
 
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
     const row = props.data;
     const id = `action-popover-${props.value}`;
     const [open, setOpen] = useState(false);
@@ -94,7 +94,7 @@ const AllPeriodsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -106,31 +106,35 @@ const AllPeriodsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={() =>
-                router.push(`/configurations/edit-period/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem tag="a" className="w-100">
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeletePeriodPopup(props.data.ID));
-                }}
-              />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() =>
+                  router.push(`/configurations/edit-period/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem tag="a" className="w-100 cursor-pointer">
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeletePeriodPopup(props.data.ID));
+                  }}
+                />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -219,39 +223,7 @@ const AllPeriodsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      PeriodName: "Q1 2023",
-      StartDate: "2023-01-01",
-      EndDate: "2023-03-31",
-      Description: "First quarter of 2023",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      PeriodName: "Q2 2023",
-      StartDate: "2023-04-01",
-      EndDate: "2023-06-30",
-      Description: "Second quarter of 2023",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-04-15",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      PeriodName: "Q3 2023",
-      StartDate: "2023-07-01",
-      EndDate: "2023-09-30",
-      Description: "Third quarter of 2023",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-07-15",
-      Status: "active",
-    },
-    // Add more data as needed
-  ];
+
 
   return (
     <div>
@@ -326,10 +298,7 @@ const AllPeriodsTable = () => {
                   />{" "}
                   Add Period
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -354,7 +323,7 @@ const AllPeriodsTable = () => {
         </Card>
       </div>
       {periodLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -365,7 +334,7 @@ const AllPeriodsTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -378,12 +347,7 @@ const AllPeriodsTable = () => {
               <NoDataPage
                 // buttonName={"Add Period"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Period"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Period" : "No button"
                 }
                 buttonLink={"/configurations/add-period"}
               />

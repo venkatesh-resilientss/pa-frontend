@@ -25,22 +25,26 @@ import infoImage from "assets/MyImages/info.svg";
 import router, { useRouter } from "next/router";
 import { hasPermission } from "commonFunctions/functions";
 import { checkTenant } from "constants/function";
+import { toast } from "react-toastify";
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteModalId, setDeleteModalId] = useState(null);
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateUseerPermission = hasPermission(
+    "user_and_role_management",
+    "create_user"
+  );
+  const hasEditUserPermission = hasPermission(
+    "user_and_role_management",
+    "edit_user"
+  );
+  const hasDeactivateUserPermission = hasPermission(
+    "user_and_role_management",
+    "deactivate_user"
+  );
+
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
   };
@@ -50,13 +54,18 @@ const AllRoleTable = () => {
     toggleDeleteModal();
   };
 
+  const usersService = new UsersService();
+
   const handleDeleteUser = async (id) => {
     try {
-      await UsersService.delete(tenantId, id);
+      await usersService.deleteUser(id);
       // Optionally, you can update your local state or refetch data here
+      toast.success("User deleted successfully");
+      clientMutate();
     } catch (error) {
       // Handle error, show a message, or log it
-      console.error("Error deleting user:", error);
+      // console.error("Error deleting user:", error);
+      toast.error("Error deleting user");
     } finally {
       toggleDeleteModal();
     }
@@ -80,7 +89,7 @@ const AllRoleTable = () => {
           className="text-black text-center"
           style={{ fontSize: "16px", fontWeight: "600", marginBottom: "8px" }}
         >
-          Are you sure you want to delete? {deleteModalId}
+          Are you sure you want to delete?
         </div>
         <div
           className="text-center"
@@ -114,8 +123,9 @@ const AllRoleTable = () => {
 
   const clientService = new UsersService();
 
-  const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
-    clientService.getUsers(tenantId)
+  const { data: clientData, mutate: clientMutate } = useSWR(
+    ["LIST_CLIENTS", searchText],
+    () => clientService.getUsers()
   );
 
   const StateBadge = (props) => {
@@ -142,51 +152,29 @@ const AllRoleTable = () => {
     );
 
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image src={actionIcon} alt="" width={14} id={id} />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => router.push(`/settings/edit-user/${id}`)}
-            >
-              <Action
-                icon={"/icons/edit_square.svg"}
-                name={"Edit"}
-                action={() => { }}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => handleDeleteClick(id)}
-            >
-              <Action
-                icon={"/icons/delete.svg"}
-                name={"Delete"}
-                action={() => { }}
-              />
-            </DropdownItem> */}
-            {hasPermission("user_and_role_management", "edit_user") && (
+            {hasEditUserPermission && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() => router.push(`/settings/edit-user/${id}`)}
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
-                  name={"Edit"}
+                  name={"Edit User"}
                   action={() => {}}
                 />
               </DropdownItem>
             )}
-            {hasPermission("user_and_role_management", "deactivate_user") && (
+            {hasDeactivateUserPermission && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() => handleDeleteClick(id)}
               >
                 <Action
@@ -210,7 +198,7 @@ const AllRoleTable = () => {
             src={
               props.data.profile_image
                 ? props.data.profile_image
-                : "/icons/sample-profile.png"
+                : "/default.svg"
             }
             alt="Profile"
             width={30}
@@ -234,6 +222,7 @@ const AllRoleTable = () => {
       cellRenderer: MemberRenderer,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      resizable: true,
       getQuickFilterText: (params) => {
         const res = `${params.data.adminname}${params.data.email}`;
         return res;
@@ -303,7 +292,7 @@ const AllRoleTable = () => {
         <CardBody>
           <div className="d-flex justify-content-between">
             <div>
-              <p className="m-2" style={{ fontWeight: "bold" }}>
+              <p className="m-2" style={{ fontWeight: "600" }}>
                 User Management
               </p>
             </div>
@@ -322,7 +311,7 @@ const AllRoleTable = () => {
               >
                 <Plus size={16} /> Add User
               </button> */}
-              {hasPermission("user_and_role_management", "create_user") && (
+              {hasCreateUseerPermission && (
                 <button
                   className="btn btn-primary"
                   onClick={() => router.push("/settings/add-user")}
@@ -334,11 +323,11 @@ const AllRoleTable = () => {
           </div>
         </CardBody>
       </Card>
-      <div className="mt-4">
+      <div className="mt-3">
         <GridTable
           rowData={clientData?.data}
           columnDefs={columnDefs}
-          pageSize={9}
+          pageSize={10}
           searchText={searchText}
         />
       </div>

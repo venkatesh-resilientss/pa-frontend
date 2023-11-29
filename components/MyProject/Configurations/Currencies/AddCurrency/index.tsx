@@ -8,17 +8,9 @@ import { CurrencyService } from "services";
 import { checkTenant } from "constants/function";
 
 function AddCurrency() {
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+
+  const currencyService = new CurrencyService();
   const {
     control,
     setError,
@@ -41,7 +33,8 @@ function AddCurrency() {
       IsActive: activeStatus,
     };
 
-    CurrencyService.create(tenantId, backendFormat)
+    currencyService
+      .createCurrency(backendFormat)
       .then((res) => {
         toast.success("Currency Added successfully");
         reset();
@@ -148,33 +141,6 @@ function AddCurrency() {
               )}
             </div>
           </Col>
-          <div className="d-flex flex-column mt-2">
-            <Label className="form-lable-font">Status </Label>
-            <div className="d-flex gap-1">
-              <div className="d-flex gap-1">
-                <input
-                  type="radio"
-                  id="ex1-active"
-                  name="ex1"
-                  onChange={() => {
-                    setActiveStatus(true);
-                  }}
-                />
-                <div>Active</div>
-              </div>
-              <div className="d-flex gap-1">
-                <input
-                  type="radio"
-                  name="ex1"
-                  id="ex1-inactive"
-                  onChange={() => {
-                    setActiveStatus(false);
-                  }}
-                />
-                <div>In-Active</div>
-              </div>
-            </div>
-          </div>
         </Form>
       </div>
     </div>

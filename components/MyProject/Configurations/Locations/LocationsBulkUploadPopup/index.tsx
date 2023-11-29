@@ -17,17 +17,9 @@ import { checkTenant } from "constants/function";
 
 const LocationsBulkUploadPopup = () => {
   const dispatch = useDispatch();
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+   
+  const locationService = new LocationsService();
+
   const popupStatus = useSelector(
     (state: any) => state.configurations.locations.bulkUploadPopup.status
   );
@@ -59,7 +51,8 @@ const LocationsBulkUploadPopup = () => {
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
-    LocationsService.uploadlocationlist(tenantId, fileName)
+    locationService
+      .uploadlocationlist(fileName)
       .then((result) => {
         // Handle success
         toast.success("Data inserted successfully.");

@@ -10,6 +10,8 @@ import {
   Button,
   Input,
 } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { UserInfo } from "redux/slices/mySlices/roles";
 import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -25,7 +27,6 @@ import { useRouter } from "next/router";
 import { LocationsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import { useDispatch } from "react-redux";
 import {
   openBulkUploadLocationsPopup,
   openDeleteLocationPopup,
@@ -41,17 +42,20 @@ const AllLocationsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const locationsService = new LocationsService();
 
@@ -61,7 +65,7 @@ const AllLocationsTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_LOCATIONS", searchText], () =>
-    locationsService.getLocations(tenantId)
+    locationsService.getLocations()
   );
   const dataSource = locationsData?.result;
 
@@ -87,7 +91,7 @@ const AllLocationsTable = () => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
 
-    console.log("PROPS", props);
+
 
     const [open, setOpen] = useState(false);
 
@@ -103,7 +107,7 @@ const AllLocationsTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -115,29 +119,33 @@ const AllLocationsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) =>
-                router.push(`/configurations/edit-location/${props.data.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-location/${props.data.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -205,62 +213,6 @@ const AllLocationsTable = () => {
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-    },
-  ];
-  const rowData = [
-    {
-      LocationCode: "001",
-      LocationName: "Location A",
-      Description: "Description",
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      LocationCode: "002",
-      LocationName: "Location B",
-      Description: "Description",
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-12",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      LocationCode: "003",
-      LocationName: "Location C",
-      Description: "Description",
-      CreatedBy: "Mike Johnson",
-      UpdatedOn: "2023-11-11",
-      Status: "active",
-      id: 3,
-    },
-    {
-      LocationCode: "004",
-      LocationName: "Location D",
-      Description: "Description",
-      CreatedBy: "Sara Williams",
-      UpdatedOn: "2023-11-10",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      LocationCode: "005",
-      LocationName: "Location E",
-      Description: "Description",
-      CreatedBy: "David Brown",
-      UpdatedOn: "2023-11-09",
-      Status: "active",
-      id: 5,
-    },
-    {
-      LocationCode: "006",
-      LocationName: "Location F",
-      Description: "Description",
-      CreatedBy: "Emily Davis",
-      UpdatedOn: "2023-11-08",
-      Status: "inactive",
-      id: 6,
     },
   ];
 
@@ -339,10 +291,7 @@ const AllLocationsTable = () => {
                   />{" "}
                   Add Location
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-location`)}
                     style={{
@@ -367,7 +316,7 @@ const AllLocationsTable = () => {
         </Card>
       </div>
       {locationsLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -378,11 +327,11 @@ const AllLocationsTable = () => {
       ) : (
         <>
           {locationsData?.result.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
-                pageSize={9}
+                pageSize={10}
                 searchText={searchText}
               />
             </div>
@@ -391,12 +340,7 @@ const AllLocationsTable = () => {
               <NoDataPage
                 // buttonName={"Create Location"}
                 buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Location"
-                    : "No button"
+                  hasCreateConfiguration ? "Create Location" : "No button"
                 }
                 buttonLink={"/configurations/add-location"}
               />

@@ -34,22 +34,25 @@ import approvalLine from "../../../../../assets/myIcons/approvalLine.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
 
 const AllCurrencyTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
+
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
@@ -60,9 +63,8 @@ const AllCurrencyTable = () => {
     error: userError,
     mutate: userMutate,
   } = useSWR(["LIST_CURRENCIES", searchText], () =>
-    currencyService.getCurrencies(tenantId)
+    currencyService.getCurrencies()
   );
-  console.log(currencyData, "currencyData");
   const dataSource = currencyData?.result;
 
   const AddCurrency = (e) => {
@@ -73,7 +75,6 @@ const AllCurrencyTable = () => {
   };
 
   const Currency = (props) => {
-    console.log(props.data.Defaultcurrency, "kkkkk");
 
     return (
       <>
@@ -114,7 +115,7 @@ const AllCurrencyTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -126,29 +127,33 @@ const AllCurrencyTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) =>
-                router.push(`/configurations/edit-currencies/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={(e) => dispatch(openDeleteCurrencyPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) =>
+                  router.push(`/configurations/edit-currencies/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={(e) => dispatch(openDeleteCurrencyPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -166,23 +171,6 @@ const AllCurrencyTable = () => {
     {
       headerName: "Currencies Name",
       field: "Name",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-    {
-      headerName: "Currencies Symbol",
-      field: "CurrencySymbol",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-    {
-      headerName: "Default Currency",
-      field: "Defaultcurrency",
-      cellRenderer: Currency,
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -227,68 +215,7 @@ const AllCurrencyTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      CurrenciesCode: "USD",
-      CurrenciesName: "US Dollar",
-      CurrenciesSymbol: "$",
-      Defaultcurrency: true,
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      CurrenciesCode: "EUR",
-      CurrenciesName: "Euro",
-      CurrenciesSymbol: "€",
-      Defaultcurrency: false,
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-14",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      CurrenciesCode: "GBP",
-      CurrenciesName: "British Pound",
-      CurrenciesSymbol: "£",
-      Defaultcurrency: true,
-      CreatedBy: "Bob Johnson",
-      UpdatedOn: "2023-11-15",
-      Status: "active",
-      id: 3,
-    },
-    {
-      CurrenciesCode: "JPY",
-      CurrenciesName: "Japanese Yen",
-      CurrenciesSymbol: "¥",
-      Defaultcurrency: false,
-      CreatedBy: "Alice Williams",
-      UpdatedOn: "2023-11-16",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      CurrenciesCode: "AUD",
-      CurrenciesName: "Australian Dollar",
-      CurrenciesSymbol: "A$",
-      Defaultcurrency: false,
-      CreatedBy: "Charlie Brown",
-      UpdatedOn: "2023-11-17",
-      Status: "active",
-      id: 5,
-    },
-    {
-      CurrenciesCode: "CAD",
-      CurrenciesName: "Canadian Dollar",
-      CurrenciesSymbol: "CA$",
-      Defaultcurrency: false,
-      CreatedBy: "Eva Davis",
-      UpdatedOn: "2023-11-18",
-      Status: "inactive",
-      id: 6,
-    },
-  ];
+
 
   return (
     <>
@@ -366,10 +293,7 @@ const AllCurrencyTable = () => {
                     />{" "}
                     Add Currency
                   </Button> */}
-                  {hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  ) && (
+                  {hasCreateConfiguration && (
                     <Button
                       onClick={() =>
                         router.push(`/configurations/add-currency`)
@@ -396,7 +320,7 @@ const AllCurrencyTable = () => {
           </Card>
         </div>
         {currenciesLoading ? (
-          <div className="mt-2">
+          <div className="mt-3">
             <GridTable
               rowData={dataSource}
               columnDefs={columnDefs}
@@ -407,7 +331,7 @@ const AllCurrencyTable = () => {
         ) : (
           <>
             {currencyData?.result.length > 0 ? (
-              <div className="mt-2">
+              <div className="mt-3">
                 <GridTable
                   rowData={dataSource}
                   columnDefs={columnDefs}
@@ -420,12 +344,7 @@ const AllCurrencyTable = () => {
                 <NoDataPage
                   // buttonName={"Create Currency"}
                   buttonName={
-                    hasPermission(
-                      "configuration_management",
-                      "create_configuration"
-                    )
-                      ? "Create Currency"
-                      : "No button"
+                    hasCreateConfiguration ? "Create Currency" : "No button"
                   }
                   buttonLink={"/configurations/add-currency"}
                 />

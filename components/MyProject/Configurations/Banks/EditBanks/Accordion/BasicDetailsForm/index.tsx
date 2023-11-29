@@ -25,17 +25,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
   ];
 
   const [currency, setCurrency] = useState("");
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const currencyService = new CurrencyService();
 
   const {
@@ -43,7 +33,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
     isLoading: userLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies(tenantId));
+  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {
@@ -237,7 +227,8 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
           </Col>
 
           <Col xl="4">
-            <Label className="form-lable-font">Currency</Label>
+            <Label className="form-lable-font"
+            style={{ fontSize: "12px", fontWeight: "400" }}>Currency</Label>
             <Controller
               name={"currency"}
               rules={{ required: "Currency is required" }}
@@ -249,7 +240,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
                   className="react-select"
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
-                  placeholder="Select Series"
+                  placeholder="Select Currency"
                   defaultOptions={currenciesSelectFormat}
                 />
               )}

@@ -40,27 +40,28 @@ const AllBudgetTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  const [tenantId, setTenantId] = useState("");
+
+  const hasCreateConfiguration = hasPermission(
+    "configuration_management",
+    "create_configuration"
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const hasDeactivateConfiguration = hasPermission(
+    "configuration_management",
+    "deactivate_configuration"
+  );
 
   const budgetService = new BudgetService();
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
+
   const {
     data: budgetData,
     isLoading: budgetLoading,
     error: userError,
     mutate: userMutate,
-  } = useSWR(["LIST_BUDGETS", searchText], () =>
-    budgetService.getBudgets(tenantId)
-  );
+  } = useSWR(["LIST_BUDGETS", searchText], () => budgetService.getBudgets());
 
   const dataSource = budgetData?.data;
 
@@ -93,7 +94,7 @@ const AllBudgetTable = () => {
       );
     };
     return (
-      <div>
+      <div className="cursor-pointer">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -105,29 +106,33 @@ const AllBudgetTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
                 action={() => {}}
               />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={() =>
-                router.push(`/configurations/edit-budget/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => dispatch(openDeleteBudgetPopup(props.data.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
+            </DropdownItem> */}
+            {hasEditConfigurationPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={() =>
+                  router.push(`/configurations/edit-budget/${props.data?.ID}`)
+                }
+              >
+                <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
+              </DropdownItem>
+            )}
+            {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => dispatch(openDeleteBudgetPopup(props.data.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              </DropdownItem>
+            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -137,7 +142,7 @@ const AllBudgetTable = () => {
   const columnDefs = [
     {
       headerName: "Budget Code",
-      field: "Cdde",
+      field: "Code",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -342,10 +347,7 @@ const AllBudgetTable = () => {
                   />{" "}
                   Add Budget
                 </Button> */}
-                {hasPermission(
-                  "configuration_management",
-                  "create_configuration"
-                ) && (
+                {hasCreateConfiguration && (
                   <Button
                     style={{
                       height: "38px",
@@ -370,7 +372,7 @@ const AllBudgetTable = () => {
         </Card>
       </div>
       {budgetLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={dataSource}
             columnDefs={columnDefs}
@@ -381,7 +383,7 @@ const AllBudgetTable = () => {
       ) : (
         <>
           {dataSource?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={dataSource}
                 columnDefs={columnDefs}
@@ -393,14 +395,7 @@ const AllBudgetTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Add Budget"}
-                buttonName={
-                  hasPermission(
-                    "configuration_management",
-                    "create_configuration"
-                  )
-                    ? "Create Budget"
-                    : ""
-                }
+                buttonName={hasCreateConfiguration ? "Create Budget" : ""}
                 buttonLink={"/configurations/add-budget"}
               />
             </div>

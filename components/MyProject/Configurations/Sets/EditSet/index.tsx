@@ -10,20 +10,11 @@ import { checkTenant } from "constants/function";
 
 function EditSet() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
 
+  const setService = new SetsService();
   const { id } = router.query;
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchSetDetails = (id) => SetsService.details(tenantId, id);
+
+  const fetchSetDetails = (id) => setService.setsDetails(id);
 
   const {
     data: setData,
@@ -44,17 +35,15 @@ function EditSet() {
   useEffect(() => {
     if (!setData) return;
 
-    setData?.Name && setValue("setname", setData?.Name);
-    setData?.Code && setValue("setcode", setData?.Code);
+    setData?.Name && setValue("name", setData?.Name);
+    setData?.Code && setValue("code", setData?.Code);
 
     setData?.Description && setValue("description", setData?.Description);
-  }),
-    [setData];
-
-  const setService = new SetsService();
+    setActiveStatus(setData?.IsActive);
+  }, [setData]);
 
   const { mutate: countryMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets(tenantId)
+    setService.getSets()
   );
 
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
@@ -65,12 +54,12 @@ function EditSet() {
     backendFormat = {
       name: data.name,
       description: data.description,
-      is_active: activeStatus,
-      start: data.startDate,
-      endDate: data.endDate,
+      isActive: activeStatus === "active" ? true : false,
+      code: data.code,
     };
 
-    SetsService.edit(tenantId, id, backendFormat)
+    setService
+      .editSet(id, backendFormat)
       .then((res) => {
         toast.success("Set Edited successfully");
         mutate(countryMutate());
@@ -139,7 +128,7 @@ function EditSet() {
           <div className="mb-1">
             <Label>Set Name</Label>
             <Controller
-              name="setname"
+              name="name"
               rules={{ required: "Set Name is required" }}
               control={control}
               render={({ field }) => (
@@ -164,7 +153,7 @@ function EditSet() {
               Set Code
             </Label>
             <Controller
-              name="setcode"
+              name="code"
               rules={{ required: "Set Code is required" }}
               control={control}
               render={({ field }) => (
@@ -222,7 +211,16 @@ function EditSet() {
           </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
-              <input type="radio" id="ex1-active" name="ex1" value="active" />
+              <input
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                value="active"
+                checked={activeStatus}
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
+              />
               <div>Active</div>
             </div>
             <div className="d-flex gap-1">
@@ -231,6 +229,10 @@ function EditSet() {
                 name="ex1"
                 id="ex1-inactive"
                 value="inactive"
+                checked={!activeStatus}
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
               />
               <div>In-Active</div>
             </div>

@@ -1,9 +1,26 @@
 import { useForm, Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import useSWR, { mutate } from "swr";
+import { StatesService } from "services";
+import AsyncSelect from "react-select/async";
 
 function MailingAddressForm({ onSubmit, control, watch, errors }) {
   const { register, handleSubmit } = useForm();
+  
+  const stateService = new StatesService();
+  const {data:states, mutate: stateMutate } = useSWR("LIST_STATES", () =>
+    stateService.getStates()
+  );
+
+  const statesDropdownoptions = states?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+      country : b.Country
+    };
+  });
+
   return (
     <div className="text-black">
       <Form
@@ -114,11 +131,14 @@ function MailingAddressForm({ onSubmit, control, watch, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter State"
-                  invalid={errors.mailingAddressState && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  // loadOptions={loadStateOptions}
+                  placeholder="Select State"
+                  defaultOptions={statesDropdownoptions}
                 />
               )}
             />

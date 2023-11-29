@@ -11,18 +11,11 @@ import { checkTenant } from "constants/function";
 function EditTaxCode() {
   const router = useRouter();
   const { id } = router.query;
-  const [tenantId, setTenantId] = useState("");
-  useEffect(() => {
-    const getTenant = async () => {
-      const tenant = await checkTenant();
-      // console.log(tenant, "tenant");
-      if (tenant) {
-        setTenantId(tenant.id);
-      }
-    };
-    getTenant();
-  }, []);
-  const fetchTaxCodeDetails = (id) => TaxCodesService.details(tenantId, id);
+   
+
+  const taxCodeService = new TaxCodesService();
+  const fetchTaxCodeDetails = (id) =>
+    taxCodeService.taxCodeDetails(id);
 
   const {
     data: taxcodesData,
@@ -49,13 +42,11 @@ function EditTaxCode() {
 
     taxcodesData?.Description &&
       setValue("description", taxcodesData?.Description);
-  }),
-    [taxcodesData];
-
-  const taxCodeService = new TaxCodesService();
+    setActiveStatus(taxcodesData?.IsActive);
+  },[taxcodesData]);
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes(tenantId)
+    taxCodeService.getTaxCodes()
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
@@ -66,10 +57,11 @@ function EditTaxCode() {
     backendFormat = {
       code: data.taxcode,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
     };
 
-    TaxCodesService.edit(tenantId, id, backendFormat)
+    taxCodeService
+      .editTaxCode(id, backendFormat)
       .then((res) => {
         toast.success("TaxCode Edited successfully");
         mutate(taxCodeMutate());
@@ -202,6 +194,7 @@ function EditTaxCode() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -213,6 +206,7 @@ function EditTaxCode() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}
