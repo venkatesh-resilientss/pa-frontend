@@ -214,7 +214,7 @@ const ResetPassword = () => {
                     autoComplete="off"
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirm_password"
-                    placeholder="Re-enter password"
+                    placeholder="Re-enter Password"
                     className="f-14 mt-2 teamworkspaceformpassword resetPassword1"
                     value={formik.values.confirm_password}
                     onChange={formik.handleChange("confirm_password")}
