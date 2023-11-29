@@ -57,7 +57,7 @@ function EditSeries() {
             <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">OCC Code</Label>
+                <Label className="form-lable-font">OCC Code <span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="OCCCode"
                   rules={{ required: "OCC Code is required" }}
@@ -81,7 +81,7 @@ function EditSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Description</Label>
+                <Label className="form-lable-font">Description <span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="Description"
                   rules={{ required: "Description is required" }}
@@ -105,7 +105,7 @@ function EditSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">WC Class</Label>
+                <Label className="form-lable-font">WC Class<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="WC Class"
                   rules={{ required: "WC Class is required" }}
@@ -130,7 +130,7 @@ function EditSeries() {
             <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Employee Type</Label>
+                <Label className="form-lable-font">Employee Type<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="EmployeeType"
                   rules={{ required: "Employee Type is required" }}
@@ -154,7 +154,7 @@ function EditSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">OFF Production</Label>
+                <Label className="form-lable-font">OFF Production<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="OFFProduction"
                   rules={{ required: "OFF Production is required" }}
@@ -178,7 +178,7 @@ function EditSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Agreements</Label>
+                <Label className="form-lable-font">Agreements<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="Agreements"
                   rules={{ required: "Agreements is required" }}
