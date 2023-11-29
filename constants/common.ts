@@ -280,6 +280,10 @@ export const sidebarRoutes = [
         name: "Budget",
         path: "/budgets",
       },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
     ],
   },
   {
