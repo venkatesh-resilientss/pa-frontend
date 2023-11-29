@@ -4,6 +4,7 @@ import { useState, ReactNode } from "react";
 // ** Next Imports
 import Link from "next/link";
 import { AiOutlineLock } from "react-icons/ai";
+// import Divider from '@mui/material/Divider';
 import { Row, Col, Button } from "reactstrap";
 import * as yup from "yup";
 import { useForm, Controller } from "react-hook-form";
@@ -15,8 +16,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // ** Layout Import
 import { Info } from "react-feather";
 import { useRouter } from "next/router";
-import Image from "next/image";
-
+import { Image } from "react-bootstrap";
 const source = require("assets/MyImages/Login2.svg");
 const Logo = require("assets/MyImages/productionLogo.svg");
 
@@ -89,25 +89,42 @@ const LoginPage = () => {
       <Row className="auth-inner ">
         <Col
           className="d-none d-lg-flex p-6"
-          lg="7"
+          lg="8"
           sm="12"
           style={{
-            backgroundColor: "#283891",
+            // backgroundColor: "#283891",
             minHeight: "100vh",
-            // overflowY: 'hidden'
+             overflowY: 'hidden'
           }}
         >
           <div className="d-lg-flex">
             <Image
-              src={source}
+              src={'/SideImage.png'}
               alt="Login Cover"
-              style={{ height: "599px", marginTop: "100px" }}
+              fluid
+               height={800}
+             style={{ maxWidth: '100%', height: 'auto',width:'2000px' }}
             />
           </div>
+          <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', color: '#ffffff', marginLeft:'-400px', marginTop:'300px'}}>
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="text-container text-center">
+              <div className="d-flex align-items-start">
+                <p className="intutive">INTUITIVE</p>
+              </div>
+              <div className="d-flex align-items-start">
+                <p className="entertainment">ENTERTAINMENT</p>
+              </div>
+              <div className="d-flex align-items-start">
+                <p className="software">SOFTWARE</p>
+              </div>
+            </div>
+          </div>
+  </div>
         </Col>
         <Col
           className="d-flex auth-bg p-lg-5"
-          lg="5"
+          lg="4"
           sm="12"
           style={{ marginTop: "-10px" }}
         >
@@ -119,7 +136,8 @@ const LoginPage = () => {
           >
             <div className="w-full h-[1500px] p-[78px,103.94px,78px,103.94px] justify-between">
               <div className="w-[283.94px] h-[107.34px]">
-                <Image src={Logo} alt="Logo" />
+                <Image src={'/Logo.svg'} alt="Logo"  width={112}
+              height={43}/>
               </div>
               <div className="w-[963.38px] h-[562.42px] gap-91.27">
                 <p
@@ -165,7 +183,7 @@ const LoginPage = () => {
                                 placeholder="Enter tenant adrress"
                                 style={{
                                   backgroundColor: "#F7F7F8",
-                                  width: "85%",
+                                  width: "95%",
                                   border: "none",
                                   outline: "none",
                                   borderColor: "transparent !important",
@@ -215,7 +233,7 @@ const LoginPage = () => {
                                 placeholder="Enter email adrress"
                                 style={{
                                   backgroundColor: "#F7F7F8",
-                                  width: "85%",
+                                  width: "95%",
                                   outline: "none",
                                   borderColor: "transparent !important",
                                 }}
@@ -253,7 +271,7 @@ const LoginPage = () => {
                               autoComplete="current-password"
                               style={{
                                 backgroundColor: "#F7F7F8",
-                                width: "85%",
+                                width: "95%",
                                 outline: "none",
                                 borderColor: "transparent !important",
                               }}
@@ -286,11 +304,11 @@ const LoginPage = () => {
                             type="submit"
                             color="primary"
                             style={{
-                              width: "140px",
+                              width: "154px",
                               marginRight: "80px",
-                              height: "60px",
+                              height: "54px",
                               fontSize: "18px",
-                              background: " #00AEEF",
+                              background: " #283891",
                               border: "none",
                             }}
                           >
@@ -300,14 +318,14 @@ const LoginPage = () => {
                       </form>
                     </div>
                   </div>
-                  <hr style={{ marginTop: "30px", width: "85%" }} />
+                  <hr style={{ marginTop: "30px", width: "95%" }} />
                   <div className="flex items-center justify-start">
                     <Button
                       className="flex p-3 border"
                       color="info"
                       style={{
                         backgroundColor: "#EAF7FC",
-                        width: "85%",
+                        width: "95%",
                         border: "#C6C6C6",
                       }}
                       onClick={() => router.push(`/singlesignon`)}
@@ -334,34 +352,40 @@ const LoginPage = () => {
                   </div>
                 </div>
                 <div
-                  className="d-flex flex-column mt-5"
+                  className="d-flex flex-column align-items-center justify-content-center"
                   style={{
+                    marginTop: "10px",
                     fontSize: "12px",
-                    fontWeight: "500",
-                    gap: "4px",
-                    marginLeft: "25%",
-                    color: "#030229",
+                    color: "#656472",
+                    marginLeft:"-60px"
                   }}
                 >
-                  <div style={{ marginLeft: "22px", fontWeight: "500" }}>
-                    If you need help, contact support
-                  </div>
-                  <div>
-                    Please email support or call{" "}
-                    <a style={{ color: "#030229" }} href="tel:805-428-8024">
-                      805-428-8024
-                    </a>{" "}
-                  </div>
-                  <div>Powered by Resilient Software Solutions LLC</div>
+                  <p className="privacy-text">
+                    Have Questions or Suggestions?
+                  </p>
+                  <p className="privacy-text">
+    Please{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
+      email
+    </a>{" "}
+    support or call{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
+      805-428-8024
+    </a>
+  </p>
+                  <p className="privacy-text">
+                    Powered by Resilient Software Solutions LLC
+                  </p>
                 </div>
                 <div
                   className="d-flex justify-content-between"
-                  style={{ marginTop: "10px", color: "#030229" }}
+                  style={{ marginTop: "10px", color: "#030229"}}
                 >
-                  <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
+                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginLeft:"85px" }}>
                     Terms & conditions
                   </a>{" "}
-                  <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
+                  <span style={{ fontSize: "12px", color: "#030229" }}>|</span>
+                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginRight:"125px" }}>
                     Privacy Policy
                   </a>{" "}
                 </div>

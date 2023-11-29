@@ -79,6 +79,7 @@ editProject(id: any,data) {
         throw error.response.data;
       });
   }
+
 }
 
 export default ProjectService;
