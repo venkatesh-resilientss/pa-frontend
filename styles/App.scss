@@ -352,3 +352,75 @@ input::placeholder {
 .custom-datepicker {
   height: 30px
 }
+.reseTpassword{
+  max-width: 100%;
+  height: auto;
+}
+.resetPassword1{
+  height: 54px;
+   color: #626873
+}
+.reseTpassword3{
+  width: 380px;
+                    height: 54px;
+                    background: #283891;
+                    border: #00AEEF;
+                    border-radius: 12px;
+                    font-size: 16px,
+}
+ .reseTpassword4{
+  margin-top: "50px";
+                    font-size: 12px;
+                    color: #656472;
+ }
+ .reseTpassword5{
+font-size: 12px;
+color: #030229;
+text-decoration: underline;
+cursor: pointer;
+  margin-left:90px 
+ }
+ .reseTpassword6{
+  font-size: 12px;
+  color: #030229
+ }
+ .resetPassword7{
+ font-size: 12px;
+  color: #030229;
+  text-decoration: underline;
+  cursor: pointer;
+    margin-right:100px ;
+ }
+ .forgotScreen{
+  position: absolute;
+   top: 20%;
+    left: 50%;
+     transform: translate(-50%, -50%);
+      text-align: center;
+      color: #ffffff;
+      margin-left:-400px;
+      margin-top:300px
+}
+.forgotScreen1{
+ max-width: 100%;
+ height:auto
+}
+.forgotScreen2{
+ width: 380px;
+ height: 54px
+
+}
+.forgotScreen2{
+ width: 380px;
+ height: 55px;
+ background: #283891;
+ border: #00AEEF;
+ border-radius:12px;
+ font-size: 16px;
+ 
+}
+.forgotScreen3{
+ text-decoration: none;
+ color: #030229;
+ font-size: 16px;
+}

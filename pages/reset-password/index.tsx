@@ -1,8 +1,9 @@
 // ** React Imports
 import { useState, useEffect } from "react";
+// import Divider from '@mui/material/Divider';
 
 // ** Next Import
-import Link from "next/link";
+// import Link from "next/link";
 import { Row, Col, Button } from "reactstrap";
 import { Form } from "react-bootstrap";
 import { useRouter } from "next/router";
@@ -10,7 +11,9 @@ import { toast } from "react-toastify";
 import { Eye } from "@styled-icons/bootstrap/Eye";
 import { EyeSlash } from "@styled-icons/bootstrap/EyeSlash";
 // ** Demo Imports
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from "react-bootstrap";
+
 import { ForgotPasswordService } from "services";
 import { useFormik, FormikErrors } from "formik";
 
@@ -96,12 +99,13 @@ const ResetPassword = () => {
         {/* left */}
         <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
           <Image
-            src={"/forgot1.svg"}
+            src={"/resetPassword.png"}
             alt="logo"
-            className="img-fluid mt-5"
-            width={400}
-            height={600}
+            fluid
+            className="img-fluid mt-5 reseTpassword"
+            // width={1000}
           />
+           <div style={{position:'absolute',top:"20%",left:"50%",transform:'translate(-50%,-50%)',textAlign:'center',color:'#ffffff', marginLeft:'-400px',marginTop:'300px'}} >
           <div className="d-flex align-items-center justify-content-center">
             <div className="text-container text-center">
               <div className="d-flex align-items-start">
@@ -115,6 +119,7 @@ const ResetPassword = () => {
               </div>
             </div>
           </div>
+  </div>
         </div>
 
         {/* right */}
@@ -128,13 +133,13 @@ const ResetPassword = () => {
               width={112}
               height={43}
             />
-            <Image
+            {/* <Image
               src={"/forgot-password.svg"}
               alt="logo"
               className="img-fluid mt-2"
               width={50}
               height={40}
-            />
+            /> */}
 
             <p className="welcome-text mt-2">Reset Password</p>
             <p style={{ fontSize: "12px" }} className="mb-0">
@@ -161,7 +166,7 @@ const ResetPassword = () => {
                     autoComplete="off"
                     type={showPassword ? "text" : "password"}
                     name="new_password"
-                    placeholder="at least 8 characters"
+                    placeholder="Enter Password"
                     className="f-14 mt-2 teamworkspaceformpassword"
                     value={formik.values.new_password}
                     onChange={formik.handleChange("new_password")}
@@ -209,12 +214,11 @@ const ResetPassword = () => {
                     autoComplete="off"
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirm_password"
-                    placeholder="re-enter password"
-                    className="f-14 mt-2 teamworkspaceformpassword"
+                    placeholder="Re-enter password"
+                    className="f-14 mt-2 teamworkspaceformpassword resetPassword1"
                     value={formik.values.confirm_password}
                     onChange={formik.handleChange("confirm_password")}
                     isInvalid={formik.errors.confirm_password}
-                    style={{ height: "54px", color: "#626873" }}
                   />
                   <i onClick={toggleConfirmPasswordVisiblity}>
                     {showConfirmPassword ? (
@@ -245,15 +249,7 @@ const ResetPassword = () => {
                 <Button
                   type="submit"
                   // loading={loading}
-                  className="f-16 mt-2"
-                  style={{
-                    width: "380px",
-                    height: "55px",
-                    background: "#00AEEF",
-                    border: "#00AEEF",
-                    borderRadius: "12px",
-                    fontSize: "16px",
-                  }}
+                  className="f-16 mt-2 reseTpassword3"
                   onClick={() => {
                     formik.handleSubmit();
                   }}
@@ -261,6 +257,7 @@ const ResetPassword = () => {
                   Reset Password
                 </Button>
               </div>
+              <hr/>
 
               {enable === true ? (
                 <div className="d-flex flex-row">
@@ -284,38 +281,38 @@ const ResetPassword = () => {
                   </p>
                 </div>
               ) : null}
-
-              <div
-                className="d-flex flex-column mt-4 align-items-center justify-content-center"
-                style={{
-                  fontSize: "12px",
-                  color: "#030229",
-                }}
-              >
-                <p className="privacy-text">
-                  If you need help, contact support
-                </p>
-                <p className="privacy-text">
-                  Please email support or call{" "}
-                  <a style={{ color: "#030229" }} href="tel:805-428-8024">
-                    805-428-8024
-                  </a>
-                </p>
-                <p className="privacy-text">
-                  Powered by Resilient Software Solutions LLC
-                </p>
-              </div>
-              <div
-                className="d-flex justify-content-between"
-                style={{ marginTop: "10px", color: "#030229" }}
-              >
-                <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
-                  Terms & conditions
-                </a>{" "}
-                <a href="#" style={{ fontSize: "12px", color: "#030229" }}>
-                  Privacy Policy
-                </a>{" "}
-              </div>
+<div
+                  className="d-flex flex-column align-items-center justify-content-center reseTpassword4"
+                >
+                  <p className="privacy-text">
+                    Have Questions or Suggestions?
+                  </p>
+                  <p className="privacy-text">
+    Please{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
+      email
+    </a>{" "}
+    support or call{" "}
+    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
+      805-428-8024
+    </a>
+  </p>
+                  <p className="privacy-text">
+                    Powered by Resilient Software Solutions LLC
+                  </p>
+                </div>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ marginTop: "10px", color: "#030229" }}
+                >
+                  <a href="#" className="reseTpassword5">
+                    Terms & conditions
+                  </a>{" "}
+                  <span className="reseTpassword6">|</span>
+                  <a href="#" className="resetPassword7">
+                    Privacy Policy
+                  </a>{" "}
+                </div>
             </div>
           </div>
         </div>
