@@ -21,5 +21,6 @@ export { default as UsersService } from './users.service'
 export { default as DashboardService } from './dashboard.service'
 export { default as BudgetService } from './budget.service'
 export { default as TenantService } from './tenant.service'
+export { default as EmployeeService } from './employee.service'
 
 

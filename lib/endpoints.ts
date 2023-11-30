@@ -147,3 +147,10 @@ export const UPLOAD_STATES_LIST =(tenant_id:any)=> `${baseUrl}/api/${tenant_id}/
 export const UPLOAD_SERIES_LIST =(tenant_id:any)=> `${baseUrl}/api/${tenant_id}/series/series-upload`;
 export const UPLOAD_BUDGET_LIST =(tenant_id:any)=> `${baseUrl}/api/${tenant_id}/budget/budget-upload`;
 export const UPLOAD_VENDORS_LIST =(tenant_id:any)=> `${baseUrl}/api/${tenant_id}/vendors/upload`;
+
+
+export const GET_EMPLOYEES = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/?limit=100&offset=0`; //Employees
+export const CREATE_EMPLOYEE = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/`; //Create Employees
+export const EDIT_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //EDIT employees
+export const EMPLOYEES_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //Employees Details
+export const DELETE_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //DELETE employees

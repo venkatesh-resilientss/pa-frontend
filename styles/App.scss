@@ -355,3 +355,10 @@ input::placeholder {
 .custom-datepicker {
   height: 30px
 }
+
+.filter-datepicker {
+  border-color: hsl(0, 0%, 80%);
+  border-radius: 5px;
+  padding: 6px;
+  border-width: 1px;
+}
