@@ -14,6 +14,8 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import Image from "next/image";
+import ReactSelect from "react-select";
+
 import {
   Modal,
   ModalHeader,
@@ -63,6 +65,8 @@ import DataTableWithButtons from "../../../Table/index";
 import { BiCheckCircle } from "react-icons/bi";
 import { openDeleteProjectPopup } from "redux/slices/mySlices/payroll";
 import { ProjectService } from "services";
+import DatePicker from "react-datepicker";
+
 import useSWR from "swr";
 import moment from "moment";
 import GridTable from "components/grid-tables/gridTable";
@@ -70,7 +74,20 @@ import { checkTenant } from "constants/function";
 
 const ProjectsListTable = () => {
   const dispatch = useDispatch();
-
+  const options = [
+    { value: "jan", label: "Jan" },
+    { value: "feb", label: "Feb" },
+    { value: "mar", label: "Mar" },
+    { value: "apr", label: "Apr" },
+    { value: "may", label: "May" },
+    { value: "jun", label: "Jun" },
+    { value: "jul", label: "Jul" },
+    { value: "aug", label: "Aug" },
+    { value: "sep", label: "Sep" },
+    { value: "oct", label: "Oct" },
+    { value: "nov", label: "Nov" },
+    { value: "dec", label: "Dec" }
+  ];
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [tenantId, setTenantId] = useState("");
@@ -311,6 +328,24 @@ const ProjectsListTable = () => {
       <Card className="w-100 p-3 project-card-bg my-3">
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Projects</div>
+          <div
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
+              >
+                <DatePicker
+                  className="filter-datepicker"
+                  placeholderText="Select a date"
+                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
+                />
+                 <ReactSelect options={options} placeholder="Filter by month" />
+          <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchConfig"
+                  placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
+                />
+              </div>
           <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={() => {
