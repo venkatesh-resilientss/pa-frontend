@@ -118,7 +118,7 @@ function EditSeries() {
               <div className="mb-1">
                 <Label className="form-lable-font">WC Class<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
-                  name="WC Class"
+                  name="WCClass"
                   rules={{ required: "WC Class is required" }}
                   control={control}
                   render={({ field }) => (
