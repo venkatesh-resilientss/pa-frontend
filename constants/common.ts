@@ -288,6 +288,10 @@ export const sidebarRoutes = [
         name: "WC Codes",
         path: "/Wccodes",
       },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
+      },
     ],
   },
   {
