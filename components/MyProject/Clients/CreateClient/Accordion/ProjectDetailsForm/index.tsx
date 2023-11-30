@@ -3,7 +3,7 @@ import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
 function ProjectDetailsForm() {
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
 
   return (
     <div>

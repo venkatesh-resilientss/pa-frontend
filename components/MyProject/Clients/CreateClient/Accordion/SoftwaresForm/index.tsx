@@ -3,7 +3,7 @@ import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
 function SoftwaresForm() {
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
   const customStyles = {
   control: (provided, state) => ({
     ...provided,
