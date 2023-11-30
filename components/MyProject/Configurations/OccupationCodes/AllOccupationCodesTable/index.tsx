@@ -311,7 +311,7 @@ const AllOccupationCodesTable = () => {
                   "create_configuration"
                 ) && (
                   <Button
-                    onClick={() => router.push(`/configurations/add-series`)}
+                    onClick={() => router.push(`/configurations/add-occupation-codes`)}
                     style={{
                       height: "38px",
                       backgroundColor: "#00AEEF",

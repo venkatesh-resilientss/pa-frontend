@@ -12,7 +12,17 @@ function EditSeries() {
 
   const { id } = router.query;
 
-
+  const onSubmit = async (data) => {
+    // Handle form submission logic here
+    try {
+      // Your logic to save the form data
+      toast.success("Company saved successfully");
+      router.push("/configurations/company");
+    } catch (error) {
+      toast.error("Error adding company");
+      console.error(error);
+    }
+  };
   const {
     data: seriesData,
     isLoading: userLoading,
@@ -53,6 +63,7 @@ function EditSeries() {
         <Form
             style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
             className=" mt-2 d-flex flex-column"
+            onClick={handleSubmit(onSubmit)}
           >
             <Row>
             <Col xl="4">
@@ -144,7 +155,7 @@ function EditSeries() {
                     />
                   )}
                 />
-                {errors.seriesname && (
+                {errors.EmployeeType && (
                   <span style={{ color: "red" }}>
                     {errors.EmployeeType.message as React.ReactNode}
                   </span>

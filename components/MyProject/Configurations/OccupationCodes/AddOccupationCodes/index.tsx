@@ -10,7 +10,17 @@ import { checkTenant } from "constants/function";
 function AddSeries() {
   const router = useRouter();
   const [tenantId, setTenantId] = useState("");
-
+  const onSubmit = async (data) => {
+    // Handle form submission logic here
+    try {
+      // Your logic to save the form data
+      toast.success("Company added successfully");
+      router.push("/configurations/company");
+    } catch (error) {
+      toast.error("Error adding company");
+      console.error(error);
+    }
+  };
   const {
     control,
     handleSubmit,
@@ -68,6 +78,7 @@ function AddSeries() {
           <Form
             style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
             className=" mt-2 d-flex flex-column"
+            onClick={handleSubmit(onSubmit)}
           >
             <Row>
             <Col xl="4">
@@ -122,7 +133,7 @@ function AddSeries() {
               <div className="mb-1">
                 <Label className="form-lable-font">WC Class<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
-                  name="WC Class"
+                  name="WCClass"
                   rules={{ required: "WC Class is required" }}
                   control={control}
                   render={({ field }) => (
@@ -159,7 +170,7 @@ function AddSeries() {
                     />
                   )}
                 />
-                {errors.seriesname && (
+                {errors.EmployeeType && (
                   <span style={{ color: "red" }}>
                     {errors.EmployeeType.message as React.ReactNode}
                   </span>
