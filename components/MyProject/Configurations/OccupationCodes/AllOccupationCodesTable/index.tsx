@@ -41,62 +41,86 @@ const AllOccupationCodesTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  // const ActionsButton = (props) => {
+  //   console.log(props.data.id, "props");
+  //   const id = `action-popover-${props.value}`;
+  //   const [open, setOpen] = useState(false);
+  //   const Action = ({ icon, name, action }) => {
+  //     return (
+  //       <div onClick={action} className="d-flex align-items-center gap-2">
+  //         <Image src={icon} alt={name} />
+  //         <p>{name}</p>
+  //       </div>
+  //     );
+  //   };
+  //   return (
+  //     <div>
+  //       <UncontrolledDropdown>
+  //         <DropdownToggle tag="span">
+  //           <Image
+  //             src={actionIcon}
+  //             alt=""
+  //             width={14}
+  //             id={id}
+  //             style={{ marginLeft: "20px" }}
+  //           />
+  //         </DropdownToggle>
+  //         <DropdownMenu end container="body">
+  //           <DropdownItem className="w-100">
+  //             <Action
+  //               icon={detailsIocn}
+  //               name={"View Details"}
+  //               action={() => {}}
+  //             />
+  //           </DropdownItem>
+  //           <DropdownItem
+  //             tag="a"
+  //             className="w-100"
+  //             onClick={(e) =>
+  //               router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)
+  //             }
+  //           >
+  //             <Action icon={editIocn} name={"Edit"} action={() => {}} />
+  //           </DropdownItem>
+  //           <DropdownItem
+  //             tag="a"
+  //             className="w-100"
+  //             onClick={(e) => e.preventDefault()}
+  //           >
+  //             <Action
+  //               icon={deleteIcon}
+  //               name={"Delete"}
+  //               action={() => {
+  //                 dispatch(openDeleteSeriesPopup(props.data?.ID));
+  //               }}
+  //             />
+  //           </DropdownItem>
+  //         </DropdownMenu>
+  //       </UncontrolledDropdown>
+  //     </div>
+  //   );
+  // };
   const ActionsButton = (props) => {
-    console.log(props.data.id, "props");
-    const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const Action = ({ icon, name, action }) => {
-      return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
-          <Image src={icon} alt={name} />
-          <p>{name}</p>
-        </div>
-      );
-    };
     return (
-      <div>
-        <UncontrolledDropdown>
-          <DropdownToggle tag="span">
-            <Image
-              src={actionIcon}
-              alt=""
-              width={14}
-              id={id}
-              style={{ marginLeft: "20px" }}
-            />
-          </DropdownToggle>
-          <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) =>
-                router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteSeriesPopup(props.data?.ID));
-                }}
-              />
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
+      <div className="d-flex align-items-center gap-2">
+        {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
+          <div
+           onClick={() =>router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)}
+            className="cursor-pointer"
+            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
+          >
+            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
+          </div>
+        {/* )} */}
+        {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
+          {/* <div
+            onClick={() => handleDeleteClick(id)}
+            className="cursor-pointer"
+            style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
+          >
+            <img src={"/icons/delete.svg"} alt="Delete" width={15} style={{marginTop:"7px",marginLeft:"7px"}}/>
+          </div> */}
+        {/* )} */}
       </div>
     );
   };
@@ -154,7 +178,7 @@ const AllOccupationCodesTable = () => {
     },
 
     {
-      headerName: "Options",
+      headerName: "Action",
       field: "id",
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
