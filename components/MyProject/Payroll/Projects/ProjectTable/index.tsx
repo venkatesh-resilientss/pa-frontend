@@ -72,7 +72,7 @@ const ProjectsListTable = () => {
   const projectService = new ProjectService();
 
   const { data: projectData } = useSWR("LIST_PROJECTS", () =>
-  projectService.getProjects(tenantId)
+    projectService.getProjects()
   );
 
   const rowData = [
@@ -294,17 +294,17 @@ const ProjectsListTable = () => {
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Projects</div>
           <div
-                className="d-flex align-items-center viewall-table"
-              >
-                <Input className="date m-2" type="date" placeholder="Select Date"></Input>
-                 <ReactSelect options={options} placeholder="Filter by month" />
-                <Input
-                  onChange={(e) => setSearchText(e.target.value)}
-                  type="search"
-                  className="searchConfig top-search m-2"
-                  placeholder="Search..."
-                />
-              </div>
+            className="d-flex align-items-center viewall-table"
+          >
+            <Input className="date m-2" type="date" placeholder="Select Date"></Input>
+            <ReactSelect options={options} placeholder="Filter by month" />
+            <Input
+              onChange={(e) => setSearchText(e.target.value)}
+              type="search"
+              className="searchConfig top-search m-2"
+              placeholder="Search..."
+            />
+          </div>
           <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={() => {
