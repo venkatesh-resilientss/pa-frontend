@@ -22,8 +22,7 @@ function AgreementsForm() {
           <Col xl="5">
             <div className="d-flex justify-content-between">
               <Label
-                className="text-black"
-                style={{ fontSize: "14px", fontWeight: "400" }}
+                className="text-black form-label"
               >
                 List of Agreements
               </Label>

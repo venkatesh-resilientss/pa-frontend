@@ -7,24 +7,24 @@ import ReactSelect from "react-select";
 function ContactInformationForm({ control, errors }) {
 
   const contacts = [
-    [{ name: 'accountantType', label: 'Production Accountant', type: 'select', placeholder: 'Enter Accountant' },
+    { name: 'accountantType', label: 'Production Accountant', type: 'select', placeholder: 'Enter Accountant' },
     { name: 'productionAccountant', label: 'Production Accountant', required: true, placeholder: 'Enter Accountant' },
     { name: 'productionAccountantOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Accountant Office Phone' },
     { name: 'productionAccountantCellPhone', label: 'Cell Phone', required: true, placeholder: 'Enter Accountant Cell Phone' },
     { name: 'productionAccountantEmailPhone', label: 'Email', required: true, placeholder: 'Enter Email' }]
-  ]
 
-  const [formData, setFormData] = useState(contacts);
+  const [formData, setFormData] = useState([contacts]);
 
   const addNewForm = () => {
+    const newform = contacts.map(obj => {return { ...obj, name: formData.length + "_" + obj.name };});
+
     setFormData((prevData) => [
       ...prevData,
-      contacts[0],
+      newform
     ]);
   };
 
   const removeForm = (form) => {
-    console.log('formData', formData)
     if (form === 0) {
       return
     }
@@ -42,8 +42,7 @@ function ContactInformationForm({ control, errors }) {
             {formField.map((formField, formindex) => (
               <Col key={formindex} xl="4">
                 <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
+                  className="text-black form-label"
                 >
                   {formField.label}{formField.required && '*'}
                 </Label>
@@ -73,7 +72,7 @@ function ContactInformationForm({ control, errors }) {
                   />
                 )}
                 {errors[`${index + '_' + formField.name}`] && formField.required && (
-                  <span style={{ color: "red" }}>
+                  <span className="error-message">
                     {errors[`${index + '_' + formField.name}`].message as React.ReactNode}
                   </span>
                 )}

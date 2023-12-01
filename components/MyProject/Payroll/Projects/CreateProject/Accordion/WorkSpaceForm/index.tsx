@@ -28,7 +28,7 @@ function WorkSpaceForm({ control, errors }) {
         <Row>
           {form.map((formField) => (
             <Col xl="4" key={formField.name}>
-              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+              <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
               {formField.type === 'select' ? (
                 <Controller
                   name={formField.name}
@@ -73,7 +73,7 @@ function WorkSpaceForm({ control, errors }) {
                 />
               )}
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="error-message">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}
