@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import {
   Col,
@@ -10,8 +10,14 @@ import {
   Row,
 } from "reactstrap";
 
-function WorkSpaceForm() {
-  const { register, handleSubmit } = useForm();
+function WorkSpaceForm({ control, errors }) {
+
+  const form = [
+    { name: 'logo', label: 'Logo', type: 'file', placeholder: 'Select Logo' },
+    { name: 'domain', label: 'Domain', required: true, placeholder: 'Enter Domain' },
+    { name: 'clientAdmin', label: 'Client Admin', type: 'select', placeholder: 'Select Client Admin' },
+    { name: 'supportUser', label: 'RSSL Support User', type: 'select', placeholder: 'Select RSSL Support User' }
+  ]
 
   return (
     <div>
@@ -20,7 +26,63 @@ function WorkSpaceForm() {
       </div>
       <Form>
         <Row>
-          <Col xl="4">
+
+          {form.map((formField) => (
+            <Col xl="4" key={formField.name}>
+              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+              {formField.type === 'select' ? (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <ReactSelect {...field} isClearable />
+                  )}
+                />
+              ) : formField.type === 'file' ? (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <Input
+                      type="file"
+                      className="p-2"
+                      placeholder={formField.placeholder}
+                      invalid={errors[`${formField.name}`] && formField.required && true}
+                      {...field}
+                    />
+                  )}
+                />
+              ) : (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <InputGroup>
+                      <Input
+                        type="text"
+                        className="p-2"
+                        placeholder={formField.placeholder}
+                        invalid={errors[`${formField.name}`] && formField.required && true}
+                        {...field}
+                      />
+                      <InputGroupText>.rssl.io</InputGroupText>
+                    </InputGroup>
+                  )}
+                />
+              )}
+              {errors[`${formField.name}`] && formField.required && (
+                <span style={{ color: "red" }}>
+                  {errors[`${formField.name}`].message as React.ReactNode}
+                </span>
+              )}
+            </Col>
+          ))}
+
+
+          {/* <Col xl="4">
             <Label
               className="text-black"
               style={{ fontSize: "14px", fontWeight: "400" }}
@@ -68,7 +130,7 @@ function WorkSpaceForm() {
               <option>Admin 1</option>
               <option>Admin 2</option>
             </Input>
-          </Col>
+          </Col> */}
         </Row>
       </Form>
     </div>

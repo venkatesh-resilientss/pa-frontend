@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
-import { Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap";
+import { Col, Form, Input, Label, Row } from "reactstrap";
 
 function HandlingFeeForm() {
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
 
   return (
     <div>

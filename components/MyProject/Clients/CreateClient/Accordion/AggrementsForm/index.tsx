@@ -1,10 +1,10 @@
 import { ArrowRight } from "react-feather";
 import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
-import { Col, Form, Input, Label, Row } from "reactstrap";
+import { Col, Form, Label, Row } from "reactstrap";
 
 function AgreementsForm() {
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
 
   const options = [
     { value: "agreement1", label: "Agreement 1" },
@@ -14,6 +14,9 @@ function AgreementsForm() {
 
   return (
     <div>
+      <div className="my-3">
+        <p>Aggrements</p>
+      </div>
       <Form>
         <Row>
           <Col xl="5">
