@@ -21,8 +21,8 @@ function ApprovalInformationForm({ control, errors }) {
         <Row key={index} className="my-3">
           {formField.map((formField, formindex) => (
            <Col key={formindex} xl="4">
-               {formField.type !== 'check' && <Label className="form-lable-font text-black"
-                style={{ fontSize: "14px", fontWeight: "400" }}>
+               {formField.type !== 'check' && <Label className="form-lable-font text-black form-label"
+                >
                   {formField.label}{formField.required && '*'}
                 </Label>}
 
@@ -50,8 +50,7 @@ function ApprovalInformationForm({ control, errors }) {
                {...field}
              />
              <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+              className="text-black form-label"
             >
               {formField.label}
             </Label>
@@ -76,7 +75,7 @@ function ApprovalInformationForm({ control, errors }) {
          )}
 
                 {errors[`${index+'_'+formField.name}`] && formField.required && (
-                  <span style={{ color: "red" }}>
+                  <span className="error-message">
                     {errors[`${index+'_'+formField.name}`].message as React.ReactNode}
                   </span>
                 )}

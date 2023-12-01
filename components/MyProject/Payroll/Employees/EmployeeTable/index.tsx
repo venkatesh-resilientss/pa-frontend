@@ -1,20 +1,9 @@
 import { useEffect, useState } from "react";
+import ReactSelect from "react-select";
 import { FcFilmReel } from "react-icons/fc";
 import { hasPermission } from "commonFunctions/functions";
 import Image from "next/image";
-import ReactSelect from "react-select";
-
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
-
+import { Input } from "reactstrap";
 import {
   Card,
   Button,
@@ -30,15 +19,16 @@ import {
   MoreVertical,
   Trash,
   Users,
+  X,
 } from "react-feather";
-import { ProjectService } from "services";
-import DatePicker from "react-datepicker";
-
+import { EmployeeService } from "services";
 import useSWR from "swr";
 import GridTable from "components/grid-tables/gridTable";
 import { checkTenant } from "constants/function";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const ProjectsListTable = () => {
+const EmployeesListTable = () => {
   const options = [
     { value: "jan", label: "Jan" },
     { value: "feb", label: "Feb" },
@@ -53,6 +43,7 @@ const ProjectsListTable = () => {
     { value: "nov", label: "Nov" },
     { value: "dec", label: "Dec" }
   ];
+
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [tenantId, setTenantId] = useState("");
@@ -66,113 +57,85 @@ const ProjectsListTable = () => {
     };
     getTenant();
   }, []);
-  const [projectModal, setProjectModal] = useState(false);
-  const toggle = () => setProjectModal(!projectModal);
+  const [employeeModal, setEmployeeModal] = useState(false);
 
-  const projectService = new ProjectService();
+  const employeeService = new EmployeeService();
 
-  const { data: projectData } = useSWR("LIST_PROJECTS", () =>
-  projectService.getProjects(tenantId)
+  const { data: employeeData } = useSWR("LIST_EMPLOYEES", () =>
+  employeeService.getEmployees(tenantId)
   );
 
   const rowData = [
     {
       id: 1,
+      last_name: "Mason",
+      first_name: "James",
+      middle_name: "Roger",
       production_name: "Endomal Private",
       project_name: "On Happy Day",
-      project_type: "MOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "09/31/2023"
     },
     {
       id: 2,
+      last_name: "Pleshette",
+      first_name: "Suzzone",
+      middle_name: "Feroz",
       production_name: "MTV Studios",
       project_name: "Perhaps Love",
-      project_type: "MVPA",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "08/24/2023"
     },
     {
       id: 3,
+      last_name: "Flore",
+      first_name: "Gloria",
+      middle_name: "Petty",
       production_name: "Smuggler Film",
       project_name: "Rainy Days",
-      project_type: "MOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "08/15/2023"
     },
     {
       id: 4,
+      last_name: "Gerwing",
+      first_name: "Greta",
+      middle_name: "Sandy",
       production_name: "Crossroads",
       project_name: "Delta Down",
-      project_type: "LOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "07/21/2023"
     },
     {
       id: 5,
+      last_name: "Mason",
+      first_name: "Drawn",
+      middle_name: "Mario",
       production_name: "Endomal Private",
       project_name: "Hari Krishna",
-      project_type: "MOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "07/1/2023"
     },
     {
       id: 6,
+      last_name: "Pleshette",
+      first_name: "James",
+      middle_name: "Vandy",
       production_name: "Smuggler Film",
       project_name: "Smuggler Film",
-      project_type: "MOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "06/31/2023"
     },
     {
       id: 7,
+      last_name: "Flore",
+      first_name: "Omini",
+      middle_name: "Nicky",
       production_name: "Crossroads",
       project_name: "On Happy Day",
-      project_type: "MOW",
       department: "Crew, DGA, SAG",
-      IsActive: true,
       created_date: "06/3/2023"
     }
-  ];
-
-
-  const addNewProjectSoftwares = [
-    {
-      name: "Production Accounting",
-      value: "Production Accounting",
-      type: "radio",
-    },
-    {
-      name: "Payroll",
-      value: "Payroll",
-      type: "radio",
-    },
-    {
-      name: "Commercial Accounting",
-      value: "Commercial Accounting",
-      type: "radio",
-    },
-    {
-      name: "ACA",
-      value: "ACA",
-      type: "radio",
-    },
-    {
-      name: "Production Calendar",
-      value: "Production Calendar",
-      type: "radio",
-    },
-    {
-      name: "Script Keeper",
-      value: "Script Keeper",
-      type: "radio",
-    },
   ];
 
   const ActionsButton = (props) => {
@@ -201,20 +164,21 @@ const ProjectsListTable = () => {
               href="/"
               className="w-100"
               onClick={(e) => {
-                e.preventDefault(), router.push(`/payroll/projects/edit-project`);
+                e.preventDefault(), router.push(`/payroll/employees/edit-employee`);
               }}
             >
-              <File size={14} className="me-50" />
+              <Edit size={14} className="me-50 cursor-pointer" />
               <span className="align-middle">Edit Details</span>
             </DropdownItem>
             <DropdownItem
               tag="a"
               href="/"
               className="w-100"
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault(), router.push(`/payroll/employees/view-employee`)}}
             >
               <FcFilmReel size={14} className="me-50" />
-              <span className="align-middle">View Project</span>
+              <span className="align-middle">View Employee</span>
             </DropdownItem>
             {/* <DropdownItem className="w-100">
               <Edit size={14} className="me-50" />
@@ -227,18 +191,6 @@ const ProjectsListTable = () => {
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem> */}
-            {hasPermission("project_management", "edit_project") && (
-              <DropdownItem className="w-100">
-                <Edit size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Edit</span>
-              </DropdownItem>
-            )}
-            {hasPermission("project_management", "deactivate_project") && (
-              <DropdownItem className="w-100">
-                <Trash size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Delete</span>
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -246,6 +198,21 @@ const ProjectsListTable = () => {
   };
 
   const columns = [
+    {
+        headerName: "Last Name",
+        sortable: true,
+        field: "last_name"
+    },
+    {
+        headerName: "First Name",
+        sortable: true,
+        field: "first_name"
+    },
+    {
+        headerName: "Middle Name",
+        sortable: true,
+        field: "middle_name"
+    },
     {
       headerName: "Production Company",
       sortable: true,
@@ -256,12 +223,6 @@ const ProjectsListTable = () => {
       headerName: "Project Name",
       sortable: true,
       field: "project_name"
-    },
-
-    {
-      headerName: "Project Type",
-      sortable: true,
-      field: "production_name"
     },
 
     {
@@ -290,88 +251,55 @@ const ProjectsListTable = () => {
 
   return (
     <div className="py-4">
-      <Card className="w-100 p-3 project-card-bg my-3">
+      <Card className="w-100 p-3 employee-card-bg my-3" style={{ backgroundColor: "#E7EFFF" }}>
         <div className="d-flex justify-content-between ">
-          <div className="pt-2 cardheader-text">All Projects</div>
+          <div className="pt-2 cardheader-text">All Employees</div>
           <div
                 className="d-flex align-items-center viewall-table"
               >
                 <Input className="date m-2" type="date" placeholder="Select Date"></Input>
-                 <ReactSelect options={options} placeholder="Filter by month" />
-                <Input
+                 <ReactSelect className="m-2" options={options} placeholder="Filter by month" />
+                  <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
-                  className="searchConfig top-search m-2"
+                  className="searchConfig"
                   placeholder="Search..."
+                  style={{ width: "217px", height: "38px" }}
                 />
               </div>
           <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={() => {
-              router.push("/payroll/projects/create-project");
+              router.push("/payroll/employees/create-employee");
             }}
           >
-            <Users size={14} /> Create Project
+            <Users size={14} /> Create Employee
           </Button>
-          {/* {hasPermission("project_management", "create_project") && (
+          {/* {hasPermission("employee_management", "create_employee") && (
             <Button
               className="my-1 my-sm-0 button-props border-0 "
               onClick={toggle}
             >
-              <Users size={14} /> Create Project
+              <Users size={14} /> Create Employee
             </Button>
           )} */}
         </div>
       </Card>
       <GridTable rowData={rowData} columnDefs={columns} pageSize={4} searchText={searchText} />
       {/* <DataTableWithButtons
-        tableTitle={"All Projects"}
-        data={projectData}
+        tableTitle={"All Employees"}
+        data={employeeData}
         columns={columns}
         showButton={true}
-        buttonClick={() => router.push(`/payroll/projects/create-project`)}
+        buttonClick={() => router.push(`/payroll/employees/create-employee`)}
         buttonName={
           <div>
-            <Users size={14} /> Create Project
+            <Users size={14} /> Create Employee
           </div>
         }
       /> */}
-      <Modal isOpen={projectModal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add New Project</ModalHeader>
-        <ModalBody>
-          <p>Softwares</p>
-          <Form>
-            <div className="d-flex flex-wrap gap-2">
-              {addNewProjectSoftwares.map((software, index) => (
-                <FormGroup key={index} check>
-                  <Input
-                    id="checkbox2"
-                    type="checkbox"
-                    value={software.value}
-                  />{" "}
-                  <Label check>{software.name}</Label>
-                </FormGroup>
-              ))}
-            </div>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggle}>
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              toggle();
-              router.push("/payroll/projects/create-project");
-            }}
-          >
-            Create
-          </Button>
-        </ModalFooter>
-      </Modal>
     </div>
   );
 };
 
-export default ProjectsListTable;
+export default EmployeesListTable;

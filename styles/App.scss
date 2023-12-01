@@ -51,18 +51,21 @@
   color: #ffffff;
   font-size: "35px";
 }
+
 .client-card-bg {
   background-color: #e7efff;
 }
 
-.project-card-bg{
+.project-card-bg {
   background-color: #E7EFFF;
 }
-.cardheader-text{
-    color: #030229;
-    font-size:18px;
-    font-weight: 600;
+
+.cardheader-text {
+  color: #030229;
+  font-size: 18px;
+  font-weight: 600;
 }
+
 .font-size-32 {
   font-size: 32px;
 }
@@ -85,13 +88,16 @@ body {
 p {
   margin: 0;
 }
+
 input {
   border: 2px solid #c9c9c9;
 }
+
 input:focus {
   // border: #dee2e6 !important;
   box-shadow: none !important;
 }
+
 textarea:focus {
   // border: #dee2e6 !important;
   box-shadow: none !important;
@@ -103,6 +109,7 @@ textarea:focus {
 .cursor-pointer:hover {
   cursor: pointer;
 }
+
 .tenantteamforgotpass {
   color: #030229;
   font-weight: 400 !important;
@@ -113,6 +120,7 @@ textarea:focus {
   font-size: 16px !important;
   text-decoration: none !important;
 }
+
 div.error-message {
   width: 320px;
   background: #ffe0e0;
@@ -127,26 +135,31 @@ div.error-message {
   letter-spacing: -0.5px !important;
   color: #c9c9c9 !important;
 }
+
 .teamworkspaceformpassword {
   background: #f7f7f8 !important;
   color: #030229 !important;
 }
+
 .teamworkspaceplaceholder::placeholder {
   font-weight: 400 !important;
   line-height: 17px !important;
   letter-spacing: -0.5px !important;
   color: #c9c9c9 !important;
 }
+
 .teamworkspaceplaceholder {
   // border: none;
   background: #f7f7f8 !important;
   // color: #030229 !important;
 }
+
 .teamworkspaceplaceholder1 {
   // border: none;
   // background: #E9E9E9 !important;
   color: black !important;
 }
+
 .teamworkspaceplaceholder1::placeholder {
   font-weight: 400 !important;
   line-height: 17px !important;
@@ -154,28 +167,29 @@ div.error-message {
   color: #030229 !important;
 }
 
-.intutive{
-color: #FFFFFF;
-font-size: 40px !important;
-line-height: 43px !important;
-letter-spacing: 3px;
+.intutive {
+  color: #FFFFFF;
+  font-size: 40px !important;
+  line-height: 43px !important;
+  letter-spacing: 3px;
 
 }
 
-.entertainment{
-font-weight: 700 !important;
-color: #FFFFFF;
-font-size: 44px !important;
-letter-spacing: 2px !important;
-line-height: 47px !important;
+.entertainment {
+  font-weight: 700 !important;
+  color: #FFFFFF;
+  font-size: 44px !important;
+  letter-spacing: 2px !important;
+  line-height: 47px !important;
 
 }
-.software{
-color: #FFFFFF;
-font-size: 41px !important;
-letter-spacing: 3px !important;
-line-height: 43px !important;
-font-weight: 300 !important;
+
+.software {
+  color: #FFFFFF;
+  font-size: 41px !important;
+  letter-spacing: 3px !important;
+  line-height: 43px !important;
+  font-weight: 300 !important;
 }
 
 // index page -login
@@ -183,6 +197,7 @@ font-weight: 300 !important;
   width: 100vw;
   height: 100vh;
 }
+
 .tenanterror-icon {
   position: relative;
   float: right;
@@ -191,6 +206,7 @@ font-weight: 300 !important;
   background: transparent;
   color: #626873;
 }
+
 .tenanterror-icon-fpwd {
   position: relative;
   float: right;
@@ -199,6 +215,7 @@ font-weight: 300 !important;
   background: transparent;
   color: #626873;
 }
+
 .email-text {
   font-size: 16px;
   font-weight: 400;
@@ -207,11 +224,13 @@ font-weight: 300 !important;
 .bg-tenantsignup {
   background: #283891;
 }
+
 .welcome-text {
   font-weight: 700;
   font-size: 24px;
   font-style: bold;
 }
+
 .custom-badge {
   font-size: 0.9rem;
   height: fit-content;
@@ -273,7 +292,7 @@ input.searchConfig {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
-.open > .dropdown-toggle.btn-primary {
+.open>.dropdown-toggle.btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: #00aeef;
   --bs-btn-border-color: #00aeef;
@@ -329,11 +348,11 @@ footer {
 
 // Card match height
 .match-height {
-  > [class*="col"] {
+  >[class*="col"] {
     display: flex;
     flex-flow: column;
 
-    > .card {
+    >.card {
       flex: 1 1 auto;
     }
   }
@@ -348,6 +367,7 @@ footer {
 .form-lable-font {
   font-size: 16px;
 }
+
 input::placeholder {
   color: #c9c9c9 !important;
 }
@@ -356,11 +376,12 @@ input::placeholder {
   height: 30px;
 }
 
-.custom-vendor-popup{
+.custom-vendor-popup {
   width: 603px;
-   height: 484px;
-/* Add this CSS in your stylesheet or style block */
+  height: 484px;
+  /* Add this CSS in your stylesheet or style block */
 }
+
 .selected-options-count {
   font-size: 14px;
   color: #555;
@@ -369,7 +390,8 @@ input::placeholder {
 
 /* Additional styling for the select field */
 .react-select-container {
-  width: 200px; /* Adjust the width as needed */
+  width: 200px;
+  /* Adjust the width as needed */
 }
 
 .react-select__control {
@@ -378,76 +400,128 @@ input::placeholder {
   font-size: 14px;
 }
 
-.reseTpassword{
+.reseTpassword {
   max-width: 100%;
   height: auto;
 }
-.resetPassword1{
+
+.resetPassword1 {
   height: 54px;
-   color: #626873
+  color: #626873
 }
-.reseTpassword3{
+
+.reseTpassword3 {
   width: 380px;
-                    height: 54px;
-                    background: #283891;
-                    border: #00AEEF;
-                    border-radius: 12px;
-                    font-size: 16px,
+  height: 54px;
+  background: #283891;
+  border: #00AEEF;
+  border-radius: 12px;
+  font-size: 16px,
 }
- .reseTpassword4{
+
+.reseTpassword4 {
   margin-top: "50px";
-                    font-size: 12px;
-                    color: #656472;
- }
- .reseTpassword5{
-font-size: 12px;
-color: #030229;
-text-decoration: underline;
-cursor: pointer;
-  margin-left:90px 
- }
- .reseTpassword6{
   font-size: 12px;
-  color: #030229
- }
- .resetPassword7{
- font-size: 12px;
+  color: #656472;
+}
+
+.reseTpassword5 {
+  font-size: 12px;
   color: #030229;
   text-decoration: underline;
   cursor: pointer;
-    margin-right:100px ;
- }
- .forgotScreen{
+  margin-left: 90px
+}
+
+.reseTpassword6 {
+  font-size: 12px;
+  color: #030229
+}
+
+.resetPassword7 {
+  font-size: 12px;
+  color: #030229;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 100px;
+}
+
+.forgotScreen {
   position: absolute;
-   top: 20%;
-    left: 50%;
-     transform: translate(-50%, -50%);
-      text-align: center;
-      color: #ffffff;
-      margin-left:-400px;
-      margin-top:300px
-}
-.forgotScreen1{
- max-width: 100%;
- height:auto
-}
-.forgotScreen2{
- width: 380px;
- height: 54px
-
-}
-.forgotScreen2{
- width: 380px;
- height: 55px;
- background: #283891;
- border:1px solid #dee2e6;
- border-radius:12px;
- font-size: 16px;
- 
-}
-.forgotScreen3{
- text-decoration: none;
- color: #030229;
- font-size: 16px;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ffffff;
+  margin-left: -400px;
+  margin-top: 300px
 }
 
+.forgotScreen1 {
+  max-width: 100%;
+  height: auto
+}
+
+.forgotScreen2 {
+  width: 380px;
+  height: 54px
+}
+
+.forgotScreen2 {
+  width: 380px;
+  height: 55px;
+  background: #283891;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  font-size: 16px;
+
+}
+
+.forgotScreen3 {
+  text-decoration: none;
+  color: #030229;
+  font-size: 16px;
+}
+
+.filter-datepicker {
+  border-color: hsl(0, 0%, 80%);
+  border-radius: 5px;
+  padding: 6px;
+  border-width: 1px;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.top-search {
+  width: 217px;
+  height: 38px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+.error-message {
+  color: red;
+}
+
+.width120 {
+  width: 120px
+}
+
+.viewall-table {
+  width: 73%;
+}
+
+.viewall-table .date {
+  width: 30%;
+}
