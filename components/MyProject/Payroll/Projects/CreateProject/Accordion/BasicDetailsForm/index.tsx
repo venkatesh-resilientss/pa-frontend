@@ -15,12 +15,12 @@ function BasicDetailsForm({ control, errors }) {
     { name: 'projectType', label: 'Project Type', placeholder: 'Enter Project Type' },
     { name: 'departments', label: 'Departments', placeholder: 'Enter Departments' },
     { name: 'batchingRequirements', label: 'Batching Requirements', placeholder: 'Enter Batching Requirements' },
-    { name: 'separateallowancechecks', label: 'Separate allowance checks', type: 'check', placeholder: 'Enter Separate allowance checks' },
     { name: 'dGAProjectType', label: 'DGA Project Type', type: 'select', placeholder: 'Enter DGA Project Type' },
     { name: 'showLength', label: 'Show Length', type: 'select', placeholder: 'Enter Show Length' },
     { name: 'videotapeProjectType', label: 'Videotape Project Type', type: 'select', placeholder: 'Enter Videotape Project Type' },
-    { name: 'separatecheckperemployeetimecard', label: 'Separate check per employee time card', type: 'check', placeholder: 'Enter Separate check per employee time card' },
     { name: 'payFrequency', label: 'Pay Frequency', type: 'select', placeholder: 'Enter Pay Frequency' },
+    { name: 'separateallowancechecks', label: 'Separate allowance checks', type: 'check', placeholder: 'Enter Separate allowance checks' },
+    { name: 'separatecheckperemployeetimecard', label: 'Separate check per employee time card', type: 'check', placeholder: 'Enter Separate check per employee time card' },
     { name: 'processingDefaultInvoice', label: 'Processing Default Invoice', type: 'check', placeholder: 'Enter Processing Default Invoice' },
     { name: 'processingDefaulteechecks', label: 'Processing Default EE Check', type: 'check', placeholder: 'Enter Processing Default EE Check' },
     { name: 'separateCheckPerTimeCard', label: 'Separate Check Per TimeCard', type: 'check', placeholder: 'Enter Separate Check Per TimeCard' }
@@ -35,11 +35,9 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {childFields.map((formField) => (
             <Col xl="4" key={formField.name}>
-              {formField.type !== 'check' && <Label className="form-lable-font text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}>
+              {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                 {formField.label}{formField.required && '*'}
         </Label>}
-              {/* <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label> */}
               {formField.type === 'select' ? (
                 <Controller
                   name={formField.name}
@@ -79,8 +77,7 @@ function BasicDetailsForm({ control, errors }) {
                      {...field}
                    />
                    <Label
-                    className="text-black"
-                    style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+                    className="text-black checkbox-label"
                   >
                     {formField.label}
                   </Label>
@@ -104,7 +101,7 @@ function BasicDetailsForm({ control, errors }) {
                 />
               )}
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="error-message">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}

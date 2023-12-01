@@ -1,18 +1,6 @@
 import { useEffect, useState } from "react";
-import { IoAlertCircle, IoTimerOutline } from "react-icons/io5";
-import { MdCancel, MdPlayCircleFilled } from "react-icons/md";
-import { AiFillCheckCircle } from "react-icons/ai";
 import { FcFilmReel } from "react-icons/fc";
-import projectLogo from "src/assets/MyImages/project.svg";
-import BluBlu from "src/assets/MyImages/blublu.svg";
-import storyFoam from "src/assets/MyImages/storyfarm.svg";
-import Indigo from "src/assets/MyImages/indigo.svg";
-import fiveFilms from "src/assets/MyImages/5films.svg";
 import { hasPermission } from "commonFunctions/functions";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import Image from "next/image";
 import ReactSelect from "react-select";
 
@@ -28,52 +16,29 @@ import {
 } from "reactstrap";
 
 import {
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
   Card,
-  CardBody,
   Button,
-  CardTitle,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
 } from "reactstrap";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import {
-  ArrowUp,
-  Check,
-  CheckCircle,
-  Copy,
-  Download,
   Edit,
   File,
   MoreVertical,
-  Plus,
   Trash,
-  User,
   Users,
-  X,
 } from "react-feather";
-import axios from "axios";
-import DataTableWithButtons from "../../../Table/index";
-import { BiCheckCircle } from "react-icons/bi";
-import { openDeleteProjectPopup } from "redux/slices/mySlices/payroll";
 import { ProjectService } from "services";
 import DatePicker from "react-datepicker";
 
 import useSWR from "swr";
-import moment from "moment";
 import GridTable from "components/grid-tables/gridTable";
 import { checkTenant } from "constants/function";
 
 const ProjectsListTable = () => {
-  const dispatch = useDispatch();
   const options = [
     { value: "jan", label: "Jan" },
     { value: "feb", label: "Feb" },
@@ -329,21 +294,15 @@ const ProjectsListTable = () => {
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Projects</div>
           <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
+                className="d-flex align-items-center viewall-table"
               >
-                <DatePicker
-                  className="filter-datepicker"
-                  placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
-                />
+                <Input className="date m-2" type="date" placeholder="Select Date"></Input>
                  <ReactSelect options={options} placeholder="Filter by month" />
-          <Input
+                <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
-                  className="searchConfig"
+                  className="searchConfig top-search m-2"
                   placeholder="Search..."
-                  style={{ width: "217px", height: "38px" }}
                 />
               </div>
           <Button

@@ -123,7 +123,7 @@ function CreateClient() {
       return Math.min(prev + 1, laststep);
     });
     if (activeStep === laststep) {
-      toast.success("Client Created successfully");
+      toast.success("Project Created successfully");
     }
   };
 
