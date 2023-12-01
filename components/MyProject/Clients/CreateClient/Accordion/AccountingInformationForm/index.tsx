@@ -10,7 +10,14 @@ function AccountingInformationForm({ control, errors }) {
     { name: 'rsslCompany', label: 'RSSL Company', type: 'select', placeholder: 'Enter RSSL Company' },
     { name: 'rsslInvoiceAddress', label: 'RSSL Invoice Address', type: 'select', placeholder: 'Enter RSSL Invoice Address' },
     { name: 'rsslBank', label: 'RSSL Bank', type: 'select', placeholder: 'Enter RSSL Bank' },
-    { name: 'psaSignedDate', label: 'PSA Signed Date', required: true, type: 'date', placeholder: 'Enter PSA Signed Date' }
+    { name: 'psaSignedDate', label: 'PSA Signed Date', required: true, type: 'date', placeholder: 'Enter PSA Signed Date' },
+    { name: 'coa', label: 'COA', required: true, placeholder: 'Enter COA' },
+    { name: 'software_cost', label: 'Software Cost', placeholder: 'Enter Software Cost' },
+    { name: 'per', label: 'Per', placeholder: 'Per' },
+    { name: 'credit_terms', label: 'Credit Terms', required: true, placeholder: 'Credit Terms' },
+    { name: 'release_days', label: 'Days +- Release', required: true, placeholder: 'Days +- Release' },
+    { name: 'invoice', label: 'Invoice Format', required: true, placeholder: 'Invoice Format' },
+    { name: 'allowDirectDeposit', label: 'Allow Direct Deposit', placeholder: 'Enter Allow Direct Deposit' },
   ]
 
   return (

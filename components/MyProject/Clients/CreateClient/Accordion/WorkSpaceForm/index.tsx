@@ -13,7 +13,7 @@ import {
 function WorkSpaceForm({ control, errors }) {
 
   const form = [
-    { name: 'logo', label: 'Logo', required: true, type: 'file', placeholder: 'Select Logo' },
+    { name: 'logo', label: 'Logo', type: 'file', placeholder: 'Select Logo' },
     { name: 'domain', label: 'Domain', required: true, placeholder: 'Enter Domain' },
     { name: 'clientAdmin', label: 'Client Admin', type: 'select', placeholder: 'Select Client Admin' },
     { name: 'supportUser', label: 'RSSL Support User', type: 'select', placeholder: 'Select RSSL Support User' }

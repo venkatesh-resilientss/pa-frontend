@@ -11,6 +11,7 @@ import SignatoryDetailsForm from "./Accordion/SignatoryDetailsForm";
 import AccountingInformationForm from "./Accordion/AccountingInformationForm";
 import FeesForm from "./Accordion/FeesForm";
 import AgreementsForm from "./Accordion/AggrementsForm";
+import ProjectDetailsForm from "./Accordion/ProjectDetailsForm";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRouter } from 'next/router';
@@ -84,6 +85,9 @@ const sections = [{
 },
 {
   label: 'Accounting Information', component: AccountingInformationForm, icon: '/notyetSelectedStep.svg', state: ''
+},
+{
+  label: 'Project Information', component: ProjectDetailsForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
   label: 'Fees', component: FeesForm, icon: '/notyetSelectedStep.svg', state: ''

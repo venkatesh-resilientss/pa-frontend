@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form'
 import { Col, Form, Input, Label, Row } from 'reactstrap'
+import ReactSelect from "react-select";
 
 function SignatoryDetailsForm({ control, errors }) {
 
@@ -11,19 +12,71 @@ function SignatoryDetailsForm({ control, errors }) {
     { name: 'dgaSignatoryCode', label: 'DGA Signatory Code', required: true, placeholder: 'Enter DGA Signatory Code' },
     { name: 'dgaSignatoryName', label: 'DGA Signatory Name', required: true, placeholder: 'Enter DGA Signatory Name' },
     { name: 'wgaSignatoryCode', label: 'WGA Signatory Code', required: true, placeholder: 'Enter WGA Signatory Code' },
-    { name: 'wgasignatoryName', label: 'WGA Signatory Name', required: true, placeholder: 'Enter WGA Signatory Name' }
+    { name: 'wgasignatoryName', label: 'WGA Signatory Name', required: true, placeholder: 'Enter WGA Signatory Name' },
+    { name: 'million', label: 'MPIPHP > 15 Million', type:'check', placeholder: 'MPIPHP > 15 MIllion' }
   ]
 
   return (
     <div>
       <div className="my-3">
-        <p>Signatory Agreements</p>
+        <p>Project Information</p>
       </div>
       <Form>
-        <Row>
-          {form.map((formField) => (
-            <Col xl="6" className='p-2' key={formField.name}>
-              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+      <Row>
+        {form.map((formField) => (
+          <Col xl="4" key={formField.name}>
+            {formField.type !== 'check' && <Label className="form-lable-font text-black"
+            style={{ fontSize: "14px", fontWeight: "400" }}>
+              {formField.label}{formField.required && '*'}
+      </Label>}
+            {formField.type === 'select' ? (
+              <Controller
+                name={formField.name}
+                control={control}
+                rules={{ required: formField.required && `${formField.label} is required` }}
+                render={({ field }) => (
+                  <ReactSelect {...field} isClearable />
+                )}
+              />
+            ) : formField.type === 'date'? (
+              <Controller
+                name={formField.name}
+                control={control}
+                rules={{ required: formField.required && `${formField.label} is required` }}
+                render={({ field }) => (
+                  <Input
+                    type="date"
+                    className="p-2"
+                    placeholder={formField.placeholder}
+                    invalid={errors[`${formField.name}`] && formField.required && true}
+                    {...field}
+                  />
+                )}
+              />
+              ) : formField.type === 'check'? (
+              <Controller
+                name={formField.name}
+                control={control}
+                rules={{ required: formField.required && `${formField.label} is required` }}
+                render={({ field }) => (
+                <div className="m-4">
+                  <Input
+                    type="checkbox"
+                    className="p-2"
+                    placeholder={formField.placeholder}
+                    invalid={errors[`${formField.name}`] && formField.required && true}
+                    {...field}
+                  />
+                  <Label
+                  className="text-black"
+                  style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+                >
+                  {formField.label}
+                </Label>
+                </div>
+                )}
+              />
+              ) : (
               <Controller
                 name={formField.name}
                 control={control}
@@ -38,90 +91,15 @@ function SignatoryDetailsForm({ control, errors }) {
                   />
                 )}
               />
-              {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
-              )}
-            </Col>
-          ))}
-          {/* <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              MPIPHP Signatory Code
-            </Label>
-            <Input placeholder="Enter MPIPHP Signatory Code" {...register} />
+            )}
+            {errors[`${formField.name}`] && formField.required && (
+              <span style={{ color: "red" }}>
+                {errors[`${formField.name}`].message as React.ReactNode}
+              </span>
+            )}
           </Col>
-
-          <Col xl='4'>
-            {' '}
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              Signatory Name
-            </Label>
-            <Input placeholder="Enter Signatory Name" {...register} />
-          </Col>
-
-          <Col xl='4'></Col>
-
-          <Col xl='4'>
-            {' '}
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              SAG Signatory Code
-            </Label>
-            <Input placeholder="Enter SAG Signatory Code" {...register} />
-          </Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              Signatory Name
-            </Label>
-            <Input placeholder="Enter Signatory Name" {...register} />
-          </Col>
-
-          <Col xl='4'></Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              DGA Signatory Code
-            </Label>
-            <Input placeholder="Enter DGA Signatory Code" {...register} />
-          </Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              Signatory Name
-            </Label>
-            <Input placeholder="Enter Signatory Name" {...register} />
-          </Col>
-
-          <Col xl='4'></Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              WGA Signatory Code
-            </Label>
-            <Input placeholder="Enter WGA Signatory Code" {...register} />
-          </Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              Signatory Name
-            </Label>
-            <Input placeholder="Enter Signatory Name" {...register} />
-          </Col>
-
-          <Col xl='4'>
-            <Label className='text-black' style={{ fontSize: '14px', fontWeight: '400' }}>
-              MPIPHP <LiaGreaterThanSolid /> 15 Million
-            </Label>
-            <div className='text-black d-flex gap-1 ' style={{ marginTop: '10px' }}>
-              {' '}
-              <div>
-                <input type='radio' {...register} /> Yes
-              </div>
-              <input type='radio' {...register} /> No
-            </div>
-          </Col> */}
-        </Row>
+        ))}
+      </Row>
       </Form>
     </div>
   )
