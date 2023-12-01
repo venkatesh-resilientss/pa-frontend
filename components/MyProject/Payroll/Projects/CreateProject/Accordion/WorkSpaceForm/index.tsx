@@ -26,7 +26,6 @@ function WorkSpaceForm({ control, errors }) {
       </div>
       <Form>
         <Row>
-
           {form.map((formField) => (
             <Col xl="4" key={formField.name}>
               <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
