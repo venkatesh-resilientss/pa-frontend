@@ -8,8 +8,6 @@ function DeductionsForm({ control, errors }) {
     const details = [
       { name: 'fee_name', label: 'Fee Name', required: false, placeholder: 'Fee Name' },
       { name: 'percentage_rate', label: 'Percentage Rate', required: false, placeholder: 'Percentage Rate' },
-      { name: 'gross', label: 'Gross', type: 'check', placeholder: 'Gross' },
-      { name: 'net', label: 'Net', type: 'check', placeholder: 'Net' },
       { name: 'flat_amount', label: 'Flat Amount', placeholder: 'Flat Amount' },
       { name: 'max_amount', label: 'Max Amount', placeholder: 'Max Amount' },
       { name: 'per', label: 'Per', placeholder: 'Per' },
@@ -19,7 +17,9 @@ function DeductionsForm({ control, errors }) {
       { name: 'case', label: 'Case#', placeholder: 'Case#' },
       { name: 'withholding_agent', label: 'Withholding Agent', placeholder: 'Withholding Agent' },
       { name: 'agency_address', label: 'Agency Address', placeholder: 'Agency Address' },
-      { name: 'lifetime_max_amt', label: 'Lifetime Max Amt', placeholder: 'Lifetime Max Amt' }
+      { name: 'lifetime_max_amt', label: 'Lifetime Max Amt', placeholder: 'Lifetime Max Amt' },
+      { name: 'gross', label: 'Gross', type: 'check', placeholder: 'Gross' },
+      { name: 'net', label: 'Net', type: 'check', placeholder: 'Net' },
     ];
     const [formData, setFormData] = useState([details]);
 

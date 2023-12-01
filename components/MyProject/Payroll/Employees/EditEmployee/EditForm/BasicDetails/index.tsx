@@ -39,7 +39,6 @@ function BasicDetailsForm({ control, errors }) {
                   style={{ fontSize: "14px", fontWeight: "400" }}>
                     {formField.label}{formField.required && '*'}
             </Label>}
-                  {/* <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label> */}
                   {formField.type === 'select' ? (
                     <Controller
                       name={formField.name}

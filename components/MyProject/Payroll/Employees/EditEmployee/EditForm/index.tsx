@@ -14,13 +14,15 @@ import AddressForm from './AddressForm';
 import DDForm from './DDForm';
 import AgentForm from './AgentForm';
 import DeductionsForm from './DeductionsForm';
+import W4Form from './W4Form';
 const tabs = [
   {id:'1', label:'Basic Information', component: BasicDetailsForm},
   {id:'2', label: 'Loanout', component: LoanoutForm},
   {id:'3', label: 'Address', component: AddressForm},
   {id:'4', label: 'Direct Deposit', component: DDForm},
   {id:'5', label: 'Agent Information', component: AgentForm},,
-  {id:'6', label: 'Deductions Information', component: DeductionsForm}
+  {id:'6', label: 'Deductions Information', component: DeductionsForm},
+  {id: '7', label: `W4's`, component: W4Form}
 ]
 
 function Tabs({ control, errors, activeStep }) {

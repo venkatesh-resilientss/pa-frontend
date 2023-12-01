@@ -167,7 +167,7 @@ const EmployeesListTable = () => {
                 e.preventDefault(), router.push(`/payroll/employees/edit-employee`);
               }}
             >
-              <File size={14} className="me-50" />
+              <Edit size={14} className="me-50 cursor-pointer" />
               <span className="align-middle">Edit Details</span>
             </DropdownItem>
             <DropdownItem
@@ -191,18 +191,6 @@ const EmployeesListTable = () => {
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem> */}
-            {hasPermission("employee_management", "edit_employee") && (
-              <DropdownItem className="w-100">
-                <Edit size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Edit</span>
-              </DropdownItem>
-            )}
-            {hasPermission("employee_management", "deactivate_employee") && (
-              <DropdownItem className="w-100">
-                <Trash size={14} className="me-50 cursor-pointer" />
-                <span className="align-middle">Delete</span>
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -267,16 +255,11 @@ const EmployeesListTable = () => {
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Employees</div>
           <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
+                className="d-flex align-items-center viewall-table"
               >
-                <DatePicker
-                  className="filter-datepicker"
-                  placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd'T'HH:mm:ssxxx" // Set the desired date format
-                />
-                 <ReactSelect options={options} placeholder="Filter by month" />
-          <Input
+                <Input className="date m-2" type="date" placeholder="Select Date"></Input>
+                 <ReactSelect className="m-2" options={options} placeholder="Filter by month" />
+                  <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
                   className="searchConfig"
