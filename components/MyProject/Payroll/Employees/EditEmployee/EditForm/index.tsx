@@ -15,6 +15,7 @@ import DDForm from './DDForm';
 import AgentForm from './AgentForm';
 import DeductionsForm from './DeductionsForm';
 import W4Form from './W4Form';
+import I9Form from './I9Form';
 const tabs = [
   {id:'1', label:'Basic Information', component: BasicDetailsForm},
   {id:'2', label: 'Loanout', component: LoanoutForm},
@@ -22,7 +23,8 @@ const tabs = [
   {id:'4', label: 'Direct Deposit', component: DDForm},
   {id:'5', label: 'Agent Information', component: AgentForm},,
   {id:'6', label: 'Deductions Information', component: DeductionsForm},
-  {id: '7', label: `W4's`, component: W4Form}
+  {id:'7', label: `I9`, component: I9Form},
+  {id:'8', label: `W4's`, component: W4Form}
 ]
 
 function Tabs({ control, errors, activeStep }) {

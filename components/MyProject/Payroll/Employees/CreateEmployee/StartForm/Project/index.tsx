@@ -5,7 +5,7 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 function ProjectForm({ control, errors }) {
     const formData = [
         { name: 'company_name', label: 'Company Name', type: 'select', required:false, placeholder: 'Company Name' },
-        { name: 'schedule', label: 'Schedule', type: 'select', required:false, placeholder: 'Schedule' }
+        { name: 'project', label: 'Project', type: 'select', required:false, placeholder: 'Project' }
       ];
 
       return (

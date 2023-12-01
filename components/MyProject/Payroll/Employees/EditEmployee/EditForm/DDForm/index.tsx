@@ -18,7 +18,6 @@ function DDForm({ control, errors }) {
   const [formData, setFormData] = useState([details]);
 
   const addNewForm = () => {
-    console.log('formData', formData.length)
     const newform = details.map(obj => {return { ...obj, name: formData.length + "_" + obj.name };});
     setFormData((prevData) => [
       ...prevData,

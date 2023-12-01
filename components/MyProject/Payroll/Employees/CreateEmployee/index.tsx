@@ -35,7 +35,7 @@ function CreateEmployee() {
       });
     }
     if (activeStep === '4' || !isChecked) {
-      toast.success("Employee Created successfully");
+      toast.success("Invitation has been sent successfully");
       router.push({
         pathname: `/payroll/employees`,
       });

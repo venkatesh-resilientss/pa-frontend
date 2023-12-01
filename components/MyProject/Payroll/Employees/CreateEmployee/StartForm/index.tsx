@@ -15,7 +15,7 @@ import AllowancesForm from './Allowances';
 import ProjectForm from './Project';
 
 const tabs = [
-  {id:'1', label: 'Union Form', component: UnionForm},
+  {id:'1', label: 'Basic Information', component: UnionForm},
   {id:'2', label: 'Payrates', component: PayratesForm},
   { id:'3', label: 'Allowances', component: AllowancesForm},
   {id:'4', label: 'Project', component: ProjectForm}

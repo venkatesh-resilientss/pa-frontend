@@ -219,7 +219,7 @@ function W4Form({ control, errors }) {
           ))
         }
       </Form>
-      <div className="form-lable-font text-black mb-4">Federal W4's</div>
+      <div className="form-lable-font text-black mb-4 mt-2">Federal W4's</div>
       <GridTable rowData={federal} columnDefs={federalColumns} pageSize={4} searchText={undefined}/>
       <div className="form-lable-font text-black mb-4">Resident W4's</div>
       <GridTable rowData={state} columnDefs={stateColumns} pageSize={4} searchText={undefined}/>
