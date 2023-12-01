@@ -1,6 +1,6 @@
 "use client";
 import { Row, Col, Button } from "reactstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineLock } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { Image } from "react-bootstrap";

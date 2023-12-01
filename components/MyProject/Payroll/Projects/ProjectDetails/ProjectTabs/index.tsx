@@ -11,11 +11,6 @@ import {
 } from "reactstrap";
 import ProductionsCard from "../Productions";
 import ProjectControl from "../ProjectControl";
-import RSSSupportUserTable from "../RSSSupportUser";
-import ProjectAccordion from "../../CreateProject/Accordion";
-import BasicDetailsForm from "../../CreateProject/Accordion/BasicDetailsForm";
-import ContactInformationForm from "../../CreateProject/Accordion/ContactInformationForm";
-import WorkSpaceForm from "../../CreateProject/Accordion/WorkSpaceForm";
 
 function ProjectTabs(props) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
