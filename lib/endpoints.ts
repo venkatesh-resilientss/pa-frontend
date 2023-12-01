@@ -177,7 +177,6 @@ export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
-
 //addresss
 export const ADDRESSES = `${tenantIdEndpoint}/addresses/`;
 export const EDIT_ADDRESSES = (id: any) => `${tenantIdEndpoint}/addresses/${id}`;
@@ -185,3 +184,9 @@ export const BANK_CONFIG = `${tenantIdEndpoint}/bankconfigs/`;
 export const BANK_CONFIG_details=(id) => `${tenantIdEndpoint}/bankconfigs/${id}`;
 export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
 export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;
+
+export const GET_EMPLOYEES = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/?limit=100&offset=0`; //Employees
+export const CREATE_EMPLOYEE = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/`; //Create Employees
+export const EDIT_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //EDIT employees
+export const EMPLOYEES_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //Employees Details
+export const DELETE_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //DELETE employees

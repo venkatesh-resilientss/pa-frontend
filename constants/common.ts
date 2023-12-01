@@ -290,6 +290,10 @@ export const sidebarRoutes = [
       {
         name: "Projects",
         path: "/projects"
+      },
+      {
+        name: "Employees",
+        path: "/employees"
       }
     ]
   },

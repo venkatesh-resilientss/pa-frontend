@@ -150,13 +150,13 @@ function ProjectTabs(props) {
       <TabContent className="py-50" activeTab={active}>
         <TabPane tabId="1">
           {/* <ProjectAccordion /> */}
-          <BasicDetailsForm />
+          {/* <BasicDetailsForm /> */}
         </TabPane>
         <TabPane tabId="2">
-          <ContactInformationForm />
+          {/* <ContactInformationForm /> */}
         </TabPane>
         <TabPane tabId="3">
-          <WorkSpaceForm />
+          {/* <WorkSpaceForm /> */}
         </TabPane>
         <TabPane tabId="4">
           <Row>

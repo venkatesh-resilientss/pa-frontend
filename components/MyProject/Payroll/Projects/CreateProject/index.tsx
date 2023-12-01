@@ -123,7 +123,7 @@ function CreateClient() {
       return Math.min(prev + 1, laststep);
     });
     if (activeStep === laststep) {
-      toast.success("Client Created successfully");
+      toast.success("Project Created successfully");
     }
   };
 
@@ -149,7 +149,7 @@ function CreateClient() {
       >
         All Projects
       </div>
-      <p className="font-size-32 fw-600">Add New Project</p>
+      <p className="font-size-32 fw-600">Project Details</p>
 
       <hr style={{ height: "2px" }} />
       <div className="row">
@@ -439,7 +439,7 @@ function CreateClient() {
           )}
         </div>
       )}
-      {/* <ClientAccordion /> */}
+      {/* <ProjectAccordion /> */}
       {/* step one */}
       <hr style={{ height: "2px" }} />
       <div className="d-flex row-reverse justify-content-end my-5 gap-3">

@@ -12,18 +12,18 @@ function FeesForm({ control, errors }) {
 
   const form = [
     { name: 'wcMargin', label: 'WC Margin', type: 'select', placeholder: 'Enter WC Margin' },
-    { name: 'weeklyCutoffs', label: 'Weekly Cutoffs', type: 'check', placeholder: 'Weekly Cutoffs' },
-    { name: 'billonPremiumOT', label: 'Bill on Premium OT', type: 'check', placeholder: 'Bill on Premium OT' },
     { name: 'sutaMargin', label: 'SUTA Margin', type: 'select', placeholder: 'Enter SUTA Margin' },
-    { name: 'taxableAllow', label: 'Taxable Allow', type: 'check', placeholder: 'Taxable Allow' },
-    { name: 'taxCutoffs', label: 'P/R Tax Cutoffs', type: 'check', placeholder: 'P/R Tax Cutoffs' },
     { name: 'breakageat', label: 'Breakage at', type: 'select', placeholder: 'Breakage at' },
-    { name: 'reduceonPretax', label: 'Reduce on Pretax', type: 'check', placeholder: 'Reduce on Pretax' },
     { name: 'hfRebateAmount', label: 'HF Rebate Amount', required: true, placeholder: 'HF Rebate Amount' },
     { name: 'wcRebateAmount', label: 'W/C Rebate Amount', required: true, placeholder: 'W/C Rebate Amount' },
     { name: 'deliveryBy', label: 'Delivery By', type: 'select', placeholder: 'Delivery By' },
     { name: 'cost', label: 'Cost', required: true, placeholder: 'Cost' },
     { name: 'per', label: 'Per', type: 'select', placeholder: 'Per' },
+    { name: 'weeklyCutoffs', label: 'Weekly Cutoffs', type: 'check', placeholder: 'Weekly Cutoffs' },
+    { name: 'billonPremiumOT', label: 'Bill on Premium OT', type: 'check', placeholder: 'Bill on Premium OT' },
+    { name: 'taxableAllow', label: 'Taxable Allow', type: 'check', placeholder: 'Taxable Allow' },
+    { name: 'taxCutoffs', label: 'P/R Tax Cutoffs', type: 'check', placeholder: 'P/R Tax Cutoffs' },
+    { name: 'reduceonPretax', label: 'Reduce on Pretax', type: 'check', placeholder: 'Reduce on Pretax' }
   ]
 
 
@@ -55,8 +55,7 @@ function FeesForm({ control, errors }) {
         <Row>
         {form.map((formField, index) => (
          <Col xl="4" className="p-2" key={index}>
-          {formField.type !== 'check' && <Label className="form-lable-font text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}>
+          {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                 {formField.label}{formField.required && '*'}
         </Label>}
          {formField.type === 'select' ? (
@@ -83,8 +82,7 @@ function FeesForm({ control, errors }) {
                {...field}
              />
              <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+              className="text-black checkbox-label"
             >
               {formField.label}
             </Label>
@@ -108,7 +106,7 @@ function FeesForm({ control, errors }) {
          />
          )}
          {errors[`${formField.name}`] && formField.required && (
-           <span style={{ color: "red" }}>
+           <span className="error-message">
              {errors[`${formField.name}`].message as React.ReactNode}
            </span>
          )}
@@ -151,8 +149,7 @@ function FeesForm({ control, errors }) {
         <ModalBody>
           <div>
           <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Fees
             </Label>
@@ -188,18 +185,16 @@ const CustomForm = ({ typeName }) => {
         <div className="d-flex gap-1">
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Fee Type
             </Label>
             <ReactSelect {...register} />
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Amount{" "}
             </Label>
@@ -208,8 +203,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>
@@ -219,8 +213,7 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               % Taxable Gross
             </Label>
@@ -229,17 +222,15 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Per Check
             </Label>
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Min. Amount{" "}
             </Label>
@@ -248,18 +239,16 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>
             <ReactSelect {...register} />
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Max. Amount{" "}
             </Label>
@@ -268,8 +257,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>

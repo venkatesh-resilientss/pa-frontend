@@ -184,7 +184,7 @@ const RSSSupportUserTable = () => {
           buttonClick={() => router.push(`/create-project`)}
           buttonName={<div>
             <Users size={14} /> Create Project
-          </div>} header={undefined} date={undefined} status={undefined} title={undefined}        />
+          </div>} />
       </CardBody>
     </Card>
   );

@@ -16,7 +16,7 @@ import FeesForm from "./FeesForm";
 import SoftwaresForm from "./SoftwaresForm";
 import HandlingFeeForm from "./HandlingFeeForm";
 
-function ClientAccordion(props) {
+function ProjectAccordion({ control, errors }) {
   const [open, setOpen] = useState("");
 
   const toggle = (id) => {
@@ -33,21 +33,21 @@ function ClientAccordion(props) {
         <AccordionItem>
           <AccordionHeader targetId="1">Basic Information</AccordionHeader>
           <AccordionBody accordionId="1">
-            <BasicDetailsForm />
+            <BasicDetailsForm control={control} errors={errors} />
           </AccordionBody>
         </AccordionItem>
 
         <AccordionItem>
           <AccordionHeader targetId="2">Contact Information</AccordionHeader>
           <AccordionBody accordionId="2">
-            <ContactInformationForm />
+            <ContactInformationForm control={control} errors={errors} />
           </AccordionBody>
         </AccordionItem>
 
         <AccordionItem>
           <AccordionHeader targetId="3">Workspace</AccordionHeader>
           <AccordionBody accordionId="3">
-            <WorkSpaceForm />
+            <WorkSpaceForm control={control} errors={errors}/>
           </AccordionBody>
         </AccordionItem>
 
@@ -61,7 +61,7 @@ function ClientAccordion(props) {
         <AccordionItem>
           <AccordionHeader targetId="5">Signatory Details</AccordionHeader>
           <AccordionBody accordionId="5">
-            <SignatoryDetailsForm />
+            <SignatoryDetailsForm control={control} errors={errors} />
           </AccordionBody>
         </AccordionItem>
 
@@ -70,7 +70,7 @@ function ClientAccordion(props) {
             Accounting Information (For Internal Usage Only)
           </AccordionHeader>
           <AccordionBody accordionId="6">
-            <AccountingInformationForm />
+            <AccountingInformationForm control={control} errors={errors} />
           </AccordionBody>
         </AccordionItem>
 
@@ -84,7 +84,7 @@ function ClientAccordion(props) {
         <AccordionItem>
           <AccordionHeader targetId="8">Fees</AccordionHeader>
           <AccordionBody accordionId="8">
-            <FeesForm />
+            <FeesForm control={control} errors={errors} />
           </AccordionBody>
         </AccordionItem>
 
@@ -106,4 +106,4 @@ function ClientAccordion(props) {
   );
 }
 
-export default ClientAccordion;
+export default ProjectAccordion;
