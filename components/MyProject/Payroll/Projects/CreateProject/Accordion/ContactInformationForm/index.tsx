@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useState } from "react";
 import { Plus, Minus } from "react-feather";
 import ReactSelect from "react-select";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function ContactInformationForm({ control, errors }) {
 
@@ -71,10 +72,8 @@ function ContactInformationForm({ control, errors }) {
                     )}
                   />
                 )}
-                {errors[`${index + '_' + formField.name}`] && formField.required && (
-                  <span className="error-message">
-                    {errors[`${index + '_' + formField.name}`].message as React.ReactNode}
-                  </span>
+                {errors[`${formField.name}`] && formField.required && (
+                  <InvalidFeedBack message={errors[`${formField.name}`].message} />
                 )}
               </Col>
             ))}

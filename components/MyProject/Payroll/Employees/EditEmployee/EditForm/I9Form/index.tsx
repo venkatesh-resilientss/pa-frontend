@@ -3,6 +3,7 @@ import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { Plus, Minus } from "react-feather";
 import { useState } from "react";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function I9Form({ control, errors }) {
   const { register } = useForm();
@@ -26,8 +27,7 @@ function I9Form({ control, errors }) {
           <Row key={index} className="my-3">
             {formField.map((formField, formindex) => (
               <Col key={formindex} xl="4">
-                {formField.type !== 'check' && <Label className="form-lable-font text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}>
+                {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                     {formField.label}{formField.required && '*'}
                   </Label>}
                 {formField.type === 'select' ? (
@@ -69,8 +69,7 @@ function I9Form({ control, errors }) {
                             {...field}
                           />
                           <Label
-                            className="text-black"
-                            style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+                            className="text-black checkbox-label"
                           >
                             {formField.label}
                           </Label>
@@ -94,9 +93,7 @@ function I9Form({ control, errors }) {
                     />
                   )}
                 {errors[`${formField.name}`] && formField.required && (
-                  <span style={{ color: "red" }}>
-                    {errors[`${formField.name}`].message as React.ReactNode}
-                  </span>
+                  <InvalidFeedBack message={errors[`${formField.name}`].message} />
                 )}
               </Col>
             ))}
@@ -112,8 +109,7 @@ function I9Form({ control, errors }) {
             >
               <strong>{formField.title}</strong>
             </div>
-            {formField.type !== 'check' && <Label className="form-lable-font text-black"
-                style={{ fontSize: "14px", fontWeight: "400" }}>
+            {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                   {formField.label}{formField.required && '*'}
           </Label>}
           {formField.type === 'file' ? (
@@ -148,9 +144,7 @@ function I9Form({ control, errors }) {
           />
           )}
           {errors[`${formField.name}`] && formField.required && (
-            <span style={{ color: "red" }}>
-              {errors[`${formField.name}`].message as React.ReactNode}
-            </span>
+            <InvalidFeedBack message={errors[`${formField.name}`].message} />
           )}
         </Col>
         ))}

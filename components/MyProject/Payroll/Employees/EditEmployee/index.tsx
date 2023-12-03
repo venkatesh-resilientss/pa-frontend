@@ -26,16 +26,15 @@ function EditEmployee() {
     }
   };
     return (
-        <div style={{ fontFamily: "Segoe UI" }} className="p-4">
+        <div className="p-4">
         <div
-          className="text-black "
-          style={{ fontSize: "16px", fontWeight: "600" }}
+          className="text-black form-label"
         >
           All Employees
         </div>
         <p className="font-size-32 fw-600">Edit Employee Details</p>
   
-        <hr style={{ height: "2px" }} />
+        <hr/>
         <StartForm control={control} errors={errors} activeStep={activeStep}/>
         <div className="d-flex row-reverse justify-content-end my-5 gap-3">
         <Button
@@ -56,7 +55,7 @@ function EditEmployee() {
             {activeStep === '8' ? ('Update Employee') : ('Continue')}
             </Button>
         </div>
-        <hr style={{ height: "2px" }} />
+        <hr/>
       </div>
     )
 }

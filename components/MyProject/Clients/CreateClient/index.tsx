@@ -144,16 +144,15 @@ function CreateClient() {
   }, [activeStep]);
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="p-4">
+    <div className="p-4">
       <div
-        className="text-black "
-        style={{ fontSize: "16px", fontWeight: "600" }}
+        className="text-black form-label"
       >
         All Clients
       </div>
       <p className="font-size-32 fw-600">Add New Client</p>
 
-      <hr style={{ height: "2px" }} />
+      <hr/>
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-end">
@@ -180,16 +179,14 @@ function CreateClient() {
           {activeStep === 1 ? (
             <div>
               <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
+                className="text-black form-label"
               >
                 Basic Information
               </p>
               <div className="row mb-5">
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Client Name
                   </Label>
@@ -197,8 +194,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Client Code
                   </Label>
@@ -206,8 +202,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Client Code
                   </Label>
@@ -215,8 +210,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Client Legal Name (If different)
                   </Label>
@@ -224,8 +218,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     FEIN
                   </Label>
@@ -233,8 +226,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Physical Address
                   </Label>
@@ -242,8 +234,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Invoice Address
                   </Label>
@@ -251,8 +242,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Routing #
                   </Label>
@@ -260,8 +250,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Bank Name
                   </Label>
@@ -276,16 +265,14 @@ function CreateClient() {
           ) : activeStep === 2 ? (
             <div>
               <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
+                className="text-black form-label"
               >
                 Contact Information
               </p>
               <div className="row mb-5">
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Company Primary Contact
                   </Label>
@@ -293,8 +280,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Title
                   </Label>
@@ -302,8 +288,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Office Phone
                   </Label>
@@ -311,8 +296,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Cell Phone
                   </Label>
@@ -320,8 +304,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Email
                   </Label>
@@ -330,8 +313,7 @@ function CreateClient() {
                 <Col xl="4"></Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Company Secondary Contact
                   </Label>
@@ -339,8 +321,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Title
                   </Label>
@@ -348,8 +329,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Office Phone
                   </Label>
@@ -357,8 +337,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Cell Phone
                   </Label>
@@ -366,8 +345,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Email
                   </Label>
@@ -378,16 +356,14 @@ function CreateClient() {
           ) : (
             <div>
               <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
+                className="text-black form-label"
               >
                 Workspace
               </p>
               <div className="row mb-5">
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Logo
                   </Label>
@@ -395,8 +371,7 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Domain
                   </Label>
@@ -408,13 +383,12 @@ function CreateClient() {
 
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     Client Admin
                   </Label>
                   <Input type="select" name="select" id="exampleSelect">
-                    <option style={{ color: "grey" }} disabled>
+                    <option className="text-grey" disabled>
                       Select Admin
                     </option>
                     <option>Admin 1</option>
@@ -423,13 +397,12 @@ function CreateClient() {
                 </Col>
                 <Col xl="4">
                   <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    className="text-black form-label"
                   >
                     RSSL Support User
                   </Label>
                   <Input type="select" name="select" id="exampleSelect">
-                    <option style={{ color: "grey" }} disabled>
+                    <option className="text-grey" disabled>
                       Select Admin
                     </option>
                     <option>Admin 1</option>
@@ -443,7 +416,7 @@ function CreateClient() {
       )}
       {/* <ClientAccordion /> */}
       {/* step one */}
-      <hr style={{ height: "2px" }} />
+      <hr/>
       <div className="d-flex row-reverse justify-content-end my-5 gap-3">
         <Button
           color="link"

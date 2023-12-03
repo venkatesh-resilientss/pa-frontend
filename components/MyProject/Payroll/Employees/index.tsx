@@ -1,7 +1,7 @@
 import EmployeesListTable from "./EmployeeTable";
 function Employees() {
   return (
-    <div style={{ fontFamily: "Segoe UI" }}>
+    <div>
       {/* <DeleteProjectPopup id={undefined} /> */}
       <EmployeesListTable />
     </div>

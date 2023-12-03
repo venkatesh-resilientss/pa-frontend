@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function AccountingInformationForm({ control, errors }) {
 
@@ -61,9 +62,7 @@ function AccountingInformationForm({ control, errors }) {
          />
          )}
          {errors[`${formField.name}`] && formField.required && (
-           <span className="error-message">
-             {errors[`${formField.name}`].message as React.ReactNode}
-           </span>
+          <InvalidFeedBack message={errors[`${formField.name}`].message} />
          )}
        </Col>
       ))}

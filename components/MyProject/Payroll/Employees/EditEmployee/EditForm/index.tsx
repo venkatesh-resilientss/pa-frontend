@@ -16,6 +16,8 @@ import AgentForm from './AgentForm';
 import DeductionsForm from './DeductionsForm';
 import W4Form from './W4Form';
 import I9Form from './I9Form';
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
+
 const tabs = [
   {id:'1', label:'Basic Information', component: BasicDetailsForm},
   {id:'2', label: 'Loanout', component: LoanoutForm},
@@ -37,19 +39,13 @@ function Tabs({ control, errors, activeStep }) {
   }
  
   return (
-    <div style={{ fontFamily: 'Segoe UI',fontSize:"14px",fontWeight:"500" }}>
+    <div>
       <div>
-        <Nav className='bg-white mb-4' style={{borderBottom:"1px solid",borderColor:"#DBDCDC"}}>
+        <Nav className='bg-white mb-4 nav-stepper'>
         {
           tabs.map((tab, index) => (
             <NavItem key={index}>
-            <NavLink
-            style={{
-              borderBottom: activeStep === tab.id ? '2px solid #293991' : 'none',
-              transition: 'border-bottom 0.3s ease',
-              color:activeStep === tab.id ? '#293991' : '#C9C9C9',
-
-            }}
+            <NavLink className={"nav-link " + (activeStep === tab.id ? 'active-link' : 'inactive-link')}
               active={activeStep === tab.id}
               onClick={() => {
                 toggle(tab.id)

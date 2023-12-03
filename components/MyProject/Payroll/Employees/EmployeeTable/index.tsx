@@ -251,7 +251,7 @@ const EmployeesListTable = () => {
 
   return (
     <div className="py-4">
-      <Card className="w-100 p-3 employee-card-bg my-3" style={{ backgroundColor: "#E7EFFF" }}>
+      <Card className="w-100 p-3 employee-card-bg my-3">
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Employees</div>
           <div
@@ -264,7 +264,6 @@ const EmployeesListTable = () => {
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
-                  style={{ width: "217px", height: "38px" }}
                 />
               </div>
           <Button

@@ -2,6 +2,7 @@ import { Controller } from "react-hook-form";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useState } from "react";
 import { Plus, Minus } from "react-feather";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function ContactInformationForm({ control, errors }) {
 
@@ -63,8 +64,7 @@ function ContactInformationForm({ control, errors }) {
           {formField.map((formField, formindex) => (
            <Col key={formindex} xl="4">
                 <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
+                  className="text-black form-label"
                 >
                   {formField.label}{formField.required && '*'}
                 </Label>
@@ -83,9 +83,7 @@ function ContactInformationForm({ control, errors }) {
                   )}
                 />
                 {errors[`${index+'_'+formField.name}`] && formField.required && (
-                  <span style={{ color: "red" }}>
-                    {errors[`${index+'_'+formField.name}`].message as React.ReactNode}
-                  </span>
+                    <InvalidFeedBack message={errors[`${index+'_'+formField.name}`].message} />
                 )}
               </Col>
                ))}
@@ -99,262 +97,6 @@ function ContactInformationForm({ control, errors }) {
         </Row>
         ))}
       </Form>
-
-      {/* {formData.map((formField, index) => (
-        <div key={index}> */}
-          {/* <Form> */}
-            {/* <div>  */}
-            {/* <div className="d-flex row-reverse justify-content-end">
-              <Button
-                color="link"
-                className="text-decoration-none"
-                onClick={() => {
-                  removeForm((index));
-                }}
-              >
-                <Minus/>
-              </Button>
-            </div> */}
-            {/* </div> */}
-            {/* <Row>
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Company Primary Contact
-                </Label>
-                <Input placeholder="Enter Name" {...register} />
-              </Col>
-
-              <Col xl="4">
-                {" "}
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Title
-                </Label>
-                <Input placeholder="Enter Title" {...register} />
-              </Col>
-
-              <Col xl="4">
-                {" "}
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Office Phone
-                </Label>
-                <Input placeholder="Enter Office Phone Number" {...register} />
-              </Col>
-
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Phone Number
-                </Label>
-                <Input
-                  placeholder="Enter phone number"
-                  value={value}
-                  // onChange={setValue}
-                />
-              </Col>
-
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Email
-                </Label>
-                <Input placeholder="Enter Email" {...register} />
-              </Col>
-              <Col xl="4"></Col>
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Company Secondary Contact
-                </Label>
-                <Input placeholder="Enter Name" {...register} />
-              </Col>
-
-              <Col xl="4">
-                {" "}
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Title
-                </Label>
-                <Input placeholder="Enter Title" {...register} />
-              </Col>
-
-              <Col xl="4">
-                {" "}
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Office Phone
-                </Label>
-                <Input placeholder="Enter Office Phone Number" {...register} />
-              </Col>
-
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Phone Number
-                </Label>
-                <Input
-                  placeholder="Enter phone number"
-                  value={value}
-                  // onChange={setValue}
-                />
-              </Col>
-
-              <Col xl="4">
-                <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
-                >
-                  Email
-                </Label>
-                <Input placeholder="Enter Email" {...register} />
-              </Col>
-            </Row> */}
-          {/* </Form> */}
-          {/* <label>{formField.fieldName}:</label>
-          <input
-            type="text"
-            value={formField.value}
-            onChange={(e) => handleChange(index, e.target.value)}
-          /> */}
-        {/* </div>
-      ))} */}
-
-      {/* <Form>
-        <Row>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Company Primary Contact
-            </Label>
-            <Input placeholder="Enter Name" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Title
-            </Label>
-            <Input placeholder="Enter Title" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Office Phone
-            </Label>
-            <Input placeholder="Enter Office Phone Number" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Phone Number
-            </Label>
-            <Input
-              placeholder="Enter phone number"
-              value={value}
-              // onChange={setValue}
-            />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Email
-            </Label>
-            <Input placeholder="Enter Email" {...register} />
-          </Col>
-          <Col xl="4"></Col>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Company Secondary Contact
-            </Label>
-            <Input placeholder="Enter Name" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Title
-            </Label>
-            <Input placeholder="Enter Title" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Office Phone
-            </Label>
-            <Input placeholder="Enter Office Phone Number" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Phone Number
-            </Label>
-            <Input
-              placeholder="Enter phone number"
-              value={value}
-              // onChange={setValue}
-            />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Email
-            </Label>
-            <Input placeholder="Enter Email" {...register} />
-          </Col>
-        </Row>
-      </Form> */}
-
       <div className="d-flex justify-content-end">
         <Button color="white" onClick={addNewForm}>
           <Plus />

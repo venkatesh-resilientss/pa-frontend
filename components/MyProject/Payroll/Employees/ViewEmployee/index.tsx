@@ -84,29 +84,25 @@ function ViewEmployee() {
       }
     ];
       return (
-        <div style={{ fontFamily: "Segoe UI" }} className="p-4">
+        <div className="p-4">
         <div
-          className="text-black "
-          style={{ fontSize: "16px", fontWeight: "600" }}
+          className="text-black form-label"
         >
           All Employees
         </div>
         <p className="font-size-32 fw-600">Employee Profile</p>
   
-        <hr style={{ height: "2px" }} />
+        <hr/>
         <Row>
           <Col xl="5">
           <div
             className="d-flex flex-column text-center align-items-center card p-3 mb-3 border-0"
-            style={{ fontSize: "12px" }}
           >
             <img
               src="/defaultemployee.jpeg"
               alt=""
-              style={{ width: "150px", height: "150px", borderRadius: "100px" }}
             />
-            <div className="text-black "
-              style={{ fontSize: "16px", fontWeight: "600" }}>
+            <div className="text-black form-label">
             <span>{employee.last_name}</span>
             <span className="m-1">{employee.first_name}</span>
             </div>
@@ -156,12 +152,11 @@ function ViewEmployee() {
               employee.projects.map((project, index) => (
                 <div className="card p-3 mb-3 border-0">
                   <div
-                    className="text-black "
-                    style={{ fontSize: "16px", fontWeight: "600" }}
+                    className="text-black form-label"
                   >
                     Project {index + 1}
                   </div>
-                  <hr style={{ height: "2px" }} />
+                  <hr/>
                   <Row>
                     <Col xl="4">
                       <div>Project Name</div>
@@ -203,7 +198,7 @@ function ViewEmployee() {
         <Row>
         <GridTable rowData={employee.payments} columnDefs={columns} pageSize={4} searchText={searchText} />
         </Row>
-        <hr style={{ height: "2px" }} />
+        <hr/>
       </div>
     )
 }
