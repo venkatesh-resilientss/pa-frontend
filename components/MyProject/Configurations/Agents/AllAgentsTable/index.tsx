@@ -37,69 +37,10 @@ import { hasPermission } from "commonFunctions/functions";
 import { checkTenant } from "constants/function";
 import React from "react";
 
-const AllCompanyTable = () => {
+const AllAgentsTable = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  // const ActionsButton = (props) => {
-  //   console.log(props.data.id, "props");
-  //   const id = `action-popover-${props.value}`;
-  //   const [open, setOpen] = useState(false);
-  //   const Action = ({ icon, name, action }) => {
-  //     return (
-  //       <div onClick={action} className="d-flex align-items-center gap-2">
-  //         <Image src={icon} alt={name} />
-  //         <p>{name}</p>
-  //       </div>
-  //     );
-  //   };
-  //   return (
-  //     <div>
-  //       <UncontrolledDropdown>
-  //         <DropdownToggle tag="span">
-  //           <Image
-  //             src={actionIcon}
-  //             alt=""
-  //             width={14}
-  //             id={id}
-  //             style={{ marginLeft: "20px" }}
-  //           />
-  //         </DropdownToggle>
-  //         <DropdownMenu end container="body">
-  //           <DropdownItem className="w-100">
-  //             <Action
-  //               icon={detailsIocn}
-  //               name={"View Details"}
-  //               action={() => {}}
-  //             />
-  //           </DropdownItem>
-  //           <DropdownItem
-  //             tag="a"
-  //             className="w-100"
-  //             onClick={(e) =>
-  //               router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)
-  //             }
-  //           >
-  //             <Action icon={editIocn} name={"Edit"} action={() => {}} />
-  //           </DropdownItem>
-  //           <DropdownItem
-  //             tag="a"
-  //             className="w-100"
-  //             onClick={(e) => e.preventDefault()}
-  //           >
-  //             <Action
-  //               icon={deleteIcon}
-  //               name={"Delete"}
-  //               action={() => {
-  //                 dispatch(openDeleteSeriesPopup(props.data?.ID));
-  //               }}
-  //             />
-  //           </DropdownItem>
-  //         </DropdownMenu>
-  //       </UncontrolledDropdown>
-  //     </div>
-  //   );
-  // };
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -130,7 +71,6 @@ const AllCompanyTable = () => {
       field: "CompanyCode",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -138,7 +78,6 @@ const AllCompanyTable = () => {
       field: "CompanyName",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -146,7 +85,6 @@ const AllCompanyTable = () => {
       field: "CompanyAddress",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -154,14 +92,12 @@ const AllCompanyTable = () => {
       field: "CompanyAddress",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Action",
       field: "id",
       cellRenderer: ActionsButton,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
   ];
@@ -202,18 +138,13 @@ const AllCompanyTable = () => {
     <div>
       <div className="section mt-4">
         <Card
-          className="mt-2"
-          style={{
-            backgroundColor: "#E7EFFF",
-            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-          }}
+          className="mt-2 agents-list"
         >
           <CardBody>
             <div className="d-flex justify-content-between">
               <div>
                 <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600", color:"#283891" }}
+                  className="m-2 agents-header"
                 >
                   Agents lists
                 </div>
@@ -227,42 +158,16 @@ const AllCompanyTable = () => {
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
-                  className="searchConfig"
+                  className="searchConfig agents-search"
                   placeholder="Search..."
-                  style={{ width: "217px", height: "38px" }}
                 />
-
-                {/* <Button
-                  onClick={() => dispatch(openBulkUploadSeriesPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button> */}
 
                 <Button
                   onClick={() => router.push(`/configurations/add-agent`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
+                  className="agents-new-button"
                 >
                   <Image
-                    style={{ width: "14px", height: "14px" }}
+                    className="agents-plus-image"
                     src={plusWhiteIcon}
                     alt="plus-icon"
                   />{" "}
@@ -310,4 +215,4 @@ const AllCompanyTable = () => {
   );
 };
 
-export default AllCompanyTable;
+export default AllAgentsTable;
