@@ -228,6 +228,10 @@ export const sidebarRoutes = [
     path: "/configurations",
     children: [
       {
+        name: "Agents",
+        path: "/agent",
+      },
+      {
         name: "Departments",
         path: "/departments",
       },
@@ -279,6 +283,14 @@ export const sidebarRoutes = [
       {
         name: "Budget",
         path: "/budgets",
+      },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
+      {
+        name: "Company",
+        path: "/company",
       },
     ],
   },
