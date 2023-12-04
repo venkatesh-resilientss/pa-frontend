@@ -9,6 +9,8 @@
 @import "./scss/buttons";
 @import "./scss/grids";
 @import "./scss/typography";
+@import "./scss/component";
+
 
 // AG Grid
 @import "ag-grid-community/styles/ag-grid.css";
@@ -481,47 +483,4 @@ input::placeholder {
   text-decoration: none;
   color: #030229;
   font-size: 16px;
-}
-
-.filter-datepicker {
-  border-color: hsl(0, 0%, 80%);
-  border-radius: 5px;
-  padding: 6px;
-  border-width: 1px;
-}
-
-.gap-10 {
-  gap: 10px;
-}
-
-.top-search {
-  width: 217px;
-  height: 38px;
-}
-
-.form-label {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.checkbox-label {
-  font-size: 14px;
-  font-weight: 400;
-  margin-left: 10px;
-}
-
-.error-message {
-  color: red;
-}
-
-.width120 {
-  width: 120px
-}
-
-.viewall-table {
-  width: 73%;
-}
-
-.viewall-table .date {
-  width: 30%;
 }

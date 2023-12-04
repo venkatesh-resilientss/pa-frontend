@@ -4,6 +4,7 @@ import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { Plus, Delete } from "react-feather";
 import { useState } from "react";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function FeesForm({ control, errors }) {
   const { register } = useForm();
@@ -106,9 +107,7 @@ function FeesForm({ control, errors }) {
          />
          )}
          {errors[`${formField.name}`] && formField.required && (
-           <span className="error-message">
-             {errors[`${formField.name}`].message as React.ReactNode}
-           </span>
+          <InvalidFeedBack message={errors[`${formField.name}`].message} />
          )}
        </Col>
       ))}

@@ -1,5 +1,6 @@
 import { Controller } from 'react-hook-form'
 import { Col, Form, Input, Label, Row } from 'reactstrap'
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function SignatoryDetailsForm({ control, errors }) {
 
@@ -39,9 +40,7 @@ function SignatoryDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span className='error-message'>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}

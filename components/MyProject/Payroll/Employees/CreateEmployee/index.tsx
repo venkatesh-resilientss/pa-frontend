@@ -42,16 +42,15 @@ function CreateEmployee() {
     }
   };
     return (
-        <div style={{ fontFamily: "Segoe UI" }} className="p-4" id="CreateEmployee">
+        <div className="p-4" id="CreateEmployee">
         <div
-          className="text-black "
-          style={{ fontSize: "16px", fontWeight: "600" }}
+          className="text-black form-label"
         >
           All Employees
         </div>
         <p className="font-size-32 fw-600">Add New Employee</p>
   
-        <hr style={{ height: "2px" }} />
+        <hr/>
         <BasicDetailsForm control={control} errors={errors}/>
         <DocumentsForm control={control} errors={errors}/>
         <Form className='mt-4'>
@@ -65,8 +64,7 @@ function CreateEmployee() {
             placeholder={formField.placeholder}
             />
             <Label
-            className="text-black"
-            style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+            className="text-black checkbox-label"
             >
             Would you like to send the start Form to this team member?
             </Label>
@@ -93,7 +91,7 @@ function CreateEmployee() {
             {(!isChecked || (activeStep === '4')) ? ('Invite Employee') : ('Continue')}
             </Button>
         </div>
-        <hr style={{ height: "2px" }} />
+        <hr/>
       </div>
     )
 

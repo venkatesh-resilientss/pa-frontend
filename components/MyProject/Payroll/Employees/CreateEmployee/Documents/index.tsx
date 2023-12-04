@@ -12,8 +12,7 @@ function DocumentsForm({ control, errors }) {
           <Form>
             <Row>
                 <Col>
-                    <Label className="form-lable-font text-black"
-                        style={{ fontSize: "14px", fontWeight: "400" }}>
+                    <Label className="form-lable-font text-black form-label">
                             {formData.label}
                     </Label>
                     <Controller

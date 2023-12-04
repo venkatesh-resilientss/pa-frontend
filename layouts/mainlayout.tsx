@@ -55,6 +55,7 @@ const MainLayout: FC<IProps> = ({ children }) => {
     "transactions",
     "my-profile",
     "edit-production",
+    "payroll"
     // "/forgot-password",
     // "/login",
     // "/reset-password",

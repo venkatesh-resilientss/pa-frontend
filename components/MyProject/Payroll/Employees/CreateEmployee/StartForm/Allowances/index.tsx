@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function AllowancesForm({ control, errors }) {
     const formData = [
@@ -30,8 +31,7 @@ function AllowancesForm({ control, errors }) {
             <Row>
               {formData.map((formField) => (
                 <Col xl="3" key={formField.name}>
-                  {formField.type !== 'check' && <Label className="form-lable-font text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}>
+                  {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                     {formField.label}{formField.required && '*'}
             </Label>}
                   {formField.type === 'select' ? (
@@ -73,8 +73,7 @@ function AllowancesForm({ control, errors }) {
                          {...field}
                        />
                        <Label
-                        className="text-black"
-                        style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+                        className="text-black checkbox-label"
                       >
                         {formField.label}
                       </Label>
@@ -98,9 +97,7 @@ function AllowancesForm({ control, errors }) {
                     />
                   )}
                   {errors[`${formField.name}`] && formField.required && (
-                    <span style={{ color: "red" }}>
-                      {errors[`${formField.name}`].message as React.ReactNode}
-                    </span>
+                  <InvalidFeedBack message={errors[`${formField.name}`].message} />
                   )}
                 </Col>
               ))}

@@ -4,6 +4,7 @@ import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { Plus, Delete } from "react-feather";
 import { useState } from "react";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function FeesForm({ control, errors }) {
   const { register } = useForm();
@@ -54,8 +55,7 @@ function FeesForm({ control, errors }) {
         <Row>
         {form.map((formField, index) => (
          <Col xl="4" className="p-2" key={index}>
-          {formField.type !== 'check' && <Label className="form-lable-font text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}>
+          {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                 {formField.label}{formField.required && '*'}
         </Label>}
          {formField.type === 'select' ? (
@@ -82,8 +82,7 @@ function FeesForm({ control, errors }) {
                {...field}
              />
              <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+              className="text-black checkbox-label"
             >
               {formField.label}
             </Label>
@@ -107,131 +106,10 @@ function FeesForm({ control, errors }) {
          />
          )}
          {errors[`${formField.name}`] && formField.required && (
-           <span style={{ color: "red" }}>
-             {errors[`${formField.name}`].message as React.ReactNode}
-           </span>
+            <InvalidFeedBack message={errors[`${formField.name}`].message} />
          )}
        </Col>
       ))}
-
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              WC Table
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4" className="d-flex gap-1 m-auto">
-            <Input type="checkbox" {...register} />
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Weekly Cutoffs
-            </Label>
-          </Col>
-
-          <Col xl="4" className="d-flex gap-1 m-auto">
-            <Input type="checkbox" {...register} />
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Bill on Premium OT
-            </Label>
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              SUTA Table
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4" className="d-flex gap-1 m-auto">
-            <Input type="checkbox" {...register} />
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Taxable Allow
-            </Label>
-          </Col>
-
-          <Col xl="4" className="d-flex gap-1 m-auto">
-            <Input type="checkbox" {...register} />
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              P/R Tax Cutoffs
-            </Label>
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Breakage at
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              HF Rebate Amount
-            </Label>
-            <Input {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              W/C Rebate Amount
-            </Label>
-            <Input {...register} />
-          </Col>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Delivery By
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Cost
-            </Label>
-            <Input {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Per
-            </Label>
-            <ReactSelect {...register} />
-          </Col> */}
         </Row>
       </Form>
       <div>
@@ -276,8 +154,7 @@ function FeesForm({ control, errors }) {
         <ModalBody>
           <div>
           <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Fees
             </Label>
@@ -313,18 +190,16 @@ const CustomForm = ({ typeName }) => {
         <div className="d-flex gap-1">
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Fee Type
             </Label>
             <ReactSelect {...register} />
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Amount{" "}
             </Label>
@@ -333,8 +208,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>
@@ -344,8 +218,7 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               % Taxable Gross
             </Label>
@@ -354,17 +227,15 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Per Check
             </Label>
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Min. Amount{" "}
             </Label>
@@ -373,18 +244,16 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>
             <ReactSelect {...register} />
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Max. Amount{" "}
             </Label>
@@ -393,8 +262,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>

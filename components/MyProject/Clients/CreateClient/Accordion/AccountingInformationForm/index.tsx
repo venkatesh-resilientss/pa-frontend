@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function AccountingInformationForm({ control, errors }) {
 
@@ -29,7 +30,7 @@ function AccountingInformationForm({ control, errors }) {
         <Row>
         {form.map((formField) => (
          <Col xl="4" className="p-2" key={formField.name}>
-         <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+         <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
          {formField.type === 'select' ? (
             <Controller
             name={formField.name}
@@ -71,73 +72,10 @@ function AccountingInformationForm({ control, errors }) {
          />
          )}
          {errors[`${formField.name}`] && formField.required && (
-           <span style={{ color: "red" }}>
-             {errors[`${formField.name}`].message as React.ReactNode}
-           </span>
+            <InvalidFeedBack message={errors[`${formField.name}`].message} />
          )}
        </Col>
       ))}
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Parent Client Code
-            </Label>
-            <Input placeholder="Enter Parent Client Code" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Parent Client Name
-            </Label>
-            <Input placeholder="Enter Parent Client Name" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              RSSL Company
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              RSSL Invoice Address{" "}
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              RSSL Bank
-            </Label>
-            <ReactSelect {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              PSA Signed Date{" "}
-            </Label>
-            <Input type="date" {...register} />
-          </Col> */}
         </Row>
       </Form>
     </div>

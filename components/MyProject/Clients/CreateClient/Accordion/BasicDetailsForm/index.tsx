@@ -1,6 +1,8 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
+
 function BasicDetailsForm({ control, errors }) {
 
   const childFields = [
@@ -22,7 +24,7 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {childFields.map((formField) => (
             <Col xl="4" key={formField.name}>
-              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+              <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
               {formField.type === 'select' ? (
                 <Controller
                   name={formField.name}
@@ -49,61 +51,10 @@ function BasicDetailsForm({ control, errors }) {
                 />
               )}
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}
-          {/* <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Client Legal Name (If different){" "}
-            </Label>
-            <Input placeholder="Enter Legal Name" {...register} />
-          </Col> */}
-
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              FEIN
-            </Label>
-            <Input placeholder="Enter FEIN" {...register} />
-          </Col> */}
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Routing #
-            </Label>
-            <Input placeholder="Routing Number" {...register} />
-          </Col> */}
-
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Bank Name
-            </Label>
-            <ReactSelect {...register} isClearable />
-          </Col> */}
-
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Account Number
-            </Label>
-            <Input placeholder="Routing Number" {...register} />
-          </Col> */}
         </Row>
       </Form>
     </div>
