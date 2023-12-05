@@ -321,7 +321,14 @@ export const sidebarRoutesProduction = [
     icon: "/icons/configurationIcon.svg",
     path: "/configurations",
     children: [
-     
+      {
+        name: "Agents",
+        path: "/agent",
+      },
+      {
+        name: "Departments",
+        path: "/departments",
+      },
       {
         name: "Budget",
         path: "/budgets",

@@ -1,0 +1,47 @@
+.add-agents {
+	font-family: 'Segoe UI';
+
+	.add-agents-header {
+		font-size: 16px;
+		font-weight: 600;
+	}
+	.add-agents-subheader{
+		font-size: 32px;
+		font-weight: 600;
+	}
+	.add-form{
+		font-size: 12px;
+		font-weight: 400;
+		gap: 10px;
+
+	}
+	.edit-buttons{
+		width: 150px;
+		border-radius: 1px;
+}
+}
+.agents-list{
+	background-color: #E7EFFF;
+	box-shadow: 0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25);
+	.agents-header{
+		font-size: 16px;
+		font-weight: 600;
+		color: #283891;
+	}
+	.agents-search{
+		width: 217px;
+		height: 38px;
+	}
+	.agents-new-button{
+		height: 38px;
+		background-color: #00AEEF;
+		font-size: 14px;
+		font-weight: 600;
+		border: none;
+	}
+	.agents-plus-image{
+		width: 14px;
+		height: 14px;
+	}
+
+}
