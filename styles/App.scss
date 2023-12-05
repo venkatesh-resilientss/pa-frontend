@@ -1,0 +1,70 @@
+// Bootstrap Override
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+@import "react-phone-input-2/lib/style.css";
+@import "react-datepicker/dist/react-datepicker.css";
+@import "./scss/bootstrap.override.scss";
+@import "react-toastify/dist/ReactToastify.css";
+
+// Custom Styles
+@import "./scss/buttons";
+@import "./scss/grids";
+@import "./scss/typography";
+@import "./scss/colors.scss";
+@import "./scss/components.scss";
+@import "./scss/fonts.scss";
+@import "./scss/images.scss";
+@import "./scss/themes.scss";
+
+// AG Grid
+@import "ag-grid-community/styles/ag-grid.css";
+@import "ag-grid-community/styles/ag-theme-alpine.css";
+@import "./scss/_aggrid.scss";
+@import "./scss/sidebar";
+
+@font-face {
+  font-family: "Segoe UI";
+  src: url("/public/fonts/Segoe.woff") format("woff2");
+}
+@font-face {
+  font-family: "Almarai";
+  src: url("/public/fonts/Almarai.ttf") format("tff");
+}
+
+@font-face {
+  font-family: "Segoe UI Semibold";
+  src: url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.eot");
+  src: url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.eot?#iefix")
+      format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.woff2")
+      format("woff2"),
+    url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.woff")
+      format("woff"),
+    url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.ttf")
+      format("truetype"),
+    url("https://db.onlinewebfonts.com/t/d4d6e1a6527a21185217393c427a52cb.svg#Segoe UI Semibold")
+      format("svg");
+}
+
+input.search {
+  display: block;
+  padding: 6px 5px 6px 39px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+  border-radius: 10.141px;
+  border: 2.535px solid #ececec;
+  margin-right: 10px;
+}
+
+input.searchConfig {
+  width: 260px;
+  height: "38px";
+  display: block;
+  padding: 9px 4px 9px 40px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+
+  border-radius: 4.006px;
+  border: 1.001px solid #ececec;
+  margin-right: 10px;
+}
