@@ -15,13 +15,11 @@ import moment from "moment";
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadCurrenciesPopup,
-  openDeleteCurrencyPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
@@ -42,10 +40,10 @@ const AllCurrencyTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const dispatch = useDispatch();
 
@@ -114,7 +112,7 @@ const AllCurrencyTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -122,7 +120,7 @@ const AllCurrencyTable = () => {
               >
                 <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -133,6 +131,7 @@ const AllCurrencyTable = () => {
       headerName: "Currencies Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -141,6 +140,7 @@ const AllCurrencyTable = () => {
       headerName: "Currencies Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -149,6 +149,7 @@ const AllCurrencyTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -162,6 +163,7 @@ const AllCurrencyTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -171,6 +173,7 @@ const AllCurrencyTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -184,7 +187,6 @@ const AllCurrencyTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-
   return (
     <>
       <div>
@@ -197,11 +199,11 @@ const AllCurrencyTable = () => {
             }}
           >
             <CardBody>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between configuration-table">
                 <div>
                   <div
-                    className="m-2"
-                    style={{ fontSize: "16px", fontWeight: "600" }}
+                    className="m-2 title"
+                    
                   >
                     All Currencies
                   </div>

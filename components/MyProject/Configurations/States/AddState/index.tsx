@@ -5,10 +5,11 @@ import { CountryService, StatesService } from "services";
 import { toast } from "react-toastify";
 import AsyncSelect from "react-select/async";
 import useSWR from "swr";
-
+import { selectStyles } from "@/constants/common";
+import { formValidationRules } from "@/constants/common";
 function AddState() {
   const router = useRouter();
-
+  const statesValidationRules = formValidationRules.states;
   const {
     control,
     handleSubmit,
@@ -109,11 +110,11 @@ function AddState() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">State Name</Label>
+              <Label className="form-lable-font">State Name <span className="required">*</span></Label>
               <Controller
                 name="Statename"
                 control={control}
-                rules={{ required: "State Name  is required" }}
+                rules={statesValidationRules.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
@@ -133,10 +134,10 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="fform-lable-font">State Code</Label>
+              <Label className="fform-lable-font">State Code <span className="required">*</span></Label>
               <Controller
                 name="Statecode"
-                rules={{ required: "State Code  is required" }}
+                rules={statesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -157,11 +158,11 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">Country</Label>
+              <Label className="form-lable-font">Country <span className="required">*</span></Label>
               <Controller
                 name="country"
                 control={control}
-                rules={{ required: "Country  is required" }}
+                rules={statesValidationRules.country}
                 render={({ field }) => (
                   <AsyncSelect
                     {...field}
@@ -171,6 +172,7 @@ function AddState() {
                     loadOptions={loadCountryOptions}
                     placeholder="Select Country"
                     defaultOptions={countrySelectFormat}
+                    styles={selectStyles}
                   />
                 )}
               />
@@ -187,8 +189,8 @@ function AddState() {
               <Label className="form-lable-font">Description</Label>
               <Controller
                 name="description"
-                rules={{ required: "Dscription  is required" }}
                 control={control}
+                rules={statesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{

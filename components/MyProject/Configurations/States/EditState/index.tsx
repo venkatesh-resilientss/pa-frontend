@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CountryService, StatesService } from "services";
 import AsyncSelect from "react-select/async";
-
+import { selectStyles } from "constants/common";
+import { formValidationRules } from "constants/common";
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
-
+  const statesValidationRules = formValidationRules.states;
   const statesService = new StatesService();
   const fetchStateDetails = (id) => statesService.stateDetails(id);
 
@@ -25,13 +26,16 @@ function EditState() {
     control,
     reset,
   } = useForm();
-
   useEffect(() => {
     if (!stateData) return;
 
     stateData?.Name && setValue("Statename", stateData?.Name);
     stateData?.Description && setValue("description", stateData?.Description);
-    stateData?.Country.Name && setValue("country", stateData?.Country.Name);
+    const country = {
+      value : stateData?.Country.ID,
+      label : stateData?.Country.Name
+    }
+    setValue('country',country)
     stateData?.Code && setValue("Statecode", stateData?.Code);
     setActiveStatus(stateData?.IsActive);
   }, [stateData]);
@@ -42,16 +46,15 @@ function EditState() {
     countryService.getCountries()
   );
 
-  const countrySelectFormat = countryData?.data.map((b) => {
+  const countrySelectOptions = countryData?.data.map((b) => {
     return {
       value: b.ID,
       label: b.Name,
     };
   });
 
-  const loadCountryOptions = (values, callBack) => {
-    callBack(countrySelectFormat);
-  };
+  
+  
 
   const stateService = new StatesService();
 
@@ -139,12 +142,12 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                State Name
+                State Name <span className="required">*</span>
               </Label>
               <Controller
                 name="Statename"
                 control={control}
-                rules={{ required: "State Name  is required" }}
+                rules={statesValidationRules.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
@@ -165,11 +168,11 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                State Code
+                State Code <span className="required">*</span>
               </Label>
               <Controller
                 name="Statecode"
-                rules={{ required: "State Code  is required" }}
+                rules={statesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -191,21 +194,21 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Country
+                Country <span className="required">*</span>
               </Label>
               <Controller
                 name="country"
                 control={control}
-                rules={{ required: "Country  is required" }}
+                rules={statesValidationRules.country}
                 render={({ field }) => (
                   <AsyncSelect
                     {...field}
                     isClearable={true}
                     className="react-select"
                     classNamePrefix="select"
-                    loadOptions={loadCountryOptions}
                     placeholder="Select Country"
-                    defaultOptions={countrySelectFormat}
+                    defaultOptions={countrySelectOptions}
+                    styles={selectStyles}
                   />
                 )}
               />
@@ -224,8 +227,8 @@ function EditState() {
               </Label>
               <Controller
                 name="description"
-                rules={{ required: "Dscription  is required" }}
                 control={control}
+                rules={statesValidationRules.country}
                 render={({ field }) => (
                   <Input
                     style={{

@@ -12,27 +12,19 @@ import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 
 import { useRouter } from "next/router";
 import { VendorsService } from "services";
 import useSWR from "swr";
 import Image from "next/image";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadVendorsPopup,
-  openDeleteVendorPopup,
-} from "redux/slices/mySlices/configurations";
-import { useDispatch } from "react-redux";
 import moment from "moment";
 import NoDataPage from "components/NoDataPage";
 
 const AllVendorsTable = () => {
   const vendorsService = new VendorsService();
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -42,10 +34,10 @@ const AllVendorsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const { data: vendorsData, isLoading: vendorsLoading } = useSWR(
     "LIST_VENDORS",
@@ -104,7 +96,7 @@ const AllVendorsTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -112,7 +104,7 @@ const AllVendorsTable = () => {
               >
                 <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -123,6 +115,7 @@ const AllVendorsTable = () => {
       headerName: "Vendor Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -131,14 +124,16 @@ const AllVendorsTable = () => {
       headerName: "Vendor Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "State",
-      field: "State",
+      field: "State.Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -147,6 +142,7 @@ const AllVendorsTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -160,6 +156,7 @@ const AllVendorsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -169,6 +166,7 @@ const AllVendorsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -219,7 +217,7 @@ const AllVendorsTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
+                {/* <Button
                   onClick={() => dispatch(openBulkUploadVendorsPopup("upload"))}
                   style={{
                     height: "38px",
@@ -236,7 +234,7 @@ const AllVendorsTable = () => {
                     alt="plus-icon"
                   />{" "}
                   Bulk Upload
-                </Button>
+                </Button> */}
 
                 {/* <Button
                   onClick={() => router.push(`/configurations/add-vendor`)}

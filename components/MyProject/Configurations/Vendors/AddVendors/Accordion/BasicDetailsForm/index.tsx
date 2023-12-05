@@ -3,15 +3,35 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import useSWR from "swr";
 import { StatesService } from "services";
+import { selectStyles } from "constants/common";
+import { COAAccountsService } from "services";
+import {
+  formValidationRules,
+  PaymentOptions,
+  VendorsAddressTypes,
+} from "constants/common";
+import { useState } from "react";
 function BasicDetailsForm({ control, onSubmit, errors }) {
-  const { handleSubmit } = useForm();
+  const {
+    // control,
+    handleSubmit,
+    clearErrors
+  } = useForm();
+  const [isPettyCashEnabled, setPettyCashEnabled] = useState(false);
   const statesService = new StatesService();
-  const paymentOptions = [
-    { value: "cheque", label: "Cheque" },
-    { value: "wireTransfer", label: "Wire Transfer" },
-    { value: "manualCheque", label: "Manual Cheque" },
-    { value: "eft", label: "EFT" },
-  ];
+  const vendorsValidationRules = formValidationRules.vendors;
+
+  const coaAccountsService = new COAAccountsService();
+
+  const { data: COAData } = useSWR("LIST_COA", () =>
+    coaAccountsService.getCoasAccounts()
+  );
+  const COASelectOptions = COAData?.result.map((account) => {
+    return {
+      value: account.ID,
+      label: `${account.Code}-${account.Name}`,
+    };
+  });
 
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates()
@@ -31,16 +51,16 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Name
+              Vendor Name <span className="required">*</span>
             </Label>
             <Controller
               name="vendorName"
-              rules={{ required: "Vendor Name  is required" }}
+              rules={vendorsValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -58,17 +78,17 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Code
+              Vendor Code <span className="required">*</span>
             </Label>
             <Controller
               name="vendorCode"
-              rules={{ required: "Vendor Code  is required" }}
+              rules={vendorsValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -86,25 +106,24 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Payment Type
+              Default Payment Type <span className="required">*</span>
             </Label>
 
             <Controller
               name="paymentType"
-              rules={{
-                required: "Default Payment Type is required",
-              }}
+              rules={vendorsValidationRules.paymentType}
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={paymentOptions}
+                  options={PaymentOptions}
                   placeholder="Select an option"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -115,19 +134,17 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Legal Name
+              Vendor Legal Name <span className="required">*</span>
             </Label>
             <Controller
               name="legalName"
-              rules={{
-                required: "Vendor Legal Name is required",
-              }}
+              rules={vendorsValidationRules.legalName}
               control={control}
               render={({ field }) => (
                 <Input
@@ -145,18 +162,16 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Email
+              Vendor Email <span className="required">*</span>
             </Label>
             <Controller
               name="vendorEmail"
-              rules={{
-                required: "Vendor Email is required",
-              }}
+              rules={vendorsValidationRules.email}
               control={control}
               render={({ field }) => (
                 <Input
@@ -175,19 +190,16 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Entity Type
+              Entity Type <span className="required">*</span>
             </Label>
             <Controller
               name="entityType"
-              rules={{
-                required: "Entity Type is required",
-                validate: (value) => value > 0 || "Enter number",
-              }}
+              rules={vendorsValidationRules.entityType}
               control={control}
               render={({ field }) => (
                 <Input
@@ -205,25 +217,23 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Address
+              Default Address <span className="required">*</span>
             </Label>
             <Controller
               name="defaultAddress"
-              rules={{
-                required: "  Default Address is required",
-              }}
+              rules={vendorsValidationRules.defaultAddress}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Address"
-                  invalid={errors.defaultAddress && true}
+                <Select
                   {...field}
+                  options={VendorsAddressTypes}
+                  placeholder="Select Default Address"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -234,24 +244,23 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Work State
+              Work State <span className="required">*</span>
             </Label>
             <Controller
               name="workState"
-              rules={{
-                required: "Work State is required",
-              }}
+              rules={vendorsValidationRules.workState}
               control={control}
               render={({ field }) => (
                 <Select
                   {...field}
                   options={stateSelectOptions}
                   placeholder="Select state"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -262,7 +271,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -271,9 +280,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="taxId"
-              rules={{
-                required: "Tax Id is required",
-              }}
+              rules={vendorsValidationRules.taxID}
               control={control}
               render={({ field }) => (
                 <Input
@@ -291,25 +298,23 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Account{" "}
+              Default Account
             </Label>
             <Controller
               name="defaultAccount"
-              rules={{
-                required: " Default Account is required",
-              }}
+              rules={vendorsValidationRules.deafultAccount}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder=" Enter Account"
-                  invalid={errors.defaultAccount && true}
+                <Select
                   {...field}
+                  options={COASelectOptions}
+                  placeholder="Select an option"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -319,75 +324,69 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              ACH Bank Routing Number{" "}
+              ACH Bank Routing Number <span className="required">*</span>
             </Label>
             <Controller
               name="achRoutingNumber"
-              rules={{
-                required: "  ACH Bank Routing Number is required",
-              }}
+              rules={vendorsValidationRules.routingNumber}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder=" Enter Routing Number"
-                  invalid={errors.routingNumber && true}
+                  placeholder="Enter Routing Number"
+                  invalid={errors.achRoutingNumber && true}
                   {...field}
                 />
               )}
             />
-            {errors.routingNumber && (
-              <span className="text-danger">
-                {errors.routingNumber.message as React.ReactNode}
+            {errors.achRoutingNumber && (
+              <span style={{ color: "red" }}>
+                {errors.achRoutingNumber.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              ACH Bank Acoount Number{" "}
+              ACH Bank Account Number <span className="required">*</span>
             </Label>
             <Controller
               name="achAccountNumber"
-              rules={{
-                required: "ACH Bank Acoount Number is required",
-              }}
+              rules={vendorsValidationRules.accountNumber}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder=" Enter Account Number"
-                  invalid={errors.accountNumber && true}
+                  invalid={errors.achAccountNumber && true}
                   {...field}
                 />
               )}
             />
-            {errors.accountNumber && (
-              <span className="text-danger">
-                {errors.accountNumber.message as React.ReactNode}
+            {errors.achAccountNumber && (
+              <span style={{ color: "red" }}>
+                {errors.achAccountNumber.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Payee Name
+              Payee Name <span className="required">*</span>
             </Label>
             <Controller
               name="payeeName"
-              rules={{
-                required: "Payee Name is required",
-              }}
+              rules={vendorsValidationRules.payeename}
               control={control}
               render={({ field }) => (
                 <Input
@@ -401,6 +400,115 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             {errors.payeeName && (
               <span className="text-danger">
                 {errors.payeeName.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2 align-self-center">
+            <div className="d-flex gap-2 align-items-center">
+              <Controller
+                name="isPettyCashEnabled"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="checkbox"
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
+                    checked={isPettyCashEnabled}
+                    onChange={() => {
+                      setPettyCashEnabled(!isPettyCashEnabled);
+                      if(isPettyCashEnabled){
+                        clearErrors('pettyCashAccount')
+                      }
+                    }}
+                  />
+                )}
+              />
+              <Label
+                className="text-black mb-0"
+                style={{ fontSize: "12px", fontWeight: "400" }}
+              >
+                Is Petty Cash Enabled
+              </Label>
+            </div>
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Petty Cash Account <span className="required">*</span>
+            </Label>
+            <Controller
+              name="pettyCashAccount"
+              rules={isPettyCashEnabled ? vendorsValidationRules.pettyCashAccount : {}}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={[]}
+                  placeholder="Select an option"
+                  styles={selectStyles}
+                  isDisabled={!isPettyCashEnabled}
+                />
+              )}
+            />
+            {errors.pettyCashAccount && (
+              <span style={{ color: "red" }}>
+                {errors.pettyCashAccount.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Contact Name <span className="required">*</span>
+            </Label>
+            <Controller
+              name="contactName"
+              rules={vendorsValidationRules.contactname}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder=" Enter Payee Name"
+                  invalid={errors.contactName && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.contactName && (
+              <span style={{ color: "red" }}>
+                {errors.contactName.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Contact Number <span className="required">*</span>
+            </Label>
+            <Controller
+              name="contactNumber"
+              rules={vendorsValidationRules.contactNumber}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder=" Enter Payee Name"
+                  invalid={errors.contactNumber && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.contactNumber && (
+              <span style={{ color: "red" }}>
+                {errors.contactNumber.message as React.ReactNode}
               </span>
             )}
           </Col>

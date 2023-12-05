@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { SetsService } from "services";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function AddSet() {
   const router = useRouter();
-
+  const setsValidationRules = formValidationRules.sets;
   const {
     control,
     handleSubmit,
@@ -21,7 +21,6 @@ function AddSet() {
       name: data.setname,
       code: data.setcode,
       description: data.description,
-      isActive: false,
     };
 
     setsService
@@ -32,7 +31,7 @@ function AddSet() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.Message);
       });
   };
 
@@ -90,16 +89,16 @@ function AddSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Set Name</Label>
+            <Label className="form-lable-font">Set Name <span className="required">*</span></Label>
             <Controller
               name="setname"
-              rules={{ required: "Set Name is required" }}
+              rules={setsValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Set Name"
-                  invalid={errors.departmenname && true}
+                  invalid={errors.setname && true}
                   {...field}
                 />
               )}
@@ -113,10 +112,10 @@ function AddSet() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Set Code</Label>
+            <Label className="form-lable-font">Set Code <span className="required">*</span></Label>
             <Controller
               name="setcode"
-              rules={{ required: "Set Code is required" }}
+              rules={setsValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -139,7 +138,7 @@ function AddSet() {
             <Label className="form-lable-font">Description</Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
+              rules={setsValidationRules.description}
               control={control}
               render={({ field }) => (
                 <Input

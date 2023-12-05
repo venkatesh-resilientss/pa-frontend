@@ -11,7 +11,6 @@ import {
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
@@ -21,7 +20,6 @@ import { DepartmentsService } from "services";
 import moment from "moment";
 import {
   openBulkUploadDepartmentPopup,
-  openDeleteDepartmentPopup,
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
@@ -43,10 +41,10 @@ const AllDepartmentsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const departmentsService = new DepartmentsService();
 
@@ -116,7 +114,7 @@ const AllDepartmentsTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -126,7 +124,7 @@ const AllDepartmentsTable = () => {
               >
                 <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -138,7 +136,7 @@ const AllDepartmentsTable = () => {
       field: "Code",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      unSortIcon: true,
       headerClass: "custom-header-class",
     },
     {
@@ -146,7 +144,7 @@ const AllDepartmentsTable = () => {
       field: "Name",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      unSortIcon: true,
       headerClass: "custom-header-class",
     },
     {
@@ -154,15 +152,15 @@ const AllDepartmentsTable = () => {
       field: "Description",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      unSortIcon: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
 
@@ -174,6 +172,7 @@ const AllDepartmentsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -183,6 +182,7 @@ const AllDepartmentsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -196,9 +196,8 @@ const AllDepartmentsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-
   return (
-    <div className="section mt-4">
+    <div className="section mt-4 configuration-table">
       <div>
         <Card
           style={{
@@ -210,8 +209,7 @@ const AllDepartmentsTable = () => {
             <div className="d-flex justify-content-between">
               <div>
                 <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
+                  className="m-2 title"
                 >
                   All Departments
                 </div>
@@ -333,5 +331,7 @@ const AllDepartmentsTable = () => {
     </div>
   );
 };
+
+
 
 export default AllDepartmentsTable;

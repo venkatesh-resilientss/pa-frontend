@@ -3,10 +3,11 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { StatesService } from "services";
 import useSWR from "swr";
+import { selectStyles } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
-  const { handleSubmit } = useForm();
-  const options = [
+  const {handleSubmit} = useForm();
+  const paymentTypes = [
     { value: "cheque", label: "Cheque" },
     { value: "wireTransfer", label: "Wire Transfer" },
     { value: "manualCheque", label: "Manual Cheque" },
@@ -103,9 +104,10 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
-                  defaultOptions={options}
+                  defaultOptions={paymentTypes}
                   placeholder="Select an option"
                   isClearable={true}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -250,11 +252,13 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               defaultValue={null}
               render={({ field }) => (
                 <AsyncSelect
-                  name="workState"
-                  defaultOptions={stateSelectOptions}
-                  placeholder="Select State"
                   {...field}
                   isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  // loadOptions={loadStateOptions}
+                  placeholder="Select State"
+                  defaultOptions={stateSelectOptions}
                 />
               )}
             />

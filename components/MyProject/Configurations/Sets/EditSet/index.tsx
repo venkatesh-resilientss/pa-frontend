@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function EditSet() {
   const router = useRouter();
-
+  const setsValidationRules = formValidationRules.sets;
   const setService = new SetsService();
   const { id } = router.query;
 
@@ -29,8 +29,8 @@ function EditSet() {
   useEffect(() => {
     if (!setData) return;
 
-    setData?.Name && setValue("name", setData?.Name);
-    setData?.Code && setValue("code", setData?.Code);
+    setData?.Name && setValue("setname", setData?.Name);
+    setData?.Code && setValue("setcode", setData?.Code);
 
     setData?.Description && setValue("description", setData?.Description);
     setActiveStatus(setData?.IsActive);
@@ -44,10 +44,10 @@ function EditSet() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.name,
+      name: data.setname,
       description: data.description,
       isActive: activeStatus === "active" ? true : false,
-      code: data.code,
+      code: data.setcode,
     };
 
     setService
@@ -60,7 +60,7 @@ function EditSet() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.Message);
       });
   };
 
@@ -118,16 +118,16 @@ function EditSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label>Set Name</Label>
+            <Label>Set Name <span className="required">*</span></Label>
             <Controller
-              name="name"
-              rules={{ required: "Set Name is required" }}
+              name="setname"
+              rules={setsValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Set Name"
-                  invalid={errors.departmenname && true}
+                  invalid={errors.setname && true}
                   {...field}
                 />
               )}
@@ -142,11 +142,11 @@ function EditSet() {
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-label" for="login-email">
-              Set Code
+              Set Code <span className="required">*</span>
             </Label>
             <Controller
-              name="code"
-              rules={{ required: "Set Code is required" }}
+              name="setcode"
+              rules={setsValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -171,7 +171,7 @@ function EditSet() {
             </Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
+              rules={setsValidationRules.description}
               control={control}
               render={({ field }) => (
                 <Input

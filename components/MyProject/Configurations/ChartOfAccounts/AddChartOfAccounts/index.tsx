@@ -3,12 +3,26 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { COAAccountsService } from "services";
-
+import { formValidationRules } from "@/constants/common";
+import Select from "react-select";
+import { selectStyles } from "constants/common";
+import { useState } from "react";
+import { COAAccountyTypeOptions } from "@/constants/common";
+import useSWR from "swr";
 function AddChartOfAccounts() {
   const router = useRouter();
-
+  const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
+  
+  const {data : COAData} = useSWR("LIST_COA",()=>coaAccountsService.getCoasAccounts());
+  const COASelectOptions = COAData?.result.map((account)=>{
+    return {
+      value : account.ID,
+      label : `${account.Code}-${account.Name}`
+    }
+  })
 
+  const [postableActiveStatus,setPostableActiveStatus] = useState(false);
   const {
     control,
     handleSubmit,
@@ -24,6 +38,7 @@ function AddChartOfAccounts() {
       IsActive: false,
       description: data.Description,
       type: data.AccountType,
+      postable : postableActiveStatus
     };
 
     coaAccountsService
@@ -31,7 +46,6 @@ function AddChartOfAccounts() {
       .then(() => {
         toast.success("COA Added successfully");
         router.back();
-
         reset();
       })
       .catch((error) => {
@@ -41,7 +55,7 @@ function AddChartOfAccounts() {
 
   return (
     <div className="section mt-4">
-      <div className="overflow-auto">
+      <div className="">
         <div
           className="text-black"
           style={{ fontSize: "16px", fontWeight: "600" }}
@@ -93,10 +107,10 @@ function AddChartOfAccounts() {
           {" "}
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Name</Label>
+              <Label className="form-lable-font">COA Name <span className="required">*</span></Label>
               <Controller
                 name="COAName"
-                rules={{ required: "COA Name  is required" }}
+                rules={coaValidationRules.name}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -116,10 +130,10 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Code</Label>
+              <Label className="form-lable-font">COA Code <span className="required">*</span></Label>
               <Controller
                 name="COACode"
-                rules={{ required: "COA Code  is required" }}
+                rules={coaValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -143,14 +157,13 @@ function AddChartOfAccounts() {
               <Controller
                 name="COAParent"
                 control={control}
-                rules={{ required: "COA Parent  is required" }}
+                rules={coaValidationRules.parent}
                 render={({ field }) => (
-                  <Input
-                    placeholder="COA Parent"
-                    invalid={errors.COAParent && true}
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                    {...field}
-                  />
+                  <Select
+                  {...field}
+                  options={COASelectOptions}
+                  placeholder="Select an option"
+                  styles={selectStyles}/>
                 )}
               />
               {errors.COAParent && (
@@ -162,18 +175,18 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font"> Account Type</Label>
+              <Label className="form-lable-font"> Account Type <span className="required">*</span></Label>
               <Controller
                 name="AccountType"
-                rules={{ required: "Account Type Name  is required" }}
+                rules={coaValidationRules.accountType}
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    placeholder="AccountType"
-                    invalid={errors.AccountType && true}
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                    {...field}
-                  />
+                  <Select
+                  {...field}
+                  options={COAAccountyTypeOptions}
+                  placeholder="Select an option"
+                  styles={selectStyles}
+                />
                 )}
               />
               {errors.AccountType && (
@@ -188,7 +201,7 @@ function AddChartOfAccounts() {
               <Label className="form-lable-font"> Description</Label>
               <Controller
                 name="Description"
-                rules={{ required: "Description  is required" }}
+                rules={coaValidationRules.description}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -211,17 +224,18 @@ function AddChartOfAccounts() {
               )}
             </div>
           </Col>
-          {/* <Col xl="4">
+          <Col xl="4">
             <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Postable </Label>
+              <Label className="form-lable-font">Postable <span className="required">*</span></Label>
               <div className="d-flex gap-1">
                 <div className="d-flex gap-1">
                   <input
                     type="radio"
                     id="ex1-active"
                     name="ex1"
+                    checked={postableActiveStatus}
                     onChange={() => {
-                      setActiveStatus(true);
+                      setPostableActiveStatus(true);
                     }}
                   />
                   <div>Yes</div>
@@ -231,15 +245,16 @@ function AddChartOfAccounts() {
                     type="radio"
                     id="ex1-active"
                     name="ex1"
+                    checked={!postableActiveStatus}
                     onChange={() => {
-                      setActiveStatus(false);
+                      setPostableActiveStatus(false);
                     }}
                   />
                   <div>No</div>
                 </div>
               </div>
             </div>
-          </Col> */}
+          </Col>
         </Form>
       </div>
     </div>

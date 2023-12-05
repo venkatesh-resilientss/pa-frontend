@@ -1,6 +1,5 @@
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
 import {
@@ -13,11 +12,10 @@ import {
 } from "services";
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function AddBudget() {
   const router = useRouter();
-
-  const [uploadExcel, setUploadExcel]: any = useState({});
+  const budgetValidationRules = formValidationRules.budgets;
 
   const currencyService = new CurrencyService();
 
@@ -139,7 +137,7 @@ function AddBudget() {
       LocationID: data?.location?.value,
       BankID: 0,
       Amount: 0.0,
-      budgetFile: uploadExcel.name,
+      budgetFile: '',
     };
 
     budgetService
@@ -206,11 +204,11 @@ function AddBudget() {
       >
         {" "}
         <Col xl="3">
-          <Label className="form-lable-font">Budget Name</Label>
+          <Label className="form-lable-font">Budget Name <span className="required">*</span></Label>
           <Controller
             name="name"
             control={control}
-            rules={{ required: "Budget Name is required" }}
+            rules={budgetValidationRules.name}
             render={({ field }) => (
               <Input
                 placeholder="Budget Name"
@@ -227,11 +225,11 @@ function AddBudget() {
           )}
         </Col>
         <Col xl="3">
-          <Label className="form-lable-font">Budget Code</Label>
+          <Label className="form-lable-font">Budget Code <span className="required">*</span></Label>
           <Controller
             name="code"
             control={control}
-            rules={{ required: "Budget Code is required" }}
+            rules={budgetValidationRules.code}
             render={({ field }) => (
               <Input
                 placeholder="Budget Code"
@@ -250,11 +248,11 @@ function AddBudget() {
       </Form>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Company</Label>
+          <Label className="form-lable-font">Company <span className="required">*</span></Label>
           <Controller
             name="company"
             control={control}
-            rules={{ required: "Company is required" }}
+            rules={budgetValidationRules.company}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -276,10 +274,10 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Production</Label>
+          <Label className="form-lable-font">Production <span className="required">*</span></Label>
           <Controller
             name={"production"}
-            rules={{ required: "Production is required" }}
+            rules={budgetValidationRules.production}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -303,10 +301,10 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Currency</Label>
+          <Label className="form-lable-font">Currency <span className="required">*</span></Label>
           <Controller
             name={"currency"}
-            rules={{ required: "Currency is required" }}
+            rules={budgetValidationRules.currency}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -329,10 +327,10 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Series</Label>
+          <Label className="form-lable-font">Series <span className="required">*</span></Label>
           <Controller
             name={"series"}
-            rules={{ required: "Series is required" }}
+            rules={budgetValidationRules.series}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -356,11 +354,11 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Location</Label>
+          <Label className="form-lable-font">Location <span className="required">*</span></Label>
           <Controller
             name={"location"}
             control={control}
-            rules={{ required: "Location is required" }}
+            rules={budgetValidationRules.location}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -382,10 +380,10 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Set</Label>
+          <Label className="form-lable-font">Set <span className="required">*</span></Label>
           <Controller
             name={"set"}
-            rules={{ required: "Set is required" }}
+            rules={budgetValidationRules.set}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -407,17 +405,28 @@ function AddBudget() {
           )}
         </Col>
         <Row className="mt-2">
-          <Col xl="3">
-            <Label className="form-lable-font">Upload Budget File</Label>
-            <div className="d-flex flex-column gap-2 w-100">
-              <input
+        <Col xl="3">
+          <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
+          <Controller
+            name="budgetfile"
+            control={control}
+            rules={budgetValidationRules.budgetfile}
+            render={({ field }) => (
+              <Input
                 type="file"
-                accept=".xls, xlsx"
-                className="remove-value"
-                onChange={(e: any) => setUploadExcel(e.target.files[0])}
+                style={{ fontSize: "12px", fontWeight: "400" }}
+                invalid={errors.budgetfile && true}
+                {...field}
+                accept=".txt"
               />
-            </div>
-          </Col>
+            )}
+          />
+          {errors.budgetfile && (
+            <span style={{ color: "red" }}>
+              {errors.budgetfile.message as React.ReactNode}
+            </span>
+          )}
+        </Col>
         </Row>
       </Row>
     </div>

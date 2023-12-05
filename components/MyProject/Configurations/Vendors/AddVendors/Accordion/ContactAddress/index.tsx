@@ -2,7 +2,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
 import useSWR from "swr";
-import Select from "react-select";
+import Select from 'react-select'
+import { selectStyles } from "constants/common";
 
 function ContactAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
@@ -103,6 +104,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   options={stateSelectOptions}
                   placeholder="Enter State"
                   {...field}
+                  styles={selectStyles}
                 />
               )}
             />

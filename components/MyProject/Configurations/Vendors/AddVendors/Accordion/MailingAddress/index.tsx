@@ -3,6 +3,7 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import { StatesService } from "services";
 import useSWR from "swr";
+import { selectStyles } from "constants/common";
 
 function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
@@ -103,6 +104,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                   options={stateSelectOptions}
                   placeholder="Enter State"
                   {...field}
+                  styles={selectStyles}
                 />
               )}
             />
