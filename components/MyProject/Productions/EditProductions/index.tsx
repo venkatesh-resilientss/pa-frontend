@@ -192,7 +192,7 @@ function EditProductions() {
               )}
             />
             {errors.productionCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.productionCode.message as React.ReactNode}
               </span>
             )}
@@ -221,7 +221,7 @@ function EditProductions() {
               )}
             />
             {errors.productionName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.productionName.message as React.ReactNode}
               </span>
             )}
@@ -395,7 +395,7 @@ function EditProductions() {
             )}
           />
           {errors.user && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.user.message as React.ReactNode}
             </span>
           )}

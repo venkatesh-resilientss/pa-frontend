@@ -137,7 +137,7 @@ function EditCurrency() {
                 )}
               />
               {errors.currencycode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.currencycode.message as React.ReactNode}
                 </span>
               )}
@@ -160,7 +160,7 @@ function EditCurrency() {
                 )}
               />
               {errors.currencyname && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.currencyname.message as React.ReactNode}
                 </span>
               )}

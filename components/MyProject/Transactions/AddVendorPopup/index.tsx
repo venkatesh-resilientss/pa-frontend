@@ -55,7 +55,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.vendorName && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.vendorName.message as React.ReactNode}
                       </span>
                     )}
@@ -79,7 +79,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.vendorCode && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.vendorCode.message as React.ReactNode}
                       </span>
                     )}
@@ -103,7 +103,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.payeeName && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.payeeName.message as React.ReactNode}
                       </span>
                     )}
@@ -127,7 +127,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.vendorLegalName && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.vendorLegalName.message as React.ReactNode}
                       </span>
                     )}
@@ -151,7 +151,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.entityType && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.entityType.message as React.ReactNode}
                       </span>
                     )}
@@ -175,7 +175,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.defaultAddress && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.defaultAddress.message as React.ReactNode}
                       </span>
                     )}
@@ -199,7 +199,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.workState && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.workState.message as React.ReactNode}
                       </span>
                     )}
@@ -223,7 +223,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.defaultPaymentType && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.defaultPaymentType.message as React.ReactNode}
                       </span>
                     )}
@@ -247,7 +247,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.defaultAccount && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.defaultAccount.message as React.ReactNode}
                       </span>
                     )}
@@ -271,7 +271,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.taxID && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.taxID.message as React.ReactNode}
                       </span>
                     )}
@@ -296,7 +296,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.achRoutingNumber && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.achRoutingNumber.message as React.ReactNode}
                       </span>
                     )}
@@ -322,7 +322,7 @@ const AddVendorPopup = () => {
                       )}
                     />
                     {errors.achBankNumber && (
-                      <span style={{ color: "red" }}>
+                      <span className="text-danger">
                         {errors.achBankNumber.message as React.ReactNode}
                       </span>
                     )}
@@ -350,7 +350,7 @@ const AddVendorPopup = () => {
                     backgroundColor: "#00AEEF",
                     border: "none",
                   }}
-                  // onClick={() => handleDeleteDepartment()}
+                // onClick={() => handleDeleteDepartment()}
                 >
                   Add Vendor
                 </Button>

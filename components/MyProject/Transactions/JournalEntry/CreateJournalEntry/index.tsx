@@ -650,7 +650,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.JENumber && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.JENumber.message as React.ReactNode}
                               </span>
                             )}
@@ -680,7 +680,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.JEDescription && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.JEDescription
                                     .message as React.ReactNode
@@ -711,7 +711,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.Amount && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.Amount.message as React.ReactNode}
                               </span>
                             )}
@@ -740,7 +740,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.transactionDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.transactionDate
                                     .message as React.ReactNode
@@ -772,7 +772,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.JEEffectiveDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.JEEffectiveDate
                                     .message as React.ReactNode
@@ -804,7 +804,7 @@ const CreateJournalEntry = () => {
                               )}
                             />
                             {errors.JEPOSTEDDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.JEPOSTEDDate.message as React.ReactNode}
                               </span>
                             )}{" "}
@@ -859,7 +859,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -890,7 +890,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -921,7 +921,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -954,7 +954,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -985,7 +985,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1016,7 +1016,7 @@ const CreateJournalEntry = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

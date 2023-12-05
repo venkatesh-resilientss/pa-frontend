@@ -14,8 +14,7 @@ function ContactInformationForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Company Primary Contact
             </Label>
@@ -25,8 +24,7 @@ function ContactInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Title
             </Label>
@@ -36,8 +34,7 @@ function ContactInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Office Phone
             </Label>
@@ -46,8 +43,7 @@ function ContactInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Phone Number
             </Label>
@@ -61,8 +57,7 @@ function ContactInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Email
             </Label>
@@ -71,8 +66,7 @@ function ContactInformationForm() {
           <Col xl="4"></Col>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Company Secondary Contact
             </Label>
@@ -82,8 +76,7 @@ function ContactInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Title
             </Label>
@@ -93,8 +86,7 @@ function ContactInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Office Phone
             </Label>
@@ -103,8 +95,7 @@ function ContactInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Phone Number
             </Label>
@@ -112,14 +103,13 @@ function ContactInformationForm() {
               placeholder="Enter phone number"
               // value={value}
               {...register}
-              // onChange={setValue}
+            // onChange={setValue}
             />
           </Col>
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Email
             </Label>

@@ -11,8 +11,7 @@ function SignatoryDetailsForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               MPIPHP Signatory Code
             </Label>
@@ -22,8 +21,7 @@ function SignatoryDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Signatory Name
             </Label>
@@ -35,8 +33,7 @@ function SignatoryDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               SAG Signatory Code
             </Label>
@@ -45,8 +42,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Signatory Name
             </Label>
@@ -57,8 +53,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               DGA Signatory Code
             </Label>
@@ -67,8 +62,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Signatory Name
             </Label>
@@ -79,8 +73,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               WGA Signatory Code
             </Label>
@@ -89,8 +82,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Signatory Name
             </Label>
@@ -99,8 +91,7 @@ function SignatoryDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               MPIPHP <LiaGreaterThanSolid /> 15 Million
             </Label>

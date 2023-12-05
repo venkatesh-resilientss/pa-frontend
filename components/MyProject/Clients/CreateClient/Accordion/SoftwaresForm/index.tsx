@@ -17,8 +17,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Onboarding
             </Label>
@@ -27,8 +26,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Production Account{" "}
             </Label>
@@ -37,8 +35,7 @@ function SoftwaresForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Features
             </Label>
@@ -68,8 +65,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Electronic Time Capture
             </Label>
@@ -98,8 +94,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               COA
             </Label>
@@ -128,8 +123,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               ACA
             </Label>
@@ -158,8 +152,7 @@ function SoftwaresForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Credit Terms
             </Label>
@@ -168,8 +161,7 @@ function SoftwaresForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               # Days +- Release
             </Label>
@@ -179,8 +171,7 @@ function SoftwaresForm() {
           <Col xl="12" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Allow Direct Deposits
             </Label>
@@ -209,8 +200,7 @@ function SoftwaresForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Invoice Format{" "}
             </Label>
@@ -219,8 +209,7 @@ function SoftwaresForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Copy from Client{" "}
             </Label>

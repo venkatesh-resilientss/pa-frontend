@@ -74,7 +74,7 @@ function WorkSpaceForm({ control, errors }) {
                 />
               )}
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}

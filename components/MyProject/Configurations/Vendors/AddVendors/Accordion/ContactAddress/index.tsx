@@ -48,7 +48,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.contactAddress1 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactAddress1.message as React.ReactNode}
               </span>
             )}
@@ -78,7 +78,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.contactAddress2 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactAddress2.message as React.ReactNode}
               </span>
             )}
@@ -107,7 +107,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.contactAddressState && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactAddressState.message as React.ReactNode}
               </span>
             )}
@@ -136,7 +136,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.contactAddressPostalCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactAddressPostalCode.message as React.ReactNode}
               </span>
             )}
@@ -165,7 +165,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.contactAddressCity && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactAddressCity.message as React.ReactNode}
               </span>
             )}

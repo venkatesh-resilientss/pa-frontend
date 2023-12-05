@@ -44,7 +44,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.checkRangeStart && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.checkRangeStart.message as React.ReactNode}
               </span>
             )}
@@ -72,7 +72,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.checkRangeEnd && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.checkRangeEnd.message as React.ReactNode}
               </span>
             )}
@@ -100,7 +100,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.checkCopies && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.checkCopies.message as React.ReactNode}
               </span>
             )}
@@ -160,7 +160,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.eftRangeStart && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.eftRangeStart.message as React.ReactNode}
               </span>
             )}
@@ -188,7 +188,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.eftRangeEnd && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.eftRangeEnd.message as React.ReactNode}
               </span>
             )}
@@ -216,7 +216,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.eftCopies && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.eftCopies.message as React.ReactNode}
               </span>
             )}
@@ -245,7 +245,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.host && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.host.message as React.ReactNode}
               </span>
             )}
@@ -273,7 +273,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.userName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.userName.message as React.ReactNode}
               </span>
             )}
@@ -301,7 +301,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.password && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.password.message as React.ReactNode}
               </span>
             )}
@@ -329,7 +329,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.inboundPath && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.inboundPath.message as React.ReactNode}
               </span>
             )}
@@ -357,7 +357,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.outboundPath && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.outboundPath.message as React.ReactNode}
               </span>
             )}
@@ -385,7 +385,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.dataFormat && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.dataFormat.message as React.ReactNode}
               </span>
             )}
@@ -414,7 +414,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.certificate && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.certificate.message as React.ReactNode}
               </span>
             )}
@@ -454,7 +454,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.wireTransaferRangeStart && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.wireTransaferRangeStart.message as React.ReactNode}
               </span>
             )}
@@ -482,7 +482,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.wireTransaferRangeEnd && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.wireTransaferRangeEnd.message as React.ReactNode}
               </span>
             )}
@@ -510,7 +510,7 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.wireTransferCopies && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.wireTransferCopies.message as React.ReactNode}
               </span>
             )}

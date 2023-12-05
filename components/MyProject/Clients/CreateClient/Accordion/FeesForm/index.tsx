@@ -11,8 +11,7 @@ function FeesForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               WC Table
             </Label>
@@ -22,8 +21,7 @@ function FeesForm() {
           <Col xl="4" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Weekly Cutoffs
             </Label>
@@ -32,8 +30,7 @@ function FeesForm() {
           <Col xl="4" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Bill on Premium OT
             </Label>
@@ -42,8 +39,7 @@ function FeesForm() {
           <Col xl="4" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Taxable Allow
             </Label>
@@ -51,8 +47,7 @@ function FeesForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               SUTA Table
             </Label>
@@ -62,8 +57,7 @@ function FeesForm() {
           <Col xl="4" className="d-flex gap-1 m-auto">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               P/R Tax Cutoffs
             </Label>
@@ -71,8 +65,7 @@ function FeesForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Breakage at
             </Label>
@@ -81,8 +74,7 @@ function FeesForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               HF Rebate Amount
             </Label>
@@ -91,8 +83,7 @@ function FeesForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               W/C Rebate Amount
             </Label>

@@ -11,8 +11,7 @@ function AccountingInformationForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Parent Client Code
             </Label>
@@ -22,8 +21,7 @@ function AccountingInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Parent Client Name
             </Label>
@@ -33,8 +31,7 @@ function AccountingInformationForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               RSSL Company
             </Label>
@@ -43,8 +40,7 @@ function AccountingInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               RSSL Invoice Address{" "}
             </Label>
@@ -53,8 +49,7 @@ function AccountingInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               RSSL Bank
             </Label>
@@ -63,8 +58,7 @@ function AccountingInformationForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               PSA Signed Date{" "}
             </Label>

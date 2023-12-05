@@ -104,7 +104,7 @@ function AddSeries() {
                   )}
                 />
                 {errors.seriesname && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.seriesname.message as React.ReactNode}
                   </span>
                 )}
@@ -128,7 +128,7 @@ function AddSeries() {
                   )}
                 />
                 {errors.Seriescode && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.Seriescode.message as React.ReactNode}
                   </span>
                 )}
@@ -157,7 +157,7 @@ function AddSeries() {
                   )}
                 />
                 {errors.description && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.description.message as React.ReactNode}
                   </span>
                 )}

@@ -636,7 +636,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.PayrollNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.PayrollNumber.message as React.ReactNode}
                           </span>
                         )}
@@ -665,7 +665,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.Description && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Description.message as React.ReactNode}
                           </span>
                         )}
@@ -694,7 +694,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.Amount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Amount.message as React.ReactNode}
                           </span>
                         )}
@@ -724,7 +724,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.WeekEnding && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.WeekEnding.message as React.ReactNode}
                           </span>
                         )}
@@ -754,7 +754,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.EffectiveDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EffectiveDate.message as React.ReactNode}
                           </span>
                         )}
@@ -785,7 +785,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.ConfirmationNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.ConfirmationNumber
                                 .message as React.ReactNode
@@ -821,7 +821,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.OriginalTRXNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.OriginalTRXNumber
                                 .message as React.ReactNode
@@ -853,7 +853,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.SourceCode && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.SourceCode.message as React.ReactNode}
                           </span>
                         )}
@@ -885,7 +885,7 @@ const ApprovePayrollDetails = () => {
                           )}
                         />
                         {errors.Period && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Period.message as React.ReactNode}
                           </span>
                         )}
@@ -938,7 +938,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -969,7 +969,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1000,7 +1000,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1033,7 +1033,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1064,7 +1064,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1095,7 +1095,7 @@ const ApprovePayrollDetails = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

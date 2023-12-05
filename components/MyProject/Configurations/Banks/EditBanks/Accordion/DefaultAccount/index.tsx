@@ -34,7 +34,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.defaultAccountCash && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountCash.message as React.ReactNode}
               </span>
             )}
@@ -64,7 +64,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.defaultAccountClearing && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountClearing.message as React.ReactNode}
               </span>
             )}
@@ -94,7 +94,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.defaultAccountDeposit && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountDeposit.message as React.ReactNode}
               </span>
             )}
@@ -124,7 +124,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.defaultAccountDiscount && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountDiscount.message as React.ReactNode}
               </span>
             )}

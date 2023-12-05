@@ -146,7 +146,7 @@ function EditPeriod() {
               )}
             />
             {errors.periodname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.periodname.message as React.ReactNode}
               </span>
             )}
@@ -226,7 +226,7 @@ function EditPeriod() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

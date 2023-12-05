@@ -1,8 +1,6 @@
 import CreateClientStepper from "components/clients/create-client-stepper";
 import { useEffect, useState, createElement } from "react";
-import { Button, Col, Input, Label } from "reactstrap";
-import { InputGroup, InputGroupText } from "reactstrap";
-
+import { Button } from "reactstrap";
 import BasicDetailsForm from "./Accordion/BasicDetailsForm";
 import ContactInformationForm from "./Accordion/ContactInformationForm";
 import AddressDetailsForm from "./Accordion/AddressDetailsForm";
@@ -15,125 +13,41 @@ import ApprovalInformationForm from "./Accordion/ApprovalInformationForm";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-const steps1Data = [
-  {
-    label: "Basic Informationn",
-    icon: "/currentStep.svg",
-    state: "current",
-  },
-  {
-    label: "Contact Information",
-    icon: "/notyetSelectedStep.svg",
-    state: "notSelected",
-  },
-  {
-    label: "Workspace Details",
-    icon: "/notyetSelectedStep.svg",
-    state: "notSelected",
-  },
-];
-const steps2Data = [
-  {
-    label: "Basic Information",
-    icon: "/completedStep.svg",
-    state: "current",
-  },
-  {
-    label: "Contact Information",
-    icon: "/currentStep.svg",
-    state: "notSelected",
-  },
-  {
-    label: "Workspace Details",
-    icon: "/notyetSelectedStep.svg",
-    state: "notSelected",
-  },
-];
-const steps3Data = [
-  {
-    label: "Basic Information",
-    icon: "/completedStep.svg",
-    state: "current",
-  },
-  {
-    label: "Contact Information",
-    icon: "/completedStep.svg",
-    state: "notSelected",
-  },
-  {
-    label: "Workspace Details",
-    icon: "/currentStep.svg",
-    state: "notSelected",
-  },
-];
 const completedStep = "/completedStep.svg";
 const currentStep = "/currentStep.svg";
-const notYetSelectedStep = "/notyetSelectedStep.svg";
+const notYetSelectedStep = '/notyetSelectedStep.svg';
 
-const sections = [
-  {
-    label: "Basic Information",
-    component: BasicDetailsForm,
-    icon: "/currentStep.svg",
-    state: "",
-  },
-  {
-    label: "Address Information",
-    component: AddressDetailsForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  {
-    label: "Contact Information",
-    component: ContactInformationForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  {
-    label: "Approval Information",
-    component: ApprovalInformationForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  {
-    label: "Signatory Agreements",
-    component: SignatoryDetailsForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  {
-    label: "Accounting Information",
-    component: AccountingInformationForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  // {
-  //   label: 'Software/Cost', component: SoftwaresForm, icon: '/notyetSelectedStep.svg', state: ''
-  // },
-  {
-    label: "Fees",
-    component: FeesForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-  {
-    label: "Agreements",
-    component: AgreementsForm,
-    icon: "/notyetSelectedStep.svg",
-    state: "",
-  },
-];
+const sections = [{
+  label: 'Basic Information', component: BasicDetailsForm, state: ''
+},
+{
+  label: 'Address Information', component: AddressDetailsForm, state: ''
+},
+{
+  label: 'Contact Information', component: ContactInformationForm, state: ''
+},
+{
+  label: 'Approval Information', component: ApprovalInformationForm, state: ''
+},
+{
+  label: 'Signatory Agreements', component: SignatoryDetailsForm, state: ''
+},
+{
+  label: 'Accounting Information', component: AccountingInformationForm, state: ''
+},
+{
+  label: 'Fees', component: FeesForm, state: ''
+},
+{
+  label: 'Agreements', component: AgreementsForm, state: ''
+}
+]
 function CreateClient() {
-  const isAdmin = true;
-  const [steps, setSteps] = useState(steps1Data);
-  const [activeStep, setActiveStep] = useState(isAdmin ? 0 : 1);
-  const laststep = isAdmin ? steps.length - 1 : steps.length;
+  const [steps, setSteps] = useState(sections);
+  const [activeStep, setActiveStep] = useState(0);
+  const laststep = steps.length - 1
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { control, handleSubmit, formState: { errors } } = useForm();
   const handleNext = () => {
     setActiveStep((prevStep) => Math.min(prevStep + 1, steps.length));
   };
@@ -142,54 +56,34 @@ function CreateClient() {
     setActiveStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
+  const handleFormSubmit = async () => {
+    handleSubmit(onSubmit)();
+  }
+
   const onSubmit = () => {
     setActiveStep((prev) => {
       return Math.min(prev + 1, laststep);
     });
     if (activeStep === laststep) {
-      toast.success("Client Created successfully");
+      toast.success("Project Created successfully");
     }
-  };
-
-  const handleFormSubmit = async () => {
-    handleSubmit(onSubmit)();
   };
 
   useEffect(() => {
-    if (isAdmin) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const adminstep = sections.map(({ icon, ...step }, index) => ({
-        ...step,
-        icon:
-          index === activeStep
-            ? currentStep
-            : index < activeStep
-            ? completedStep
-            : notYetSelectedStep,
-      }));
-      setSteps(adminstep);
-    } else {
-      if (activeStep === 1) {
-        //
-      } else if (activeStep === 2) {
-        setSteps(steps2Data);
-      } else {
-        setSteps(steps3Data);
-      }
-    }
+    const adminstep = sections.map(({ ...step }, index) => ({ ...step, icon: index === activeStep ? currentStep : index < activeStep ? completedStep : notYetSelectedStep }));
+    setSteps(adminstep);
   }, [activeStep]);
 
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="p-4">
+    <div className="p-4">
       <div
-        className="text-black "
-        style={{ fontSize: "16px", fontWeight: "600" }}
+        className="text-black form-label"
       >
         All Projects
       </div>
       <p className="font-size-32 fw-600">Project Details</p>
 
-      <hr style={{ height: "2px" }} />
+      <hr />
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-end">
@@ -199,288 +93,19 @@ function CreateClient() {
           </div>
         </div>
       </div>
-
-      {isAdmin ? (
-        <div>
-          {sections.map((item, index) => (
-            <div key={index}>
-              {activeStep === index &&
-                createElement(item.component, {
-                  control: control,
-                  errors: errors,
-                })}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div>
-          {activeStep === 1 ? (
-            <div>
-              <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
-              >
-                Basic Information
-              </p>
-              <div className="row mb-5">
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Client Name
-                  </Label>
-                  <Input placeholder="Client Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Client Code
-                  </Label>
-                  <Input placeholder="Client Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Client Code
-                  </Label>
-                  <Input placeholder="Client Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Client Legal Name (If different)
-                  </Label>
-                  <Input placeholder="Enter Legal Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    FEIN
-                  </Label>
-                  <Input placeholder="Enter FEIN" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Physical Address
-                  </Label>
-                  <Input placeholder="Enter Address" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Invoice Address
-                  </Label>
-                  <Input placeholder="Enter Invoice Address" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Routing #
-                  </Label>
-                  <Input placeholder="Routing Number" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Bank Name
-                  </Label>
-                  <Input type="select" name="select" id="exampleSelect">
-                    <option>SBI</option>
-                    <option>ICICI</option>
-                    <option>HDFC</option>
-                  </Input>
-                </Col>
-              </div>
-            </div>
-          ) : activeStep === 2 ? (
-            <div>
-              <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
-              >
-                Contact Information
-              </p>
-              <div className="row mb-5">
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Company Primary Contact
-                  </Label>
-                  <Input placeholder="Enter POC Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Title
-                  </Label>
-                  <Input placeholder="Select Role" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Office Phone
-                  </Label>
-                  <Input placeholder="Enter Phone Number" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Cell Phone
-                  </Label>
-                  <Input placeholder="Enter Mobile Number" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Email
-                  </Label>
-                  <Input placeholder="Enter Email ID" />
-                </Col>
-                <Col xl="4"></Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Company Secondary Contact
-                  </Label>
-                  <Input placeholder="Enter POC Name" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Title
-                  </Label>
-                  <Input placeholder="Select Role" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Office Phone
-                  </Label>
-                  <Input placeholder="Enter Phone Number" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Cell Phone
-                  </Label>
-                  <Input placeholder="Enter Mobile Number" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Email
-                  </Label>
-                  <Input placeholder="Enter Email ID" />
-                </Col>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <p
-                className="text-black "
-                style={{ fontSize: "20px", fontWeight: "600" }}
-              >
-                Workspace
-              </p>
-              <div className="row mb-5">
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Logo
-                  </Label>
-                  <Input type="file" name="file" id="exampleFile" />
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Domain
-                  </Label>
-                  <InputGroup>
-                    <Input />
-                    <InputGroupText>.rssl.io</InputGroupText>
-                  </InputGroup>
-                </Col>
-
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    Client Admin
-                  </Label>
-                  <Input type="select" name="select" id="exampleSelect">
-                    <option style={{ color: "grey" }} disabled>
-                      Select Admin
-                    </option>
-                    <option>Admin 1</option>
-                    <option>Admin 2</option>
-                  </Input>
-                </Col>
-                <Col xl="4">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                  >
-                    RSSL Support User
-                  </Label>
-                  <Input type="select" name="select" id="exampleSelect">
-                    <option style={{ color: "grey" }} disabled>
-                      Select Admin
-                    </option>
-                    <option>Admin 1</option>
-                    <option>Admin 2</option>
-                  </Input>
-                </Col>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      <div>
+        {sections.map((item, index) => (
+          <div key={index}>
+            {activeStep === index && createElement(item.component, {
+              control: control, errors: errors
+            }
+            )}
+          </div>
+        ))}
+      </div>
       {/* <ProjectAccordion /> */}
       {/* step one */}
-      <hr style={{ height: "2px" }} />
+      <hr />
       <div className="d-flex row-reverse justify-content-end my-5 gap-3">
         <Button
           color="link"
@@ -493,8 +118,11 @@ function CreateClient() {
         >
           Back
         </Button>
-        <Button className="button-props" onClick={handleFormSubmit}>
-          {activeStep === laststep ? "Submit" : "Continue"}
+        <Button
+          className="button-props"
+          onClick={handleFormSubmit}
+        >
+          {activeStep === laststep ? ('Submit') : ('Continue')}
         </Button>
       </div>
     </div>

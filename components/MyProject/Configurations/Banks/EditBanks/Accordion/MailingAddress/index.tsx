@@ -48,7 +48,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingAddress1 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingAddress1.message as React.ReactNode}
               </span>
             )}
@@ -78,7 +78,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingAddress2 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingAddress2.message as React.ReactNode}
               </span>
             )}
@@ -107,7 +107,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingAddressCity && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingAddressCity.message as React.ReactNode}
               </span>
             )}
@@ -140,7 +140,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingAddressState && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingAddressState.message as React.ReactNode}
               </span>
             )}
@@ -169,7 +169,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingAddressPostalCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingAddressPostalCode.message as React.ReactNode}
               </span>
             )}
@@ -200,7 +200,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingPhoneNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingPhoneNumber.message as React.ReactNode}
               </span>
             )}
@@ -229,7 +229,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingFax && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingFax.message as React.ReactNode}
               </span>
             )}
@@ -259,7 +259,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.mailingEmail && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.mailingEmail.message as React.ReactNode}
               </span>
             )}

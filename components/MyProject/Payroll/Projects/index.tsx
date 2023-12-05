@@ -1,7 +1,7 @@
 import ProjectsListTable from "./ProjectTable";
 function Projects() {
   return (
-    <div style={{ fontFamily: "Segoe UI" }}>
+    <div>
       {/* <DeleteProjectPopup id={undefined} /> */}
       <ProjectsListTable />
     </div>

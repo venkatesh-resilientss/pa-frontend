@@ -155,7 +155,7 @@ function EditState() {
                 )}
               />
               {errors.Statename && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statename.message as React.ReactNode}
                 </span>
               )}
@@ -181,7 +181,7 @@ function EditState() {
                 )}
               />
               {errors.Statecode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statecode.message as React.ReactNode}
                 </span>
               )}
@@ -210,7 +210,7 @@ function EditState() {
                 )}
               />
               {errors.country && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.country.message as React.ReactNode}
                 </span>
               )}
@@ -241,7 +241,7 @@ function EditState() {
                 )}
               />
               {errors.description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.description.message as React.ReactNode}
                 </span>
               )}

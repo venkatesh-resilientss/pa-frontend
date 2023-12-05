@@ -709,7 +709,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.vendor && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendor.message as React.ReactNode}
                           </span>
                         )}
@@ -739,7 +739,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.VendorAddress && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.VendorAddress.message as React.ReactNode}
                           </span>
                         )}
@@ -768,7 +768,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.vendorType && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendorType.message as React.ReactNode}
                           </span>
                         )}
@@ -817,7 +817,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.vendorTEnvelopeNumberype && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EnvelopeNumber.message as React.ReactNode}
                           </span>
                         )}
@@ -845,7 +845,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.Description && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Description.message as React.ReactNode}
                           </span>
                         )}
@@ -873,7 +873,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.Amount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Amount.message as React.ReactNode}
                           </span>
                         )}
@@ -904,7 +904,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.TransactionDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.TransactionDate.message as React.ReactNode}
                           </span>
                         )}
@@ -934,7 +934,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.PCEffectiveDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.PCEffectiveDate.message as React.ReactNode}
                           </span>
                         )}
@@ -965,7 +965,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.Period && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Period.message as React.ReactNode}
                           </span>
                         )}
@@ -998,7 +998,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.EnvelopeAmount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EnvelopeAmount.message as React.ReactNode}
                           </span>
                         )}
@@ -1029,7 +1029,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.AdvancedAmount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.AdvancedAmount.message as React.ReactNode}
                           </span>
                         )}
@@ -1063,7 +1063,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.BeginningPCBalance && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.BeginningPCBalance
                                 .message as React.ReactNode
@@ -1102,7 +1102,7 @@ const EditPettyCash = () => {
                           )}
                         />
                         {errors.RemainingPCBalance && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.RemainingPCBalance
                                 .message as React.ReactNode
@@ -1158,7 +1158,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -1189,7 +1189,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1220,7 +1220,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1253,7 +1253,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1284,7 +1284,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1315,7 +1315,7 @@ const EditPettyCash = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

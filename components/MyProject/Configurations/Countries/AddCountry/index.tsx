@@ -101,7 +101,7 @@ function AddCountry() {
                   )}
                 />
                 {errors.countryname && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.countryname.message as React.ReactNode}
                   </span>
                 )}
