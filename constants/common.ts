@@ -320,7 +320,11 @@ export const sidebarRoutes = [
       {
         name: "Vendors",
         path: "/vendors",
-      }
+      },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
     ]    
   },
   {
