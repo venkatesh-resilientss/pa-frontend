@@ -14,6 +14,9 @@ function AgreementsForm() {
 
   return (
     <div>
+      <div className="my-3">
+        <p>Aggrements</p>
+      </div>
       <Form>
         <Row>
           <Col xl="5">

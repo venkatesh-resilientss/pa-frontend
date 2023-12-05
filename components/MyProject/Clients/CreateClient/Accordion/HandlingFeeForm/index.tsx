@@ -128,7 +128,7 @@ const CustomForm = ({ typeName }) => {
             </Label>
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
               className="text-black form-label"
             >
@@ -146,7 +146,7 @@ const CustomForm = ({ typeName }) => {
             <ReactSelect {...register} />
           </div>
 
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
               className="text-black form-label"
             >
