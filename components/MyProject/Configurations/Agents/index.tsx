@@ -1,7 +1,7 @@
 // import React from "react";
 import AllAgentsTable from "./AllAgentsTable";
 
-function OccupationCodes() {
+function Agents() {
   return (
     <div>
       <AllAgentsTable />
@@ -9,4 +9,4 @@ function OccupationCodes() {
   );
 }
 
-export default OccupationCodes;
+export default Agents;
