@@ -12,7 +12,6 @@ import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { PeriodsService } from "services";
@@ -20,7 +19,6 @@ import useSWR from "swr";
 import { useDispatch } from "react-redux";
 import {
   openBulkUploadPeriodsPopup,
-  openDeletePeriodPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
@@ -42,10 +40,10 @@ const AllPeriodsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const periodsService = new PeriodsService();
 
@@ -117,7 +115,7 @@ const AllPeriodsTable = () => {
                 />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem tag="a" className="w-100 cursor-pointer">
                 <Action
                   icon={deleteIcon}
@@ -127,7 +125,7 @@ const AllPeriodsTable = () => {
                   }}
                 />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -138,6 +136,7 @@ const AllPeriodsTable = () => {
       headerName: "Period Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -150,6 +149,7 @@ const AllPeriodsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -163,6 +163,7 @@ const AllPeriodsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -172,6 +173,7 @@ const AllPeriodsTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -181,6 +183,7 @@ const AllPeriodsTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -194,6 +197,7 @@ const AllPeriodsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -203,6 +207,7 @@ const AllPeriodsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -228,11 +233,10 @@ const AllPeriodsTable = () => {
           }}
         >
           <CardBody>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between configuration-table">
               <div>
                 <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
+                  className="title mt-2"
                 >
                   All Periods
                 </div>

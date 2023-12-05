@@ -5,11 +5,11 @@ import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
-
+  const countryValidations = formValidationRules.countries
   const fetchCountryDetails = (id) => countryService.countryDetails(id);
 
   const { data: countryData } = useSWR(
@@ -43,6 +43,7 @@ function EditCountry() {
   const onSubmit = (data) => {
     const backendFormat = {
       name: data.countryname,
+      code: data.countrycode,
       description: data.description,
       isActive: activeStatus,
     };
@@ -114,11 +115,11 @@ function EditCountry() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label>Country name</Label>
+              <Label>Country name  <span className="required">*</span></Label>
               <Controller
                 name="countryname"
                 control={control}
-                rules={{ required: "Country Name  is required" }}
+                rules={countryValidations.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
@@ -135,7 +136,57 @@ function EditCountry() {
               )}
             </div>
           </Col>
-
+          <Col xl="4">
+              <div className="mb-1">
+                <Label className="form-lable-font">Country Code <span className="required">*</span></Label>
+                <Controller
+                  name="countrycode"
+                  control={control}
+                  rules={countryValidations.code}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Country Code"
+                      invalid={errors.countrycode && true}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.countrycode && (
+                  <span style={{ color: "red" }}>
+                    {errors.countrycode.message as React.ReactNode}
+                  </span>
+                )}
+              </div>
+            </Col>
+            <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                rules={countryValidations.description}
+                render={({ field }) => (
+                  <Input
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      height: "81px",
+                    }}
+                    placeholder="Description"
+                    invalid={errors.description && true}
+                    {...field}
+                    type="textarea"
+                  />
+                )}
+              />
+              {errors.description && (
+                <span style={{ color: "red" }}>
+                  {errors.description.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
           <div className="d-flex flex-column mt-1">
             <Label
               className="text-black"

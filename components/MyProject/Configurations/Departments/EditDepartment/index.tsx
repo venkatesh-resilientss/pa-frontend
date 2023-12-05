@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
+import { formValidationRules } from "@/constants/common";
 
 function EditDepartment() {
   const router = useRouter();
   const { id } = router.query;
+  const departmentValidationRules = formValidationRules.department;
   const departmentsService = new DepartmentsService();
 
   const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
@@ -46,7 +48,7 @@ function EditDepartment() {
     const backendFormat = {
       name: data.name,
       description: data.description,
-      is_active: activeStatus,
+      isActive: activeStatus,
     };
 
     departmentService
@@ -64,18 +66,17 @@ function EditDepartment() {
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 configuration-add">
       <div
-        className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600" }}
+        className="title-sub"
+        
       >
         All Departments
       </div>
 
       <div className="d-flex justify-content-between">
         <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
+          className="title"
         >
           Edit Department
         </div>
@@ -116,11 +117,11 @@ function EditDepartment() {
         <Col xl="4">
           <div className="mb-1 mt-1">
             <Label className="form-label" for="login-email">
-              Department Name
+              Department Name<span className="required">*</span>
             </Label>
             <Controller
               name="name"
-              rules={{ required: "Department Name is required" }}
+              rules={departmentValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -142,11 +143,11 @@ function EditDepartment() {
         <Col xl="4">
           <div className="mb-1 mt-1">
             <Label className="form-label" for="login-email">
-              Department Code
+              Department Code<span className="required">*</span>
             </Label>
             <Controller
               name="code"
-              rules={{ required: "Department Code is required" }}
+              rules={departmentValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -175,8 +176,8 @@ function EditDepartment() {
             </Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
               control={control}
+              rules={departmentValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{
@@ -210,6 +211,7 @@ function EditDepartment() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -221,6 +223,7 @@ function EditDepartment() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}

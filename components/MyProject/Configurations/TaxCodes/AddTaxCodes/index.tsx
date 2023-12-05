@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 import { TaxCodesService } from "services";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
+import { CountryService } from "services";
+import { selectStyles } from "@/constants/common";
+import AsyncSelect from "react-select/async";
+import useSWR from "swr";
 function AddTaxCode() {
   const {
     control,
@@ -12,14 +16,29 @@ function AddTaxCode() {
     formState: { errors },
   } = useForm();
   const router = useRouter();
-
+  const taxCodeValidationRules = formValidationRules.taxCodes;
   const taxCodeService = new TaxCodesService();
+  const countryService = new CountryService();
 
+  const { data: countryData } = useSWR("LIST_COUNTRY", () =>
+    countryService.getCountries()
+  );
+
+  const countrySelectFormat = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const loadCountryOptions = (values, callBack) => {
+    callBack(countrySelectFormat);
+  };
   const onSubmit = (data) => {
     const backendFormat = {
       code: data.taxcode,
       description: data.description,
-      is_active: false,
+      
     };
 
     taxCodeService
@@ -34,7 +53,7 @@ function AddTaxCode() {
       });
   };
   return (
-    <div className="overflow-auto mt-4">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -86,10 +105,10 @@ function AddTaxCode() {
       >
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code</Label>
+            <Label className="form-lable-font">Tax Code<span className="required">*</span> </Label>
             <Controller
               name="taxcode"
-              rules={{ required: "Tax Code  is required" }}
+              rules={taxCodeValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -107,7 +126,56 @@ function AddTaxCode() {
             )}
           </div>
         </Col>
-
+        <Col xl="4">
+          <div className="mb-1">
+            <Label className="form-lable-font">Tax Code Name<span className="required">*</span> </Label>
+            <Controller
+              name="taxcodename"
+              rules={taxCodeValidationRules.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Tax Code"
+                  invalid={errors.taxcodename && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.taxcodename && (
+              <span style={{ color: "red" }}>
+                {errors.taxcodename.message as React.ReactNode}
+              </span>
+            )}
+          </div>
+        </Col>
+        <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Country <span className="required">*</span></Label>
+              <Controller
+                name="country"
+                control={control}
+                rules={taxCodeValidationRules.country}
+                render={({ field }) => (
+                  <AsyncSelect
+                    {...field}
+                    isClearable={true}
+                    className="react-select"
+                    classNamePrefix="select"
+                    loadOptions={loadCountryOptions}
+                    placeholder="Select Country"
+                    defaultOptions={countrySelectFormat}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+              {errors.country && (
+                <span style={{ color: "red" }}>
+                  {errors.country.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-lable-font" f>
@@ -116,7 +184,7 @@ function AddTaxCode() {
             <Controller
               name="description"
               control={control}
-              rules={{ required: "Description  is required" }}
+              rules={taxCodeValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{

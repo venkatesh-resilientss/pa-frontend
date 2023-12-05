@@ -77,7 +77,7 @@ const LocationsBulkUploadPopup = () => {
           <Button
             color="white"
             style={{
-              fontSize: "14px",
+              fontSize: "10px",
               fontWeight: "400",
               height: "25.31px",
               borderColor: "#00AEEF",

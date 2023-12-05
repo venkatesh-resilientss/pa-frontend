@@ -6,10 +6,10 @@ import { useState } from "react";
 import { ProjectService, UsersService } from "services";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-
+import { formValidationRules } from "@/constants/common";
 function AddProductions() {
   const router = useRouter();
-
+  const productionRules = formValidationRules.productions;
   const [purchaseOrderValue, setPurchaseOrderValue] = useState(false);
   const [accountPayableValue, setAccountPayableValue] = useState(false);
   const [id, setID] = useState(1);
@@ -48,7 +48,7 @@ function AddProductions() {
     productionService.getPOApprovers(id)
   );
 
-  const poSelectFormat = poData?.data.map((b) => {
+  const poSelectFormat = poData?.data?.map((b) => {
     return {
       value: b.ID,
       label: b.username,
@@ -63,7 +63,7 @@ function AddProductions() {
     productionService.getAPApprovers(id)
   );
 
-  const apSelectFormat = apData?.data.map((b) => {
+  const apSelectFormat = apData?.data?.map((b) => {
     return {
       value: b.ID,
       label: b.username,
@@ -80,7 +80,7 @@ function AddProductions() {
     clientService.getUsers()
   );
 
-  const userSelectFormat = clientData?.data.map((b) => {
+  const userSelectFormat = clientData?.data?.map((b) => {
     return {
       value: b.id,
       label: b.adminname,
@@ -185,7 +185,6 @@ function AddProductions() {
             <Label style={{ color: "#030229" }}>Production Code</Label>
             <Controller
               name="productionCode"
-              rules={{ required: "Production Code is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -193,13 +192,14 @@ function AddProductions() {
                   type="text"
                   name="address"
                   id="address"
-                  placeholder="Enter Production Code"
+                  placeholder=""
                   invalid={errors.productionCode && true}
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
                     height: "34px",
                   }}
+                  disabled
                 />
               )}
             />
@@ -213,7 +213,7 @@ function AddProductions() {
             <Label style={{ color: "#030229" }}>Production Name</Label>
             <Controller
               name="productionName"
-              rules={{ required: "Production Name is required" }}
+              rules={productionRules.name}
               control={control}
               render={({ field }) => (
                 <Input
