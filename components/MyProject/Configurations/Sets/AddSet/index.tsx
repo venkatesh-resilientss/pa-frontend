@@ -105,7 +105,7 @@ function AddSet() {
               )}
             />
             {errors.setname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.setname.message as React.ReactNode}
               </span>
             )}
@@ -128,7 +128,7 @@ function AddSet() {
               )}
             />
             {errors.setcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.setcode.message as React.ReactNode}
               </span>
             )}
@@ -156,7 +156,7 @@ function AddSet() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

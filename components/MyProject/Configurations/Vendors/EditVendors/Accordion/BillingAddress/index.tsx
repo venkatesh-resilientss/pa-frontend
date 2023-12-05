@@ -48,7 +48,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.billingAddress1 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.billingAddress1.message as React.ReactNode}
               </span>
             )}
@@ -78,7 +78,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.billingAddress2 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.billingAddress2.message as React.ReactNode}
               </span>
             )}
@@ -107,7 +107,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.billingAddressState && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.billingAddressState.message as React.ReactNode}
               </span>
             )}
@@ -136,7 +136,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.billingAddressPostalCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.billingAddressPostalCode.message as React.ReactNode}
               </span>
             )}
@@ -165,7 +165,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.billingAddressCity && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.billingAddressCity.message as React.ReactNode}
               </span>
             )}

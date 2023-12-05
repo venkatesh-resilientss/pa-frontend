@@ -50,7 +50,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.physicalAddress1 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddress1.message as React.ReactNode}
               </span>
             )}
@@ -80,7 +80,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.physicalAddress2 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddress2.message as React.ReactNode}
               </span>
             )}
@@ -109,7 +109,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.physicalAddressCity && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressCity.message as React.ReactNode}
               </span>
             )}
@@ -142,7 +142,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.physicalAddressState && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressState.message as React.ReactNode}
               </span>
             )}
@@ -171,7 +171,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               )}
             />
             {errors.physicalAddressPostalCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressPostalCode.message as React.ReactNode}
               </span>
             )}

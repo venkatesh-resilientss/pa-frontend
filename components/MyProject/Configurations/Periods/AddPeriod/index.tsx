@@ -117,7 +117,7 @@ function AddPeriod() {
                   )}
                 />
                 {errors.periodname && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.periodname.message as React.ReactNode}
                   </span>
                 )}
@@ -184,7 +184,7 @@ function AddPeriod() {
                   )}
                 />
                 {errors.description && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.description.message as React.ReactNode}
                   </span>
                 )}

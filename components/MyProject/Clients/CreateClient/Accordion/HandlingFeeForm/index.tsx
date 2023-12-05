@@ -51,8 +51,7 @@ function HandlingFeeForm() {
         <Row>
           <Col xl="3">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               HF FLAT INVOICE AMOUNT
             </Label>
@@ -62,8 +61,7 @@ function HandlingFeeForm() {
           <Col xl="2">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Delivery By
             </Label>
@@ -72,8 +70,7 @@ function HandlingFeeForm() {
 
           <Col xl="2">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Cost
             </Label>
@@ -83,8 +80,7 @@ function HandlingFeeForm() {
           <Col xl="2">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Per
             </Label>
@@ -105,10 +101,9 @@ const CustomForm = ({ typeName }) => {
     <div className="bg-white rounded border p-1">
       <Form>
         <div className="d-flex gap-1">
-          <div style={{ width: "120px" }}>
+          <div className="width120">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               {typeName}
             </Label>
@@ -118,8 +113,7 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               % Taxable Gross
             </Label>
@@ -128,8 +122,7 @@ const CustomForm = ({ typeName }) => {
           <div className="d-flex gap-1 m-auto ">
             <Input type="checkbox" {...register} />
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Per Check
             </Label>
@@ -137,8 +130,7 @@ const CustomForm = ({ typeName }) => {
 
           <div style={{ width: "120px" }}>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Min. Amount{" "}
             </Label>
@@ -147,8 +139,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>
@@ -157,8 +148,7 @@ const CustomForm = ({ typeName }) => {
 
           <div style={{ width: "120px" }}>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Max. Amount{" "}
             </Label>
@@ -167,8 +157,7 @@ const CustomForm = ({ typeName }) => {
 
           <div>
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Basis
             </Label>

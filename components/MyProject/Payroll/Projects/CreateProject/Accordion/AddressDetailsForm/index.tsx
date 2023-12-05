@@ -9,8 +9,8 @@ function BasicDetailsForm({ control, errors }) {
     { name: 'physicalCity', label: 'City', required: true, placeholder: 'Enter City' },
     { name: 'physicalState', label: 'State', required: true, placeholder: 'Enter State' },
     { name: 'physicalZip', label: 'Zip', required: true, placeholder: 'Enter Zip' },
-    { name: 'worklocation', label: 'All Work Location Address', type:'select', required: false, placeholder: 'Select Work Location' },
-    { name: 'checkDeliveryMethod', label: 'Check Delivery Method', type:'select', required: false, placeholder: 'Select Delivery Method' }
+    { name: 'worklocation', label: 'All Work Location Address', type: 'select', required: false, placeholder: 'Select Work Location' },
+    { name: 'checkDeliveryMethod', label: 'Check Delivery Method', type: 'select', required: false, placeholder: 'Select Delivery Method' }
   ]
 
   const invoiceAddress = [
@@ -57,7 +57,7 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}
@@ -137,7 +137,7 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}
@@ -217,7 +217,7 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors[`${formField.name}`].message as React.ReactNode}
                 </span>
               )}

@@ -132,7 +132,7 @@ function EditDepartment() {
               )}
             />
             {errors.name && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.name.message as React.ReactNode}
               </span>
             )}
@@ -161,7 +161,7 @@ function EditDepartment() {
               )}
             />
             {errors.code && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.code.message as React.ReactNode}
               </span>
             )}
@@ -192,7 +192,7 @@ function EditDepartment() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

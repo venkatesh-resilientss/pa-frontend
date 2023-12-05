@@ -14,8 +14,7 @@ function BasicDetailsForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Client Name
             </Label>
@@ -25,8 +24,7 @@ function BasicDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Client Code
             </Label>
@@ -36,8 +34,7 @@ function BasicDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Client Legal Name (If different){" "}
             </Label>
@@ -46,8 +43,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               FEIN
             </Label>
@@ -56,8 +52,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Physical Address
             </Label>
@@ -66,8 +61,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Invoice Address
             </Label>
@@ -76,8 +70,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Routing #
             </Label>
@@ -86,8 +79,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Bank Name
             </Label>
@@ -96,8 +88,7 @@ function BasicDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Account Number
             </Label>

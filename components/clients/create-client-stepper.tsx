@@ -26,17 +26,6 @@ const CustomStepper = ({ steps }) => {
             justifyContent: "flex-end",
           }}
         >
-          {/* <div
-            style={{
-              color: step.state === "completed" ? "#fff" : "#000",
-              width: "50px",
-              height: "50px",
-              borderRadius: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          > */}
           <div
             className="d-flex flex-column text-center align-items-center"
             style={{ fontSize: "12px" }}

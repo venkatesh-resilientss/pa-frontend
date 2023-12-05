@@ -11,8 +11,7 @@ function ProjectDetailsForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Project Types
             </Label>
@@ -22,8 +21,7 @@ function ProjectDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Departments
             </Label>
@@ -33,8 +31,7 @@ function ProjectDetailsForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Pay Frequency
             </Label>
@@ -43,8 +40,7 @@ function ProjectDetailsForm() {
 
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Period Ending Day
             </Label>

@@ -107,7 +107,7 @@ function ContactInformationForm({ control, errors }) {
                 )}
                 {errors[`${index + "_" + formField.name}`] &&
                   formField.required && (
-                    <span style={{ color: "red" }}>
+                    <span className="text-danger">
                       {
                         errors[`${index + "_" + formField.name}`]
                           .message as React.ReactNode

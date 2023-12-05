@@ -243,7 +243,7 @@ function EditBudget() {
             )}
           />
           {errors.name && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.name.message as React.ReactNode}
             </span>
           )}
@@ -269,7 +269,7 @@ function EditBudget() {
             )}
           />
           {errors.code && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.code.message as React.ReactNode}
             </span>
           )}

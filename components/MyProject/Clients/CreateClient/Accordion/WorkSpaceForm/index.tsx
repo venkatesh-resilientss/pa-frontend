@@ -22,8 +22,7 @@ function WorkSpaceForm() {
         <Row>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Logo
             </Label>
@@ -33,8 +32,7 @@ function WorkSpaceForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Domain
             </Label>
@@ -47,8 +45,7 @@ function WorkSpaceForm() {
           <Col xl="4">
             {" "}
             <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               Cleint Admin
             </Label>
@@ -56,8 +53,7 @@ function WorkSpaceForm() {
           </Col>
           <Col xl="4">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="text-black form-label"
             >
               RSSL Support User
             </Label>
