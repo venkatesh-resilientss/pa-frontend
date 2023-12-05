@@ -1,0 +1,26 @@
+.bg-login {
+  background-repeat: no-repeat;
+  background-image: url("/SideImage.png");
+  background-size: cover;
+}
+.bg-forgot {
+  background-repeat: no-repeat;
+  background-image: url("/ForgotSide.png");
+  background-size: cover;
+}
+.bg-reset {
+  background-repeat: no-repeat;
+  background-image: url("/resetPassword.png");
+  background-size: cover;
+}
+.eye {
+  cursor: pointer;
+  position: relative;
+  float: right;
+  bottom: 37px;
+  right: 17px;
+  background: transparent;
+  color: #626873;
+  width: 20px;
+  height: 20px;
+}
