@@ -15,6 +15,8 @@
 @import "./scss/fonts.scss";
 @import "./scss/images.scss";
 @import "./scss/themes.scss";
+@import "./scss/component";
+@import "./scss/masterData";
 
 // AG Grid
 @import "ag-grid-community/styles/ag-grid.css";
@@ -67,4 +69,216 @@ input.searchConfig {
   border-radius: 4.006px;
   border: 1.001px solid #ececec;
   margin-right: 10px;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #26afb8;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open>.dropdown-toggle.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #00aeef;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
+}
+
+.form-check-input:checked {
+  background-color: #00aeef !important;
+  border-color: #00aeef !important;
+}
+
+.hrline {
+  margin: auto;
+  color: #c1c1c1;
+}
+
+.custom-radio-input {
+  /* Set the color you want for the radio button */
+  color: #000;
+}
+
+.custom-radio-input:checked::before {
+  /* Set the color of the dot when the radio button is checked */
+  background-color: #000;
+}
+
+footer {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  border-top: 1.001px solid #d7d7d7;
+}
+
+/// !!!CAUTION!!! Dont Remove this (Ag Grid Table Header Text Styling)
+.custom-header-class {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.ag-theme-alpine .ag-row {
+  border-bottom: 2px solid #d9d9d9 !important;
+}
+
+// Card match height
+.match-height {
+  >[class*="col"] {
+    display: flex;
+    flex-flow: column;
+
+    >.card {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+/* Add this to your CSS */
+.custom-modal {
+  height: 215px;
+  width: 342px;
+}
+
+.form-lable-font {
+  font-size: 16px;
+}
+
+input::placeholder {
+  color: #c9c9c9 !important;
+}
+
+.custom-datepicker {
+  height: 30px;
+}
+
+.custom-vendor-popup {
+  width: 603px;
+  height: 484px;
+  /* Add this CSS in your stylesheet or style block */
+}
+
+.selected-options-count {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* Additional styling for the select field */
+.react-select-container {
+  width: 200px;
+  /* Adjust the width as needed */
+}
+
+.react-select__control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.reseTpassword {
+  max-width: 100%;
+  height: auto;
+}
+
+.resetPassword1 {
+  height: 54px;
+  color: #626873
+}
+
+.reseTpassword3 {
+  width: 380px;
+  height: 54px;
+  background: #283891;
+  border: #00AEEF;
+  border-radius: 12px;
+  font-size: 16px,
+}
+
+.reseTpassword4 {
+  margin-top: "50px";
+  font-size: 12px;
+  color: #656472;
+}
+
+.reseTpassword5 {
+  font-size: 12px;
+  color: #030229;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 90px
+}
+
+.reseTpassword6 {
+  font-size: 12px;
+  color: #030229
+}
+
+.resetPassword7 {
+  font-size: 12px;
+  color: #030229;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 100px;
+}
+
+.forgotScreen {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #ffffff;
+  margin-left: -400px;
+  margin-top: 300px
+}
+
+.forgotScreen1 {
+  max-width: 100%;
+  height: auto
+}
+
+.forgotScreen2 {
+  width: 380px;
+  height: 54px
+}
+
+.forgotScreen2 {
+  width: 380px;
+  height: 55px;
+  background: #283891;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  font-size: 16px;
+
+}
+
+.forgotScreen3 {
+  text-decoration: none;
+  color: #030229;
+  font-size: 16px;
 }
