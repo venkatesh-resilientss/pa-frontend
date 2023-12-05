@@ -266,6 +266,14 @@ export const sidebarRoutes = [
         path: "/banks",
       },
       {
+        name: "Agents",
+        path: "/agent",
+      },
+      {
+        name: "Departments",
+        path: "/departments",
+      },
+      {
         name: "Budget",
         path: "/budgets",
       },
