@@ -104,7 +104,7 @@ function AddDepartment() {
               )}
             />
             {errors.departmentname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.departmentname.message as React.ReactNode}
               </span>
             )}
@@ -131,7 +131,7 @@ function AddDepartment() {
               )}
             />
             {errors.departmentcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.departmentcode.message as React.ReactNode}
               </span>
             )}
@@ -160,7 +160,7 @@ function AddDepartment() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

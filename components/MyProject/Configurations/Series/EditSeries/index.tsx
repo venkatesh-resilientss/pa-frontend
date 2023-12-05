@@ -136,7 +136,7 @@ function EditSeries() {
                 )}
               />
               {errors.seriesname && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.seriesname.message as React.ReactNode}
                 </span>
               )}
@@ -162,7 +162,7 @@ function EditSeries() {
                 )}
               />
               {errors.Seriescode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Seriescode.message as React.ReactNode}
                 </span>
               )}
@@ -193,7 +193,7 @@ function EditSeries() {
                 )}
               />
               {errors.description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.description.message as React.ReactNode}
                 </span>
               )}

@@ -654,7 +654,7 @@ const CreatePurchaseOrder = () => {
                           )}
                         />
                         {errors.vendor && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendor.message as React.ReactNode}
                           </span>
                         )}
@@ -684,7 +684,7 @@ const CreatePurchaseOrder = () => {
                           )}
                         />
                         {errors.VendorAddress && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.VendorAddress.message as React.ReactNode}
                           </span>
                         )}
@@ -713,7 +713,7 @@ const CreatePurchaseOrder = () => {
                           )}
                         />
                         {errors.vendorType && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendorType.message as React.ReactNode}
                           </span>
                         )}
@@ -767,7 +767,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poNumber && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.poNumber.message as React.ReactNode}
                               </span>
                             )}
@@ -797,7 +797,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poDescription && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.poDescription
                                     .message as React.ReactNode
@@ -830,7 +830,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poAmount && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.poAmount.message as React.ReactNode}
                               </span>
                             )}
@@ -859,7 +859,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.poDate.message as React.ReactNode}
                               </span>
                             )}
@@ -888,7 +888,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poEffectiveDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.poEffectiveDate
                                     .message as React.ReactNode
@@ -920,7 +920,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poExpiryDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.poExpiryDate.message as React.ReactNode}
                               </span>
                             )}{" "}
@@ -975,7 +975,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -1006,7 +1006,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1037,7 +1037,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1070,7 +1070,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1101,7 +1101,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1132,7 +1132,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

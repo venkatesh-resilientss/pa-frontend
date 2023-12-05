@@ -142,7 +142,7 @@ function EditChartOfAccounts() {
               )}
             />
             {errors.COAName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.COAName.message as React.ReactNode}
               </span>
             )}
@@ -165,7 +165,7 @@ function EditChartOfAccounts() {
               )}
             />
             {errors.COACode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.COACode.message as React.ReactNode}
               </span>
             )}
@@ -188,7 +188,7 @@ function EditChartOfAccounts() {
               )}
             />
             {errors.COAParent && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.COAParent.message as React.ReactNode}
               </span>
             )}
@@ -211,7 +211,7 @@ function EditChartOfAccounts() {
               )}
             />
             {errors.AccountType && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.AccountType.message as React.ReactNode}
               </span>
             )}
@@ -239,7 +239,7 @@ function EditChartOfAccounts() {
               )}
             />
             {errors.Description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.Description.message as React.ReactNode}
               </span>
             )}

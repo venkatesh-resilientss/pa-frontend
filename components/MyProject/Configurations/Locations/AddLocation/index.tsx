@@ -104,7 +104,7 @@ function AddLocation() {
             />
 
             {errors.locationname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationname.message as React.ReactNode}
               </span>
             )}
@@ -127,7 +127,7 @@ function AddLocation() {
               )}
             />
             {errors.locationcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationcode.message as React.ReactNode}
               </span>
             )}
@@ -155,7 +155,7 @@ function AddLocation() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

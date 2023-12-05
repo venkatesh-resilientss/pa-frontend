@@ -142,7 +142,7 @@ function EditLocation() {
             />
 
             {errors.locationname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationname.message as React.ReactNode}
               </span>
             )}
@@ -167,7 +167,7 @@ function EditLocation() {
               )}
             />
             {errors.locationcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationcode.message as React.ReactNode}
               </span>
             )}
@@ -197,7 +197,7 @@ function EditLocation() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

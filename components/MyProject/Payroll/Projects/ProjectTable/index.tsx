@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FcFilmReel } from "react-icons/fc";
 import { hasPermission } from "commonFunctions/functions";
+import ReactSelect from "react-select";
+
 import {
   Modal,
   ModalHeader,
@@ -21,13 +23,33 @@ import {
   DropdownMenu,
 } from "reactstrap";
 import { useRouter } from "next/router";
-import { Edit, File, MoreVertical, Trash, Users } from "react-feather";
-
+import {
+  Edit,
+  File,
+  MoreVertical,
+  Trash,
+  Users,
+} from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
 
 const ProjectsListTable = () => {
+  const options = [
+    { value: "jan", label: "Jan" },
+    { value: "feb", label: "Feb" },
+    { value: "mar", label: "Mar" },
+    { value: "apr", label: "Apr" },
+    { value: "may", label: "May" },
+    { value: "jun", label: "Jun" },
+    { value: "jul", label: "Jul" },
+    { value: "aug", label: "Aug" },
+    { value: "sep", label: "Sep" },
+    { value: "oct", label: "Oct" },
+    { value: "nov", label: "Nov" },
+    { value: "dec", label: "Dec" }
+  ];
   const router = useRouter();
-
+  const [searchText, setSearchText] = useState("");
+  
   const [projectModal, setProjectModal] = useState(false);
   const toggle = () => setProjectModal(!projectModal);
 
@@ -39,7 +61,7 @@ const ProjectsListTable = () => {
       project_type: "MOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "09/31/2023",
+      created_date: "09/31/2023"
     },
     {
       id: 2,
@@ -48,7 +70,7 @@ const ProjectsListTable = () => {
       project_type: "MVPA",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "08/24/2023",
+      created_date: "08/24/2023"
     },
     {
       id: 3,
@@ -57,7 +79,7 @@ const ProjectsListTable = () => {
       project_type: "MOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "08/15/2023",
+      created_date: "08/15/2023"
     },
     {
       id: 4,
@@ -66,7 +88,7 @@ const ProjectsListTable = () => {
       project_type: "LOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "07/21/2023",
+      created_date: "07/21/2023"
     },
     {
       id: 5,
@@ -75,7 +97,7 @@ const ProjectsListTable = () => {
       project_type: "MOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "07/1/2023",
+      created_date: "07/1/2023"
     },
     {
       id: 6,
@@ -84,7 +106,7 @@ const ProjectsListTable = () => {
       project_type: "MOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "06/31/2023",
+      created_date: "06/31/2023"
     },
     {
       id: 7,
@@ -93,8 +115,8 @@ const ProjectsListTable = () => {
       project_type: "MOW",
       department: "Crew, DGA, SAG",
       IsActive: true,
-      created_date: "06/3/2023",
-    },
+      created_date: "06/3/2023"
+    }
   ];
 
   const addNewProjectSoftwares = [
@@ -143,8 +165,7 @@ const ProjectsListTable = () => {
               href="/"
               className="w-100"
               onClick={(e) => {
-                e.preventDefault(),
-                  router.push(`/payroll/projects/edit-project`);
+                e.preventDefault(), router.push(`/payroll/projects/edit-project`);
               }}
             >
               <File size={14} className="me-50" />
@@ -192,25 +213,25 @@ const ProjectsListTable = () => {
     {
       headerName: "Production Company",
       sortable: true,
-      field: "production_name",
+      field: "production_name"
     },
 
     {
       headerName: "Project Name",
       sortable: true,
-      field: "project_name",
+      field: "project_name"
     },
 
     {
       headerName: "Project Type",
       sortable: true,
-      field: "production_name",
+      field: "production_name"
     },
 
     {
       headerName: "Department",
       sortable: true,
-      field: "department",
+      field: "department"
     },
 
     {
@@ -236,6 +257,18 @@ const ProjectsListTable = () => {
       <Card className="w-100 p-3 project-card-bg my-3">
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Projects</div>
+          <div
+            className="d-flex align-items-center viewall-table"
+          >
+            <Input className="date m-2" type="date" placeholder="Select Date"></Input>
+            <ReactSelect options={options} placeholder="Filter by month" />
+            <Input
+              onChange={(e) => setSearchText(e.target.value)}
+              type="search"
+              className="searchConfig top-search m-2"
+              placeholder="Search..."
+            />
+          </div>
           <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={() => {
@@ -254,12 +287,7 @@ const ProjectsListTable = () => {
           )} */}
         </div>
       </Card>
-      <GridTable
-        rowData={rowData}
-        columnDefs={columns}
-        pageSize={4}
-        searchText={""}
-      />
+      <GridTable rowData={rowData} columnDefs={columns} pageSize={4} searchText={searchText} />
       {/* <DataTableWithButtons
         tableTitle={"All Projects"}
         data={projectData}

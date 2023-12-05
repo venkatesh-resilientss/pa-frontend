@@ -638,7 +638,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.PayrollNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.PayrollNumber.message as React.ReactNode}
                           </span>
                         )}
@@ -667,7 +667,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Description && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Description.message as React.ReactNode}
                           </span>
                         )}
@@ -696,7 +696,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Amount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Amount.message as React.ReactNode}
                           </span>
                         )}
@@ -726,7 +726,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.WeekEnding && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.WeekEnding.message as React.ReactNode}
                           </span>
                         )}
@@ -756,7 +756,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.EffectiveDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EffectiveDate.message as React.ReactNode}
                           </span>
                         )}
@@ -787,7 +787,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.ConfirmationNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.ConfirmationNumber
                                 .message as React.ReactNode
@@ -823,7 +823,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.OriginalTRXNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.OriginalTRXNumber
                                 .message as React.ReactNode
@@ -855,7 +855,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.SourceCode && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.SourceCode.message as React.ReactNode}
                           </span>
                         )}
@@ -887,7 +887,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Period && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Period.message as React.ReactNode}
                           </span>
                         )}
@@ -940,7 +940,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -971,7 +971,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1002,7 +1002,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1035,7 +1035,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1066,7 +1066,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1097,7 +1097,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

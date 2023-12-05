@@ -134,7 +134,7 @@ function EditBank() {
             )}
           />
           {errors.bankName && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.bankName.message as React.ReactNode}
             </span>
           )}
@@ -166,7 +166,7 @@ function EditBank() {
             )}
           />
           {errors.description && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.description.message as React.ReactNode}
             </span>
           )}

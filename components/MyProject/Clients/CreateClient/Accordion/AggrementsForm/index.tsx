@@ -14,13 +14,15 @@ function AgreementsForm() {
 
   return (
     <div>
+      <div className="my-3">
+        <p>Aggrements</p>
+      </div>
       <Form>
         <Row>
           <Col xl="5">
             <div className="d-flex justify-content-between">
               <Label
-                className="text-black"
-                style={{ fontSize: "14px", fontWeight: "400" }}
+                className="text-black form-label"
               >
                 List of Agreements
               </Label>

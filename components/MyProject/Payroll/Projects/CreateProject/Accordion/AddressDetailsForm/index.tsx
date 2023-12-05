@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function BasicDetailsForm({ control, errors }) {
 
@@ -57,63 +58,10 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Address Line 1*
-            </Label>
-            <Input placeholder="Enter Address Line 1" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Address Line 2
-            </Label>
-            <Input placeholder="Enter Address Line 2" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              City*
-            </Label>
-            <Input placeholder="Enter City" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              State*
-            </Label>
-            <Input placeholder="Enter State" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Zip*
-            </Label>
-            <Input placeholder="Enter Zip" {...register} />
-          </Col> */}
         </Row>
         <div className="my-3">
           <p>Invoice Address Information</p>
@@ -121,7 +69,7 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {invoiceAddress.map((formField) => (
             <Col xl="4" className="p-2" key={formField.name}>
-              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
+              <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
               <Controller
                 name={formField.name}
                 control={control}
@@ -137,63 +85,10 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Address Line 1*
-            </Label>
-            <Input placeholder="Enter Address Line 1" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Address Line 2
-            </Label>
-            <Input placeholder="Enter Address Line 2" {...register} />
-          </Col>
-
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              City*
-            </Label>
-            <Input placeholder="Enter City" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              State*
-            </Label>
-            <Input placeholder="Enter State" {...register} />
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}
-            >
-              Zip*
-            </Label>
-            <Input placeholder="Enter Zip" {...register} />
-          </Col> */}
         </Row>
         <div className="my-3">
           <p>Production Office Address (if different from above)</p>
@@ -217,9 +112,7 @@ function BasicDetailsForm({ control, errors }) {
                 )}
               />
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}

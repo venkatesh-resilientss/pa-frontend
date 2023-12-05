@@ -52,7 +52,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.bankName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.bankName.message as React.ReactNode}
               </span>
             )}
@@ -80,7 +80,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.bankCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.bankCode.message as React.ReactNode}
               </span>
             )}
@@ -111,7 +111,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.accountNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.accountNumber.message as React.ReactNode}
               </span>
             )}
@@ -136,12 +136,12 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                  // type="textarea"
+                // type="textarea"
                 />
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}
@@ -170,7 +170,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.routingNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.routingNumber.message as React.ReactNode}
               </span>
             )}
@@ -199,7 +199,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.accountFraction && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.accountFraction.message as React.ReactNode}
               </span>
             )}
@@ -261,7 +261,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.contactName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactName.message as React.ReactNode}
               </span>
             )}
@@ -290,7 +290,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               )}
             />
             {errors.branchNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.branchNumber.message as React.ReactNode}
               </span>
             )}
