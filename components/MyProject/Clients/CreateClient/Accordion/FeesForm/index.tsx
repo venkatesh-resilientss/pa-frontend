@@ -48,68 +48,68 @@ function FeesForm({ control, errors }) {
 
   return (
     <div>
-       <div className="my-3">
+      <div className="my-3">
         <p>Fees</p>
       </div>
       <Form>
         <Row>
-        {form.map((formField, index) => (
-         <Col xl="4" className="p-2" key={index}>
-          {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
+          {form.map((formField, index) => (
+            <Col xl="4" className="p-2" key={index}>
+              {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
                 {formField.label}{formField.required && '*'}
-        </Label>}
-         {formField.type === 'select' ? (
-            <Controller
-            name={formField.name}
-            control={control}
-            rules={{ required: formField.required && `${formField.label} is required` }}
-            render={({ field }) => (
-              <ReactSelect {...field} isClearable />
-            )}
-            />
-         ) : formField.type === 'check'? (
-          <Controller
-           name={formField.name}
-           control={control}
-           rules={{ required: formField.required && `${formField.label} is required` }}
-           render={({ field }) => (
-            <div className="m-4">
-             <Input
-               type="checkbox"
-               className="p-2"
-               placeholder={formField.placeholder}
-               invalid={errors[`${formField.name}`] && formField.required && true}
-               {...field}
-             />
-             <Label
-              className="text-black checkbox-label"
-            >
-              {formField.label}
-            </Label>
-            </div>
-           )}
-         />
-         ) : (
-          <Controller
-           name={formField.name}
-           control={control}
-           rules={{ required: formField.required && `${formField.label} is required` }}
-           render={({ field }) => (
-             <Input
-               type="text"
-               className="p-2"
-               placeholder={formField.placeholder}
-               invalid={errors[`${formField.name}`] && formField.required && true}
-               {...field}
-             />
-           )}
-         />
-         )}
-         {errors[`${formField.name}`] && formField.required && (
-            <InvalidFeedBack message={errors[`${formField.name}`].message} />
-         )}
-       </Col>
-      ))}
+              </Label>}
+              {formField.type === 'select' ? (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <ReactSelect {...field} isClearable />
+                  )}
+                />
+              ) : formField.type === 'check' ? (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <div className="m-4">
+                      <Input
+                        type="checkbox"
+                        className="p-2"
+                        placeholder={formField.placeholder}
+                        invalid={errors[`${formField.name}`] && formField.required && true}
+                        {...field}
+                      />
+                      <Label
+                        className="text-black checkbox-label"
+                      >
+                        {formField.label}
+                      </Label>
+                    </div>
+                  )}
+                />
+              ) : (
+                <Controller
+                  name={formField.name}
+                  control={control}
+                  rules={{ required: formField.required && `${formField.label} is required` }}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      className="p-2"
+                      placeholder={formField.placeholder}
+                      invalid={errors[`${formField.name}`] && formField.required && true}
+                      {...field}
+                    />
+                  )}
+                />
+              )}
+              {errors[`${formField.name}`] && formField.required && (
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
+              )}
+            </Col>
+          ))}
         </Row>
       </Form>
       <div>
@@ -120,40 +120,40 @@ function FeesForm({ control, errors }) {
         </div>
       </div>
       <div>
-      {formData.map((formField, feeindex) => (
-        <div key={feeindex} className="d-flex">
-          <CustomForm typeName={formField.fieldName} />
-          <Button
-                color="link"
-                className="text-decoration-none"
-                onClick={() => {
-                  removeForm((feeindex));
-                }}
-              >
-            <Delete/>
-          </Button>
-        </div>
-      ))}
-      {/* <div>
+        {formData.map((_, feeindex) => (
+          <div key={feeindex} className="d-flex">
+            <CustomForm />
+            <Button
+              color="link"
+              className="text-decoration-none"
+              onClick={() => {
+                removeForm((feeindex));
+              }}
+            >
+              <Delete />
+            </Button>
+          </div>
+        ))}
+        {/* <div>
         <CustomForm typeName={"HF-TAL"} />
       </div>
 
       <div>
         <CustomForm typeName={"HF-L/O"} />
       </div> */}
-      <div>
-        <div className="d-flex justify-content-end">
-          <Button className="button-props my-3 gap-3" onClick={addNewForm}>
-          <Plus /> Add Fee
-          </Button>
+        <div>
+          <div className="d-flex justify-content-end">
+            <Button className="button-props my-3 gap-3" onClick={addNewForm}>
+              <Plus /> Add Fee
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
-    <Modal isOpen={feeModal} toggle={toggle}>
+      <Modal isOpen={feeModal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Import Fees from Client</ModalHeader>
         <ModalBody>
           <div>
-          <Label
+            <Label
               className="text-black form-label"
             >
               Fees
@@ -181,7 +181,7 @@ function FeesForm({ control, errors }) {
 
 export default FeesForm;
 
-const CustomForm = ({ typeName }) => {
+const CustomForm = () => {
   const { register } = useForm();
 
   return (

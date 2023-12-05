@@ -9,25 +9,25 @@ function ContactInformationForm({ control, errors }) {
   const primaryContact = [
     { name: 'primaryContact', label: 'Company Primary Contact', required: true, placeholder: 'Enter Primary Contact' },
     { name: 'primaryTitle', label: 'Title', required: true, placeholder: 'Enter Title' },
-    { name: 'primaryOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone'},
-    { name: 'primaryphoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number'},
-    { name: 'primaryEmail', label: 'Email', required: true, placeholder: 'Enter Email'}
+    { name: 'primaryOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone' },
+    { name: 'primaryphoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number' },
+    { name: 'primaryEmail', label: 'Email', required: true, placeholder: 'Enter Email' }
   ]
- 
+
   const secondaryContact = [
     { name: 'secondaryContact', label: 'Company Secondary Contact', placeholder: 'Enter Secondary Contact' },
     { name: 'secondaryTitle', label: 'Title', placeholder: 'Enter Title' },
-    { name: 'secondaryOfficePhone', label: 'Office Phone', placeholder: 'Enter Office Phone'},
-    { name: 'secondaryPhoneNumber', label: 'Phone Number', placeholder: 'Enter Phone Number'},
-    { name: 'secondaryEmail', label: 'Email', required: false, placeholder: 'Enter Email'}
+    { name: 'secondaryOfficePhone', label: 'Office Phone', placeholder: 'Enter Office Phone' },
+    { name: 'secondaryPhoneNumber', label: 'Phone Number', placeholder: 'Enter Phone Number' },
+    { name: 'secondaryEmail', label: 'Email', required: false, placeholder: 'Enter Email' }
   ]
 
   const additionalContact = [
     { name: 'additionalContact', label: 'Company Additional Contact', required: true, placeholder: 'Enter Additional Contact' },
     { name: 'additionalTitle', label: 'Title', required: true, placeholder: 'Enter Title' },
-    { name: 'additionalOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone'},
-    { name: 'additionalPhoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number'},
-    { name: 'additionalEmail', label: 'Email', required: true, placeholder: 'Enter Email'}
+    { name: 'additionalOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone' },
+    { name: 'additionalPhoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number' },
+    { name: 'additionalEmail', label: 'Email', required: true, placeholder: 'Enter Email' }
   ]
 
   const [formData, setFormData] = useState([primaryContact, secondaryContact]);
@@ -37,13 +37,6 @@ function ContactInformationForm({ control, errors }) {
       ...prevData,
       additionalContact,
     ]);
-  };
-  const handleChange = (index, newValue) => {
-    setFormData((prevData) =>
-      prevData.map((item, index1) =>
-      index1 === index ? { ...item, value: newValue } : item
-      )
-    );
   };
 
   const removeForm = (form) => {
@@ -59,17 +52,17 @@ function ContactInformationForm({ control, errors }) {
         <p>Contact Information</p>
       </div>
       <Form>
-      {formData.map((formField, index) => (
-        <Row key={index} className="my-3">
-          {formField.map((formField, formindex) => (
-           <Col key={formindex} xl="4">
+        {formData.map((formField, index) => (
+          <Row key={index} className="my-3">
+            {formField.map((formField, formindex) => (
+              <Col key={formindex} xl="4">
                 <Label
                   className="text-black form-label"
                 >
                   {formField.label}{formField.required && '*'}
                 </Label>
                 <Controller
-                  name={index+'_'+formField.name}
+                  name={index + '_' + formField.name}
                   control={control}
                   rules={{ required: formField.required && `${formField.label} is required` }}
                   render={({ field }) => (
@@ -77,24 +70,24 @@ function ContactInformationForm({ control, errors }) {
                       type="text"
                       className="p-2"
                       placeholder={formField.placeholder}
-                      invalid={errors[`${index+'_'+formField.name}`] && formField.required && true}
+                      invalid={errors[`${index + '_' + formField.name}`] && formField.required && true}
                       {...field}
                     />
                   )}
                 />
-                {errors[`${index+'_'+formField.name}`] && formField.required && (
-                    <InvalidFeedBack message={errors[`${index+'_'+formField.name}`].message} />
+                {errors[`${index + '_' + formField.name}`] && formField.required && (
+                  <InvalidFeedBack message={errors[`${index + '_' + formField.name}`].message} />
                 )}
               </Col>
-               ))}
-               <Col xl="4">
-                {index > 1 && <Button color="white" onClick={() => {
-                  removeForm((index));
-                }}>
-                  <Minus />
-                </Button>}
-               </Col>
-        </Row>
+            ))}
+            <Col xl="4">
+              {index > 1 && <Button color="white" onClick={() => {
+                removeForm((index));
+              }}>
+                <Minus />
+              </Button>}
+            </Col>
+          </Row>
         ))}
       </Form>
       <div className="d-flex justify-content-end">

@@ -100,7 +100,7 @@ const sections = [{
 }
 ]
 function CreateClient() {
-  const [isAdmin, setAdmin] = useState(true);
+  const isAdmin = true;
   const [steps, setSteps] = useState(steps1Data);
   const [activeStep, setActiveStep] = useState(isAdmin ? 0 : 1);
   const laststep = isAdmin ? steps.length - 1 : steps.length
@@ -119,7 +119,7 @@ function CreateClient() {
     handleSubmit(onSubmit)();
   }
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     setActiveStep((prev) => {
       return Math.min(prev + 1, laststep);
     });
@@ -131,10 +131,11 @@ function CreateClient() {
 
   useEffect(() => {
     if (isAdmin) {
-      const adminstep = sections.map(({ icon, ...step }, index) => ({ ...step, icon: index === activeStep ? currentStep : index < activeStep ? completedStep : notYetSelectedStep }));
+      const adminstep = sections.map(({ ...step }, index) => ({ ...step, icon: index === activeStep ? currentStep : index < activeStep ? completedStep : notYetSelectedStep }));
       setSteps(adminstep);
     } else {
       if (activeStep === 1) {
+        // 
       } else if (activeStep === 2) {
         setSteps(steps2Data);
       } else {
@@ -152,7 +153,7 @@ function CreateClient() {
       </div>
       <p className="font-size-32 fw-600">Add New Client</p>
 
-      <hr/>
+      <hr />
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-end">
@@ -416,7 +417,7 @@ function CreateClient() {
       )}
       {/* <ClientAccordion /> */}
       {/* step one */}
-      <hr/>
+      <hr />
       <div className="d-flex row-reverse justify-content-end my-5 gap-3">
         <Button
           color="link"

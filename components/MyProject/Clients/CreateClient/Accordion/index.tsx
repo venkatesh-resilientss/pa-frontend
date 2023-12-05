@@ -16,7 +16,7 @@ import FeesForm from "./FeesForm";
 import SoftwaresForm from "./SoftwaresForm";
 import HandlingFeeForm from "./HandlingFeeForm";
 
-function ClientAccordion(props) {
+function ClientAccordion() {
   const [open, setOpen] = useState("");
 
   const toggle = (id) => {

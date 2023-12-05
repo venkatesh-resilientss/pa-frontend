@@ -1,7 +1,6 @@
 import { useState } from "react";
 import ReactSelect from "react-select";
 import { FcFilmReel } from "react-icons/fc";
-import Image from "next/image";
 import { Input } from "reactstrap";
 import {
   Card,
@@ -38,7 +37,7 @@ const EmployeesListTable = () => {
 
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
- 
+
   const rowData = [
     {
       id: 1,
@@ -112,20 +111,8 @@ const EmployeesListTable = () => {
     }
   ];
 
-  const ActionsButton = (props) => {
-    const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
-      return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
-          <Image src={icon} alt={name} />
-          <p>{name}</p>
-        </div>
-      );
-    };
+  const ActionsButton = () => {
+
     return (
       <div>
         <UncontrolledDropdown>
@@ -149,7 +136,8 @@ const EmployeesListTable = () => {
               href="/"
               className="w-100"
               onClick={(e) => {
-                e.preventDefault(), router.push(`/payroll/employees/view-employee`)}}
+                e.preventDefault(), router.push(`/payroll/employees/view-employee`)
+              }}
             >
               <FcFilmReel size={14} className="me-50" />
               <span className="align-middle">View Employee</span>
@@ -173,19 +161,19 @@ const EmployeesListTable = () => {
 
   const columns = [
     {
-        headerName: "Last Name",
-        sortable: true,
-        field: "last_name"
+      headerName: "Last Name",
+      sortable: true,
+      field: "last_name"
     },
     {
-        headerName: "First Name",
-        sortable: true,
-        field: "first_name"
+      headerName: "First Name",
+      sortable: true,
+      field: "first_name"
     },
     {
-        headerName: "Middle Name",
-        sortable: true,
-        field: "middle_name"
+      headerName: "Middle Name",
+      sortable: true,
+      field: "middle_name"
     },
     {
       headerName: "Production Company",
@@ -229,17 +217,17 @@ const EmployeesListTable = () => {
         <div className="d-flex justify-content-between ">
           <div className="pt-2 cardheader-text">All Employees</div>
           <div
-                className="d-flex align-items-center viewall-table"
-              >
-                <Input className="date m-2" type="date" placeholder="Select Date"></Input>
-                 <ReactSelect className="m-2" options={options} placeholder="Filter by month" />
-                  <Input
-                  onChange={(e) => setSearchText(e.target.value)}
-                  type="search"
-                  className="searchConfig"
-                  placeholder="Search..."
-                />
-              </div>
+            className="d-flex align-items-center viewall-table"
+          >
+            <Input className="date m-2" type="date" placeholder="Select Date"></Input>
+            <ReactSelect className="m-2" options={options} placeholder="Filter by month" />
+            <Input
+              onChange={(e) => setSearchText(e.target.value)}
+              type="search"
+              className="searchConfig"
+              placeholder="Search..."
+            />
+          </div>
           <Button
             className="my-1 my-sm-0 button-props border-0 "
             onClick={() => {

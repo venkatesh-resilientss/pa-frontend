@@ -5,7 +5,7 @@ import GridTable from "components/grid-tables/gridTable";
 import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function W4Form({ control, errors }) {
-  const formData =[
+  const formData = [
     { name: 'type', label: 'State/Federal', placeholder: 'State/Federal', type: 'select' },
     { name: 'filing_status', label: 'Filing Status', required: false, type: 'select', placeholder: 'Filing Status' },
     { name: 'two_jobs', label: 'Two Jobs', required: false, type: 'select', placeholder: 'Two Jobs' },
@@ -16,27 +16,27 @@ function W4Form({ control, errors }) {
     { name: 'total_allowances', label: 'Total Allowances', placeholder: 'Total Allowances' },
     { name: 'deductions', label: 'Deductions', placeholder: 'Deductions' }]
   const federal = [
-      {filling_status: 'Single', two_jobs: 'Yes', dependent_amount: '$30000.00', is_exempt: 'True', created_date: '09/23/2023', status: 'Active', actions: "Update W4"}
-    ]
+    { filling_status: 'Single', two_jobs: 'Yes', dependent_amount: '$30000.00', is_exempt: 'True', created_date: '09/23/2023', status: 'Active', actions: "Update W4" }
+  ]
   const state = [
-      {state: 'CA', filling_status: 'Single', two_jobs: 'Yes', dependent_amount: '$30000.00', is_exempt: 'True', created_date: '09/23/2023', status: 'Active', actions: "Update W4"}
-    ]
+    { state: 'CA', filling_status: 'Single', two_jobs: 'Yes', dependent_amount: '$30000.00', is_exempt: 'True', created_date: '09/23/2023', status: 'Active', actions: "Update W4" }
+  ]
 
   const federalColumns = [
     {
-        headerName: "Filling Status",
-        sortable: true,
-        field: "filling_status"
+      headerName: "Filling Status",
+      sortable: true,
+      field: "filling_status"
     },
     {
-        headerName: "Two Jobs",
-        sortable: true,
-        field: "two_jobs"
+      headerName: "Two Jobs",
+      sortable: true,
+      field: "two_jobs"
     },
     {
-        headerName: "Dependent Amount",
-        sortable: true,
-        field: "dependent_amount"
+      headerName: "Dependent Amount",
+      sortable: true,
+      field: "dependent_amount"
     },
     {
       headerName: "Is Exempt",
@@ -68,19 +68,19 @@ function W4Form({ control, errors }) {
       field: "state"
     },
     {
-        headerName: "Filling Status",
-        sortable: true,
-        field: "filling_status"
+      headerName: "Filling Status",
+      sortable: true,
+      field: "filling_status"
     },
     {
-        headerName: "Two Jobs",
-        sortable: true,
-        field: "two_jobs"
+      headerName: "Two Jobs",
+      sortable: true,
+      field: "two_jobs"
     },
     {
-        headerName: "Dependent Amount",
-        sortable: true,
-        field: "dependent_amount"
+      headerName: "Dependent Amount",
+      sortable: true,
+      field: "dependent_amount"
     },
     {
       headerName: "Is Exempt",
@@ -184,10 +184,10 @@ function W4Form({ control, errors }) {
           ))}
         </Row>
       </Form>
-      <div className="form-lable-font text-black mb-4 mt-2">Federal W4's</div>
-      <GridTable rowData={federal} columnDefs={federalColumns} pageSize={4} searchText={undefined}/>
-      <div className="form-lable-font text-black mb-4">Resident W4's</div>
-      <GridTable rowData={state} columnDefs={stateColumns} pageSize={4} searchText={undefined}/>
+      <div className="form-lable-font text-black mb-4 mt-2">Federal W4&apos;`s</div>
+      <GridTable rowData={federal} columnDefs={federalColumns} pageSize={4} searchText={undefined} />
+      <div className="form-lable-font text-black mb-4">Resident W4&apos;`s</div>
+      <GridTable rowData={state} columnDefs={stateColumns} pageSize={4} searchText={undefined} />
     </div>
   );
 }
