@@ -1,5 +1,5 @@
 import { Button } from "reactstrap";
-import endamolLogo from "../../../../assets/MyImages/endamol.svg";
+import endamolLogo from "@/assets/MyImages/endamol.svg";
 import ClientTabs from "./ClientTabs";
 import { useRouter } from "next/router";
 
