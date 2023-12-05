@@ -1,8 +1,6 @@
 import CreateClientStepper from "components/clients/create-client-stepper";
 import { useEffect, useState, createElement } from "react";
-import { Button, Col, Input, Label } from "reactstrap";
-import { InputGroup, InputGroupText } from "reactstrap";
-
+import { Button } from "reactstrap";
 import BasicDetailsForm from "./Accordion/BasicDetailsForm";
 import ContactInformationForm from "./Accordion/ContactInformationForm";
 import AddressDetailsForm from "./Accordion/AddressDetailsForm";
@@ -20,31 +18,28 @@ const currentStep = "/currentStep.svg";
 const notYetSelectedStep = '/notyetSelectedStep.svg';
 
 const sections = [{
-  label: 'Basic Information', component: BasicDetailsForm, icon: '/currentStep.svg', state: ''
+  label: 'Basic Information', component: BasicDetailsForm, state: ''
 },
 {
-  label: 'Address Information', component: AddressDetailsForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Address Information', component: AddressDetailsForm, state: ''
 },
 {
-  label: 'Contact Information', component: ContactInformationForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Contact Information', component: ContactInformationForm, state: ''
 },
 {
-  label: 'Approval Information', component: ApprovalInformationForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Approval Information', component: ApprovalInformationForm, state: ''
 },
 {
-  label: 'Signatory Agreements', component: SignatoryDetailsForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Signatory Agreements', component: SignatoryDetailsForm, state: ''
 },
 {
-  label: 'Accounting Information', component: AccountingInformationForm, icon: '/notyetSelectedStep.svg', state: ''
-},
-// {
-//   label: 'Software/Cost', component: SoftwaresForm, icon: '/notyetSelectedStep.svg', state: ''
-// },
-{
-  label: 'Fees', component: FeesForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Accounting Information', component: AccountingInformationForm, state: ''
 },
 {
-  label: 'Agreements', component: AgreementsForm, icon: '/notyetSelectedStep.svg', state: ''
+  label: 'Fees', component: FeesForm, state: ''
+},
+{
+  label: 'Agreements', component: AgreementsForm, state: ''
 }
 ]
 function CreateClient() {
@@ -65,7 +60,7 @@ function CreateClient() {
     handleSubmit(onSubmit)();
   }
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     setActiveStep((prev) => {
       return Math.min(prev + 1, laststep);
     });
@@ -75,7 +70,7 @@ function CreateClient() {
   };
 
   useEffect(() => {
-    const adminstep = sections.map(({ icon, ...step }, index) => ({ ...step, icon: index === activeStep ? currentStep : index < activeStep ? completedStep : notYetSelectedStep }));
+    const adminstep = sections.map(({ ...step }, index) => ({ ...step, icon: index === activeStep ? currentStep : index < activeStep ? completedStep : notYetSelectedStep }));
     setSteps(adminstep);
   }, [activeStep]);
 
