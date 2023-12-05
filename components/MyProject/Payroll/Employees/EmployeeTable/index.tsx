@@ -18,6 +18,8 @@ import {
 } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
 import "react-datepicker/dist/react-datepicker.css";
+// services
+import EmployeeService from "services/employee.service";
 
 const EmployeesListTable = () => {
   const options = [
@@ -38,6 +40,9 @@ const EmployeesListTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
 
+  const [employeeModal, setEmployeeModal] = useState(false);
+
+  const employeeService = new EmployeeService();
 
   const rowData = [
     {
