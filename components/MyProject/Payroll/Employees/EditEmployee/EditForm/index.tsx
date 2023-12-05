@@ -18,14 +18,14 @@ import W4Form from './W4Form';
 import I9Form from './I9Form';
 
 const tabs = [
-  { id: '1', label: 'Basic Information', component: BasicDetailsForm },
-  { id: '2', label: 'Loanout', component: LoanoutForm },
-  { id: '3', label: 'Address', component: AddressForm },
-  { id: '4', label: 'Direct Deposit', component: DDForm },
-  { id: '5', label: 'Agent Information', component: AgentForm },
-  { id: '6', label: 'Deductions Information', component: DeductionsForm },
-  { id: '7', label: `I9`, component: I9Form },
-  { id: '8', label: `W4's`, component: W4Form }
+  {id:'1', label:'Basic Information', component: BasicDetailsForm},
+  {id:'2', label: 'Loanout', component: LoanoutForm},
+  {id:'3', label: 'Address', component: AddressForm},
+  {id:'4', label: 'Direct Deposit', component: DDForm},
+  {id:'5', label: 'Agent Information', component: AgentForm},
+  {id:'6', label: 'Deductions Information', component: DeductionsForm},
+  {id:'7', label: `I9`, component: I9Form},
+  {id:'8', label: `W4's`, component: W4Form}
 ]
 
 function Tabs({ control, errors, activeStep }) {
@@ -36,43 +36,43 @@ function Tabs({ control, errors, activeStep }) {
       setActive(tab)
     }
   }
-
+ 
   return (
     <div>
       <div>
         <Nav className='bg-white mb-4 nav-stepper'>
-          {
-            tabs.map((tab, index) => (
-              <NavItem key={index}>
-                <NavLink className={"nav-link " + (activeStep === tab.id ? 'active-link' : 'inactive-link')}
-                  active={activeStep === tab.id}
-                  onClick={() => {
-                    toggle(tab.id)
-                  }}
-                >
-                  {tab.label}
-                </NavLink>
-              </NavItem>
-            ))
-          }
-        </Nav>
-        <TabContent className='py-50' activeTab={activeStep}>
-          {
-            tabs.map((tab, index) => (
-              (activeStep === tab.id && <TabPane key={index} tabId={tab.id}>
-                <Row>
-                  <Col >
-                    {createElement(tab.component, {
-                      control: control, errors: errors
-                    }
-                    )}
-                  </Col>
-                </Row>
-              </TabPane>)
-            ))
-          }
-        </TabContent>
-      </div>
+        {
+          tabs.map((tab, index) => (
+            <NavItem key={index}>
+            <NavLink className={"nav-link " + (activeStep === tab.id ? 'active-link' : 'inactive-link')}
+              active={activeStep === tab.id}
+              onClick={() => {
+                toggle(tab.id)
+              }}
+            >
+              {tab.label}
+            </NavLink>
+          </NavItem>
+          ))
+        }
+      </Nav>
+      <TabContent className='py-50' activeTab={activeStep}>
+        {
+          tabs.map((tab, index) => (
+            (activeStep === tab.id && <TabPane key={index} tabId={tab.id}>
+            <Row>
+              <Col >
+              {createElement(tab.component, {
+                control: control, errors: errors
+              }
+              )}
+              </Col>
+            </Row>
+          </TabPane>)
+          ))
+        }
+      </TabContent>
+        </div>
     </div>
   )
 }

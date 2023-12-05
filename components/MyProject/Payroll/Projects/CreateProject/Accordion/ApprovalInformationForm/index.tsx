@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import ReactSelect from "react-select";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function ApprovalInformationForm({ control, errors }) {
 
@@ -17,72 +18,69 @@ function ApprovalInformationForm({ control, errors }) {
         <p>Payroll Approval Levels</p>
       </div>
       <Form>
-        {formData.map((formField, index) => (
-          <Row key={index} className="my-3">
-            {formField.map((formField, formindex) => (
-              <Col key={formindex} xl="4">
-                {formField.type !== 'check' && <Label className="form-lable-font text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}>
+      {formData.map((formField, index) => (
+        <Row key={index} className="my-3">
+          {formField.map((formField, formindex) => (
+           <Col key={formindex} xl="4">
+               {formField.type !== 'check' && <Label className="form-lable-font text-black form-label"
+                >
                   {formField.label}{formField.required && '*'}
                 </Label>}
 
-                {formField.type === 'select' ? (
-                  <Controller
-                    name={formField.name}
-                    control={control}
-                    rules={{ required: formField.required && `${formField.label} is required` }}
-                    render={({ field }) => (
-                      <ReactSelect {...field} isClearable />
-                    )}
-                  />
-                ) : formField.type === 'check' ? (
-                  <Controller
-                    name={formField.name}
-                    control={control}
-                    rules={{ required: formField.required && `${formField.label} is required` }}
-                    render={({ field }) => (
-                      <div className="m-4">
-                        <Input
-                          type="checkbox"
-                          className="p-2"
-                          placeholder={formField.placeholder}
-                          invalid={errors[`${formField.name}`] && formField.required && true}
-                          {...field}
-                        />
-                        <Label
-                          className="text-black"
-                          style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
-                        >
-                          {formField.label}
-                        </Label>
-                      </div>
-                    )}
-                  />
-                ) : (
-                  <Controller
-                    name={formField.name}
-                    control={control}
-                    rules={{ required: formField.required && `${formField.label} is required` }}
-                    render={({ field }) => (
-                      <Input
-                        type="text"
-                        className="p-2"
-                        placeholder={formField.placeholder}
-                        invalid={errors[`${formField.name}`] && formField.required && true}
-                        {...field}
-                      />
-                    )}
-                  />
-                )}
+               {formField.type === 'select' ? (
+            <Controller
+            name={formField.name}
+            control={control}
+            rules={{ required: formField.required && `${formField.label} is required` }}
+            render={({ field }) => (
+              <ReactSelect {...field} isClearable />
+            )}
+            />
+         ) : formField.type === 'check'? (
+          <Controller
+           name={formField.name}
+           control={control}
+           rules={{ required: formField.required && `${formField.label} is required` }}
+           render={({ field }) => (
+            <div className="m-4">
+             <Input
+               type="checkbox"
+               className="p-2"
+               placeholder={formField.placeholder}
+               invalid={errors[`${formField.name}`] && formField.required && true}
+               {...field}
+             />
+             <Label
+              className="text-black form-label"
+            >
+              {formField.label}
+            </Label>
+            </div>
+           )}
+         />
+         ) : (
+          <Controller
+           name={formField.name}
+           control={control}
+           rules={{ required: formField.required && `${formField.label} is required` }}
+           render={({ field }) => (
+             <Input
+               type="text"
+               className="p-2"
+               placeholder={formField.placeholder}
+               invalid={errors[`${formField.name}`] && formField.required && true}
+               {...field}
+             />
+           )}
+         />
+         )}
 
-                {errors[`${index + '_' + formField.name}`] && formField.required && (
-                  <span className="text-danger">
-                    {errors[`${index + '_' + formField.name}`].message as React.ReactNode}
-                  </span>
+                {errors[`${index+'_'+formField.name}`] && formField.required && (
+                  <InvalidFeedBack message={errors[`${index+'_'+formField.name}`].message} />
                 )}
               </Col>
-            ))}
-          </Row>
+               ))}
+        </Row>
         ))}
       </Form>
     </div>

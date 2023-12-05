@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function AccountingInformationForm({ control, errors }) {
 
@@ -17,56 +18,54 @@ function AccountingInformationForm({ control, errors }) {
       </div>
       <Form>
         <Row>
-          {form.map((formField) => (
-            <Col xl="4" className="p-2" key={formField.name}>
-              <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label>
-              {formField.type === 'select' ? (
-                <Controller
-                  name={formField.name}
-                  control={control}
-                  rules={{ required: formField.required && `${formField.label} is required` }}
-                  render={({ field }) => (
-                    <ReactSelect {...field} isClearable />
-                  )}
-                />
-              ) : formField.type === 'date' ? (
-                <Controller
-                  name={formField.name}
-                  control={control}
-                  rules={{ required: formField.required && `${formField.label} is required` }}
-                  render={({ field }) => (
-                    <Input
-                      type="date"
-                      className="p-2"
-                      placeholder={formField.placeholder}
-                      invalid={errors[`${formField.name}`] && formField.required && true}
-                      {...field}
-                    />
-                  )}
-                />
-              ) : (
-                <Controller
-                  name={formField.name}
-                  control={control}
-                  rules={{ required: formField.required && `${formField.label} is required` }}
-                  render={({ field }) => (
-                    <Input
-                      type="text"
-                      className="p-2"
-                      placeholder={formField.placeholder}
-                      invalid={errors[`${formField.name}`] && formField.required && true}
-                      {...field}
-                    />
-                  )}
-                />
-              )}
-              {errors[`${formField.name}`] && formField.required && (
-                <span className="text-danger">
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
-              )}
-            </Col>
-          ))}
+        {form.map((formField) => (
+         <Col xl="4" className="p-2" key={formField.name}>
+         <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
+         {formField.type === 'select' ? (
+            <Controller
+            name={formField.name}
+            control={control}
+            rules={{ required: formField.required && `${formField.label} is required` }}
+            render={({ field }) => (
+              <ReactSelect {...field} isClearable />
+            )}
+            />
+         ) : formField.type === 'date'? (
+          <Controller
+           name={formField.name}
+           control={control}
+           rules={{ required: formField.required && `${formField.label} is required` }}
+           render={({ field }) => (
+             <Input
+               type="date"
+               className="p-2"
+               placeholder={formField.placeholder}
+               invalid={errors[`${formField.name}`] && formField.required && true}
+               {...field}
+             />
+           )}
+         />
+         ) : (
+          <Controller
+           name={formField.name}
+           control={control}
+           rules={{ required: formField.required && `${formField.label} is required` }}
+           render={({ field }) => (
+             <Input
+               type="text"
+               className="p-2"
+               placeholder={formField.placeholder}
+               invalid={errors[`${formField.name}`] && formField.required && true}
+               {...field}
+             />
+           )}
+         />
+         )}
+         {errors[`${formField.name}`] && formField.required && (
+          <InvalidFeedBack message={errors[`${formField.name}`].message} />
+         )}
+       </Col>
+      ))}
         </Row>
       </Form>
     </div>

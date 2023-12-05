@@ -18,28 +18,31 @@ const currentStep = "/currentStep.svg";
 const notYetSelectedStep = '/notyetSelectedStep.svg';
 
 const sections = [{
-  label: 'Basic Information', component: BasicDetailsForm, state: ''
+  label: 'Basic Information', component: BasicDetailsForm, icon: '/currentStep.svg', state: ''
 },
 {
-  label: 'Address Information', component: AddressDetailsForm, state: ''
+  label: 'Address Information', component: AddressDetailsForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
-  label: 'Contact Information', component: ContactInformationForm, state: ''
+  label: 'Contact Information', component: ContactInformationForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
-  label: 'Approval Information', component: ApprovalInformationForm, state: ''
+  label: 'Approval Information', component: ApprovalInformationForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
-  label: 'Signatory Agreements', component: SignatoryDetailsForm, state: ''
+  label: 'Signatory Agreements', component: SignatoryDetailsForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
-  label: 'Accounting Information', component: AccountingInformationForm, state: ''
+  label: 'Accounting Information', component: AccountingInformationForm, icon: '/notyetSelectedStep.svg', state: ''
+},
+// {
+//   label: 'Software/Cost', component: SoftwaresForm, icon: '/notyetSelectedStep.svg', state: ''
+// },
+{
+  label: 'Fees', component: FeesForm, icon: '/notyetSelectedStep.svg', state: ''
 },
 {
-  label: 'Fees', component: FeesForm, state: ''
-},
-{
-  label: 'Agreements', component: AgreementsForm, state: ''
+  label: 'Agreements', component: AgreementsForm, icon: '/notyetSelectedStep.svg', state: ''
 }
 ]
 function CreateClient() {
@@ -83,7 +86,7 @@ function CreateClient() {
       </div>
       <p className="font-size-32 fw-600">Project Details</p>
 
-      <hr />
+      <hr/>
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-end">
@@ -105,7 +108,7 @@ function CreateClient() {
       </div>
       {/* <ProjectAccordion /> */}
       {/* step one */}
-      <hr />
+      <hr/>
       <div className="d-flex row-reverse justify-content-end my-5 gap-3">
         <Button
           color="link"
