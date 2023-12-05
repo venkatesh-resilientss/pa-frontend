@@ -2,7 +2,7 @@ export const DEFAULT_APP_STATE = "local";
 export const selectStyles = {
   control: (provided, state) => ({
     ...provided,
-    background: state.isDisabled ? "#e3e3e3":'#fff',
+    background: state.isDisabled ? "#e3e3e3" : '#fff',
     borderColor: '#9e9e9e',
     minHeight: '31px',
     height: '31px',
@@ -320,8 +320,16 @@ export const sidebarRoutes = [
       {
         name: "Vendors",
         path: "/vendors",
-      }
-    ]    
+      },
+      {
+        name: "Company",
+        path: "/company",
+      },
+      {
+        name: "Project Types",
+        path: "/project-type",
+      },
+    ]
   },
   {
     name: "Payroll",
@@ -356,50 +364,50 @@ export const sidebarRoutes = [
 ];
 
 /**Chart of accounts */
-export const COAAccountyTypeOptions =  [
+export const COAAccountyTypeOptions = [
   {
-    label : 'Asset',
-    value : 'asset'
+    label: 'Asset',
+    value: 'asset'
   },
   {
-    label : "Asset: Inventory",
-    value : 'asset_inventroy'
+    label: "Asset: Inventory",
+    value: 'asset_inventroy'
   },
   {
-    label : "Cost Of Goods",
-    value : 'cost_of_goods'
+    label: "Cost Of Goods",
+    value: 'cost_of_goods'
   },
   {
-    label : "Expense: Other",
-    value : "expense_other"
+    label: "Expense: Other",
+    value: "expense_other"
   },
   {
-    label : "Expense: ATL",
-    value : "expense_atl"
+    label: "Expense: ATL",
+    value: "expense_atl"
   },
   {
-    label : "Expense: BTL",
-    value : "expense_btl"
+    label: "Expense: BTL",
+    value: "expense_btl"
   },
   {
-    label : "Expense: Post",
-    value : "expense_post"
+    label: "Expense: Post",
+    value: "expense_post"
   },
   {
-    label : "Liability",
-    value : "liability"
+    label: "Liability",
+    value: "liability"
   },
   {
-    label : "Income",
-    value : "income",
+    label: "Income",
+    value: "income",
   },
   {
-    label : "Capital",
-    value : "capital"
+    label: "Capital",
+    value: "capital"
   },
   {
-    label : "Header - Separate Table",
-    value : "header_seperate_table"
+    label: "Header - Separate Table",
+    value: "header_seperate_table"
   }
 ]
 
@@ -413,9 +421,9 @@ export const PaymentOptions = [
 
 /**Address Types */
 export const VendorsAddressTypes = [
-  {label : "Mailing Address", value : 'mailing_address'},
-  {label : "Billing Address", value : 'billing address'},
-  {label : "Contact Address", value : 'contact_address'}
+  { label: "Mailing Address", value: 'mailing_address' },
+  { label: "Billing Address", value: 'billing address' },
+  { label: "Contact Address", value: 'contact_address' }
 ]
 
 /**Form Validation Rules */
@@ -435,7 +443,7 @@ const ROUTING_NUMBER_MAX_LENGTH = 12;
 
 
 export const formValidationRules = {
-  department : {
+  department: {
     name: {
       required: "Department Name is required",
       maxLength: {
@@ -447,25 +455,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Department Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Department Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Department Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     }
   },
-  sets : {
+  sets: {
     name: {
       required: "Set Name is required",
       maxLength: {
@@ -477,25 +485,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Set Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Set Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Set Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     }
   },
-  countries : {
+  countries: {
     name: {
       required: "Country Name is required",
       maxLength: {
@@ -507,25 +515,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Country Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Country Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Country Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     }
   },
-  states : {
+  states: {
     name: {
       required: "State Name is required",
       maxLength: {
@@ -537,28 +545,28 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "State Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `State Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `State Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
-    },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
       }
     },
-    country :{
-      required : 'Country is required'
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+      }
+    },
+    country: {
+      required: 'Country is required'
     }
   },
-  series : {
+  series: {
     name: {
       required: "Series Name is required",
       maxLength: {
@@ -570,25 +578,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Series Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Series Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Series Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     }
   },
-  locations : {
+  locations: {
     name: {
       required: "Loaction Name is required",
       maxLength: {
@@ -600,25 +608,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Location Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Location Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Location Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : "Description cannot contain more than 250 characters"
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: "Description cannot contain more than 250 characters"
       }
     }
   },
-  budgets : {
+  budgets: {
     name: {
       required: "Budget Name is required",
       maxLength: {
@@ -630,40 +638,40 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Budget Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Budget Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Budget Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    company : {
-      required : "Company is required",
+    company: {
+      required: "Company is required",
     },
-    production : {
-      required : "Production is required",
+    production: {
+      required: "Production is required",
     },
-    currency : {
-      required : "Currency is required",
+    currency: {
+      required: "Currency is required",
     },
-    series : {
-      required : "Series is required",
+    series: {
+      required: "Series is required",
     },
-    location : {
-      required : "Location is required",
+    location: {
+      required: "Location is required",
     },
-    set : {
-      required : "Set is required",
+    set: {
+      required: "Set is required",
     },
-    budgetfile : {
-      required : "File is required",
+    budgetfile: {
+      required: "File is required",
     }
   },
-  currencies :{
+  currencies: {
     name: {
       required: "Currency Name is required",
       maxLength: {
@@ -675,39 +683,39 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Currency Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Currency Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Currency Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
-    },
-    symbol : {
-      required : 'Currency Symbol is required',
-      maxLength : {
-        value : 1,
-        message : 'Currency Symbol cannot be more than 1 character'
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
       }
     },
-    currentRate  : {
-        required : 'Base Value is required',
-        pattern : {
-          value : NUMERIC,
-          message : 'Base Value must be a number'
-        }
+    symbol: {
+      required: 'Currency Symbol is required',
+      maxLength: {
+        value: 1,
+        message: 'Currency Symbol cannot be more than 1 character'
+      }
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    currentRate: {
+      required: 'Base Value is required',
+      pattern: {
+        value: NUMERIC,
+        message: 'Base Value must be a number'
+      }
+    },
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     },
   },
-  chartofaccounts : {
+  chartofaccounts: {
     name: {
       required: "COA Name is required",
       maxLength: {
@@ -719,44 +727,44 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "COA Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `COA Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `COA Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
-    },
-    parent : {
-
-    },
-    accountType : {
-      required : 'Account Type is required'
-    },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
       }
     },
-    postable : {
-      requuired : 'Postable is required'
+    parent: {
+
+    },
+    accountType: {
+      required: 'Account Type is required'
+    },
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+      }
+    },
+    postable: {
+      requuired: 'Postable is required'
     }
   },
-  taxCodes : {
-    code : { 
+  taxCodes: {
+    code: {
       required: "Tax Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Tax Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Tax Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
     name: {
       required: "Tax Code Name is required",
@@ -769,17 +777,17 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    country : {
-      required : "Tax Code Country is required"
+    country: {
+      required: "Tax Code Country is required"
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     }
   },
-  periods : {
+  periods: {
     name: {
       required: "Period Name is required",
       maxLength: {
@@ -791,49 +799,49 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    description : {
-      maxLength : {
-        value : DESCRIPTION_MAX_LENGTH,
-        message : `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
       }
     },
-    startDate :{
-      required : 'Start Date is required'
+    startDate: {
+      required: 'Start Date is required'
     }
   },
-  address :{
-    line1 : {
-      required : 'Address Line 1 is required',
-      maxLength : {
-        value : ADDRESS_LINE_MAX_LENGTH,
-        message : `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
+  address: {
+    line1: {
+      required: 'Address Line 1 is required',
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
       }
     },
-    line2 : {
-      required : 'Address Line 2 is required',
-      maxLength : {
-        value : ADDRESS_LINE_MAX_LENGTH,
-        message : `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
+    line2: {
+      required: 'Address Line 2 is required',
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
       }
     },
-    city : {
-      required : 'City is required'
+    city: {
+      required: 'City is required'
     },
-    state : {
-      required : 'State is required',
+    state: {
+      required: 'State is required',
     },
-    country : {
-      required : 'Country is required'
+    country: {
+      required: 'Country is required'
     },
-    zipCode : {
-      required : 'Zip Code is required',
-      maxLength : {
-        value : ZIP_CODE_MAX_LENGTH,
-        message : `Zip Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`
+    zipCode: {
+      required: 'Zip Code is required',
+      maxLength: {
+        value: ZIP_CODE_MAX_LENGTH,
+        message: `Zip Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`
       }
     }
   },
-  productions : {
+  productions: {
     name: {
       required: "Production Name is required",
       maxLength: {
@@ -846,7 +854,7 @@ export const formValidationRules = {
       },
     },
   },
-  vendors : {
+  vendors: {
     name: {
       required: "Vendor Name is required",
       maxLength: {
@@ -858,19 +866,19 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    code : { 
+    code: {
       required: "Vendor Code is required",
       maxLength: {
-        value : CODE_MAX_LENGTH,
-        message : `Vendor Code must be contain less than ${CODE_MAX_LENGTH} characters`
+        value: CODE_MAX_LENGTH,
+        message: `Vendor Code must be contain less than ${CODE_MAX_LENGTH} characters`
       },
       pattern: {
-        value : CODE_PATTERN,
-        message : 'Special characters and spaces are not allowed'
-      } 
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
+      }
     },
-    legalName : {
-      required  : "Vendor Legal Name is required",
+    legalName: {
+      required: "Vendor Legal Name is required",
       maxLength: {
         value: NAME_MAX_LENGTH,
         message: `Vendor Legal Name must be contain less than ${NAME_MAX_LENGTH} characters`,
@@ -880,25 +888,25 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    paymentType : {
-      required  : "Payment Type Name is required",
+    paymentType: {
+      required: "Payment Type Name is required",
     },
-    deafultAccount : {
-      
+    deafultAccount: {
+
     },
-    entityType : {
-      required : "Entity Type is required"
+    entityType: {
+      required: "Entity Type is required"
     },
-    defaultAddress : {
-      required : "Default Address is required"
+    defaultAddress: {
+      required: "Default Address is required"
     },
-    workState : {
-      required : "Work State is required"
+    workState: {
+      required: "Work State is required"
     },
-    deafutltAccount : {
-      required : "Default Account is required"
+    deafutltAccount: {
+      required: "Default Account is required"
     },
-    payeename : {
+    payeename: {
       required: "Payee Name is required",
       maxLength: {
         value: NAME_MAX_LENGTH,
@@ -909,35 +917,35 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    accountNumber :{
+    accountNumber: {
       required: "Account Number is required",
-      maxLength : {
-        value : ACCOUNT_NUMBER_MAX_LENGTH,
-        message : `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`
+      maxLength: {
+        value: ACCOUNT_NUMBER_MAX_LENGTH,
+        message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`
       }
     },
-    routingNumber : {
-      required : "Routing Number is required",
-      maxLength : {
-        value : ROUTING_NUMBER_MAX_LENGTH,
-        message : `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} characters`
+    routingNumber: {
+      required: "Routing Number is required",
+      maxLength: {
+        value: ROUTING_NUMBER_MAX_LENGTH,
+        message: `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} characters`
       }
     },
-    taxID : {
-      pattern : {
-        value : TAX_ID_PATTERN,
-        message : "Required Tax ID pattern (xx-xxxxxxx)"
+    taxID: {
+      pattern: {
+        value: TAX_ID_PATTERN,
+        message: "Required Tax ID pattern (xx-xxxxxxx)"
       }
     },
-    email : {
-      required : "Email is required",
-      pattern : {
-        value : EMAIL_PATTERN,
-        message : "Please enter a valid email"
+    email: {
+      required: "Email is required",
+      pattern: {
+        value: EMAIL_PATTERN,
+        message: "Please enter a valid email"
       }
     },
-    pettyCashAccount : {
-      required : "Petty Cash Account is required",
+    pettyCashAccount: {
+      required: "Petty Cash Account is required",
     },
     contactname: {
       required: "Contact Name is required",
@@ -950,11 +958,11 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    contactNumber : {
-      required : "Contact Number is required",
-      pattern : {
-        value : PHONE_NUMBER_PATTERN,
-        message : "Invalid Phone"
+    contactNumber: {
+      required: "Contact Number is required",
+      pattern: {
+        value: PHONE_NUMBER_PATTERN,
+        message: "Invalid Phone"
       }
     }
   }
