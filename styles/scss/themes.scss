@@ -285,6 +285,11 @@ footer {
 .form-lable-font {
   font-size: 16px;
 }
+.form-label{
+  span.required{
+    color: #ff0000;
+  }
+}
 input::placeholder {
   color: #c9c9c9 !important;
 }
