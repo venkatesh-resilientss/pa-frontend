@@ -14,15 +14,11 @@ import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadTaxCodesPopup,
-  openDeleteTaxCodesPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -42,10 +38,10 @@ const AllTaxCodesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const taxcodesService = new TaxCodesService();
 
@@ -113,7 +109,7 @@ const AllTaxCodesTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -123,7 +119,7 @@ const AllTaxCodesTable = () => {
               >
                 <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -134,6 +130,7 @@ const AllTaxCodesTable = () => {
       headerName: "Tax Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -142,6 +139,7 @@ const AllTaxCodesTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -151,6 +149,7 @@ const AllTaxCodesTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -163,6 +162,7 @@ const AllTaxCodesTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -172,6 +172,7 @@ const AllTaxCodesTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -193,7 +194,7 @@ const AllTaxCodesTable = () => {
 
   return (
     <div>
-      <div className="section">
+      <div className="section ">
         <Card
           className="mt-2"
           style={{
@@ -203,13 +204,8 @@ const AllTaxCodesTable = () => {
         >
           <CardBody>
             <div className="d-flex justify-content-between">
-              <div className="d-flex align-items-center ">
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All Tax Codes
-                </div>
+              <div className="d-flex align-items-center configuration-table">
+                <div className="title">All Tax Codes</div>
               </div>
 
               <div

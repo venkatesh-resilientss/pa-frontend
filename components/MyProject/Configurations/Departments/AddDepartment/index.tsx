@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { DepartmentsService } from "services";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function AddDepartment() {
   const router = useRouter();
-
+  const departmentValidationRules = formValidationRules.department;
   const departmentService = new DepartmentsService();
 
   const {
@@ -35,23 +35,13 @@ function AddDepartment() {
         toast.error(error?.error);
       });
   };
-
+  
   return (
-    <div>
-      <div
-        className="text-black mt-4"
-        style={{ fontSize: "16px", fontWeight: "600" }}
-      >
-        All Departments
-      </div>
+    <div className="mt-4 configuration-add">
+      <p className="title-head">All Departments</p>
 
       <div className="d-flex justify-content-between">
-        <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
-        >
-          Add New Department
-        </div>
+        <div className="title">Add New Department</div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
@@ -89,10 +79,12 @@ function AddDepartment() {
       >
         <Col xl="4">
           <div className="mb-1 mt-1">
-            <Label className="form-lable-font">Department Name</Label>
+            <Label className="form-lable-font">
+              Department Name<span className="required">*</span>
+            </Label>
             <Controller
               name="departmentname"
-              rules={{ required: "Department Name is required" }}
+              rules={departmentValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -113,10 +105,12 @@ function AddDepartment() {
 
         <Col xl="4">
           <div className="mb-1 mt-1">
-            <Label className="form-lable-font">Department Code</Label>
+            <Label className="form-lable-font">
+              Department Code<span className="required">*</span>
+            </Label>
             <Controller
               name="departmentcode"
-              rules={{ required: "Department Code is required" }}
+              rules={departmentValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -143,8 +137,8 @@ function AddDepartment() {
             <Label className="form-lable-font">Description</Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
               control={control}
+              rules={departmentValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{

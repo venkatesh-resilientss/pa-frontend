@@ -9,7 +9,7 @@ import {
 import BasicDetailsForm from "./BasicDetailsForm";
 import MailingAddressForm from "./MailingAddress";
 import { useForm } from "react-hook-form";
-import { BankService, AddressService } from "services";
+import { BankService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import PhysicalAddressForm from "./PhysicalAddress";
@@ -21,8 +21,11 @@ function BankAccordion() {
   const { reset } = useForm();
 
   const [open, setOpen] = useState("");
+  const [eft, setEft] = useState(false);
+  const [positivePay, setPositivePay] = useState(false);
+  const [ACHExport, setACHExport] = useState(false);
   const bankService = new BankService();
-  const addressService = new AddressService();
+  // const addressService = new AddressService();
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -33,101 +36,99 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
-    const pysicalAddressPaylaod = {
-      cityName: data.physicalAddressCity,
-      countryID: data.physicalAddressState.country.ID,
-      line1: data.physicalAddress1,
-      line2: data.physicalAddress2,
-      stateID: data.physicalAddressState.value,
-      zipcode: parseInt(data.physicalAddressPostalCode),
+    const bankPayload: any = {
+      Name: data.bankName,
+      Code: data.bankCode,
+      AccountNumber: parseInt(data.accountNumber),
+      RoutingNumber: parseInt(data.routingNumber),
+      Description: data.description,
+      Fax: data.mailingFax,
+      BranchNumber: parseInt(data.branchNumber),
+      ClientId: 14,
+      projectId: 1,
+      PhysicalAddress: {
+        Line1: data.physicalAddress1,
+        Line2: data.physicalAddress2,
+        CityName: data.physicalAddressCity,
+        StateId: parseInt(data.physicalAddressState.value),
+        CountryId: parseInt(data.physicalAddressState.country.ID),
+        Zipcode: parseInt(data.physicalAddressPostalCode),
+      },
+      MailingAddress: {
+        Line1: data.mailingAddress1,
+        Line2: data.mailingAddress2,
+        CityName: data.mailingAddressCity,
+        StateId: parseInt(data.mailingAddressState.value),
+        CountryId: parseInt(data.mailingAddressState.country.ID),
+        Zipcode: parseInt(data.mailingAddressPostalCode),
+        ContactPhone: data.mailingPhoneNumber,
+        ContactPhoneCode: "+1",
+        ContactEmailID: data.mailingEmail,
+      },
+      Meta: {
+        BankAch: [],
+        BankConfig: {
+          CheckCopies: parseInt(data.checkCopies),
+          WireTransferRangeStart: parseInt(data.wireTransaferRangeStart),
+          WireTransferRangeEnd: parseInt(data.wireTransaferRangeEnd),
+          WireTransferCopies: parseInt(data.wireTransferCopies),
+          CheckRangeStart: parseInt(data.checkRangeStart),
+          CheckRangeEnd: parseInt(data.checkRangeEnd),
+          EftRangeStart: parseInt(data.ACHeftRangeStart),
+          EftRangeEnd: parseInt(data.ACHeftRangeEnd),
+          EftCopies: parseInt(data.ACHeftCopies),
+          // PositivePayEftRangeStart: parseInt(data.PPeftRangeStart),
+          // PositivePayEftRangeEnd: parseInt(data.PPeftRangeEnd),
+          // PositivePayEftCopies: parseInt(data.PPeftCopies),
+        },
+      },
+      SeriesId: parseInt(data.series.value),
+      SetId: parseInt(data.set.value),
+      LocationId: parseInt(data.location.value),
+      CurrencyId: parseInt(data.currency.value),
+      CountryId: parseInt(data.physicalAddressState.country.ID),
+      // PrimaryContactId: 1,
+      // SecondaryContactId: 1,
+      DefaultAmountCash: parseFloat(data.defaultAccountCash),
+      DefaultAccountClearing: parseFloat(data.defaultAccountClearing),
+      DefaultAccountDiscount: parseFloat(data.defaultAccountDiscount),
+      DefaultAccountDeposit: parseInt(data.defaultAccountDeposit),
     };
-    const mailingAddress = {
-      cityName: data.physicalAddressCity,
-      countryID: data.mailingAddressState.country.ID,
-      line1: data.mailingAddress1,
-      line2: data.mailingAddress2,
-      stateID: data.mailingAddressState.value,
-      zipcode: parseInt(data.mailingAddressPostalCode),
-    };
+    if (eft) {
+      if (ACHExport) {
+        const achExportPayload = {
+          Host: data.ACHhost,
+          Username: data.ACHuserName,
+          Password: data.ACHpassword,
+          InboundPath: data.ACHinboundPath,
+          OutboundPath: data.ACHoutboundPath,
+          DataFormat: data.ACHdataFormat.value,
+          Certificate: data.ACHcertificate,
+          // Port: 1234,
+          Type: "ACH",
+        };
+        bankPayload.Meta.BankAch.push(achExportPayload);
+      }
+      if (positivePay) {
+        const positivepayPayload = {
+          Host: data.PPhost,
+          Username: data.PPuserName,
+          Password: data.PPpassword,
+          // "InboundPath": " PositivePay your_inbound_path_here",
+          OutboundPath: data.PPoutboundPath,
+          DataFormat: data.PPdataFormat.value,
+          Certificate: data.PPcertificate,
+          Port: data.PPport,
+          Type: "PositivePay",
+        };
+        bankPayload.Meta.BankAch.push(positivepayPayload);
+      }
+    }
 
-    addressService
-      .createAddress(pysicalAddressPaylaod) //creating pysical address
-      .then((pysicalAddressResponse) => {
-        addressService
-          .createAddress(mailingAddress) //creating mailing address
-          .then((mailingAddressResponse) => {
-            const bankPayload = {
-              accountNumber: parseInt(data.accountNumber),
-              code: data.bankCode,
-              countryID: data.physicalAddressState.country.ID,
-              currencyID: data.currency.value,
-              description: data.description,
-              fax: data.mailingFax,
-              mailingAddressID: mailingAddressResponse.ID,
-              name: data.bankName,
-              physicalAddressID: pysicalAddressResponse.ID,
-              // "primaryContactID": 0,
-              routingNumber: parseInt(data.routingNumber),
-              SetID: parseInt(data.set.value),
-              LocationID: parseInt(data.location.value),
-              SeriesID: parseInt(data.series.value),
-              DefaultAmountCash: parseInt(data.defaultAccountCash),
-              DefaultAccountClearing: parseInt(data.defaultAccountClearing),
-              DefaultAccountDeposit: parseInt(data.defaultAccountDeposit),
-              DefaultAccountDiscount: parseInt(data.defaultAccountDiscount),
-              // "secondaryContactID": 0,
-            };
-            bankService
-              .createBank(bankPayload)
-              .then((bankRes) => {
-                toast.success("Bank created successfully");
-                const bankConfigPayload = {
-                  bankID: parseInt(bankRes.ID),
-                  checkCopies: parseInt(data.checkCopies),
-                  checkRangeEnd: parseInt(data.checkRangeEnd),
-                  checkRangeStart: parseInt(data.checkRangeStart),
-                  eftCopies: parseInt(data.eftCopies),
-                  eftRangeEnd: parseInt(data.eftRangeEnd),
-                  eftRangeStart: parseInt(data.eftRangeStart),
-                  wireTransferRangeEnd: parseInt(data.wireTransaferRangeEnd),
-                  wireTransferRangeStart: parseInt(
-                    data.wireTransaferRangeStart
-                  ),
-                  wireTransferCopies: parseInt(data.wireTransferCopies),
-                };
-                bankService
-                  .createBankConfig(bankConfigPayload)
-                  .then(() => {
-                    const bankAchPayload = {
-                      bankID: parseInt(bankRes.ID),
-                      certificate: data.certificate,
-                      dataFormat: data.dataFormat,
-                      host: data.host,
-                      inboundPath: data.inboundPath,
-                      outboundPath: data.outboundPath,
-                      password: data.password,
-                      username: data.userName,
-                    };
-                    bankService
-                      .createBankAch(bankAchPayload)
-                      .then(() => {
-                        router.back();
-                      })
-                      .catch((error) => {
-                        toast.error(error?.error);
-                      });
-                  })
-                  .catch((error) => {
-                    toast.error(error?.error);
-                  });
-              })
-              .catch((error) => {
-                toast.error(error?.error);
-              });
-          })
-          .catch((error) => {
-            toast.error(error?.error);
-          });
+    bankService
+      .createBank(bankPayload)
+      .then(() => {
+        toast.success("Bank created successfully");
       })
       .catch((error) => {
         toast.error(error?.error);
@@ -230,6 +231,14 @@ function BankAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                {...{
+                  eft,
+                  setEft,
+                  positivePay,
+                  setPositivePay,
+                  ACHExport,
+                  setACHExport,
+                }}
               />
             </AccordionBody>
           </AccordionItem>

@@ -7,7 +7,7 @@
   --ag-font-size: 1rem;
   --ag-border-radius: 5px;
   --ag-font-size: 14px;
-  --ag-font-family: 'Segoe UI';
+  --ag-font-family: "Segoe UI";
   width: 100%;
   .ag-header {
     box-shadow: 1px 1px 0px 1px rgb(233 233 233 / 60%);
@@ -28,9 +28,11 @@
     color: #030229;
     font-weight: 400;
   }
-    .ag-cell {
-      --ag-internal-padded-row-height: fit-content;
-      display: flex;
-      align-items: center;
-    }
+  .ag-cell {
+    --ag-internal-padded-row-height: fit-content;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 400;
+  }
 }

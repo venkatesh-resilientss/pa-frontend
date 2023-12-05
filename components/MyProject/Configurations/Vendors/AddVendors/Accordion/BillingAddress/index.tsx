@@ -3,13 +3,15 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import { StatesService } from "services";
 import useSWR from "swr";
+import { selectStyles } from "constants/common";
+import { formValidationRules } from "constants/common";
 function BillingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
-
+  const addressValidationRules = formValidationRules.address;
   const stateSelectOptions = statesData?.data.map((b) => {
     return {
       value: b.ID,
@@ -33,9 +35,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="billingAddress1"
-              rules={{
-                required: "Contact Address Line 1 is required",
-              }}
+              rules={addressValidationRules.line1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -63,9 +63,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="billingAddress2"
-              rules={{
-                required: "Contact Address Line 2 is required",
-              }}
+              rules={addressValidationRules.line2}
               control={control}
               render={({ field }) => (
                 <Input
@@ -83,34 +81,6 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
-            {" "}
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              State{" "}
-            </Label>
-            <Controller
-              name="billingAddressState"
-              rules={{
-                required: "State is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Select
-                  options={stateSelectOptions}
-                  placeholder="Enter State"
-                  {...field}
-                />
-              )}
-            />
-            {errors.billingAddressState && (
-              <span className="text-danger">
-                {errors.billingAddressState.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
 
           <Col xl="4">
             <Label
@@ -121,9 +91,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="billingAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
+              rules={addressValidationRules.zipCode}
               control={control}
               render={({ field }) => (
                 <Input
@@ -142,6 +110,62 @@ function BillingAddressForm({ onSubmit, control, errors }) {
           </Col>
 
           <Col xl="4">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Country{" "}
+            </Label>
+            <Controller
+              name="billingAddressCountry"
+              rules={addressValidationRules.country}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={[]}
+                  placeholder="Select Country"
+                  {...field}
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.billingAddressCountry && (
+              <span style={{ color: "red" }}>
+                {errors.billingAddressCountry.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              State{" "}
+            </Label>
+            <Controller
+              name="billingAddressState"
+              rules={addressValidationRules.state}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={stateSelectOptions}
+                  placeholder="Select State"
+                  {...field}
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.billingAddressState && (
+              <span style={{ color: "red" }}>
+                {errors.billingAddressState.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -150,9 +174,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="billingAddressCity"
-              rules={{
-                required: "City is required",
-              }}
+              rules={addressValidationRules.city}
               control={control}
               render={({ field }) => (
                 <Input

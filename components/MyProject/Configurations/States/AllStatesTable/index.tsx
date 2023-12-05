@@ -14,15 +14,11 @@ import { StatesService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadStatesPopup,
-  openDeleteStatePopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadStatesPopup } from "redux/slices/mySlices/configurations";
 import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
@@ -44,16 +40,16 @@ const AllStatesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const statesService = new StatesService();
 
   const { data: statesData, isLoading: stateLoading } = useSWR(
     ["LIST_STATES", searchText],
-    () => statesService.getStates()
+    () => statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const dataSource = statesData?.data;
@@ -119,10 +115,10 @@ const AllStatesTable = () => {
                 />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={(e) => e.preventDefault()}
               >
                 <Action
@@ -133,7 +129,7 @@ const AllStatesTable = () => {
                   }}
                 />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -144,6 +140,7 @@ const AllStatesTable = () => {
       headerName: "State Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -152,6 +149,7 @@ const AllStatesTable = () => {
       headerName: "State Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -160,6 +158,7 @@ const AllStatesTable = () => {
       headerName: "Country",
       field: "Country.Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -168,6 +167,7 @@ const AllStatesTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -177,6 +177,7 @@ const AllStatesTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -189,6 +190,7 @@ const AllStatesTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -198,6 +200,7 @@ const AllStatesTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -226,14 +229,9 @@ const AllStatesTable = () => {
           }}
         >
           <CardBody>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All States
-                </div>
+                <div className="m-2 title">All States</div>
               </div>
 
               <div

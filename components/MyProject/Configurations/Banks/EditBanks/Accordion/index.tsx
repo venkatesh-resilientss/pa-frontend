@@ -25,6 +25,11 @@ const addressService = new AddressService();
 
 function BankAccordion() {
   const router = useRouter();
+  const [eft, setEft] = useState(false)
+  const [positivePay, setPositivePay] = useState(false)
+  const [ACHExport, setACHExport] = useState(false);
+  const [wireTransfer, setWireTransfer] = useState(false);
+  const [check, setCheck] = useState(false)
 
   const { reset } = useForm();
   const BankId = router.query.id;
@@ -205,8 +210,8 @@ function BankAccordion() {
         value: bankDetails.Currency.ID,
       };
       setValue("currency", currency);
-      setValue("contactName", bankDetails?.contactName);
-      setValue("branchNumber", bankDetails?.branchNumber);
+      setValue("contactName", bankDetails?.ContactName);
+      setValue("branchNumber", bankDetails?.BranchNumber);
 
       //physical address
       setValue("physicalAddress1", bankDetails?.PhysicalAddress?.Line1);
@@ -254,6 +259,15 @@ function BankAccordion() {
       setValue("checkCopies", bankConfigDetails?.CheckCopies);
       setValue("checkRangeStart", bankConfigDetails?.CheckRangeStart);
       setValue("checkRangeEnd", bankConfigDetails?.CheckRangeEnd);
+      if (bankConfigDetails?.CheckRangeStart) {
+        setCheck(true)
+      }
+      if (bankConfigDetails?.EftRangeStart) {
+        setEft(true)
+      }
+      if (bankConfigDetails?.WireTransferRangeStart) {
+        setWireTransfer(true)
+      }
 
       setValue("eftRangeStart", bankConfigDetails?.EftRangeStart);
       setValue("eftRangeEnd", bankConfigDetails?.EftRangeEnd);
@@ -366,6 +380,7 @@ function BankAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                {...{ eft, setEft, positivePay, setPositivePay, ACHExport, setACHExport, check, setCheck, wireTransfer, setWireTransfer }}
               />
             </AccordionBody>
           </AccordionItem>

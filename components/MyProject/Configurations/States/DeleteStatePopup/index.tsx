@@ -13,7 +13,7 @@ const DeleteStatePopup = () => {
   const stateService = new StatesService();
 
   const { mutate: stateMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(

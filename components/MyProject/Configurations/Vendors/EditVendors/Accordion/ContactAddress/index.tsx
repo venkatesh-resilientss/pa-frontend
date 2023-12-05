@@ -1,3 +1,4 @@
+import { selectStyles } from "constants/common";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
@@ -8,7 +9,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {
@@ -103,6 +104,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   options={stateSelectOptions}
                   placeholder="Enter State"
                   {...field}
+                  styles={selectStyles}
                 />
               )}
             />

@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { TaxCodesService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function EditTaxCode() {
   const router = useRouter();
   const { id } = router.query;
-
+  const taxCodeValidationRules = formValidationRules.taxCodes;
   const taxCodeService = new TaxCodesService();
   const fetchTaxCodeDetails = (id) => taxCodeService.taxCodeDetails(id);
 
@@ -120,7 +120,7 @@ function EditTaxCode() {
             </Label>
             <Controller
               name="taxcode"
-              rules={{ required: "Tax Code  is required" }}
+              rules={taxCodeValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -147,7 +147,7 @@ function EditTaxCode() {
             <Controller
               name="description"
               control={control}
-              rules={{ required: "Description  is required" }}
+              rules={taxCodeValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{

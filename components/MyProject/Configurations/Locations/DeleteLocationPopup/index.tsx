@@ -13,7 +13,7 @@ const DeleteLocationPopup = () => {
   const locationService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationService.getLocations()
+    locationService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(

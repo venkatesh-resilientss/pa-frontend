@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker"; // Import the CSS
 import moment from "moment";
-
+import { formValidationRules } from "@/constants/common";
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  const periodValidationRules = formValidationRules.periods;
   const router = useRouter();
   const periodsService = new PeriodsService();
   const handleStartDateChange = (date) => {
@@ -28,7 +28,17 @@ function AddPeriod() {
     formState: { errors },
   } = useForm();
 
+  const compareDates = (startDate : string,endDate : string)=>{
+    const isAfter = moment(endDate).isAfter(startDate);
+    return isAfter;
+  }
+
   const onSubmit = (data) => {
+    if(startDate && endDate && !compareDates(startDate,endDate)){
+      toast.warning('End Date must be greater than Start Date');
+      return;
+    }
+
     const backendFormat = {
       name: data.periodname,
       description: data.description,
@@ -100,40 +110,18 @@ function AddPeriod() {
             className=" mt-2 d-flex flex-column"
             onSubmit={handleSubmit(onSubmit)}
           >
-            <Col xl="4">
-              <div className="mb-1">
-                <Label className="form-lable-font"> Period Name</Label>
-                <Controller
-                  name="periodname"
-                  rules={{ required: "Period Name  is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Period name"
-                      invalid={errors.periodname && true}
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.periodname && (
-                  <span className="text-danger">
-                    {errors.periodname.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
             <Col xl="4" className="d-flex flex-column">
-              <Label className="form-lable-font">Start Date</Label>
+              <Label className="form-lable-font">Start Date<span className="required" >*</span></Label>
               <Controller
                 name="startDate"
                 control={control}
+                // rules={periodValidationRules.startDate}
                 render={({ field }) => (
                   <DatePicker
                     {...field}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
                     id="startDatePicker" // Add the id here
-                    className="w-100 custom-datepicker "
+                    className="w-100 form-control"
                     placeholderText="Select Start date"
                     selected={startDate}
                     onChange={handleStartDateChange}
@@ -141,6 +129,11 @@ function AddPeriod() {
                   />
                 )}
               />
+              {/* {errors.startDate && (
+                  <span style={{ color: "red" }}>
+                    {errors.startDate.message as React.ReactNode}
+                  </span>
+                )} */}
             </Col>
 
             <Col xl="4" className="d-flex flex-column">
@@ -151,8 +144,9 @@ function AddPeriod() {
                 render={({ field }) => (
                   <DatePicker
                     {...field}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
                     id="endDatePicker" // Add the id here
-                    className="w-100 custom-datepicker "
+                    className="w-100 form-control "
                     placeholderText="Select End date"
                     selected={endDate}
                     onChange={handleEndDateChange}
@@ -168,7 +162,7 @@ function AddPeriod() {
                 <Controller
                   name="description"
                   control={control}
-                  rules={{ required: "Description  is required" }}
+                  rules={periodValidationRules.description}
                   render={({ field }) => (
                     <Input
                       type="textarea"

@@ -12,17 +12,13 @@ import { useDispatch } from "react-redux";
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { hasPermission } from "commonFunctions/functions";
 import { useRouter } from "next/router";
 import { LocationsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import {
-  openBulkUploadLocationsPopup,
-  openDeleteLocationPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -43,16 +39,17 @@ const AllLocationsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const locationsService = new LocationsService();
 
   const { data: locationsData, isLoading: locationsLoading } = useSWR(
     ["LIST_LOCATIONS", searchText],
-    () => locationsService.getLocations()
+    () =>
+      locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
   const dataSource = locationsData?.result;
 
@@ -111,7 +108,7 @@ const AllLocationsTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -119,7 +116,7 @@ const AllLocationsTable = () => {
               >
                 <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -130,6 +127,7 @@ const AllLocationsTable = () => {
       headerName: "Location Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -138,6 +136,7 @@ const AllLocationsTable = () => {
       headerName: "Location Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -146,6 +145,7 @@ const AllLocationsTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -154,6 +154,7 @@ const AllLocationsTable = () => {
       headerName: "Created By",
       field: "CreatedBy",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -167,6 +168,7 @@ const AllLocationsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -176,6 +178,7 @@ const AllLocationsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -202,13 +205,8 @@ const AllLocationsTable = () => {
         >
           <CardBody>
             <div className="d-flex justify-content-between">
-              <div>
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All Locations
-                </div>
+              <div className="configuration-table">
+                <div className="m-2 title">All Locations</div>
               </div>
 
               <div

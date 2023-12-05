@@ -13,7 +13,7 @@ const DeleteCurrencyPopup = () => {
   const currencyService = new CurrencyService();
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(

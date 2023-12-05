@@ -13,18 +13,18 @@ import {
 } from "services";
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
+import { formValidationRules } from "@/constants/common";
 
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
 
   const router = useRouter();
-  const [uploadExcel, setUploadExcel]: any = useState({});
 
   const currencyService = new CurrencyService();
   const { id } = router.query;
 
   const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
@@ -34,6 +34,8 @@ function EditBudget() {
     };
   });
 
+  const budgetValidationRules = formValidationRules.budgets;
+
   const loadCurrencyOptions = (values, callBack) => {
     values;
     callBack(currenciesSelectFormat);
@@ -42,7 +44,7 @@ function EditBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -59,7 +61,7 @@ function EditBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -75,7 +77,9 @@ function EditBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -154,7 +158,7 @@ function EditBudget() {
       LocationID: data?.location?.value,
       BankID: 0,
       Amount: 0.0,
-      budgetFile: uploadExcel.name,
+      budgetFile: "",
       IsActive: activeStatus,
     };
 
@@ -227,12 +231,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Budget Name
+            Budget Name <span className="required">*</span>
           </Label>
           <Controller
             name="name"
             control={control}
-            rules={{ required: "Budget Name is required" }}
+            rules={budgetValidationRules.name}
             render={({ field }) => (
               <Input
                 placeholder="Budget Name"
@@ -253,12 +257,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Budget Code
+            Budget Code <span className="required">*</span>
           </Label>
           <Controller
             name="code"
             control={control}
-            rules={{ required: "Budget Code is required" }}
+            rules={budgetValidationRules.code}
             render={({ field }) => (
               <Input
                 placeholder="Budget Code"
@@ -281,12 +285,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Company
+            Company <span className="required">*</span>
           </Label>
           <Controller
             name="company"
             control={control}
-            rules={{ required: "Company is required" }}
+            rules={budgetValidationRules.company}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -312,11 +316,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Production
+            Production <span className="required">*</span>
           </Label>
           <Controller
             name={"production"}
-            rules={{ required: "Production is required" }}
+            rules={budgetValidationRules.production}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -344,11 +348,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Currency
+            Currency <span className="required">*</span>
           </Label>
           <Controller
             name={"currency"}
-            rules={{ required: "Currency is required" }}
+            rules={budgetValidationRules.currency}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -375,11 +379,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Series
+            Series <span className="required">*</span>
           </Label>
           <Controller
             name={"series"}
-            rules={{ required: "Series is required" }}
+            rules={budgetValidationRules.series}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -407,12 +411,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Location
+            Location <span className="required">*</span>
           </Label>
           <Controller
             name={"location"}
             control={control}
-            rules={{ required: "Location is required" }}
+            rules={budgetValidationRules.location}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -438,11 +442,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Set
+            Set <span className="required">*</span>
           </Label>
           <Controller
             name={"set"}
-            rules={{ required: "Set is required" }}
+            rules={budgetValidationRules.set}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -467,15 +471,28 @@ function EditBudget() {
 
       <Row className="mt-2">
         <Col xl="3">
-          <Label className="form-lable-font">Upload Budget File</Label>
-          <div className="d-flex flex-column gap-2 w-100">
-            <input
-              type="file"
-              accept=".xls, xlsx"
-              className="remove-value"
-              onChange={(e: any) => setUploadExcel(e.target.files[0])}
-            />
-          </div>
+          <Label className="form-lable-font">
+            Upload Budget File <span className="required">*</span>
+          </Label>
+          <Controller
+            name="budgetfile"
+            control={control}
+            rules={budgetValidationRules.budgetfile}
+            render={({ field }) => (
+              <Input
+                type="file"
+                style={{ fontSize: "12px", fontWeight: "400" }}
+                invalid={errors.budgetfile && true}
+                {...field}
+                accept=".txt"
+              />
+            )}
+          />
+          {errors.budgetfile && (
+            <span style={{ color: "red" }}>
+              {errors.budgetfile.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Row>
 

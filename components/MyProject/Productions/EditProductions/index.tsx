@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { ProjectService, UsersService } from "services";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-
+import { formValidationRules } from "@/constants/common";
 function EditProductions() {
   const router = useRouter();
-
+  const productionRules = formValidationRules.productions;
   const { id } = router.query;
 
   const {
@@ -172,7 +172,6 @@ function EditProductions() {
             <Label style={{ color: "#030229" }}>Production Code</Label>
             <Controller
               name="productionCode"
-              rules={{ required: "Production Code is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -182,7 +181,7 @@ function EditProductions() {
                   id="address"
                   placeholder="Enter Production Code"
                   invalid={errors.productionCode && true}
-                  disabled={!editMode}
+                  disabled
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
@@ -201,7 +200,7 @@ function EditProductions() {
             <Label style={{ color: "#030229" }}>Production Name</Label>
             <Controller
               name="productionName"
-              rules={{ required: "Production Name is required" }}
+              rules={productionRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -372,7 +371,6 @@ function EditProductions() {
           <Label style={{ color: "#030229" }}>User</Label>
           <Controller
             name="user"
-            rules={{ required: "User is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect

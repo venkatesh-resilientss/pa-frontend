@@ -29,7 +29,7 @@ const DeleteDepartmentPopup = () => {
     try {
       await departmentsService.deleteDepartment(helperData);
       toast.success("Department Deleted Successfully");
-
+      dispatch(closeDeleteDepartmentPopup("delete"))
       mutate(departmentMutate());
     } catch (error) {
       console.error("Error deleting Department:", error);

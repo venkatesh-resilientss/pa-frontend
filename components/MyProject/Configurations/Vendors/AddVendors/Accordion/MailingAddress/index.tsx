@@ -3,12 +3,13 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import { StatesService } from "services";
 import useSWR from "swr";
+import { selectStyles } from "constants/common";
 
 function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {
@@ -103,6 +104,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                   options={stateSelectOptions}
                   placeholder="Enter State"
                   {...field}
+                  styles={selectStyles}
                 />
               )}
             />

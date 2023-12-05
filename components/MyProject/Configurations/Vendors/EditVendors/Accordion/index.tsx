@@ -45,15 +45,29 @@ function VendorAccordion() {
     () => fetchVendorData(id)
   );
 
+  const paymentTypes = [
+    { value: "cheque", label: "Cheque" },
+    { value: "wireTransfer", label: "Wire Transfer" },
+    { value: "manualCheque", label: "Manual Cheque" },
+    { value: "eft", label: "EFT" },
+  ];
   const setBasicInformation = (data) => {
     data.Name && setValue("vendorName", data.Name);
     data.Code && setValue("vendorCode", data.Code);
-    data.PaymentType && setValue("paymentType", data.PaymentType); //
+
+    const paymentType = paymentTypes.find(type=> type.value === data.PaymentType);
+    data.PaymentType && setValue("paymentType", paymentType); //
+
     data.LegalName && setValue("legalName", data.LegalName);
     data.Email && setValue("vendorEmail", data.Email);
     data.EntityID && setValue("entityType", data.EntityID);
     data.DefaultAddress && setValue("defaultAddress", data.DefaultAddress);
-    data.State && setValue("workState", data.State); //
+    // data.State && setValue("workState", data.State); //
+    const basicInfoState = {
+      label : data.State?.Name,
+      value : data.State?.Id
+    }
+    setValue('workState',basicInfoState)
     // console.log({state : data.State});
     data.TaxID && setValue("taxId", data.TaxID);
     data.DefaultAccount && setValue("defaultAccount", data.DefaultAccount);
@@ -175,7 +189,7 @@ function VendorAccordion() {
                   // PettyCashCustodian
                   // LegalName
                   // Description
-                  WorkStateID: parseInt(data.workState?.value),
+                  State: parseInt(data.workState?.value),
                   EntityID: parseInt(data.entityType),
                   // TaxCodeID
                   // BankAchID
@@ -192,7 +206,7 @@ function VendorAccordion() {
                   .then(() => {
                     toast.success("Vendor updated successfully");
                     // reset();
-                    // router.back();
+                    router.back();
                   })
                   .catch((error) => {
                     toast.error(error?.error);
