@@ -1,17 +1,11 @@
-import ReactSelect from "react-select";
 import { Button, Col, Row ,Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import { SeriesService } from "services";
-import { checkTenant } from "constants/function";
 
 function AddAgent() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     try {
       // Your logic to save the form data
       toast.success("Agent added successfully");
@@ -25,8 +19,6 @@ function AddAgent() {
   const {
     control,
     handleSubmit,
-    register,
-    reset,
     formState: { errors },
   } = useForm();
   return (
@@ -154,7 +146,7 @@ function AddAgent() {
             <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Agent's Name<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Agent Name<span className="text-danger">*</span></Label>
                 <Controller
                   name="Agentsname"
                   rules={{ required: "Agent's Name is required" }}

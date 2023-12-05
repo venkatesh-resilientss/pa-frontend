@@ -1,44 +1,17 @@
 import {
   Card,
   CardBody,
-  Badge,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Form,
   Input,
   Button,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
-import CustomBadge from "components/Generic/CustomBadge";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
 import { useRouter } from "next/router";
-import { SeriesService } from "services";
-import moment from "moment";
-import useSWR from "swr";
-import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSeriesPopup,
-  openDeleteSeriesPopup,
-} from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
+import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import NoDataPage from "components/NoDataPage";
-import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
 import React from "react";
 
 const AllAgentsTable = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const ActionsButton = (props) => {

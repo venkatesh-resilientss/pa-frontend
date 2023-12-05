@@ -1,17 +1,9 @@
-import ReactSelect from "react-select";
 import { Button, Col,Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
-import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { SeriesService } from "services";
-
 function EditAgent() {
   const router = useRouter();
-
-  const { id } = router.query;
-
   const onSubmit = async () => {
     // Handle form submission logic here
     try {
@@ -26,10 +18,7 @@ function EditAgent() {
   const {
     handleSubmit,
     formState: { errors },
-    setError,
-    setValue,
     control,
-    reset,
   } = useForm();
   return (
     <>
@@ -156,7 +145,7 @@ function EditAgent() {
             <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Agent's Name<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Agent Name<span className="text-danger">*</span></Label>
                 <Controller
                   name="Agentsname"
                   rules={{ required: "Agent's Name is required" }}
