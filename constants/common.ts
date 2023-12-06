@@ -33,6 +33,124 @@ export const selectStyles = {
     };
   },
 }
+
+export const roleCreationData1 = { 
+  "Transaction Management": {
+  state: false,
+  value: "transaction_management",
+  permissions: {
+    "Create Purchase Order": { state: false, value: "create_purchase_order" },
+    "Edit Purchase Order": { state: false, value: "edit_purchase_order" },
+    "View Purchase Order List": {
+      state: false,
+      value: "view_purchase_order_list",
+    },
+    "Approve or Reject Purchase Order": {
+      state: false,
+      value: "approve_or_reject_purchase_order",
+    },
+    "Create Account Pay": { state: false, value: "create_account_pay" },
+    "Edit Account Pay": { state: false, value: "edit_account_pay" },
+    "View Account Pay List": { state: false, value: "view_account_pay_list" },
+    "Approve or Reject Account Payable": {
+      state: false,
+      value: "approve_or_reject_account_pay",
+    },
+    "Create Journal Entry": { state: false, value: "create_journal_entry" },
+    "Edit Journal Entry": { state: false, value: "edit_journal_entry" },
+    "View Journal Entry List": {
+      state: false,
+      value: "view_journal_entry_list",
+    },
+    "Create Petty Cash": { state: false, value: "create_petty_cash" },
+    "Edit Petty Cash": { state: false, value: "edit_petty_cash" },
+    "View Petty Cash List": { state: false, value: "view_petty_cash_list" },
+    "Approve or Reject Petty Cash": {
+      state: false,
+      value: "approve_or_reject_petty_cash",
+    },
+    "Create Payroll": { state: false, value: "create_payroll" },
+    "Edit Payroll": { state: false, value: "edit_payroll" },
+    "View Payroll List": { state: false, value: "view_payroll_list" },
+    "Approve or Reject Payroll": {
+      state: false,
+      value: "approve_or_reject_payroll",
+    },
+  },
+}}
+export const roleCreationData2 = { 
+  "Payments Management": {
+  state: false,
+  value: "payments_management",
+  permissions: {
+    "View All Payments": { state: false, value: "view_all_payments" },
+    "Check Signature Access": {
+      state: false,
+      value: "check_signature_access",
+    },
+    "Check Payment Processing": {
+      state: false,
+      value: "check_payment_processing",
+    },
+    "EFT Payment Processing": {
+      state: false,
+      value: "eft_payment_processing",
+    },
+    "Wire Payment Processing": {
+      state: false,
+      value: "wire_payment_processing",
+    },
+    "Manual Check Processing": {
+      state: false,
+      value: "manual_check_processing",
+    },
+    "Approve or Reject Payment": {
+      state: false,
+      value: "approve_or_reject_payment",
+    },
+  },
+},
+"Reports Management": {
+  state: false,
+  value: "reports_management",
+  permissions: {
+    "Trail Balance": { state: false, value: "trail_balance" },
+    "General Ledger Reporting": {
+      state: false,
+      value: "general_ledger_reporting",
+    },
+    "Cost Report": { state: false, value: "cost_report" },
+    "Purchase Order Reporting": {
+      state: false,
+      value: "purchase_order_reporting",
+    },
+    "Check Register": { state: false, value: "check_register" },
+    "Vendor Reporting": { state: false, value: "vendor_reporting" },
+    "Vendor Listing": { state: false, value: "vendor_listing" },
+    "Chart of Accounts": { state: false, value: "chart_of_accounts" },
+    "Asset Report": { state: false, value: "asset_report" },
+    "Audit Report by Transaction": {
+      state: false,
+      value: "audit_report_by_transaction",
+    },
+    "Audit Report by Account": {
+      state: false,
+      value: "audit_report_by_account",
+    },
+    "Posting Report by Transaction": {
+      state: false,
+      value: "posting_report_by_transaction",
+    },
+    "Posting Report by Account": {
+      state: false,
+      value: "posting_report_by_account",
+    },
+    "Bank Reconciliation Report": {
+      state: false,
+      value: "bank_reconciliation_report",
+    },
+  },
+},}
 export const roleCreationData = {
   "Client Management": {
     state: false,
@@ -40,6 +158,8 @@ export const roleCreationData = {
     permissions: {
       "Create Client": { state: false, value: "create_client" },
       "Edit Client": { state: false, value: "edit_client" },
+      "View All Clients": { state: false, value: "view_all_clients" },
+      "Document Signature": { state: false, value: "document_signature" },
       "Deactivate Client": { state: false, value: "deactivate_client" },
     },
   },
@@ -48,8 +168,10 @@ export const roleCreationData = {
     state: false,
     value: "production_management",
     permissions: {
+      "Approve Production": { state: false, value: "approve_production" },
       "Create Production": { state: false, value: "create_production" },
       "Edit Production": { state: false, value: "edit_production" },
+      "View All Productions": { state: false, value: "view_all_productions" },
       "Deactivate Production": { state: false, value: "deactivate_production" },
     },
   },
@@ -58,7 +180,8 @@ export const roleCreationData = {
     value: "configuration_management",
     permissions: {
       "Create Configuration": { state: false, value: "create_configuration" },
-      "Edit Configuration": { state: false, value: "edit_configuration" },
+      "Edit Configuration": { state: false, value: "edit_configuration" },  
+      "View All Configurations": { state: false, value: "view_all_configurations" },
       "Deactivate Configuration": {
         state: false,
         value: "deactivate_configuration",
@@ -72,126 +195,17 @@ export const roleCreationData = {
       "Create User": { state: false, value: "create_user" },
       "Edit User": { state: false, value: "edit_user" },
       "Deactivate User": { state: false, value: "deactivate_user" },
+      "View All Users": { state: false, value: "view_all_users" },
+
       "Create Role": { state: false, value: "create_role" },
       "Edit Role": { state: false, value: "edit_role" },
+      "View All Roles": { state: false, value: "view_all_Roles" },
+
       "Deactivate Role": { state: false, value: "deactivate_role" },
     },
   },
-  "Transaction Management": {
-    state: false,
-    value: "transaction_management",
-    permissions: {
-      "Create Purchase Order": { state: false, value: "create_purchase_order" },
-      "Edit Purchase Order": { state: false, value: "edit_purchase_order" },
-      "View Purchase Order List": {
-        state: false,
-        value: "view_purchase_order_list",
-      },
-      "Approve or Reject Purchase Order": {
-        state: false,
-        value: "approve_or_reject_purchase_order",
-      },
-      "Create Account Pay": { state: false, value: "create_account_pay" },
-      "Edit Account Pay": { state: false, value: "edit_account_pay" },
-      "View Account Pay List": { state: false, value: "view_account_pay_list" },
-      "Approve or Reject Account Pay": {
-        state: false,
-        value: "approve_or_reject_account_pay",
-      },
-      "Create Journal Entry": { state: false, value: "create_journal_entry" },
-      "Edit Journal Entry": { state: false, value: "edit_journal_entry" },
-      "View Journal Entry List": {
-        state: false,
-        value: "view_journal_entry_list",
-      },
-      "Create Petty Cash": { state: false, value: "create_petty_cash" },
-      "Edit Petty Cash": { state: false, value: "edit_petty_cash" },
-      "View Petty Cash List": { state: false, value: "view_petty_cash_list" },
-      "Approve or Reject Petty Cash": {
-        state: false,
-        value: "approve_or_reject_petty_cash",
-      },
-      "Create Payroll": { state: false, value: "create_payroll" },
-      "Edit Payroll": { state: false, value: "edit_payroll" },
-      "View Payroll List": { state: false, value: "view_payroll_list" },
-      "Approve or Reject Payroll": {
-        state: false,
-        value: "approve_or_reject_payroll",
-      },
-    },
-  },
-  "Payments Management": {
-    state: false,
-    value: "payments_management",
-    permissions: {
-      "View All Payments": { state: false, value: "view_all_payments" },
-      "Check Signature Access": {
-        state: false,
-        value: "check_signature_access",
-      },
-      "Check Payment Processing": {
-        state: false,
-        value: "check_payment_processing",
-      },
-      "EFT Payment Processing": {
-        state: false,
-        value: "eft_payment_processing",
-      },
-      "Wire Payment Processing": {
-        state: false,
-        value: "wire_payment_processing",
-      },
-      "Manual Check Processing": {
-        state: false,
-        value: "manual_check_processing",
-      },
-      "Approve or Reject Payment": {
-        state: false,
-        value: "approve_or_reject_payment",
-      },
-    },
-  },
-  "Reports Management": {
-    state: false,
-    value: "reports_management",
-    permissions: {
-      "Trail Balance": { state: false, value: "trail_balance" },
-      "General Ledger Reporting": {
-        state: false,
-        value: "general_ledger_reporting",
-      },
-      "Cost Report": { state: false, value: "cost_report" },
-      "Purchase Order Reporting": {
-        state: false,
-        value: "purchase_order_reporting",
-      },
-      "Check Register": { state: false, value: "check_register" },
-      "Vendor Reporting": { state: false, value: "vendor_reporting" },
-      "Vendor Listing": { state: false, value: "vendor_listing" },
-      "Chart of Accounts": { state: false, value: "chart_of_accounts" },
-      "Asset Report": { state: false, value: "asset_report" },
-      "Audit Report by Transaction": {
-        state: false,
-        value: "audit_report_by_transaction",
-      },
-      "Audit Report by Account": {
-        state: false,
-        value: "audit_report_by_account",
-      },
-      "Posting Report by Transaction": {
-        state: false,
-        value: "posting_report_by_transaction",
-      },
-      "Posting Report by Account": {
-        state: false,
-        value: "posting_report_by_account",
-      },
-      "Bank Reconciliation Report": {
-        state: false,
-        value: "bank_reconciliation_report",
-      },
-    },
-  },
+ 
+ 
 };
 export const sidebarRoutesMaster = [
   {
@@ -231,9 +245,7 @@ export const sidebarRoutesMaster = [
       {
         name: "Departments",
         path: "/departments",
-      },
-     
-      
+      },    
       {
         name: "States",
         path: "/states",
@@ -336,18 +348,12 @@ export const sidebarRoutesProduction = [
     icon: "/icons/configurationIcon.svg",
     path: "/configurations",
     children: [
-      {
-        name: "Banks",
-        path: "/banks",
-      },
+     
       {
         name: "Agents",
         path: "/agent",
       },
-      {
-        name: "Departments",
-        path: "/departments",
-      },
+      
       {
         name: "Budget",
         path: "/budgets",
@@ -357,18 +363,6 @@ export const sidebarRoutesProduction = [
         path: "/coaaccounts",
       },
      
-      {
-        name: "Countries",
-        path: "/countries",
-      },
-      {
-        name: "Currencies",
-        path: "/currencies",
-      },
-      {
-        name: "Departments",
-        path: "/departments",
-      },
       {
         name: "Locations",
         path: "/locations",
@@ -384,14 +378,6 @@ export const sidebarRoutesProduction = [
       {
         name: "Series",
         path: "/series",
-      },
-      {
-        name: "States",
-        path: "/states",
-      },
-      {
-        name: "Tax Codes",
-        path: "/taxcodes",
       },
       {
         name: "Vendors",

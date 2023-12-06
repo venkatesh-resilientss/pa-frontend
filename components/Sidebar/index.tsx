@@ -12,6 +12,7 @@ import { Card, Image } from "react-bootstrap";
 import { AuthService, ClientsService } from "services";
 import { Input } from "reactstrap";
 import useSWR from "swr";
+import { hasPermission } from "commonFunctions/functions";
 
 const Sidebar = ({ props }) => {
   const router = useRouter();
@@ -40,6 +41,25 @@ const Sidebar = ({ props }) => {
   const { data: productionData } = useSWR("GET_PRODUCTION_LIST", () =>
     clientService.getProductions()
   );
+
+  const hasViewConfiguration = hasPermission(
+    "configuration_management",
+    "view_all_configurations"
+  );
+  // const hasViewProduction = hasPermission(
+  //   "production_management",
+  //   "view_all_productions"
+  // );
+
+  // const hasViewUsers = hasPermission(
+  //   "user_and_role_management",
+  //   "view_all_users"
+  // );
+  const hasViewRoles = hasPermission(
+    "user_and_role_management",
+    "view_all_roles"
+  );
+  // const hasViewClients = hasPermission("client_management", "view_all_clients");
 
   /**
    * User Profile
@@ -345,7 +365,7 @@ const Sidebar = ({ props }) => {
                 style={{ width: "217px", height: "38px" }}
               />
 
-              {productionData?.map((item: any, index: any) => {
+              {(productionData || [])?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
                 return (
@@ -404,34 +424,69 @@ const Sidebar = ({ props }) => {
               })}
             </div>
           </>
-        ) : !userData?.data?.IsStaffUser ? (
+        ) : userData?.data?.IsStaffUser ? (
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
+                if (!hasViewConfiguration && route?.name !== "Configurations") {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
+                }
               })}
             </div>
           ) : (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesMaster.map((route, i) => {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
+                if (
+                  userData?.data?.IsStaffUser &&
+                  userData?.data?.Role?.AccessType === "full_access" &&
+                  userData?.data?.Role?.RoleName === "SUPER_ADMIN" &&
+                  hasViewRoles
+                ) {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
+                } else {
+                  const filteredChildren = route?.children?.filter(
+                    (child) => child.name !== "Role Management"
+                  );
+
+                  // Create a new route object with filtered children
+                  const filteredRoute = {
+                    ...route,
+                    children: filteredChildren,
+                  };
+
+                  // Use filteredRoute when rendering
+                  return (
+                    <SideBarRoute
+                      route={filteredRoute}
+                      key={`sidebar-route-${i}`}
+                    />
+                  );
+                }
               })}
             </div>
           )
         ) : selectedProduction ? (
           <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesProduction.map((route, i) => {
-              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+              if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              }
             })}
           </div>
         ) : (
           <div className="px-2 mt-2 sidebar-body">
-            {sidebarRoutesNonStaff.map((route, i) => {
-              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+            {sidebarRoutesNonStaff.map((route: any, i) => {
+              if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              }
             })}
           </div>
         )}
