@@ -28,7 +28,15 @@ export const EDIT_PROJECTS = (id: any) => `${tenantIdEndpoint}/projects/${id}`; 
 export const PROJECT_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/projects/${id}`;
 
-export const CREATE_PROJECT = `${tenantIdEndpoint}/projects/`; //Create projects
+  export const GET_PURCHASE_ORDERS =  `${tenantIdEndpoint}/purchaseorders/` //Purchase Orders
+  export const DELETE_PURCHASE_ORDER = (id: any) => `${tenantIdEndpoint}/purchaseorders/${id}`; //DELETE purchaseorders
+  export const CREATE_PURCHASE_ORDER = `${tenantIdEndpoint}/purchaseorders/`; //Create purchaseorders
+
+  export const GET_TRANSACTION_LINES =  `${tenantIdEndpoint}/transactionlines/` //transactionlines
+  export const DELETE_TRANSACTION_LINES = (id: any) => `${tenantIdEndpoint}/transactionlines/${id}`; //DELETE transactionlines
+  export const CREATE_TRANSACTION_LINES = `${tenantIdEndpoint}/transactionlines/`; //Create transactionlines
+
+export const CREATE_PROJECT =  `${tenantIdEndpoint}/projects/`; //Create projects
 export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard Stats
 export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients

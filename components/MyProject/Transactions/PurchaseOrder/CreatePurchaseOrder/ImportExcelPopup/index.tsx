@@ -1,16 +1,21 @@
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, ModalBody } from "reactstrap";
+import * as XLSX from "xlsx";
 
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 
-import { closeImportFromExcelPurchaseOrderPopup } from "redux/slices/mySlices/transactions";
+import {
+  closeImportFromExcelPurchaseOrderPopup,
+  updatePurchaseOrderData,
+} from "redux/slices/mySlices/transactions";
 
-const ImportExcelPopup = () => {
+import { useDropzone } from "react-dropzone";
+
+const ImportExcelPopup = ({ array, setArray }) => {
   const dispatch = useDispatch();
 
   const popupStatus = useSelector(
@@ -19,30 +24,74 @@ const ImportExcelPopup = () => {
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [fileName, setFileName] = useState([]);
+
+  const handleUpload = () => {
+    const newArray = [...array]; // Create a copy of the existing array
+    uploadedFiles.forEach((uploadedItem, idx) => {
+      newArray[idx] = { ...newArray[idx], ...uploadedItem };
+    });
+    setArray(newArray); // Set the updated array
+    dispatch(updatePurchaseOrderData(newArray)); // Dispatch your Redux action to update data
+    dispatch(closeImportFromExcelPurchaseOrderPopup("close"));
+  };
 
   useEffect(() => {
     if (!popupStatus) {
-      // Reset uploaded files when the popup is closed
+      // Reset uploaded files and array data when the popup is closed
       setUploadedFiles([]);
     }
   }, [popupStatus]);
 
   const onDrop = useCallback((acceptedFiles) => {
     setUploadedFiles(acceptedFiles);
+    readExcel(acceptedFiles[0]);
+    setFileName(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const readExcel = (file) => {
+    const reader = new FileReader();
 
-  const handleRemoveFile = (index) => {
-    const updatedFiles = [...uploadedFiles];
-    updatedFiles.splice(index, 1);
-    setUploadedFiles(updatedFiles);
+    reader.onload = (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+
+      // Assuming the Excel file has only one sheet
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      // Convert Excel data to JSON
+      const excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      // Extract values from the Excel data (excluding the header)
+
+      const keys = excelData[0]; // Assuming the first row contains the keys
+      const values = excelData.slice(1).map((row: any) =>
+        row.reduce((obj, cell, index) => {
+          obj[keys[index]] = cell;
+          return obj;
+        }, {})
+      );
+
+      // Set the values to the array
+      setUploadedFiles([...values]); // Corrected line
+    };
+
+    reader.readAsBinaryString(file);
+  };
+
+  const handleRemoveFile = () => {
+    setUploadedFiles([]);
+    setFileName([]);
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/departments_sample.csv";
+    const url = "/upload-sample-files/transaction_lines_sample.csv";
     window.open(url);
   };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
   return (
     <Modal
       isOpen={popupStatus}
@@ -95,7 +144,9 @@ const ImportExcelPopup = () => {
               />
             </div>
             <input {...getInputProps()} />
-            {isDragActive ? (
+            {uploadedFiles.length > 0 ? (
+              <p>{uploadedFiles[0].name}</p>
+            ) : isDragActive ? (
               <p>Drop the files here ...</p>
             ) : (
               <div className="text-center">
@@ -126,25 +177,22 @@ const ImportExcelPopup = () => {
           {uploadedFiles.length > 0 && (
             <div>
               <ul>
-                {uploadedFiles.map((file, index) => (
-                  <li
-                    style={{
-                      fontSize: "10px",
-                      fontWeight: "400",
-                      color: "#030229",
-                    }}
-                    key={index}
-                  >
-                    {file.name}{" "}
-                    <Image
-                      onClick={handleRemoveFile}
-                      className="cursor-pointer"
-                      src={cancelIcon}
-                      alt="can-icon"
-                      style={{ width: "10px", height: "10px" }}
-                    />
-                  </li>
-                ))}
+                <li
+                  style={{
+                    fontSize: "10px",
+                    fontWeight: "400",
+                    color: "#030229",
+                  }}
+                >
+                  {fileName[0]?.name}{" "}
+                  <Image
+                    onClick={handleRemoveFile}
+                    className="cursor-pointer"
+                    src={cancelIcon}
+                    alt="can-icon"
+                    style={{ width: "10px", height: "10px" }}
+                  />
+                </li>
               </ul>
             </div>
           )}
@@ -164,7 +212,7 @@ const ImportExcelPopup = () => {
             Cancel
           </Button>
           <Button
-            // onClick={handleUpload}
+            onClick={handleUpload}
             style={{
               fontSize: "14px",
               backgroundColor: "#00AEEF",
