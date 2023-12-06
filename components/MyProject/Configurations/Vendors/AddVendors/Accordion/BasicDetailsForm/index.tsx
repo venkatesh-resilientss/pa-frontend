@@ -15,16 +15,10 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const {
     // control,
     handleSubmit,
-    clearErrors,
+    clearErrors
   } = useForm();
   const [isPettyCashEnabled, setPettyCashEnabled] = useState(false);
   const statesService = new StatesService();
-  // const paymentOptions = [
-  //   { value: "cheque", label: "Cheque" },
-  //   { value: "wire_transfer", label: "Wire Transfer" },
-  //   { value: "manual_cheque", label: "Manual Cheque" },
-  //   { value: "eft", label: "EFT" },
-  // ];
   const vendorsValidationRules = formValidationRules.vendors;
 
   const coaAccountsService = new COAAccountsService();

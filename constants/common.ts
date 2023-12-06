@@ -322,6 +322,10 @@ export const sidebarRoutesProduction = [
     path: "/configurations",
     children: [
       {
+        name: "Banks",
+        path: "/banks",
+      },
+      {
         name: "Agents",
         path: "/agent",
       },
@@ -339,20 +343,40 @@ export const sidebarRoutesProduction = [
       },
      
       {
+        name: "Countries",
+        path: "/countries",
+      },
+      {
+        name: "Currencies",
+        path: "/currencies",
+      },
+      {
+        name: "Departments",
+        path: "/departments",
+      },
+      {
         name: "Locations",
         path: "/locations",
-      },  
+      },
       {
         name: "Periods",
         path: "/periods",
+      },
+      {
+        name: "Sets",
+        path: "/sets",
       },
       {
         name: "Series",
         path: "/series",
       },
       {
-        name: "Sets",
-        path: "/sets",
+        name: "States",
+        path: "/states",
+      },
+      {
+        name: "Tax Codes",
+        path: "/taxcodes",
       },
       {
         name: "Vendors",

@@ -48,7 +48,7 @@ function AddProductions() {
     productionService.getPOApprovers(id)
   );
 
-  const poSelectFormat = poData?.data.map((b) => {
+  const poSelectFormat = poData?.data?.map((b) => {
     return {
       value: b.ID,
       label: b.username,
@@ -63,7 +63,7 @@ function AddProductions() {
     productionService.getAPApprovers(id)
   );
 
-  const apSelectFormat = apData?.data.map((b) => {
+  const apSelectFormat = apData?.data?.map((b) => {
     return {
       value: b.ID,
       label: b.username,
@@ -80,7 +80,7 @@ function AddProductions() {
     clientService.getUsers()
   );
 
-  const userSelectFormat = clientData?.data.map((b) => {
+  const userSelectFormat = clientData?.data?.map((b) => {
     return {
       value: b.id,
       label: b.adminname,
