@@ -18,9 +18,7 @@ import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadCurrenciesPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadCurrenciesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -51,7 +49,8 @@ const AllCurrencyTable = () => {
 
   const { data: currencyData, isLoading: currenciesLoading } = useSWR(
     ["LIST_CURRENCIES", searchText],
-    () => currencyService.getCurrencies()
+    () =>
+      currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
   const dataSource = currencyData?.result;
 
@@ -201,12 +200,7 @@ const AllCurrencyTable = () => {
             <CardBody>
               <div className="d-flex justify-content-between configuration-table">
                 <div>
-                  <div
-                    className="m-2 title"
-                    
-                  >
-                    All Currencies
-                  </div>
+                  <div className="m-2 title">All Currencies</div>
                 </div>
 
                 <div

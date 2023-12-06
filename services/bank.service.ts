@@ -2,8 +2,8 @@ import APIService from "./api.service";
 import { BANKS_DETAIL_ENDPOINT, CREATE_BANK, DELETE_BANKS, EDIT_BANKS, GET_BANKS,UPLOAD_BANK_LIST,ADDRESSES,BANK_CONFIG,BANK_CONFIG_details,BANK_ACHES,BANK_ACH_DETAILS } from "../lib/endpoints";
 
 class BankService extends APIService {
-  getBanks(): Promise<any> {
-    return this.get(`${GET_BANKS}`)
+  getBanks(params?): Promise<any> {
+    return this.get(`${GET_BANKS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })

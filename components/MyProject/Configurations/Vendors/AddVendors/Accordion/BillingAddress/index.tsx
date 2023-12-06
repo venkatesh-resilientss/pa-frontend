@@ -9,7 +9,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
   const addressValidationRules = formValidationRules.address;
   const stateSelectOptions = statesData?.data.map((b) => {

@@ -18,9 +18,7 @@ import { useRouter } from "next/router";
 import { LocationsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
-import {
-  openBulkUploadLocationsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -50,7 +48,8 @@ const AllLocationsTable = () => {
 
   const { data: locationsData, isLoading: locationsLoading } = useSWR(
     ["LIST_LOCATIONS", searchText],
-    () => locationsService.getLocations()
+    () =>
+      locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
   const dataSource = locationsData?.result;
 
@@ -169,7 +168,7 @@ const AllLocationsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
-unSortIcon: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -179,7 +178,7 @@ unSortIcon: true,
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
-unSortIcon: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -207,12 +206,7 @@ unSortIcon: true,
           <CardBody>
             <div className="d-flex justify-content-between">
               <div className="configuration-table">
-                <div
-                  className="m-2 title"
-                  
-                >
-                  All Locations
-                </div>
+                <div className="m-2 title">All Locations</div>
               </div>
 
               <div

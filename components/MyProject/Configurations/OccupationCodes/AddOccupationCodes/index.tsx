@@ -24,7 +24,7 @@ function AddSeries() {
   return (
     <>
       <div className="section mt-4">
-        <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+        <div className="overflow-auto">
           <div
             className="text-black"
             style={{ fontSize: "16px", fontWeight: "600" }}

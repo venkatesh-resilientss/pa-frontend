@@ -1,24 +1,47 @@
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import { Col, Form, Input, Label, Row } from "reactstrap";
-import useSWR from "swr";
 import { StatesService } from "services";
+import { useEffect, useState } from "react";
 
 const stateService = new StatesService();
 function PhysicalAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
+  const [initialStateOptions, setInitialStateOptions] = useState([])
 
-  const { data: states } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
-  );
-
-  const statesDropdownoptions = states?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-      country: b.Country,
+  useEffect(() => {
+    const fetchInitialStates = async () => {
+      try {
+        const res = await stateService.getStates({ search: "", pageLimit: 25, offset: 0 });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+          country: item.Country
+        }));
+        setInitialStateOptions(options);
+      } catch (error) {
+        console.error('Error fetching initial options:', error);
+      }
     };
-  });
+
+    fetchInitialStates();
+  }, []);
+
+  const loadStateOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await stateService.getStates({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+        country: item.Country
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error('Error loading options:', error);
+    }
+  };
   return (
     <div className="text-black">
       <Form
@@ -26,12 +49,12 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address Line 1
+              Physical Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="physicalAddress1"
@@ -55,7 +78,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -65,9 +88,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddress2"
-              rules={{
-                required: "  Physical Address Line 2 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -85,17 +105,17 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address City
+              Physical Address City <span className="required">*</span>
             </Label>
             <Controller
               name="physicalAddressCity"
               rules={{
-                required: "  City is required",
+                required: "City is required",
               }}
               control={control}
               render={({ field }) => (
@@ -114,18 +134,18 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address State{" "}
+              Physical Address State <span className="required">*</span>
             </Label>
             <Controller
               name="physicalAddressState"
               rules={{
-                required: " State is required",
+                required: "State is required",
               }}
               control={control}
               render={({ field }) => (
@@ -134,9 +154,9 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  // loadOptions={loadStateOptions}
+                  loadOptions={loadStateOptions}
                   placeholder="Select State"
-                  defaultOptions={statesDropdownoptions}
+                  defaultOptions={initialStateOptions}
                 />
               )}
             />
@@ -147,12 +167,12 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address Postal Code
+              Physical Address Postal Code <span className="required">*</span>
             </Label>
             <Controller
               name="physicalAddressPostalCode"

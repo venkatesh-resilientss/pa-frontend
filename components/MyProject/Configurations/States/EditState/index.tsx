@@ -32,10 +32,10 @@ function EditState() {
     stateData?.Name && setValue("Statename", stateData?.Name);
     stateData?.Description && setValue("description", stateData?.Description);
     const country = {
-      value : stateData?.Country.ID,
-      label : stateData?.Country.Name
-    }
-    setValue('country',country)
+      value: stateData?.Country.ID,
+      label: stateData?.Country.Name,
+    };
+    setValue("country", country);
     stateData?.Code && setValue("Statecode", stateData?.Code);
     setActiveStatus(stateData?.IsActive);
   }, [stateData]);
@@ -53,13 +53,10 @@ function EditState() {
     };
   });
 
-  
-  
-
   const stateService = new StatesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);

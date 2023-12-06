@@ -2,59 +2,143 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { LocationsService, SeriesService, SetsService } from "services";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 function OtherDetailsForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
 
   const seriesService = new SeriesService();
 
-  const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
-  );
-
-  const seriesSelectFormat = seriesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadSeriesOptions = (values, callBack) => {
-    callBack(seriesSelectFormat);
-  };
-
   const locationsService = new LocationsService();
-
-  const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
-  );
-
-  const locationsSelectFormat = locationsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadLocationsOptions = (values, callBack) => {
-    callBack(locationsSelectFormat);
-  };
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const [initialSets, setInitialSets] = useState([]);
+  const [initialLocations, setInitialLocations] = useState([]);
+  const [initialSeries, setInitialSeries] = useState([]);
 
-  const setsSelectFormat = setsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  useEffect(() => {
+    const fetchInitialOptions = async () => {
+      try {
+        const res = await setsService.getSets({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSets(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
 
-  const loadSetsOptions = (values, callBack) => {
-    callBack(setsSelectFormat);
+    fetchInitialOptions();
+  }, []);
+
+  const loadSetsOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await setsService.getSets({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchInitialLocations = async () => {
+      try {
+        const res = await locationsService.getLocations({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialLocations(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialLocations();
+  }, []);
+
+  const loadLocationOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await locationsService.getLocations({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+  useEffect(() => {
+    const fetchInitialSeries = async () => {
+      try {
+        const res = await seriesService.getSeries({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSeries(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialSeries();
+  }, []);
+
+  const loadSeriesOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await seriesService.getSeries({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  // const loadSetsOptions = (values, callBack) => {
+  //   callBack(setsSelectFormat);
+  // };
 
   return (
     <div className="text-black">
@@ -77,7 +161,7 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
                   classNamePrefix="select"
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
-                  defaultOptions={seriesSelectFormat}
+                  defaultOptions={initialSeries}
                 />
               )}
             />
@@ -103,9 +187,9 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  loadOptions={loadLocationsOptions}
+                  loadOptions={loadLocationOptions}
                   placeholder="Select Location"
-                  defaultOptions={locationsSelectFormat}
+                  defaultOptions={initialLocations}
                 />
               )}
             />
@@ -122,7 +206,7 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
           <Col xl="4">
             <Label className="form-lable-font">Set</Label>
             <Controller
-              name={"set"}
+              name="set"
               rules={{ required: "Set is required" }}
               control={control}
               render={({ field }) => (
@@ -133,7 +217,7 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
                   classNamePrefix="select"
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
-                  defaultOptions={setsSelectFormat}
+                  defaultOptions={initialSets} // Provide an empty array initially
                 />
               )}
             />
@@ -147,20 +231,6 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
             )}
           </Col>
         </Row>
-
-        <div className="d-flex flex-column mt-1">
-          <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input type="radio" id="ex1-active" name="ex1" />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input type="radio" name="ex1" id="ex1-inactive" />
-              <div>In-Active</div>
-            </div>
-          </div>
-        </div>
       </Form>
     </div>
   );

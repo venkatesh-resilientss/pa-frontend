@@ -13,7 +13,7 @@ const DeleteBankPopup = () => {
   const bankService = new BankService();
 
   const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
+    bankService.getBanks({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(

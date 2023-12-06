@@ -37,7 +37,7 @@ function EditSet() {
   }, [setData]);
 
   const { mutate: countryMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets()
+    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
@@ -118,7 +118,9 @@ function EditSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label>Set Name <span className="required">*</span></Label>
+            <Label>
+              Set Name <span className="required">*</span>
+            </Label>
             <Controller
               name="setname"
               rules={setsValidationRules.name}

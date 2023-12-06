@@ -2,8 +2,8 @@
   import {CREATE_CURRENCIES, CURRENCY_DETAIL_ENDPOINT, DELETE_CURRENCIES, EDIT_CURRENCIES, GET_COUNTRIES, GET_CURRENCIES,UPLOAD_CURRENCIES_LIST} from '../lib/endpoints';
 
   class CurrencyService extends APIService {
-    getCurrencies(): Promise<any> {
-      return this.get(`${GET_CURRENCIES}`)
+    getCurrencies(params?): Promise<any> {
+      return this.get(`${GET_CURRENCIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
         .then((res) => {
           return res?.data;
         })
