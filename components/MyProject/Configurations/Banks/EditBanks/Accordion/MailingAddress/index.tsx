@@ -7,24 +7,21 @@ import { StatesService } from "services";
 const stateService = new StatesService();
 function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
-  const [initialStateOptions, setInitialStateOptions] = useState([]);
+  const [initialStateOptions, setInitialStateOptions] = useState([])
+
 
   useEffect(() => {
     const fetchInitialStates = async () => {
       try {
-        const res = await stateService.getStates({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        });
+        const res = await stateService.getStates({ search: "", pageLimit: 25, offset: 0 });
         const options = res?.data.map((item) => ({
           value: item.ID,
           label: item.Name,
-          country: item.Country,
+          country: item.Country
         }));
         setInitialStateOptions(options);
       } catch (error) {
-        console.error("Error fetching initial options:", error);
+        console.error('Error fetching initial options:', error);
       }
     };
 
@@ -33,21 +30,16 @@ function MailingAddressForm({ onSubmit, control, errors }) {
 
   const loadStateOptions: any = async (inputValue, callback) => {
     try {
-      const res = await stateService.getStates({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      });
-
+      const res = await stateService.getStates({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
       const options = res?.data.map((item) => ({
         value: item.ID,
         label: item.Name,
-        country: item.Country,
+        country: item.Country
       }));
 
       callback(options);
     } catch (error) {
-      console.error("Error loading options:", error);
+      console.error('Error loading options:', error);
     }
   };
   return (
@@ -62,7 +54,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Line 1
+              Mailing Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddress1"
@@ -96,9 +88,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddress2"
-              rules={{
-                required: "  Mailing Address Line 2 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -121,12 +110,12 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address City
+              Mailing Address City <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressCity"
               rules={{
-                required: "  City is required",
+                required: "City is required",
               }}
               control={control}
               render={({ field }) => (
@@ -151,7 +140,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address State{" "}
+              Mailing Address State <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressState"
@@ -183,7 +172,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Postal Code
+              Mailing Address Postal Code <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressPostalCode"
@@ -214,7 +203,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Phone
+              Phone <span className="required">*</span>
             </Label>
             <Controller
               name="mailingPhoneNumber"
@@ -243,7 +232,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Fax
+              Fax <span className="required">*</span>
             </Label>
             <Controller
               name="mailingFax"
@@ -272,7 +261,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Email
+              Email <span className="required">*</span>
             </Label>
             <Controller
               name="mailingEmail"
