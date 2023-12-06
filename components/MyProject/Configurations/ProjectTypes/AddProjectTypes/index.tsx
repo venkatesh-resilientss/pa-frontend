@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select';
 import { toast } from "react-toastify";
-function AddAgent() {
+function AddProjectType() {
   const router = useRouter();
   const onSubmit = async () => {
     try {
@@ -240,4 +240,4 @@ function AddAgent() {
   );
 }
 
-export default AddAgent;
+export default AddProjectType;

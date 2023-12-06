@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Select from 'react-select';
 
-function EditAgent() {
+function EditProjectType() {
   const router = useRouter();
   const onSubmit = async () => {
     // Handle form submission logic here
@@ -241,4 +241,4 @@ function EditAgent() {
   );
 }
 
-export default EditAgent;
+export default EditProjectType;

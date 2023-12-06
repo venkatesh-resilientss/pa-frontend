@@ -1,7 +1,7 @@
 // import React from "react";
 import AllProjectTypeTable from "./AllProjectTypeTable";
 
-function OccupationCodes() {
+function ProjectTypes() {
   return (
     <div>
       <AllProjectTypeTable />
@@ -9,4 +9,4 @@ function OccupationCodes() {
   );
 }
 
-export default OccupationCodes;
+export default ProjectTypes;
