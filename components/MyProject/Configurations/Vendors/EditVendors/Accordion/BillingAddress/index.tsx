@@ -2,14 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
 import useSWR from "swr";
-import Select from 'react-select';
+import Select from "react-select";
 import { selectStyles } from "constants/common";
 
 function BillingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {

@@ -14,9 +14,7 @@ import { StatesService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadStatesPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadStatesPopup } from "redux/slices/mySlices/configurations";
 import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -51,7 +49,7 @@ const AllStatesTable = () => {
 
   const { data: statesData, isLoading: stateLoading } = useSWR(
     ["LIST_STATES", searchText],
-    () => statesService.getStates()
+    () => statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const dataSource = statesData?.data;
@@ -233,11 +231,7 @@ const AllStatesTable = () => {
           <CardBody>
             <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="m-2 title"
-                >
-                  All States
-                </div>
+                <div className="m-2 title">All States</div>
               </div>
 
               <div

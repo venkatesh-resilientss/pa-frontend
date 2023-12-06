@@ -17,14 +17,14 @@ import { formValidationRules } from "@/constants/common";
 
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
-  
+
   const router = useRouter();
 
   const currencyService = new CurrencyService();
   const { id } = router.query;
 
   const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
@@ -44,7 +44,7 @@ function EditBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -61,7 +61,7 @@ function EditBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -77,7 +77,9 @@ function EditBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -156,7 +158,7 @@ function EditBudget() {
       LocationID: data?.location?.value,
       BankID: 0,
       Amount: 0.0,
-      budgetFile: '',
+      budgetFile: "",
       IsActive: activeStatus,
     };
 
@@ -468,8 +470,10 @@ function EditBudget() {
       </Row>
 
       <Row className="mt-2">
-      <Col xl="3">
-          <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
+        <Col xl="3">
+          <Label className="form-lable-font">
+            Upload Budget File <span className="required">*</span>
+          </Label>
           <Controller
             name="budgetfile"
             control={control}

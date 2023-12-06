@@ -13,7 +13,9 @@ const DeleteSetPopup = () => {
 
   const setService = new SetsService();
 
-  const { mutate: setMutate } = useSWR("LIST_SETS", () => setService.getSets());
+  const { mutate: setMutate } = useSWR("LIST_SETS", () =>
+    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.sets.deleteSetPopup.status

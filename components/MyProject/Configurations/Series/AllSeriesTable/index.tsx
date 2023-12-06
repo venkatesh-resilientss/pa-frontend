@@ -51,7 +51,7 @@ const AllSeriesTable = () => {
 
   const { data: seriesData, isLoading: seriesLoading } = useSWR(
     ["LIST_SERIES", searchText],
-    () => seriesService.getSeries()
+    () => seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const dataSource = seriesData?.data;

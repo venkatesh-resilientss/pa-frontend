@@ -2,9 +2,10 @@ import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { BankService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+const bankService = new BankService();
 
 function EditBank() {
   const router = useRouter();
@@ -32,12 +33,6 @@ function EditBank() {
   }),
     [bankData];
 
-  const bankService = new BankService();
-
-  const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
-  );
-
   const onSubmit = (data) => {
     const backendFormat = {
       name: data.name,
@@ -50,7 +45,6 @@ function EditBank() {
       .editBank(id, backendFormat)
       .then(() => {
         toast.success("Bank Edited successfully");
-        mutate(bankMutate());
         router.back();
       })
       .catch((error) => {

@@ -34,7 +34,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   });
 
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {
@@ -416,8 +416,8 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                     checked={isPettyCashEnabled}
                     onChange={() => {
                       setPettyCashEnabled(!isPettyCashEnabled);
-                      if(isPettyCashEnabled){
-                        clearErrors('pettyCashAccount')
+                      if (isPettyCashEnabled) {
+                        clearErrors("pettyCashAccount");
                       }
                     }}
                   />
@@ -440,7 +440,11 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="pettyCashAccount"
-              rules={isPettyCashEnabled ? vendorsValidationRules.pettyCashAccount : {}}
+              rules={
+                isPettyCashEnabled
+                  ? vendorsValidationRules.pettyCashAccount
+                  : {}
+              }
               control={control}
               render={({ field }) => (
                 <Select

@@ -2,8 +2,8 @@ import APIService from './api.service';
 import {CREATE_STATES, DELETE_STATES, EDIT_STATES, GET_STATES, STATES_DETAIL_ENDPOINT,UPLOAD_STATES_LIST} from '../lib/endpoints';
 
 class StatesService extends APIService {
-  getStates(): Promise<any> {
-    return this.get(`${GET_STATES}`)
+  getStates(params): Promise<any> {
+    return this.get(`${GET_STATES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })

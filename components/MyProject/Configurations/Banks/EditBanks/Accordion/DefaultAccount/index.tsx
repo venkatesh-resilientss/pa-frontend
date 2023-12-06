@@ -11,7 +11,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -40,7 +40,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -70,7 +70,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -100,7 +100,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"

@@ -6,7 +6,7 @@ import useSWR from "swr";
 import { selectStyles } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
-  const {handleSubmit} = useForm();
+  const { handleSubmit } = useForm();
   const paymentTypes = [
     { value: "cheque", label: "Cheque" },
     { value: "wireTransfer", label: "Wire Transfer" },
@@ -15,7 +15,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   ];
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates()
+    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {

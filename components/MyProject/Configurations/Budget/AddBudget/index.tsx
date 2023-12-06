@@ -12,7 +12,7 @@ import {
 } from "services";
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
-import { formValidationRules } from "@/constants/common";
+import { formValidationRules } from "constants/common";
 function AddBudget() {
   const router = useRouter();
   const budgetValidationRules = formValidationRules.budgets;
@@ -20,7 +20,7 @@ function AddBudget() {
   const currencyService = new CurrencyService();
 
   const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
@@ -37,7 +37,7 @@ function AddBudget() {
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -54,7 +54,7 @@ function AddBudget() {
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -70,7 +70,9 @@ function AddBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -137,7 +139,7 @@ function AddBudget() {
       LocationID: data?.location?.value,
       BankID: 0,
       Amount: 0.0,
-      budgetFile: '',
+      budgetFile: "",
     };
 
     budgetService
@@ -204,7 +206,9 @@ function AddBudget() {
       >
         {" "}
         <Col xl="3">
-          <Label className="form-lable-font">Budget Name <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Budget Name <span className="required">*</span>
+          </Label>
           <Controller
             name="name"
             control={control}
@@ -225,7 +229,9 @@ function AddBudget() {
           )}
         </Col>
         <Col xl="3">
-          <Label className="form-lable-font">Budget Code <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Budget Code <span className="required">*</span>
+          </Label>
           <Controller
             name="code"
             control={control}
@@ -248,7 +254,9 @@ function AddBudget() {
       </Form>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Company <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Company <span className="required">*</span>
+          </Label>
           <Controller
             name="company"
             control={control}
@@ -274,7 +282,9 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Production <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Production <span className="required">*</span>
+          </Label>
           <Controller
             name={"production"}
             rules={budgetValidationRules.production}
@@ -301,7 +311,9 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Currency <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Currency <span className="required">*</span>
+          </Label>
           <Controller
             name={"currency"}
             rules={budgetValidationRules.currency}
@@ -327,7 +339,9 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Series <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Series <span className="required">*</span>
+          </Label>
           <Controller
             name={"series"}
             rules={budgetValidationRules.series}
@@ -354,7 +368,9 @@ function AddBudget() {
       </Row>
       <Row>
         <Col xl="3">
-          <Label className="form-lable-font">Location <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Location <span className="required">*</span>
+          </Label>
           <Controller
             name={"location"}
             control={control}
@@ -380,7 +396,9 @@ function AddBudget() {
         </Col>
 
         <Col xl="3">
-          <Label className="form-lable-font">Set <span className="required">*</span></Label>
+          <Label className="form-lable-font">
+            Set <span className="required">*</span>
+          </Label>
           <Controller
             name={"set"}
             rules={budgetValidationRules.set}
@@ -405,28 +423,30 @@ function AddBudget() {
           )}
         </Col>
         <Row className="mt-2">
-        <Col xl="3">
-          <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
-          <Controller
-            name="budgetfile"
-            control={control}
-            rules={budgetValidationRules.budgetfile}
-            render={({ field }) => (
-              <Input
-                type="file"
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                invalid={errors.budgetfile && true}
-                {...field}
-                accept=".txt"
-              />
+          <Col xl="3">
+            <Label className="form-lable-font">
+              Upload Budget File <span className="required">*</span>
+            </Label>
+            <Controller
+              name="budgetfile"
+              control={control}
+              rules={budgetValidationRules.budgetfile}
+              render={({ field }) => (
+                <Input
+                  type="file"
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  invalid={errors.budgetfile && true}
+                  {...field}
+                  accept=".txt"
+                />
+              )}
+            />
+            {errors.budgetfile && (
+              <span style={{ color: "red" }}>
+                {errors.budgetfile.message as React.ReactNode}
+              </span>
             )}
-          />
-          {errors.budgetfile && (
-            <span style={{ color: "red" }}>
-              {errors.budgetfile.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
+          </Col>
         </Row>
       </Row>
     </div>

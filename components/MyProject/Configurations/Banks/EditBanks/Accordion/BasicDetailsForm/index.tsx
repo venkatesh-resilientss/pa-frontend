@@ -1,28 +1,56 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
-import useSWR from "swr";
 import { CurrencyService } from "services";
+// import useSWR from "swr";
+import { useEffect, useState } from "react";
+import { selectStyles } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const { handleSubmit } = useForm();
+  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
 
   const currencyService = new CurrencyService();
 
-  const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies()
-  );
-
-  const currenciesSelectFormat = currencyData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  useEffect(() => {
+    const fetchInitialCurrencyOptions = async () => {
+      try {
+        const res = await currencyService.getCurrencies({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCurrencyOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
 
-  const loadCurrencyOptions = (values, callBack) => {
-    callBack(currenciesSelectFormat);
+    fetchInitialCurrencyOptions();
+  }, []);
+
+  const loadCurrencyOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await currencyService.getCurrencies({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
   };
+
   return (
     <div className="text-black">
       <Form
@@ -30,7 +58,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -57,7 +85,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -85,7 +113,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -101,6 +129,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               control={control}
               render={({ field }) => (
                 <Input
+                  type="number"
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Account Number"
                   invalid={errors.accountNumber && true}
@@ -115,7 +144,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -145,7 +174,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -174,7 +203,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -203,7 +232,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="form-lable-font"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -221,8 +250,9 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   className="react-select"
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
-                  placeholder="Select Currency"
-                  defaultOptions={currenciesSelectFormat}
+                  placeholder="Select Series"
+                  defaultOptions={initialCurrencyOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -236,7 +266,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -265,7 +295,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}

@@ -9,13 +9,12 @@ import {
   Input,
 } from "reactstrap";
 
-import GridTable from "components/grid-tables/gridTable";
+// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import { SetsService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import {
@@ -24,16 +23,18 @@ import {
 } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
-import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+const setsService = new SetsService();
 
-const AllSetsTable = () => {
-  const setsService = new SetsService();
+const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
+  // const setsService = new SetsService();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const perPage = 3;
+  // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -50,11 +51,31 @@ const AllSetsTable = () => {
 
   const dispatch = useDispatch();
 
-  const { data: setsData, isLoading: setsLoading } = useSWR(
-    ["LIST_SETS", searchText],
-    () => setsService.getSets()
-  );
-  const dataSource = setsData?.result;
+  // const { data: setsData, isLoading: setsLoading } = useSWR(
+  //   ["LIST_SETS", searchText],
+  //   () => setsService.getSets()
+  // );
+  // const dataSource = setsData?.result;
+
+  const fetchData1 = async (pageNumber) => {
+    // setBankLoading(true)
+    try {
+      const response = await setsService.getSets({
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      });
+      const data = response.result; // Adjust based on the actual structure of the response
+      // setBankData(data)
+      // setTotalRecords(response.total_records)
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -164,8 +185,10 @@ const AllSetsTable = () => {
       headerName: "Updated On",
       field: "UpdatedDate",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
-        return <div>{formattedDate}</div>;
+        if (params.value) {
+          const formattedDate = moment(params.value).format("YYYY-MM-DD");
+          return <div>{formattedDate}</div>;
+        }
       },
       sortable: true,
       resizable: true,
@@ -216,9 +239,9 @@ const AllSetsTable = () => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {setsData?.result.length} Sets
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -288,7 +311,7 @@ const AllSetsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {setsLoading ? (
+      {/* {setsLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -318,7 +341,20 @@ const AllSetsTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
+            buttonLink={"/configurations/add-bank"}
+          />
+        )}
+      />
     </div>
   );
 };
