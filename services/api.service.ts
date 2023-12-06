@@ -89,6 +89,17 @@ abstract class APIService {
         : this.getAxiosHeaders(),
     });
   }
+  postWithMultiPartHeaders(url: string, data = {}): AxiosPromise<any> {
+    return axios({
+      method: "POST",
+      url,
+      data,
+      headers: {
+        Authorization: `Bearer ${cookie.get("accessToken")}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
   // Axios put method
   put(url: string, data = {}): AxiosPromise<any> {
     return axios({
