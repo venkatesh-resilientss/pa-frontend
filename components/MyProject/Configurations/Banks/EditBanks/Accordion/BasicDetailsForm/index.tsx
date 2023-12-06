@@ -2,31 +2,26 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { CurrencyService } from "services";
-// import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { selectStyles } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const { handleSubmit } = useForm();
-  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
+  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([])
 
   const currencyService = new CurrencyService();
 
   useEffect(() => {
     const fetchInitialCurrencyOptions = async () => {
       try {
-        const res = await currencyService.getCurrencies({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        });
+        const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialCurrencyOptions(options);
       } catch (error) {
-        console.error("Error fetching initial options:", error);
+        console.error('Error fetching initial options:', error);
       }
     };
 
@@ -35,11 +30,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
 
   const loadCurrencyOptions: any = async (inputValue, callback) => {
     try {
-      const res = await currencyService.getCurrencies({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      });
+      const res = await currencyService.getCurrencies({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -47,7 +38,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
 
       callback(options);
     } catch (error) {
-      console.error("Error loading options:", error);
+      console.error('Error loading options:', error);
     }
   };
 
@@ -63,7 +54,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Name
+              Bank Name <span className="required">*</span>
             </Label>
             <Controller
               name="bankName"
@@ -91,7 +82,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Code
+              Bank Code <span className="required">*</span>
             </Label>
             <Controller
               name="bankCode"
@@ -119,7 +110,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Number
+              Account Number <span className="required">*</span>
             </Label>
             <Controller
               name="accountNumber"
@@ -153,9 +144,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="description"
-              rules={{
-                required: "Description is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -179,7 +167,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Routing Number
+              Routing Number <span className="required">*</span>
             </Label>
             <Controller
               name="routingNumber"
@@ -208,7 +196,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Fraction
+              Account Fraction <span className="required">*</span>
             </Label>
             <Controller
               name="accountFraction"
@@ -237,7 +225,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="form-lable-font"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Currency
+              Currency <span className="required">*</span>
             </Label>
             <Controller
               name={"currency"}
@@ -275,9 +263,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="contactName"
-              rules={{
-                required: "Contact Name is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -304,9 +289,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="branchNumber"
-              rules={{
-                required: " Branch Number is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

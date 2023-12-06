@@ -118,7 +118,7 @@ function BankAccordion() {
           OutboundPath: data.PPoutboundPath,
           DataFormat: data.PPdataFormat.value,
           Certificate: data.PPcertificate,
-          Port: data.PPport,
+          Port: parseInt(data.PPport),
           Type: "PositivePay",
         };
         bankPayload.Meta.BankAch.push(positivepayPayload);
@@ -129,6 +129,7 @@ function BankAccordion() {
       .createBank(bankPayload)
       .then(() => {
         toast.success("Bank created successfully");
+        router.back();
       })
       .catch((error) => {
         toast.error(error?.error);

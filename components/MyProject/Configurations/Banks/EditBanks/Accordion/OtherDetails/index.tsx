@@ -3,15 +3,15 @@ import { Col, Form, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { LocationsService, SeriesService, SetsService } from "services";
-import { toast } from "react-toastify";
 
-function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
+function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveStatus }) {
   const { handleSubmit } = useForm();
-  const [activeStatus, setActiveStatus] = useState(isActive);
+
 
   const seriesService = new SeriesService();
   const locationsService = new LocationsService();
   const setsService = new SetsService();
+
 
   const [initialSets, setInitialSets] = useState([]);
   const [initialLocations, setInitialLocations] = useState([]);
@@ -20,18 +20,14 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
   useEffect(() => {
     const fetchInitialOptions = async () => {
       try {
-        const res = await setsService.getSets({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        });
+        const res = await setsService.getSets({ search: "", pageLimit: 25, offset: 0 });
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialSets(options);
       } catch (error) {
-        console.error("Error fetching initial options:", error);
+        console.error('Error fetching initial options:', error);
       }
     };
 
@@ -40,12 +36,7 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
   const loadSetsOptions: any = async (inputValue, callback) => {
     try {
-      const res = await setsService.getSets({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      });
-
+      const res = await setsService.getSets({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -53,25 +44,21 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
       callback(options);
     } catch (error) {
-      console.error("Error loading options:", error);
+      console.error('Error loading options:', error);
     }
   };
 
   useEffect(() => {
     const fetchInitialLocations = async () => {
       try {
-        const res = await locationsService.getLocations({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        });
+        const res = await locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 });
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialLocations(options);
       } catch (error) {
-        toast.error("Error fetching initial options:", error);
+        console.error('Error fetching initial options:', error);
       }
     };
 
@@ -80,12 +67,7 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
   const loadLocationOptions: any = async (inputValue, callback) => {
     try {
-      const res = await locationsService.getLocations({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      });
-
+      const res = await locationsService.getLocations({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -93,24 +75,20 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
       callback(options);
     } catch (error) {
-      console.error("Error loading options:", error);
+      console.error('Error loading options:', error);
     }
   };
   useEffect(() => {
     const fetchInitialSeries = async () => {
       try {
-        const res = await seriesService.getSeries({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        });
+        const res = await seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 });
         const options = res?.data.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialSeries(options);
       } catch (error) {
-        console.error("Error fetching initial options:", error);
+        console.error('Error fetching initial options:', error);
       }
     };
 
@@ -119,12 +97,7 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
   const loadSeriesOptions: any = async (inputValue, callback) => {
     try {
-      const res = await seriesService.getSeries({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      });
-
+      const res = await seriesService.getSeries({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
       const options = res?.data.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -132,7 +105,7 @@ function OtherDetailsForm({ onSubmit, control, errors, isActive }) {
 
       callback(options);
     } catch (error) {
-      console.error("Error loading options:", error);
+      console.error('Error loading options:', error);
     }
   };
 

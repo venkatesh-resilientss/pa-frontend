@@ -16,12 +16,11 @@ import PhysicalAddressForm from "./PhysicalAddress";
 import DefaultAccountForm from "./DefaultAccount";
 import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
-import { SeriesService, LocationsService, AddressService } from "services";
+import { SeriesService, LocationsService } from "services";
 import { SetsService } from "services";
 
 const seriesService = new SeriesService();
 const setService = new SetsService();
-const addressService = new AddressService();
 
 function BankAccordion() {
   const router = useRouter();
@@ -41,6 +40,7 @@ function BankAccordion() {
   const [selectedSets, setSelectedSets]: any = useState();
   const [bankConfigDetails, setBankConfigDetails]: any = useState();
   const [bankAchDetails, setBankAchDetails]: any = useState();
+  const [activeStatus, setActiveStatus] = useState(false);
   const bankService = new BankService();
 
   const locationService = new LocationsService();
@@ -55,101 +55,101 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
-    const pysicalAddressPaylaod = {
-      cityName: data.physicalAddressCity,
-      countryID: data.physicalAddressState.country.ID,
-      line1: data.physicalAddress1,
-      line2: data.physicalAddress2,
-      stateID: data.physicalAddressState.value,
-      zipcode: parseInt(data.physicalAddressPostalCode),
-    };
-    const mailingAddress = {
-      cityName: data.physicalAddressCity,
-      countryID: data.mailingAddressState.country.ID,
-      line1: data.mailingAddress1,
-      line2: data.mailingAddress2,
-      stateID: data.mailingAddressState.value,
-      zipcode: parseInt(data.mailingAddressPostalCode),
-    };
+    const bankPayload: any = {
+      Name: data.bankName,
+      Code: data.bankCode,
+      AccountNumber: parseInt(data.accountNumber),
+      RoutingNumber: parseInt(data.routingNumber),
+      Description: data.description,
+      Fax: data.mailingFax,
+      BranchNumber: parseInt(data.branchNumber),
+      ClientId: 2,
+      projectId: 1,
+      IsActive: activeStatus,
+      PhysicalAddress: {
+        Line1: data.physicalAddress1,
+        Line2: data.physicalAddress2,
+        CityName: data.physicalAddressCity,
+        StateId: parseInt(data.physicalAddressState.value),
+        CountryId: parseInt(data.physicalAddressState.country.ID),
+        Zipcode: parseInt(data.physicalAddressPostalCode),
+      },
+      MailingAddress: {
+        Line1: data.mailingAddress1,
+        Line2: data.mailingAddress2,
+        CityName: data.mailingAddressCity,
+        StateId: parseInt(data.mailingAddressState.value),
+        CountryId: parseInt(data.mailingAddressState.country.ID),
+        Zipcode: parseInt(data.mailingAddressPostalCode),
+        ContactPhone: data.mailingPhoneNumber,
+        ContactPhoneCode: "+1",
+        ContactEmailID: data.mailingEmail,
+      },
+      Meta: {
+        BankAch: [],
+        BankConfig: {
+          CheckCopies: parseInt(data.checkCopies),
+          WireTransferRangeStart: parseInt(data.wireTransaferRangeStart),
+          WireTransferRangeEnd: parseInt(data.wireTransaferRangeEnd),
+          WireTransferCopies: parseInt(data.wireTransferCopies),
+          CheckRangeStart: parseInt(data.checkRangeStart),
+          CheckRangeEnd: parseInt(data.checkRangeEnd),
+          EftRangeStart: parseInt(data.ACHeftRangeStart),
+          EftRangeEnd: parseInt(data.ACHeftRangeEnd),
+          EftCopies: parseInt(data.ACHeftCopies),
+        }
+      },
+      SeriesId: parseInt(data.series.value),
+      SetId: parseInt(data.set.value),
+      LocationId: parseInt(data.location.value),
+      CurrencyId: parseInt(data.currency.value),
+      CountryId: parseInt(data.physicalAddressState.country.ID),
+      DefaultAmountCash: parseFloat(data.defaultAccountCash),
+      DefaultAccountClearing: parseFloat(data.defaultAccountClearing),
+      DefaultAccountDiscount: parseFloat(data.defaultAccountDiscount),
+      DefaultAccountDeposit: parseInt(data.defaultAccountDeposit),
+    }
+    if (eft) {
+      if (ACHExport) {
+        const achExportPayload = {
+          id: data.ID,
+          Host: data.ACHhost,
+          Username: data.ACHuserName,
+          Password: data.ACHpassword,
+          InboundPath: data.ACHinboundPath,
+          OutboundPath: data.ACHoutboundPath,
+          DataFormat: data.ACHdataFormat.value,
+          Certificate: data.ACHcertificate,
+          Type: "ACH"
+        }
+        bankPayload.Meta.BankAch.push(achExportPayload)
+      }
+      if (positivePay) {
+        const positivepayPayload = {
+          Host: data.PPhost,
+          Username: data.PPuserName,
+          Password: data.PPpassword,
+          OutboundPath: data.PPoutboundPath,
+          DataFormat: data.PPdataFormat.value,
+          Certificate: data.PPcertificate,
+          Port: parseInt(data.PPport),
+          Type: "PositivePay"
+        }
+        bankPayload.Meta.BankAch.push(positivepayPayload)
+      }
 
-    addressService
-      .updateAddress(bankDetails?.PhysicalAddress?.ID, pysicalAddressPaylaod) //creating pysical address
-      .then((pysicalAddressResponse) => {
-        addressService
-          .updateAddress(bankDetails?.MailingAddress?.ID, mailingAddress) //creating mailing address
-          .then((mailingAddressResponse) => {
-            const bankPayload = {
-              accountNumber: parseInt(data.accountNumber),
-              code: data.bankCode,
-              countryID: data.physicalAddressState.country.ID,
-              currencyID: data.currency.value,
-              description: data.description,
-              fax: data.mailingFax,
-              mailingAddressID: mailingAddressResponse.ID,
-              name: data.bankName,
-              physicalAddressID: pysicalAddressResponse.ID,
-              // "primaryContactID": 0,
-              routingNumber: parseInt(data.routingNumber),
-              SetID: parseInt(data.set.value),
-              LocationID: parseInt(data.location.value),
-              SeriesID: parseInt(data.series.value),
-              DefaultAmountCash: parseInt(data.defaultAccountCash),
-              DefaultAccountClearing: parseInt(data.defaultAccountClearing),
-              DefaultAccountDeposit: parseInt(data.defaultAccountDeposit),
-              DefaultAccountDiscount: parseInt(data.defaultAccountDiscount),
-              // "secondaryContactID": 0,
-            };
-            bankService
-              .editBank(BankId, bankPayload)
-              .then((bankRes) => {
-                const bankConfigPayload = {
-                  bankID: parseInt(bankRes.ID),
-                  checkCopies: parseInt(data.checkCopies),
-                  checkRangeEnd: parseInt(data.checkRangeEnd),
-                  checkRangeStart: parseInt(data.checkRangeStart),
-                  eftCopies: parseInt(data.eftCopies),
-                  eftRangeEnd: parseInt(data.eftRangeEnd),
-                  eftRangeStart: parseInt(data.eftRangeStart),
-                  wireTransferRangeEnd: parseInt(data.wireTransaferRangeEnd),
-                  wireTransferRangeStart: parseInt(
-                    data.wireTransaferRangeStart
-                  ),
-                  wireTransferCopies: parseInt(data.wireTransferCopies),
-                };
-                bankService
-                  .createBankConfig(bankConfigPayload)
-                  .then(() => {
-                    const bankAchPayload = {
-                      bankID: parseInt(bankRes.ID),
-                      certificate: data.certificate,
-                      dataFormat: data.dataFormat,
-                      host: data.host,
-                      inboundPath: data.inboundPath,
-                      outboundPath: data.outboundPath,
-                      password: data.password,
-                      username: data.userName,
-                    };
-                    bankService.createBankAch(bankAchPayload).catch((error) => {
-                      toast.error(error?.error);
-                    });
-                  })
-                  .catch((error) => {
-                    toast.error(error?.error);
-                  });
-              })
-              .catch((error) => {
-                toast.error(error?.error);
-              });
-          })
-          .catch((error) => {
-            toast.error(error?.error);
-          });
+    }
+
+    bankService
+      .editBank(BankId, bankPayload)
+      .then(() => {
+        toast.success("Bank details updated successfully");
+        router.back()
       })
       .catch((error) => {
         toast.error(error?.error);
       });
   };
-
   const {
     control,
     handleSubmit,
@@ -269,9 +269,28 @@ function BankAccordion() {
         setWireTransfer(true)
       }
 
-      setValue("eftRangeStart", bankConfigDetails?.EftRangeStart);
-      setValue("eftRangeEnd", bankConfigDetails?.EftRangeEnd);
-      setValue("eftCopies", bankConfigDetails?.EftCopies);
+      setValue("ACHeftRangeStart", bankConfigDetails?.EftRangeStart);
+      setValue("ACHeftRangeEnd", bankConfigDetails?.EftRangeEnd);
+      setValue("ACHeftCopies", bankConfigDetails?.EftCopies);
+      bankAchDetails?.map((ach) => {
+        if (ach.Type === "PositivePay") {
+          setValue("PPhost", ach.Host);
+          setValue("PPuserName", ach.Username);
+          setValue("PPpassword", ach.Password);
+          setValue("PPoutboundPath", ach.OutboundPath);
+          setValue("PPdataFormat", ach.DataFormat);
+          setValue("PPcertificate", ach.Certificate);
+          setValue("PPport", ach.Port);
+
+        } else if (ach.Type === "ACH") {
+          setValue("ACHhost", ach.Host);
+          setValue("ACHuserName", ach.Username);
+          setValue("ACHinboundPath", ach.InboundPath);
+          setValue("ACHoutboundPath", ach.OutboundPath);
+          setValue("ACHdataFormat", ach.DataFormat);
+          setValue("ACHcertificate", ach.Certificate);
+        }
+      })
 
       setValue(
         "wireTransaferRangeStart",
@@ -281,6 +300,10 @@ function BankAccordion() {
         "wireTransaferRangeEnd",
         bankConfigDetails?.WireTransferRangeEnd
       );
+      setValue(
+        "wireTransferCopies",
+        bankConfigDetails?.WireTransferCopies
+      );
 
       setValue("host", bankConfigDetails?.host);
       setValue("userName", bankConfigDetails?.username);
@@ -288,7 +311,8 @@ function BankAccordion() {
       setValue("inboundPath", bankConfigDetails?.inboundPath);
       setValue("outboundPath", bankConfigDetails?.outboundPath);
       setValue("dataFormat", bankConfigDetails?.dataFormat);
-      // setValue("physicalAddress1", bankDetails?.Name )
+
+      setActiveStatus(bankDetails.IsActive)
     }
   }, [bankDetails, bankConfigDetails, bankAchDetails]);
 
@@ -403,7 +427,7 @@ function BankAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
-                isActive={bankDetails?.IsActive}
+                {...{ activeStatus, setActiveStatus }}
               />
             </AccordionBody>
           </AccordionItem>
