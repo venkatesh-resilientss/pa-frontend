@@ -1,18 +1,12 @@
-import ReactSelect from "react-select";
 import { Button, Col,Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
-import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { SeriesService } from "services";
 
-function EditSeries() {
+function EditOccupationCodes() {
   const router = useRouter();
 
-  const { id } = router.query;
-
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     // Handle form submission logic here
     try {
       // Your logic to save the form data
@@ -24,19 +18,9 @@ function EditSeries() {
     }
   };
   const {
-    data: seriesData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["SERIES_DETAILS", id] : null, () => fetchSeriesDetails(id));
-
-  const {
     handleSubmit,
     formState: { errors },
-    setError,
-    setValue,
     control,
-    reset,
   } = useForm();
   return (
     <>
@@ -257,4 +241,4 @@ function EditSeries() {
   );
 }
 
-export default EditSeries;
+export default EditOccupationCodes;

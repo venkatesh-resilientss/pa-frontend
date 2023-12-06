@@ -1,105 +1,19 @@
 import {
   Card,
   CardBody,
-  Badge,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Form,
   Input,
   Button,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
-import CustomBadge from "components/Generic/CustomBadge";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
 import { useRouter } from "next/router";
-import { SeriesService } from "services";
-import moment from "moment";
-import useSWR from "swr";
-import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSeriesPopup,
-  openDeleteSeriesPopup,
-} from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
+import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import NoDataPage from "components/NoDataPage";
-import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
 import React from "react";
 
 const AllOccupationCodesTable = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
-  // const ActionsButton = (props) => {
-  //   console.log(props.data.id, "props");
-  //   const id = `action-popover-${props.value}`;
-  //   const [open, setOpen] = useState(false);
-  //   const Action = ({ icon, name, action }) => {
-  //     return (
-  //       <div onClick={action} className="d-flex align-items-center gap-2">
-  //         <Image src={icon} alt={name} />
-  //         <p>{name}</p>
-  //       </div>
-  //     );
-  //   };
-  //   return (
-  //     <div>
-  //       <UncontrolledDropdown>
-  //         <DropdownToggle tag="span">
-  //           <Image
-  //             src={actionIcon}
-  //             alt=""
-  //             width={14}
-  //             id={id}
-  //             style={{ marginLeft: "20px" }}
-  //           />
-  //         </DropdownToggle>
-  //         <DropdownMenu end container="body">
-  //           <DropdownItem className="w-100">
-  //             <Action
-  //               icon={detailsIocn}
-  //               name={"View Details"}
-  //               action={() => {}}
-  //             />
-  //           </DropdownItem>
-  //           <DropdownItem
-  //             tag="a"
-  //             className="w-100"
-  //             onClick={(e) =>
-  //               router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)
-  //             }
-  //           >
-  //             <Action icon={editIocn} name={"Edit"} action={() => {}} />
-  //           </DropdownItem>
-  //           <DropdownItem
-  //             tag="a"
-  //             className="w-100"
-  //             onClick={(e) => e.preventDefault()}
-  //           >
-  //             <Action
-  //               icon={deleteIcon}
-  //               name={"Delete"}
-  //               action={() => {
-  //                 dispatch(openDeleteSeriesPopup(props.data?.ID));
-  //               }}
-  //             />
-  //           </DropdownItem>
-  //         </DropdownMenu>
-  //       </UncontrolledDropdown>
-  //     </div>
-  //   );
-  // };
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -269,25 +183,6 @@ const AllOccupationCodesTable = () => {
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
                 />
-
-                <Button
-                  onClick={() => dispatch(openBulkUploadSeriesPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
 
                 <Button
                   onClick={() => router.push(`/configurations/add-occupation-codes`)}

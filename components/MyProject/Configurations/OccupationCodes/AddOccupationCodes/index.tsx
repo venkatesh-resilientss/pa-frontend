@@ -1,16 +1,11 @@
-import ReactSelect from "react-select";
 import { Button, Col, Row ,Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import { SeriesService } from "services";
-import { checkTenant } from "constants/function";
 
 function AddSeries() {
   const router = useRouter();
-  const [tenantId, setTenantId] = useState("");
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     // Handle form submission logic here
     try {
       // Your logic to save the form data
@@ -24,8 +19,6 @@ function AddSeries() {
   const {
     control,
     handleSubmit,
-    register,
-    reset,
     formState: { errors },
   } = useForm();
   return (
@@ -46,32 +39,6 @@ function AddSeries() {
             >
               Add Occupation Code
             </div>
-            {/* <div className="d-flex me-2 " style={{ gap: "10px" }}>
-              <Button
-                onClick={() => router.back()}
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "400",
-                  height: "34px",
-                  backgroundColor: "transparent",
-                  color: "#2D2C2C",
-                  border: "none",
-                }}
-              >
-                Dismiss
-              </Button>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                color="primary"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  height: "34px",
-                }}
-              >
-                Save
-              </Button>
-            </div> */}
           </div>
 
           <hr style={{ height: "2px" }} />
