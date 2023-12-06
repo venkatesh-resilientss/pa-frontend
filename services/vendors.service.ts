@@ -19,13 +19,16 @@ class VendorsService extends APIService {
       });
   }
 
-  getVendorDetails(id: any): Promise<any> {
-    return this.get(`${VENDORS_DETAIL_ENDPOINT(id)}`)
-      .then((res) => {
-        return res?.data;
+  
+
+  getVendorDetails(id: any) {
+    return this
+      .get(VENDORS_DETAIL_ENDPOINT(id))
+      .then((response) => {
+        return response.data;
       })
-      .catch((error: any) => {
-        throw error?.response?.data;
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 
