@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Modal, ModalBody, ModalFooter } from "reactstrap";
 import useSWR from "swr";
 
 import { ClientsService } from "services";
@@ -6,19 +6,19 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function SoftwaresModal(props: any) {
-  const { show, setShow, clientData, setClientData } = props;
+  const { router, show, setShow, clientData, setClientData } = props;
 
   const { data } = useSWR("SOFTWARES", () => clientService.getSoftwares());
 
   return (
-    <Modal isOpen={show} size="lg">
-      <ModalHeader>Add New Client</ModalHeader>
+    <Modal isOpen={show} size="md">
       <ModalBody>
-        <p>Softwares</p>
+        <h5 className="fw-600">Add New Client</h5>
+        <p className="f-18">Softwares</p>
 
         <div className="row m-0">
           {(data || []).map((software, idx) => (
-            <div key={idx} className="col-12 col-sm-4 my-1">
+            <div key={idx} className="col-12 col-sm-6 my-1">
               <div className="flex-center me-3">
                 <input
                   type="radio"
@@ -31,7 +31,7 @@ export default function SoftwaresModal(props: any) {
                     })
                   }
                 />
-                <label htmlFor={software.Name} className="ms-1">
+                <label htmlFor={software.Name} className="ms-1 text-nowrap">
                   {software.Name}
                 </label>
               </div>
@@ -40,6 +40,9 @@ export default function SoftwaresModal(props: any) {
         </div>
       </ModalBody>
       <ModalFooter>
+        <button className="btn" onClick={() => router.back()}>
+          Cancel
+        </button>
         <button
           className="btn btn-primary"
           onClick={() => setShow(false)}

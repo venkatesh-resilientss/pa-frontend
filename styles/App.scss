@@ -83,44 +83,6 @@ input.searchProduction {
   margin-right: 10px;
 }
 
-.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #26afb8;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #00aeef;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
 .form-check-input:checked {
   background-color: #00aeef !important;
   border-color: #00aeef !important;
@@ -321,44 +283,6 @@ input.searchProduction {
   margin-right: 10px;
 }
 
-.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #26afb8;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #00aeef;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
 .form-check-input:checked {
   background-color: #00aeef !important;
   border-color: #00aeef !important;
@@ -548,44 +472,6 @@ input::placeholder {
   }
 }
 
-.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #26afb8;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #00aeef;
-  --bs-btn-border-color: #00aeef;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #00aeef;
-  --bs-btn-hover-border-color: #00aeef;
-  --bs-btn-focus-shadow-rgb: 0, 137, 145;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00aeef;
-  --bs-btn-active-border-color: #00aeef;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #00aeef;
-  --bs-btn-disabled-border-color: #00aeef;
-}
-
 .form-check-input:checked {
   background-color: #00aeef !important;
   border-color: #00aeef !important;
@@ -764,7 +650,7 @@ input::placeholder {
 }
 .menu-item-text {
   letter-spacing: 0.1px;
-  color: #4C4C61  ;
+  color: #4c4c61;
   font-size: 14px;
 }
 .menu-item-icon {
@@ -778,5 +664,4 @@ input::placeholder {
   align-items: center;
   justify-content: left;
   text-align: center;
- 
 }

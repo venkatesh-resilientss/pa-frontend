@@ -136,18 +136,26 @@ function Clients() {
         <div style={{ fontFamily: "Segoe UI" }} className="p-4 text-black">
           <div className="d-flex justify-content-between">
             <div className="d-flex gap-1">
-              <img
-                src="/endamol.svg"
-                style={{ width: "50px", height: "50px" }}
-              />
+              {clientData?.LogoUrl ? (
+                <img
+                  src={clientData?.LogoUrl || "/endamol.svg"}
+                  width={50}
+                  height={50}
+                  className="rounded-circle"
+                />
+              ) : (
+                <div className="img-div">
+                  {(clientData?.Name || "").charAt(0).toUpperCase()}
+                </div>
+              )}
 
               <div>
-                <div style={{ fontSize: "30px", fontWeight: "700" }}>
-                  {clientData?.name}
+                <div className="fw-bold f-20">{clientData?.Name}</div>
+                <div className="f-12">
+                  {clientData?.Tenant?.Slug &&
+                    `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
+                  {/* | Client Admin Name | Client Admin Email */}
                 </div>
-                {/* <div>
-                  endemol.rssl.io | Client Admin Name | Client Admin Email
-                </div> */}
               </div>
             </div>
             <div className="d-flex gap-1" style={{ height: "30px" }}>
