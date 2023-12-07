@@ -70,25 +70,6 @@ const Sidebar = ({ props }) => {
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
 
-  // useEffect(() => {
-  //   const handleOutsideClick = (event) => {
-  //     console.log(event.target, divRef.current, "divvvvvvvvv");
-  //     if (divRef.current && !divRef.current.contains(event.target)) {
-  //       // Clicked outside of the sidebar-body
-  //       setProductionList(false);
-  //       setSelectedProduction(null);
-  //     }
-  //   };
-
-  //   // Add event listener when the component mounts
-  //   document.addEventListener("click", handleOutsideClick);
-
-  //   // Clean up the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener("click", handleOutsideClick);
-  //   };
-  // }, []);
-
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
@@ -574,16 +555,6 @@ const Sidebar = ({ props }) => {
         <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
           <div className="d-flex align-items-center">
             <div>
-              {/* <img
-                src={
-                  props.profileImg
-                    ? props.profileImg
-                    : "/icons/sample-profile.png"
-                }
-                width={22}
-                className="me-2"
-                alt=""
-              /> */}
               <img
                 className="rounded-circle me-3"
                 src={props.profileImg ? props.profileImg : "/newAvatar.svg"}

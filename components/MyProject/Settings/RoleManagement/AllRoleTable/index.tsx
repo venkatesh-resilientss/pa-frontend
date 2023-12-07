@@ -37,11 +37,6 @@ const AllRoleTable = () => {
   //   "deactivate_role"
   // );
 
-  // const { data: rolesdata, isLoading: rolesLoading } = useSWR(
-  //   "LIST_ROLES",
-  //   () => roleservice.getRoles()
-  // );
-
   const fetchData1 = async (pageNumber) => {
     // setBankLoading(true)
     try {
@@ -51,8 +46,7 @@ const AllRoleTable = () => {
         offset: pageNumber,
       });
       const data = response.result; // Adjust based on the actual structure of the response
-      // setBankData(data)
-      // setTotalRecords(response.total_records)
+
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
@@ -117,39 +111,12 @@ const AllRoleTable = () => {
                   </div>
                 </DropdownItem>
               </Link>
-              {/* {hasEditrolePermission && (
-                <Link
-                  href={`/settings/roles?q=edit_role&role_id=${row?.data?.ID}`}
-                >
-                  <DropdownItem
-                    onClick={() => {
-                      document.body.click();
-                    }}
-                    className="menu-item"
-                  >
-                    <div className="d-flex flex-row">
-                      <Image
-                        src="/edit_square.svg"
-                        className="menu-item-icon"
-                      />
-                      <p className="menu-item-text mb-0">Edit Role</p>
-                    </div>
-                  </DropdownItem>
-                </Link>
-              )} */}
             </DropdownMenu>
           </UncontrolledDropdown>
         );
       },
     },
   ];
-
-  // const deleteRole = (role_id) => {
-  //   roleservice.delete_role(role_id).then(() => {
-  //     mutateRoles();
-  //     toast.success("Role delelted successfully");
-  //   });
-  // };
 
   return (
     <>
@@ -168,10 +135,6 @@ const AllRoleTable = () => {
               </p>
             </div>
             <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-              {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {bankData?.data.length} Banks
-                </div> */}
-
               <Input
                 onChange={(e) => setSearchText(e.target.value)}
                 type="search"
@@ -191,38 +154,6 @@ const AllRoleTable = () => {
           </div>
         </CardBody>
       </Card>
-      {/* {rolesLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={rolesdata}
-            columnDefs={columns}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {rolesdata?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={rolesdata}
-                columnDefs={columns}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                buttonName={
-                  hasCreateRolePermission ? "Create Role" : "No button"
-                }
-                buttonLink={"/settings/add-role"}
-              />
-            </div>
-          )}
-        </>
-      )} */}
 
       <div className="mt-3">
         <AGGridTable
