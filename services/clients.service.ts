@@ -6,6 +6,7 @@ import {
   EDIT_CLIENTS,
   GET_CLIENTS,
   GET_SOFTWARES,
+  GET_PRODUCTIONS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
@@ -64,6 +65,15 @@ class ClientsService extends APIService {
         return response?.data;
       })
       .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+  getProductions(): Promise<any> {
+    return this.get(`${GET_PRODUCTIONS}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
         throw error?.response?.data;
       });
   }

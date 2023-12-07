@@ -2,7 +2,7 @@ import BankAccordion from "./Accordion";
 
 function AddBanks() {
   return (
-    <div className="overflow-auto">
+    <div className="">
       <BankAccordion />
     </div>
   );

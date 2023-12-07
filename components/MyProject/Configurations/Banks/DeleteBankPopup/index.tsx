@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { BankService } from "services";
 import { closeDeleteBanksPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
@@ -12,9 +11,9 @@ const DeleteBankPopup = () => {
 
   const bankService = new BankService();
 
-  const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
-  );
+  // const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
+  //   bankService.getBanks()
+  // );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.deleteBankPopup.status
@@ -29,7 +28,7 @@ const DeleteBankPopup = () => {
       await bankService.deleteBank(helperData);
       toast.success("Bank Deleted Successfully");
       dispatch(closeDeleteBanksPopup("close"));
-      mutate(bankMutate());
+      // mutate(bankMutate());
     } catch (error) {
       console.error("Error deleting Bank:", error);
     }

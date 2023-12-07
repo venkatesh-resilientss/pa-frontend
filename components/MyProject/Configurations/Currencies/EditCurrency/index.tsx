@@ -41,7 +41,7 @@ function EditCurrency() {
   }, [currencyData]);
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
@@ -71,19 +71,10 @@ function EditCurrency() {
   return (
     <div className="section mt-4 configuration-add">
       <div className="overflow-auto">
-        <div
-          className="title-head"
-          
-        >
-          All currencies
-        </div>
+        <div className="title-head">All currencies</div>
 
         <div className="d-flex justify-content-between">
-          <div
-            className="title"
-          >
-            Edit Currency
-          </div>
+          <div className="title">Edit Currency</div>
           <div className="d-flex me-2 " style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}

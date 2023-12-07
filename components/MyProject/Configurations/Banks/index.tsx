@@ -1,11 +1,11 @@
 import AllBanksTable from "./AllBanksTable";
-import BanksBulkUploadPopup from "./BanksBulkUploadPopup";
+// import BanksBulkUploadPopup from "./BanksBulkUploadPopup";
 import DeleteBankPopup from "./DeleteBankPopup";
 
 function Banks() {
   return (
     <div>
-      <BanksBulkUploadPopup />
+      {/* <BanksBulkUploadPopup /> */}
       <DeleteBankPopup />
       <AllBanksTable />
     </div>

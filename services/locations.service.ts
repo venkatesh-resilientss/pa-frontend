@@ -2,8 +2,8 @@ import APIService from './api.service';
 import {CREATE_LOCATIONS, DELETE_LOCATION, EDIT_LOCATION, GET_LOCATIONS, LOCATION_DETAIL_ENDPOINT,UPLOAD_LOCATION_LIST} from '../lib/endpoints';
 
 class LocationsService extends APIService {
-  getLocations(): Promise<any> {
-    return this.get(`${GET_LOCATIONS}`)
+  getLocations(params?): Promise<any> {
+    return this.get(`${GET_LOCATIONS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })

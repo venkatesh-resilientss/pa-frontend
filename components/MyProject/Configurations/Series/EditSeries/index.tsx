@@ -38,7 +38,7 @@ function EditSeries() {
   const seriesService = new SeriesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);

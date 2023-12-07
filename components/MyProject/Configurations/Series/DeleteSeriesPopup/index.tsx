@@ -14,7 +14,7 @@ const DeleteSeriesPopup = () => {
   const seriesService = new SeriesService();
 
   const { mutate: seriesMutate } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(

@@ -193,7 +193,7 @@ export const roleCreationData = {
     },
   },
 };
-export const sidebarRoutes = [
+export const sidebarRoutesMaster = [
   {
     name: "Dashboard",
     icon: "/icons/dashboardIcon.svg",
@@ -208,6 +208,66 @@ export const sidebarRoutes = [
     name: "Productions",
     icon: "/icons/productionIcon.svg",
     path: "/productions",
+  },
+ 
+  {
+    name: "Reports",
+    icon: "/icons/report.svg",
+    path: "/reports",
+  },
+  {
+    name: "Configurations",
+    icon: "/icons/configurationIcon.svg",
+    path: "/configurations",
+    children: [
+      {
+        name: "Currencies",
+        path: "/currencies",
+      },
+      {
+        name: "Countries",
+        path: "/countries",
+      },
+      {
+        name: "Departments",
+        path: "/departments",
+      },
+     
+      
+      {
+        name: "States",
+        path: "/states",
+      },
+      {
+        name: "Tax Codes",
+        path: "/taxcodes",
+      },
+    
+   
+      
+    ],
+  },
+  {
+    name: "Settings",
+    icon: "/icons/settingIcon.svg",
+    path: "/settings",
+    children: [
+      {
+        name: "User Management",
+        path: "/usermanagement",
+      },
+      {
+        name: "Role Management",
+        path: "/rolemanagement",
+      },
+    ],
+  },
+];
+export const sidebarRoutesProduction = [
+  {
+    name: "Dashboard",
+    icon: "/icons/dashboardIcon.svg",
+    path: "/dashboard",
   },
   {
     name: "Transactions",
@@ -251,11 +311,11 @@ export const sidebarRoutes = [
       },
     ],
   },
-  {
-    name: "Reports",
-    icon: "/icons/report.svg",
-    path: "/reports",
-  },
+  // {
+  //   name: "Reports",
+  //   icon: "/icons/report.svg",
+  //   path: "/reports",
+  // },
   {
     name: "Configurations",
     icon: "/icons/configurationIcon.svg",
@@ -281,6 +341,7 @@ export const sidebarRoutes = [
         name: "Chart of Accounts (COA)",
         path: "/coaaccounts",
       },
+     
       {
         name: "Countries",
         path: "/countries",
@@ -331,20 +392,41 @@ export const sidebarRoutes = [
       },
     ]
   },
+  
+];
+
+export const sidebarRoutesNonStaff = [
   {
-    name: "Payroll",
+    name: "Dashboard",
+    icon: "/icons/dashboardIcon.svg",
+    path: "/dashboard",
+  },
+  {
+    name: "Productions",
+    icon: "/icons/productionIcon.svg",
+    path: "/productions",
+  },
+  {
+    name: "Reports",
+    icon: "/icons/report.svg",
+    path: "/reports",
+  },
+  {
+    name: "Configurations",
     icon: "/icons/configurationIcon.svg",
-    path: "/payroll",
+    path: "/configurations",
     children: [
       {
-        name: "Projects",
-        path: "/projects"
+        name: "Banks",
+        path: "/banks",
       },
+
       {
-        name: "Employees",
-        path: "/employees"
-      }
-    ]
+        name: "Departments",
+        path: "/departments",
+      },
+    
+    ],
   },
   {
     name: "Settings",
@@ -355,12 +437,10 @@ export const sidebarRoutes = [
         name: "User Management",
         path: "/usermanagement",
       },
-      {
-        name: "Role Management",
-        path: "/rolemanagement",
-      },
+    
     ],
   },
+  
 ];
 
 /**Chart of accounts */

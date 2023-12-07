@@ -1,24 +1,68 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
-import useSWR from "swr";
+// import useSWR from "swr";
 import { StatesService } from "services";
 import AsyncSelect from "react-select/async";
+import { useEffect, useState } from "react";
 
 function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
+  const [initialStateOptions, setInitialStateOptions] = useState([]);
 
   const stateService = new StatesService();
-  const { data: states } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
-  );
+  // const { data: states } = useSWR("LIST_STATES", () =>
+  //   stateService.getStates()
+  // );
 
-  const statesDropdownoptions = states?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-      country: b.Country,
+  // const statesDropdownoptions = states?.data.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //     country: b.Country,
+  //   };
+  // });
+
+  useEffect(() => {
+    const fetchInitialStates = async () => {
+      try {
+        const res = await stateService.getStates({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+          country: item.Country,
+        }));
+        setInitialStateOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
+
+    fetchInitialStates();
+  }, []);
+
+  const loadStateOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await stateService.getStates({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+        country: item.Country,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
 
   return (
     <div className="text-black">
@@ -27,7 +71,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -56,7 +100,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -86,7 +130,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -115,7 +159,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -135,9 +179,9 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  // loadOptions={loadStateOptions}
+                  loadOptions={loadStateOptions}
                   placeholder="Select State"
-                  defaultOptions={statesDropdownoptions}
+                  defaultOptions={initialStateOptions}
                 />
               )}
             />
@@ -148,7 +192,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -177,9 +221,9 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4"></Col>
+          <Col xl="4" className="my-2"></Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -208,7 +252,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -237,7 +281,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}

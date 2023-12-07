@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { sidebarRoutes } from "constants/common";
+import {
+  sidebarRoutesMaster,
+  sidebarRoutesNonStaff,
+  sidebarRoutesProduction,
+} from "constants/common";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import { Card } from "react-bootstrap";
-import { AuthService } from "services";
+import { Card, Image } from "react-bootstrap";
+import { AuthService, ClientsService } from "services";
+import { Input } from "reactstrap";
+import useSWR from "swr";
+
 const Sidebar = ({ props }) => {
   const router = useRouter();
   const [showSidebar, setSidebar] = useState(true); // min - full;
@@ -13,22 +20,36 @@ const Sidebar = ({ props }) => {
     if (!showSidebar && childRoute) handleDropDownChange(parentRoute);
     setSidebar(!showSidebar);
   };
+  // const [searchText, setSearchText] = useState("");
+  const authService = new AuthService();
+  const clientService = new ClientsService();
   const [activeDropDown, setActiveDropDown] = useState(null);
   const [parentRoute, setParentRoute] = useState(null);
   const [childRoute, setChildRoute] = useState(null);
+  const [productionList, setProductionList] = useState(false);
+  const [selectedProduction, setSelectedProduction] = useState() as any;
+  const [clickedItemIndex, setClickedItemIndex] = useState(null);
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
   };
+  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
+    authService.getUserDetails()
+  );
+
+  const { data: productionData } = useSWR("GET_PRODUCTION_LIST", () =>
+    clientService.getProductions()
+  );
+
   /**
    * User Profile
    */
-  const authService = new AuthService();
   const handleLogout = () => {
     authService.logout();
     props.mutate();
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
+
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
@@ -225,13 +246,195 @@ const Sidebar = ({ props }) => {
             />
           </div>
         </div>
-        <hr />
+        <hr className="mt-2 mb-2" />
         {/* Drop downs */}
-        <div className="px-2 sidebar-body">
-          {sidebarRoutes.map((route, i) => {
-            return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
-          })}
+
+        <div
+          className="sidenavDropdown"
+          onClick={() => {
+            setProductionList(true);
+          }}
+        >
+          {selectedProduction ? (
+            <div className="d-flex align-items-center flex-row">
+              <Image
+                src="/home.svg"
+                alt="project"
+                width="30"
+                height="35"
+                className="ms-2 me-2"
+              />
+              <div className="d-flex flex-column">
+                <div className="d-flex align-items-start">
+                  <p className="home mt-1 ellipsis">
+                    {selectedProduction.Name}
+                  </p>
+                </div>
+                <div className="d-flex mb-1 align-items-start">
+                  <p className="ressl">
+                    {selectedProduction.Client.Name
+                      ? selectedProduction.Client.Name
+                      : selectedProduction.Description}
+                  </p>
+                </div>
+              </div>
+              <Image
+                src="/chevron-down.svg"
+                alt="project"
+                width="20"
+                height="24"
+                className="ms-auto me-2"
+              />
+            </div>
+          ) : (
+            <div className="d-flex align-items-center flex-row">
+              <Image
+                src="/home.svg"
+                alt="project"
+                width="30"
+                height="35"
+                className="ms-2 me-2"
+              />
+              <div className="d-flex flex-column">
+                <div className="d-flex align-items-start">
+                  <p className="home mt-1">Home</p>
+                </div>
+                <div className="d-flex mb-1 align-items-start">
+                  <p className="ressl">Resillient Software Solutions</p>
+                </div>
+              </div>
+              <Image
+                src="/chevron-down.svg"
+                alt="project"
+                width="20"
+                height="24"
+                className="ms-auto me-2"
+              />
+            </div>
+          )}
         </div>
+
+        {productionList ? (
+          <>
+            <div className="container p-0">
+              <div className="d-flex align-items-center mt-2 flex-row">
+                <Image
+                  src="/home.svg"
+                  alt="project"
+                  width="20"
+                  height="24"
+                  className="ms-2 me-2"
+                />
+                <div className="d-flex align-items-start ms-2">
+                  <p
+                    className="home"
+                    onClick={() => {
+                      setProductionList(false);
+                      setSelectedProduction();
+                    }}
+                  >
+                    Home
+                  </p>
+                </div>
+              </div>
+              <Input
+                // onChange={(e) => setSearchText(e.target.value)}
+                type="search"
+                className="searchProduction"
+                placeholder="Search Production"
+                style={{ width: "217px", height: "38px" }}
+              />
+
+              {productionData?.map((item: any, index: any) => {
+                const isClicked = index === clickedItemIndex;
+
+                return (
+                  <div
+                    key={index}
+                    className={`d-flex align-items-center flex-row${
+                      isClicked ? " clicked" : ""
+                    }`}
+                    onClick={() => {
+                      setClickedItemIndex(index);
+                      setSelectedProduction(item);
+                      setProductionList(false);
+
+                      sessionStorage.setItem("clientid", item.Client.ID);
+                      sessionStorage.setItem("projectid", item.ID);
+                    }}
+                  >
+                    <img
+                      className="rounded-circle me-2 ms-1"
+                      src={item.img || "/icons/dummy-client-logo.svg"}
+                      width="20"
+                      height="20"
+                      alt="avatar"
+                      key={index}
+                    />
+                    <div className="d-flex flex-column">
+                      <div className="d-flex align-items-start">
+                        <p
+                          className={`home mt-1 ${
+                            item?.Name.length > 5 ? "ellipsis" : ""
+                          }`}
+                        >
+                          {item.Name}
+                        </p>
+                      </div>
+                      <div className="d-flex mb-1 align-items-start">
+                        <p className="ressl">
+                          {item.Client.Name
+                            ? item.Client.Name
+                            : item.Description}
+                        </p>
+                      </div>
+                    </div>
+                    {isClicked && (
+                      <img
+                        key={index}
+                        className="ms-3"
+                        src="/tick.svg"
+                        alt="tickmark"
+                        width="16"
+                        height="16"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        ) : !userData?.data?.IsStaffUser ? (
+          selectedProduction ? (
+            <div className="px-2 mt-2 sidebar-body">
+              {sidebarRoutesProduction.map((route, i) => {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="px-2 mt-2 sidebar-body">
+              {sidebarRoutesMaster.map((route, i) => {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              })}
+            </div>
+          )
+        ) : selectedProduction ? (
+          <div className="px-2 mt-2 sidebar-body">
+            {sidebarRoutesProduction.map((route, i) => {
+              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+            })}
+          </div>
+        ) : (
+          <div className="px-2 mt-2 sidebar-body">
+            {sidebarRoutesNonStaff.map((route, i) => {
+              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+            })}
+          </div>
+        )}
       </div>
 
       {/* Bottom Bar */}

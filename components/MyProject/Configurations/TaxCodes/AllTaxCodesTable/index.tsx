@@ -18,9 +18,7 @@ import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadTaxCodesPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -207,11 +205,7 @@ const AllTaxCodesTable = () => {
           <CardBody>
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center configuration-table">
-                <div
-                  className="title"
-                >
-                  All Tax Codes
-                </div>
+                <div className="title">All Tax Codes</div>
               </div>
 
               <div

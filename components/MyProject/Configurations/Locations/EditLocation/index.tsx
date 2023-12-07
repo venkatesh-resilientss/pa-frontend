@@ -42,7 +42,7 @@ function EditLocation() {
   const locationsService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
@@ -71,19 +71,10 @@ function EditLocation() {
 
   return (
     <div className="mt-4 configuration-add">
-      <div
-        className="title-head"
-        
-      >
-        All Locations
-      </div>
+      <div className="title-head">All Locations</div>
 
       <div className="d-flex justify-content-between">
-        <div
-          className="title"
-        >
-          Edit Location
-        </div>
+        <div className="title">Edit Location</div>
 
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
           <Button
