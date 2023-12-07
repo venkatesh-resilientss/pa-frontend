@@ -11,6 +11,7 @@ const authService = new AuthService();
 
 import useSWR from "swr";
 import AsyncSelect from "react-select/async";
+const roleservice = new RoleService();
 
 function AddUser() {
   const { data: userData } = useSWR("GET_USER_DETAILS", () =>
@@ -29,9 +30,23 @@ function AddUser() {
   const [selectedClient] = useState(true);
   const [userDetails, setUserDetails] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
+  const [roleOptions, setRoleOptions] = useState();
   const [clientProductionsList, setClientProductionsList] = useState([{
     client: "client_1", production: "production_1", client_id: 0, production_id: [], productionOptions: []
   }])
+
+  useEffect(() => {
+    roleservice.getRoles({ search: "", pageLimit: 50, offset: 0 })
+      .then((res) => {
+        const temproleOptions = Array.isArray(res?.result)
+          ? res.result.map((role) => ({
+            value: role.ID,
+            label: role.RoleName,
+          }))
+          : [];
+        setRoleOptions(temproleOptions)
+      })
+  }, [])
 
   useEffect(() => {
 
@@ -93,30 +108,6 @@ function AddUser() {
       console.error('Error loading options:', error);
     }
   };
-
-  // const clientOptions = Array.isArray(clientData)
-  //   ? clientData.map((client) => ({
-  //     value: client.ID,
-  //     label: client.Name,
-  //   }))
-  //   : [];
-
-  //get roles
-  const roleservice = new RoleService();
-  const { data: rolesdata } = useSWR("LIST_ROLES", () =>
-    roleservice.getRoles()
-  );
-
-
-  const roleOptions = Array.isArray(rolesdata?.result)
-    ? rolesdata.result.map((role) => ({
-      value: role.ID,
-      label: role.RoleName,
-    }))
-    : [];
-
-  //get projects
-
 
   const getProductionOptions = (client, clientId) => {
     usersService
