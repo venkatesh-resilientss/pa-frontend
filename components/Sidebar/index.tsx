@@ -180,7 +180,7 @@ const Sidebar = ({ props }) => {
         {/* Route children */}
 
         {route.children && activeDropDown === route.path ? (
-          <div className="sidebar-list">
+          <div className="sidebar-list mx-2">
             <div className="ps-3">
               <ul>
                 {route.children.map((child, i) => {
