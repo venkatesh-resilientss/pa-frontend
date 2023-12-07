@@ -150,7 +150,7 @@ export const COAACCOUNTS_DETAIL_ENDPOINT = (id: any) =>
 
 export const GET_CLIENTS = `${withoutTenantIdEndpoint}/clients/`; //Clients
 export const DELETE_CLIENTS = (id: any) => `${withoutTenantIdEndpoint}/clients/${id}`; //DELETE clients
-export const EDIT_CLIENTS = (id: any) => `${tenantIdEndpoint}/clients/${id}`; //EDIT clients
+export const EDIT_CLIENTS = (id: any) => `${withoutTenantIdEndpoint}/clients/${id}`; //EDIT clients
 export const CREATE_CLIENT = `${withoutTenantIdEndpoint}/clients/`; //CREATE clients
 export const CLIENTS_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}`; //clients Details

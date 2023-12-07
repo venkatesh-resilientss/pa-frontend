@@ -1,7 +1,7 @@
-import { Button } from "reactstrap";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Button from "react-bootstrap-button-loader";
 
 import ClientTabs from "@/components/clients/ClientTabs";
 
@@ -10,6 +10,8 @@ import { ClientsService } from "services";
 function Clients() {
   const router = useRouter();
   const clientService = new ClientsService();
+  const [isEditing, setEditing] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const defaultClientData: any = {
     SoftwareID: "",
@@ -80,55 +82,55 @@ function Clients() {
         const tempObj: any = { ...clientData, ...resp?.client };
         tempObj.clientType = tempObj?.ClientType?.ID
           ? {
-              label: tempObj?.ClientType?.Name,
-              value: tempObj?.ClientType?.ID,
-            }
+            label: tempObj?.ClientType?.Name,
+            value: tempObj?.ClientType?.ID,
+          }
           : null;
         tempObj.clientAdmin = tempObj?.ClientAdmin?.ID
           ? {
-              label: tempObj?.ClientAdmin?.Name,
-              value: tempObj?.ClientAdmin?.ID,
-            }
+            label: tempObj?.ClientAdmin?.Name,
+            value: tempObj?.ClientAdmin?.ID,
+          }
           : null;
         tempObj.rsslSupportUser = tempObj?.RsslSupportUser?.ID
           ? {
-              label: tempObj?.RsslSupportUser?.Name,
-              value: tempObj?.RsslSupportUser?.ID,
-            }
+            label: tempObj?.RsslSupportUser?.Name,
+            value: tempObj?.RsslSupportUser?.ID,
+          }
           : null;
 
         tempObj.PhysicalAddress.country =
           tempObj?.PhysicalAddress?.CountryID &&
-          resp?.mailing_address?.country_name
+            resp?.mailing_address?.country_name
             ? {
-                label: resp?.mailing_address?.country_name,
-                value: tempObj?.PhysicalAddress?.CountryID,
-              }
+              label: resp?.mailing_address?.country_name,
+              value: tempObj?.PhysicalAddress?.CountryID,
+            }
             : null;
 
         tempObj.PhysicalAddress.state =
           tempObj?.PhysicalAddress?.StateID && resp?.mailing_address?.state_name
             ? {
-                label: resp?.mailing_address?.state_name,
-                value: tempObj?.PhysicalAddress?.StateID,
-              }
+              label: resp?.mailing_address?.state_name,
+              value: tempObj?.PhysicalAddress?.StateID,
+            }
             : null;
 
         tempObj.MailingAddress.country =
           tempObj?.MailingAddress?.CountryID &&
-          resp?.mailing_address?.country_name
+            resp?.mailing_address?.country_name
             ? {
-                label: resp?.mailing_address?.country_name,
-                value: tempObj?.MailingAddress?.CountryID,
-              }
+              label: resp?.mailing_address?.country_name,
+              value: tempObj?.MailingAddress?.CountryID,
+            }
             : null;
 
         tempObj.MailingAddress.state =
           tempObj?.MailingAddress?.StateID && resp?.mailing_address?.state_name
             ? {
-                label: resp?.mailing_address?.state_name,
-                value: tempObj?.MailingAddress?.StateID,
-              }
+              label: resp?.mailing_address?.state_name,
+              value: tempObj?.MailingAddress?.StateID,
+            }
             : null;
         tempObj.Company.PrimaryContact.EmailID =
           resp?.primary_contactID?.email_id || "";
@@ -141,6 +143,55 @@ function Clients() {
     };
     if (Number(router.query.id)) getClientDetails();
   }, [router.query.id]);
+
+
+  const handleEdit = async () => {
+    if (isEditing) {
+      // form submission
+      setLoading(true)
+      try {
+        const payload = {
+          ...clientData,
+        }
+        if (clientData.clientType)
+          payload["ClientTypeID"] = clientData.clientType.value;
+        if (clientData.clientAdmin)
+          payload["ClientAdminID"] = clientData.clientAdmin.value;
+        if (clientData.rsslSupportUser)
+          payload["RsslSupportUserID"] = clientData.rsslSupportUser.value;
+
+        if (clientData.MailingAddress.country)
+          payload["MailingAddress"]["CountryID"] =
+            clientData.MailingAddress.country.value;
+        if (clientData.MailingAddress.state)
+          payload["MailingAddress"]["StateID"] =
+            clientData.MailingAddress.state.value;
+        if (clientData.MailingAddress.Zipcode)
+          payload["MailingAddress"]["Zipcode"] =
+            Number(clientData.MailingAddress.Zipcode) || 0;
+
+        if (clientData.PhysicalAddress.country)
+          payload["PhysicalAddress"]["CountryID"] =
+            clientData.PhysicalAddress.country.value;
+        if (clientData.PhysicalAddress.state)
+          payload["PhysicalAddress"]["StateID"] =
+            clientData.PhysicalAddress.state.value;
+        if (clientData.PhysicalAddress.Zipcode)
+          payload["PhysicalAddress"]["Zipcode"] =
+            Number(clientData.PhysicalAddress.Zipcode) || 0;
+        await clientService.editClient(Number(router.query.id), payload)
+        setEditing(false)
+        setLoading(false)
+        toast.success("Client Updated Successfully")
+      } catch (e) {
+        setLoading(false)
+        toast.error(e?.error || e || "Error");
+      }
+
+    } else {
+      setEditing(true)
+    }
+  }
 
   return (
     <>
@@ -171,22 +222,21 @@ function Clients() {
               </div>
             </div>
             <div className="d-flex gap-1" style={{ height: "30px" }}>
-              <Button
+              <button
                 onClick={() => router.push("/clients")}
-                color="white"
-                size="sm"
+                className="btn"
               >
                 Dismiss
+              </button>
+              <Button size="sm" color="info" onClick={handleEdit} loading={loading} disabled={loading} spinColor="#ffffff">
+                {isEditing ? "Save" : "Edit"}
               </Button>
-              {/* <Button size="sm" color="info">
-                Save
-              </Button> */}
             </div>
           </div>
 
           <hr style={{ height: "2px" }} />
 
-          <ClientTabs {...{ clientData, setClientData }} />
+          <ClientTabs {...{ clientData, setClientData, disabled: !isEditing, isEditing }} />
         </div>
       ) : (
         <></>
