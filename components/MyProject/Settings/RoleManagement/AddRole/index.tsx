@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { RoleService, AuthService } from "services";
 import { toast } from "react-toastify";
+// import Button from "react-bootstrap-button-loader";
+import { getSessionVariables } from "@/constants/function";
+
 import {
   roleCreationData,
   roleCreationData1,
@@ -20,6 +23,7 @@ function AddRole() {
   const { data: userData } = useSWR("GET_USER_DETAILS", () =>
     authService.getUserDetails()
   );
+  const [loading, setLoading] = useState(false);
 
   const [restricted, setRestricted] = useState(true);
   const [role_name, setRole_name] = useState("");
@@ -277,7 +281,11 @@ function AddRole() {
   };
 
   const save_role = () => {
+    const { clientID, projectID } = getSessionVariables();
+
+    setLoading(true);
     if (!role_name || !role_id) {
+      setLoading(false);
       toast.error("Please enter role name");
       return;
     }
@@ -291,6 +299,8 @@ function AddRole() {
       IsActive: true,
       RoleName: role_name,
       Code: uppercaseString,
+      clientID,
+      projectID,
       AccessType: restricted ? "restricted" : "full_access",
     };
     if (restricted) {
@@ -305,15 +315,27 @@ function AddRole() {
       };
     }
 
-    roleservice.post_roles(payload).then(() => {
-      toast.success("Role created successfully");
-      router.push("/settings/rolemanagement");
-      resetData();
-    });
+    roleservice
+      .post_roles(payload)
+      .then(() => {
+        setLoading(false);
+        toast.success("Role created successfully");
+        router.push("/settings/rolemanagement");
+        resetData();
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
   const updateRole = (roleId) => {
-    if (!role_name || !role_id) {
-      toast.error("Please enter roleId and role name");
+    setLoading(true);
+    const { clientID, projectID } = getSessionVariables();
+
+    if (!role_name) {
+      toast.error("Please enter role name");
+      setLoading(false);
+
       return;
     }
     // return;
@@ -322,6 +344,8 @@ function AddRole() {
       IsActive: true,
       RoleName: role_name,
       RoleID: parseInt(role_id),
+      clientID,
+      projectID,
       AccessType: restricted ? "restricted" : "full_access",
     };
     if (restricted) {
@@ -330,11 +354,17 @@ function AddRole() {
       payload.permissions = convertedPayload;
     }
 
-    roleservice.update_role(roleId, payload).then(() => {
-      toast.success("Role updated successfully");
-      router.push("/settings/rolemanagement");
-      resetData();
-    });
+    roleservice
+      .update_role(roleId, payload)
+      .then(() => {
+        toast.success("Role updated successfully");
+        router.push("/settings/rolemanagement");
+        resetData();
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+      });
   };
 
   const handleCategoryChange = (category, newValue) => {
@@ -406,9 +436,10 @@ function AddRole() {
           <div className="d-flex gap-1">
             <Button
               onClick={() => router.back()}
-              color="white"
+              color="#000000"
               size="sm"
-              className="px-3"
+              className="px-3 btn-default"
+              background="#FFFFFF"
             >
               Back
             </Button>
@@ -429,14 +460,16 @@ function AddRole() {
           <div className="d-flex gap-1">
             <Button
               onClick={() => router.back()}
-              color="white"
+              color="#000000"
               size="sm"
-              className="px-3"
+              className="px-3 btn-default"
+              background="#FFFFFF"
             >
               Back
             </Button>
             <Button
               size="sm"
+              loading={loading}
               color="primary"
               className="px-3"
               onClick={() => updateRole(router.query.role_id)}
@@ -450,7 +483,7 @@ function AddRole() {
               onClick={() => router.back()}
               color="white"
               size="sm"
-              className="px-3"
+              className="px-3 btn-default"
             >
               Dismiss
             </Button>
@@ -458,6 +491,7 @@ function AddRole() {
               size="sm"
               color="primary"
               className="px-3"
+              loading={loading}
               onClick={save_role}
             >
               Save
