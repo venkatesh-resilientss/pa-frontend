@@ -246,6 +246,21 @@ export const sidebarRoutesMaster = [
     ],
   },
   {
+    name: "Payroll",
+    icon: "/icons/list.svg",
+    path: "/payroll",
+    children: [
+      {
+        name: "Projects",
+        path: "/projects",
+      },
+      {
+        name: "Employees",
+        path: "/employees",
+      }
+    ],
+  },
+  {
     name: "Settings",
     icon: "/icons/settingIcon.svg",
     path: "/settings",
@@ -390,7 +405,21 @@ export const sidebarRoutesProduction = [
       },
     ]
   },
-  
+  {
+    name: "Payroll",
+    icon: "/icons/list.svg",
+    path: "/payroll",
+    children: [
+      {
+        name: "Projects",
+        path: "/projects",
+      },
+      {
+        name: "Employees",
+        path: "/employees",
+      }
+    ],
+  },
 ];
 
 export const sidebarRoutesNonStaff = [
@@ -424,6 +453,21 @@ export const sidebarRoutesNonStaff = [
         path: "/departments",
       },
     
+    ],
+  },
+  {
+    name: "Payroll",
+    icon: "/icons/list.svg",
+    path: "/payroll",
+    children: [
+      {
+        name: "Projects",
+        path: "/projects",
+      },
+      {
+        name: "Employees",
+        path: "/employees",
+      }
     ],
   },
   {

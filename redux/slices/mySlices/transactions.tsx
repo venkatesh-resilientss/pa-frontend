@@ -9,6 +9,8 @@ const initialState = {
     approvePurchaseOrderPopup: { status: false, helperData: null },
     rejectPurchaseOrderPopup: { status: false, helperData: null },
     purchaseOrderImportFromExcelPopup: { status: false, helperData: null },
+    splitAmountpopup: { status: false, helperData: null },
+    purchaseOrderData: [], // Add your purchase order data array here
   },
   journalEntry: {
     deleteJournalEntryPopup: { status: false, helperData: null },
@@ -112,6 +114,18 @@ const transactionsSlice = createSlice({
     closeImportFromExcelPurchaseOrderPopup(state, action) {
       state.purchaseOrder.purchaseOrderImportFromExcelPopup.status = false;
       state.purchaseOrder.purchaseOrderImportFromExcelPopup.helperData = null;
+    },
+
+    //Split Amount Popup
+
+    openSplitAmountPopup(state, action) {
+      state.purchaseOrder.splitAmountpopup.helperData = action.payload;
+      state.purchaseOrder.splitAmountpopup.status = true;
+    },
+
+    closeSplitAmountPopup(state, action) {
+      state.purchaseOrder.splitAmountpopup.status = false;
+      state.purchaseOrder.splitAmountpopup.helperData = null;
     },
 
     //**Journal ENtry */
@@ -316,6 +330,11 @@ const transactionsSlice = createSlice({
       state.accountPayable.addMoreLinePopup.status = false;
       state.accountPayable.addMoreLinePopup.helperData = null;
     },
+
+    updatePurchaseOrderData: (state, action) => {
+      // Assuming action.payload is the updated data
+      state.purchaseOrder.purchaseOrderData = action.payload;
+    },
   },
 });
 
@@ -364,6 +383,9 @@ export const {
   closeAddMoreLinesToPayrollPopup,
   openAddMoreLinesToPettyCashPopup,
   closeAddMoreLinesToPettyCashPopup,
+  openSplitAmountPopup,
+  closeSplitAmountPopup,
+  updatePurchaseOrderData,
 } = transactionsSlice.actions;
 
 export default transactionsSlice.reducer;

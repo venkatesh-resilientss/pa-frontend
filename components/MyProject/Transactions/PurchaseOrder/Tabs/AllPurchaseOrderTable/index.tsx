@@ -18,8 +18,22 @@ import {
 import { openDeletePurchaseOrderPopup } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import { PurchaseOrderService } from "services";
+import useSWR from "swr";
+import moment from "moment";
 
 const AllPurchaseTable = () => {
+  const searchText = "";
+
+  const purchaseOrderService = new PurchaseOrderService();
+
+  const { data: purchaseOrdersData } = useSWR(
+    ["LIST_PURCHASE_ORDERS", searchText],
+    () => purchaseOrderService.getPurchaseOrders()
+  );
+
+  const dataSource = purchaseOrdersData && purchaseOrdersData.data;
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -72,9 +86,9 @@ const AllPurchaseTable = () => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
 
-    const Action = ({ icon, name }) => {
+    const Action = ({ icon, name, action }) => {
       return (
-        <div className="d-flex align-items-center gap-2">
+        <div onClick={action} className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -102,7 +116,7 @@ const AllPurchaseTable = () => {
                 });
               }}
             >
-              <Action icon={detailsIocn} name={"View Details"} />
+              <Action icon={detailsIocn} name={"View Details"} action={""} />
             </DropdownItem>
             <DropdownItem
               className="w-100"
@@ -113,7 +127,7 @@ const AllPurchaseTable = () => {
                 });
               }}
             >
-              <Action icon={editIcon} name={"Edit"} />
+              <Action icon={editIcon} name={"Edit"} action={""} />
             </DropdownItem>
 
             <DropdownItem
@@ -124,7 +138,7 @@ const AllPurchaseTable = () => {
                 )
               }
             >
-              <Action icon={approveIcon} name={"Approve"} />
+              <Action icon={approveIcon} name={"Approve"} action={""} />
             </DropdownItem>
             <DropdownItem
               className="w-100 cursor-pointer"
@@ -132,7 +146,7 @@ const AllPurchaseTable = () => {
                 dispatch(openDeletePurchaseOrderPopup(props.data?.ID))
               }
             >
-              <Action icon={deleteIcon} name={"Delete"} />
+              <Action icon={deleteIcon} name={"Delete"} action={""} />
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -143,7 +157,7 @@ const AllPurchaseTable = () => {
   const columnDefs = [
     {
       headerName: "PO Number",
-      field: "po_number",
+      field: "Number",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400", color: "#24AAE2" },
@@ -151,7 +165,7 @@ const AllPurchaseTable = () => {
     },
     {
       headerName: " PO Description",
-      field: "description",
+      field: "Description",
       sortable: true,
 
       resizable: true,
@@ -162,7 +176,7 @@ const AllPurchaseTable = () => {
 
     {
       headerName: "Vendor",
-      field: "vendor",
+      field: "Vendor.Name",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -170,7 +184,13 @@ const AllPurchaseTable = () => {
     },
     {
       headerName: "Issued On",
-      field: "issued_on",
+      field: "CreatedDate",
+      cellRenderer: (params) => {
+        const formattedDate = moment(params.CreatedDate).format(
+          "MM/DD/YYYY, HH:mm"
+        );
+        return <span>{formattedDate}</span>;
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -178,7 +198,7 @@ const AllPurchaseTable = () => {
     },
     {
       headerName: "Amount",
-      field: "orginal_amount",
+      field: "Amount",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -187,7 +207,7 @@ const AllPurchaseTable = () => {
 
     {
       headerName: "Approval Status",
-      field: "approval_status",
+      field: "Status",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -208,139 +228,13 @@ const AllPurchaseTable = () => {
     },
   ];
 
-  const rowData = [
-    {
-      po_number: 93457,
-      title: "iPhone 9",
-      description: "An apple mobile which is nothing like apple",
-      price: 549,
-      discountPercentage: 12.96,
-      rating: 4.69,
-      stock: 94,
-      brand: "Apple",
-      actions: "",
-      status: "open",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      orginal_amount: "$576.28",
-      approval_status: "Fully Approved",
-    },
-    {
-      po_number: 93457,
-      title: "iPhone X",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      approval_status: "Fully Approved",
-
-      description:
-        "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-      price: 899,
-      discountPercentage: 17.94,
-      rating: 4.44,
-      stock: 34,
-      brand: "Apple",
-      actions: "",
-      status: "open",
-      orginal_amount: "$576.28",
-    },
-    {
-      po_number: 93457,
-      title: "Samsung Universe 9",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      approval_status: "Fully Approved",
-
-      description:
-        "Samsung's new variant which goes beyond Galaxy to the Universe",
-      price: 1249,
-      discountPercentage: 15.46,
-      rating: 4.09,
-      stock: 36,
-      brand: "Samsung",
-      actions: "",
-      status: "posted",
-      orginal_amount: "$576.28",
-    },
-    {
-      po_number: 93457,
-      title: "OPPOF19",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      approval_status: "Fully Approved",
-
-      description: "OPPO F19 is officially announced on April 2021.",
-      price: 280,
-      discountPercentage: 17.91,
-      rating: 4.3,
-      stock: 123,
-      brand: "OPPO",
-      actions: "",
-      status: "open",
-      orginal_amount: "$576.28",
-    },
-    {
-      po_number: 93457,
-      title: "Huawei P30",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      approval_status: "Fully Approved",
-
-      description:
-        "Huawei’s re-badged P30 Pro New Edition was officially unveiled yesterday in Germany and now the device has made its way to the UK.",
-      price: 499,
-      discountPercentage: 10.58,
-      rating: 4.09,
-      stock: 32,
-      brand: "Huawei",
-      actions: "",
-      orginal_amount: "$576.28",
-
-      status: "posted",
-    },
-    {
-      po_number: 93457,
-      title: "MacBook Pro",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      orginal_amount: "$576.28",
-      approval_status: "Fully Approved",
-
-      description:
-        "MacBook Pro 2021 with mini-LED display may launch between September, November",
-      price: 1749,
-      discountPercentage: 11.02,
-      rating: 4.57,
-      stock: 83,
-      brand: "Apple",
-      category: "laptops",
-      status: "open",
-    },
-    {
-      po_number: 93457,
-      title: "Samsung Galaxy Book",
-      vendor: "Winston George",
-      issued_on: "06/24/2022, 20:12",
-      approval_status: "Fully Approved",
-
-      description:
-        "Samsung Galaxy Book S (2020) Laptop With Intel Lakefield Chip, 8GB of RAM Launched",
-      price: 1499,
-      discountPercentage: 4.15,
-      rating: 4.25,
-      stock: 50,
-      brand: "Samsung",
-      category: "laptops",
-      status: "open",
-    },
-  ];
-
   return (
     <div className="my-5 m-auto" style={{ width: "100%" }}>
       <GridTable
-        rowData={rowData}
+        rowData={dataSource}
         columnDefs={columnDefs}
         pageSize={10}
-        searchText={undefined}
+        searchText={searchText}
       />
     </div>
   );

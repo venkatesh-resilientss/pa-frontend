@@ -1,28 +1,46 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, ModalBody } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
-import { closeAddMoreLinesPopup } from "redux/slices/mySlices/transactions";
+import { closeSplitAmountPopup } from "redux/slices/mySlices/transactions";
 import { useState } from "react";
 
-const AddMoreLinesPopup = ({ array, setArray }) => {
+const SplitAmountPopup = ({ array, setArray }) => {
   const dispatch = useDispatch();
 
-  const { control, register, reset } = useForm();
+  const { control, register } = useForm();
 
   const popupStatus = useSelector(
-    (state: any) => state.transactions.addMoreLinePopup.status
+    (state: any) => state.transactions.purchaseOrder.splitAmountpopup.status
+  );
+
+  const helperData = useSelector(
+    (state: any) => state.transactions.purchaseOrder.splitAmountpopup.helperData
   );
 
   const [numberOfElements, setNumberOfElements] = useState(0);
 
-  const handleAdd = () => {
-    const newArray = [...array];
-    for (let i = 0; i < numberOfElements; i++) {
-      newArray.push("");
+  const onSplit = (index) => {
+    const selectedRow = array[index];
+
+    if (selectedRow.Amount > 0 && numberOfElements > 1) {
+      const newAmount = selectedRow.Amount / numberOfElements;
+
+      // Create an array of new rows
+      const newRows = Array.from({ length: numberOfElements }, (_) => ({
+        ...selectedRow,
+        Amount: newAmount,
+        // You can add other properties if needed
+      }));
+
+      setArray((prevArray) => [
+        ...prevArray.slice(0, index),
+        ...newRows,
+        ...prevArray.slice(index + 1),
+      ]);
+
+      // Dispatch outside the array update
+      dispatch(closeSplitAmountPopup("close"));
     }
-    setArray(newArray);
-    dispatch(closeAddMoreLinesPopup("close"));
-    reset();
   };
 
   const handleNumberChange = (event) => {
@@ -33,7 +51,7 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
   return (
     <Modal
       isOpen={popupStatus}
-      toggle={() => dispatch(closeAddMoreLinesPopup("close"))}
+      toggle={() => dispatch(closeSplitAmountPopup("close"))}
       className=" modal-dialog-centered"
       style={{
         width: "338px",
@@ -50,7 +68,7 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
             marginBottom: "8px",
           }}
         >
-          Add More Lines
+          Split Amount
         </div>
 
         <div
@@ -71,7 +89,6 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
                 {...field}
                 {...register}
                 type="number"
-                // value={numberOfElements}
                 onChange={handleNumberChange}
                 style={{
                   width: "37px",
@@ -93,7 +110,7 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
             style={{ fontSize: "10.96px", fontWeight: "400" }}
-            onClick={() => dispatch(closeAddMoreLinesPopup("delete"))}
+            onClick={() => dispatch(closeSplitAmountPopup("delete"))}
             color="white"
           >
             Cancel
@@ -106,9 +123,9 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
               border: "none",
             }}
             // onClick={() => handleDeleteDepartment()}
-            onClick={handleAdd}
+            onClick={() => onSplit(helperData)}
           >
-            Add
+            Split
           </Button>
         </div>
       </ModalBody>
@@ -116,4 +133,4 @@ const AddMoreLinesPopup = ({ array, setArray }) => {
   );
 };
 
-export default AddMoreLinesPopup;
+export default SplitAmountPopup;
