@@ -45,7 +45,7 @@ export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 
-export const GET_BANKS = `${tenantIdEndpoint}/banks/`; //Banks
+export const GET_BANKS = `${tenantIdEndpoint}/banks/search`; //Banks
 export const CREATE_BANK = `${tenantIdEndpoint}/banks/`; //Create banks
 export const DELETE_BANKS = (id: any) => `${tenantIdEndpoint}/banks/${id}`; //DELETE banks
 export const EDIT_BANKS = (id: any) => `${tenantIdEndpoint}/banks/${id}`; //EDIT banks

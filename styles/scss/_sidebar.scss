@@ -24,7 +24,7 @@ a {
   width: 300px;
   height: 100vh;
   overflow-x: hidden;
-  transition: 0.2s ease;
+  // transition: 0.2s ease;
   .bottom-bar {
     padding: 0 0.5rem;
   }
@@ -105,8 +105,8 @@ a {
 .custom-tooltip {
   z-index: 999;
 }
-.custom-tooltip-card{
-  color: #4C4C61;
+.custom-tooltip-card {
+  color: #4c4c61;
   background: #fff;
   font-size: 12px;
   width: 10rem;

@@ -107,8 +107,9 @@ function AddUser() {
     roleservice.getRoles()
   );
 
-  const roleOptions = Array.isArray(rolesdata)
-    ? rolesdata.map((role) => ({
+
+  const roleOptions = Array.isArray(rolesdata?.result)
+    ? rolesdata.result.map((role) => ({
       value: role.ID,
       label: role.RoleName,
     }))
@@ -426,6 +427,8 @@ function AddUser() {
                         placeholder="Select Client"
                         defaultOptions={initialClientOptions}
                         onChange={(client) => {
+                          const updatedCLientOptions = initialClientOptions.filter((ele) => ele.value !== client.value)
+                          setInitialClientOptions([...updatedCLientOptions])
                           const clientToUpdate = `client_${index + 1}`
                           getProductionOptions(clientToUpdate, client.value)
                         }}
