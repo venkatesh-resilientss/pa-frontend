@@ -26,6 +26,7 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 const setsService = new SetsService();
 
 const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
@@ -51,13 +52,15 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   // const dataSource = setsData?.result;
 
   const fetchData1 = async (pageNumber) => {
-    // setBankLoading(true)
     try {
-      const response = await setsService.getSets({
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      });
+      }
+      const payload = { clientId: clientID, projectId: projectID }
+      const response = await setsService.getSets(queryParams, payload);
       const data = response.result; // Adjust based on the actual structure of the response
       // setBankData(data)
       // setTotalRecords(response.total_records)
@@ -161,6 +164,11 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
       field: "CreatedBy",
       sortable: true,
       resizable: true,
+      cellRenderer: (params) => {
+        if (params?.data?.Created) {
+          return params.data.Created.first_name + " " + params.data?.Created.last_name
+        }
+      },
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },

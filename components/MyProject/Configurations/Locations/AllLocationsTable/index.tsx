@@ -9,26 +9,26 @@ import {
   Input,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import GridTable from "components/grid-tables/gridTable";
+// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { hasPermission } from "commonFunctions/functions";
 import { useRouter } from "next/router";
 import { LocationsService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { openBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
-import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import { getSessionVariables } from "@/constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
-const AllLocationsTable = () => {
+const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const perPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -46,12 +46,28 @@ const AllLocationsTable = () => {
 
   const locationsService = new LocationsService();
 
-  const { data: locationsData, isLoading: locationsLoading } = useSWR(
-    ["LIST_LOCATIONS", searchText],
-    () =>
-      locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
-  );
-  const dataSource = locationsData?.result;
+
+  const fetchData1 = async (pageNumber) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      }
+      const payload = { clientId: clientID, projectId: projectID }
+      const response = await locationsService.getLocations(queryParams, payload);
+      const data = response.result; // Adjust based on the actual structure of the response
+      // setBankData(data)
+      // setTotalRecords(response.total_records)
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -155,6 +171,11 @@ const AllLocationsTable = () => {
       field: "CreatedBy",
       sortable: true,
       unSortIcon: true,
+      cellRenderer: (params) => {
+        if (params.data?.Created) {
+          return params.data.Created.first_name + " " + params.data?.Created.last_name
+        }
+      },
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -213,9 +234,9 @@ const AllLocationsTable = () => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {locationsData?.result.length} Locations
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -287,7 +308,7 @@ const AllLocationsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {locationsLoading ? (
+      {/* {locationsLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -319,7 +340,20 @@ const AllLocationsTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
+          />
+        )}
+      />
     </div>
   );
 };

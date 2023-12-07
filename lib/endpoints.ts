@@ -54,7 +54,7 @@ export const BANKS_DETAIL_ENDPOINT = (id: any) =>
 
 export const GET_ROLES = `${withoutTenantIdEndpoint}/roles/`; //Users
 
-export const GET_SERIES = `${tenantIdEndpoint}/series/`; //Series
+export const GET_SERIES = `${tenantIdEndpoint}/series/search`; //Series
 export const CREATE_SERIES = `${tenantIdEndpoint}/series/`; //Create Series
 export const DELETE_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //DELETE series
 export const EDIT_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //EDIT series
@@ -101,7 +101,7 @@ export const EDIT_DEPARTMENTS = (id: any) =>
 export const DEPARTMENT_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/departments/${id}`;
 
-export const GET_SETS = `${tenantIdEndpoint}/sets/`; //Sets
+export const GET_SETS = `${tenantIdEndpoint}/sets/search`; //Sets
 export const DELETE_SETS = (id: any) => `${tenantIdEndpoint}/sets/${id}`; //DELETE Sets
 export const EDIT_SETS = (id: any) => `${tenantIdEndpoint}/sets/${id}`; //EDIT Sets
 export const CREATE_SETS = `${tenantIdEndpoint}/sets/`; //Create Sets
@@ -131,7 +131,7 @@ export const CREATE_TAXCODES = `${tenantIdEndpoint}/taxcodes/`; // Create TaxCod
 export const TAXCODES_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/taxcodes/${id}`; //Tax Codes Details
 
-export const GET_LOCATIONS = `${tenantIdEndpoint}/locations/`; //Locations
+export const GET_LOCATIONS = `${tenantIdEndpoint}/locations/search`; //Locations
 export const CREATE_LOCATIONS = `${tenantIdEndpoint}/locations/`; //Create Locations
 export const DELETE_LOCATION = (id: any) =>
   `${tenantIdEndpoint}/locations/${id}`; //DELETE Locations

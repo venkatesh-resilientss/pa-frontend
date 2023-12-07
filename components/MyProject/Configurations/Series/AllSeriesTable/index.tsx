@@ -8,7 +8,7 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import GridTable from "components/grid-tables/gridTable";
+// import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
@@ -16,23 +16,26 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import { SeriesService } from "services";
 import moment from "moment";
-import useSWR from "swr";
+// import useSWR from "swr";
 import { useDispatch } from "react-redux";
 import {
   openBulkUploadSeriesPopup,
   openDeleteSeriesPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
+// import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 
-const AllSeriesTable = () => {
+const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const perPage = 10;
+  // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -49,12 +52,34 @@ const AllSeriesTable = () => {
 
   const seriesService = new SeriesService();
 
-  const { data: seriesData, isLoading: seriesLoading } = useSWR(
-    ["LIST_SERIES", searchText],
-    () => seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
-  );
+  // const { data: seriesData, isLoading: seriesLoading } = useSWR(
+  //   ["LIST_SERIES", searchText],
+  //   () => seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
+  // );
 
-  const dataSource = seriesData?.data;
+  // const dataSource = seriesData?.data;
+
+  const fetchData1 = async (pageNumber) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      }
+      const payload = { clientId: clientID, projectId: projectID }
+      const response = await seriesService.getSeries(queryParams, payload);
+      const data = response.data; // Adjust based on the actual structure of the response
+      // setBankData(data)
+      // setTotalRecords(response.total_records)
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -168,6 +193,11 @@ const AllSeriesTable = () => {
       field: "CreatedBy",
       sortable: true,
       resizable: true,
+      cellRenderer: (params) => {
+        if (params?.data?.Created) {
+          return params.data.Created.first_name + " " + params.data?.Created.last_name
+        }
+      },
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
@@ -228,9 +258,9 @@ const AllSeriesTable = () => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {seriesData?.data.length} Series
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -300,7 +330,21 @@ const AllSeriesTable = () => {
           </CardBody>
         </Card>
       </div>
-      {seriesLoading ? (
+
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
+          />
+        )}
+      />
+      {/* {seriesLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -319,6 +363,7 @@ const AllSeriesTable = () => {
                 pageSize={10}
                 searchText={searchText}
               />
+
             </div>
           ) : (
             <div>
@@ -330,7 +375,7 @@ const AllSeriesTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
     </div>
   );
 };
