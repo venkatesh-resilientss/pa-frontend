@@ -157,7 +157,7 @@ const AllRoleTable = () => {
           />
         </div>
         <div>
-          <p style={{ fontSize: "14px" }}>{props.data.adminname}</p>
+          <p style={{ fontSize: "14px" }}>{props.data.adminName}</p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
             {props.data.email}
           </p>
@@ -175,7 +175,7 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params.data.adminname}${params.data.email}`;
+        const res = `${params.data.adminName}${params.data.email}`;
         return res;
       },
     },
@@ -186,6 +186,7 @@ const AllRoleTable = () => {
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => (params.data.roleName),
       unSortIcon: true
     },
     {
