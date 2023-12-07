@@ -1,8 +1,7 @@
 // ** Third Party Components
-import { BiSolidCameraMovie } from "react-icons/bi";
 import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
-import { CgCalendarDates } from "react-icons/cg";
 import budget from "assets/DashboardIcons/budget.svg";
+import budgetSpend from "assets/DashboardIcons/budget_spend.svg";
 import Image from "next/image";
 import calenderMonth from "assets/DashboardIcons/calenderMonth.svg";
 
@@ -21,19 +20,19 @@ const ProjectCard = ({ data }) => {
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
               <div className="d-flex justify-content-between">
-                <div style={{ fontSize: "12px", color: "#030229" }}>
+                <div style={{ fontSize: "14px", color: "#030229" }}>
                   {data.client_name ? data.client_name : "-"}
                 </div>
                 <div
                   className="border rounded cursor-pointer text-black text-center d-flex px-1 p-1"
                   style={{
-                    fontSize: "10px",
+                    fontSize: "14px",
                     gap: "3px",
                   }}
                 >
                   <div>
-                    <AiOutlineProfile style={{ marginBottom: "1px" }} />
-                  </div>{" "}
+                    <AiOutlineProfile className="font-size-14" style={{ marginBottom: "1px",}} />
+                  </div>
                   <div>View Details</div>
                   <div>
                     <AiFillCaretRight style={{ marginBottom: "1px" }} />
@@ -42,10 +41,8 @@ const ProjectCard = ({ data }) => {
               </div>
 
               <div className="d-flex justify-content-between mt-1">
-                <div
+                <div className="font-size-16 fw-600"
                   style={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
                     color: "#030229",
                   }}
                 >
@@ -54,7 +51,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
 
-            <div style={{ fontSize: "10px" }} className="mt-1">
+            <div  className="mt-1 font-size-14">
               Payroll Coordinator :{" "}
               {data.payroll_coordinator ? data.payroll_coordinator : "-"}
             </div>
@@ -62,33 +59,34 @@ const ProjectCard = ({ data }) => {
         </div>
 
         <div
-          className="d-flex justify-content-between mt-3"
-          style={{ fontSize: "10px" }}
+          className="d-flex justify-content-between mt-3 font-size-14"
         >
-          <div className="d-flex" style={{ gap: "2px" }}>
+          <div className="d-flex gap-2">
             <Image
               src={budget}
               alt=""
               style={{
-                height: "12px",
-                width: "12px",
-                fontWeight: "400",
-                color: "#030229",
-                marginTop: "2px",
+                width: "15px",
               }}
             />
             <div>
               <span>Budget Allocated</span>
-              <div style={{ fontWeight: "bold", fontSize: "10px" }}>
+              <div className="fw-bold font-size-14">
                 {data.budget || 0}
               </div>
             </div>
             {/* Add margin to create space */}
-            <div className="d-flex" style={{ gap: "2px", marginLeft: "8px" }}>
-              <CgCalendarDates style={{ marginTop: "2px" }} />
+            <div className="d-flex gap-2">
+            <Image
+              src={budgetSpend}
+              alt=""
+              style={{
+                width: "15px",
+              }}
+            />
               <div>
                 <div>Budget Spent </div>
-                <div style={{ fontWeight: "bold" }}>
+                <div className="fw-bold">
                   {data.budget_spent || 0}
                 </div>
               </div>
@@ -97,28 +95,22 @@ const ProjectCard = ({ data }) => {
         </div>
 
         <div
-          className="d-flex justify-content-between mt-3"
-          style={{ fontSize: "10px" }}
-        >
+          className="d-flex justify-content-between mt-3">
           <div>
-            <div className="d-flex" style={{ gap: "2px" }}>
-              <BiSolidCameraMovie
-                style={{ marginBottom: "3px", fontSize: "10px" }}
-              />{" "}
+            <div className="d-flex gap-2">
+              <img src="software_subscribed.svg" alt="" />
               Subscribed Softwares
             </div>
             <div
               className="d-flex justify-content-between"
               style={{ fontSize: "10px" }}
             >
-              <div className="d-flex gap-1 mt-1">
+              <div className="d-flex gap-2 mt-1 font-size-14 fw-400">
                 {data.softwares?.map((software, i) => {
                   return (
                     <div
                       key={`software-card-${i}`}
                       style={{
-                        fontSize: "10px",
-                        fontWeight: "400",
                         backgroundColor: "#B5DEF0",
                         width: "auto",
                         color: "#030229",
@@ -136,24 +128,22 @@ const ProjectCard = ({ data }) => {
           <div>
             <div
               className="d-flex justify-content-between"
-              style={{ fontSize: "10px" }}
+              style={{ fontSize: "14px" }}
             >
-              <div className="d-flex" style={{ gap: "2px" }}>
+              <div className="d-flex gap-2">
                 <div></div>
               </div>
-              <div className="d-flex" style={{ gap: "2px" }}>
+              <div className="d-flex gap-2">
                 <Image
                   src={calenderMonth}
-                  style={{ height: "12px", width: "12px" }}
-                  alt={""}
-                />
+                  style={{ width: "16px" }} alt={""}                />
                 <div>
                   <div>Last payroll Date</div>
                 </div>
               </div>
             </div>
             <div>
-              <div style={{ fontWeight: "bold", fontSize: "10px" }}>
+              <div style={{ fontWeight: "bold", fontSize: "14px" }}>
                 {data.payrolldate ? formatDate() : "-"} {/* Payroll date */}
               </div>
             </div>

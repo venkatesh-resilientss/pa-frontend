@@ -105,3 +105,13 @@ a {
 .custom-tooltip {
   z-index: 999;
 }
+.custom-tooltip-card{
+  color: #4C4C61;
+  background: #fff;
+  font-size: 12px;
+  width: 10rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: justify;
+}
