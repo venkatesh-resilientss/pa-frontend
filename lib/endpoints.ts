@@ -92,7 +92,7 @@ export const EDIT_COUNTRIES = (id: any) =>
 export const COUNTRIES_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/countries/${id}`; //countries Details
 
-export const GET_DEPARTMENTS = `${tenantIdEndpoint}/departments/`; //Departments
+export const GET_DEPARTMENTS = `${tenantIdEndpoint}/departments/search`; //Departments
 export const CREATE_DEPARTMENTS = `${tenantIdEndpoint}/departments/`; //Create Departments
 export const DELETE_DEPARTMENTS = (id: any) =>
   `${tenantIdEndpoint}/departments/${id}`; //DELETE Departments

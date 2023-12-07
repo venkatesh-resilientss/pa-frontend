@@ -12,14 +12,12 @@ import {
 // import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import { SetsService } from "services";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import {
   openBulkUploadSetsPopup,
-  openDeleteSetPopup,
 } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
@@ -44,11 +42,6 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
-
   const dispatch = useDispatch();
 
   // const { data: setsData, isLoading: setsLoading } = useSWR(
@@ -130,15 +123,6 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
                 className="w-100 cursor-pointer"
               >
                 <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
             )}
           </DropdownMenu>

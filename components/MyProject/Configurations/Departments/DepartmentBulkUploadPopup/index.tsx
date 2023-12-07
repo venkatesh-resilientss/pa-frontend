@@ -12,7 +12,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 
-const DepartmentBulkUploadPopup = () => {
+const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
@@ -56,12 +56,12 @@ const DepartmentBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
+        setRerender(!rerender)
         dispatch(closeBulkUploadDepartmentPopup("close"));
       })
       .catch((error) => {
         // Handle error
-        console.error("Upload failed", error);
-
+        console.error(error.Message || error.error || "Upload failed");
         toast.error("Failed to insert data.");
       });
   };

@@ -19,7 +19,8 @@ const MainLayout = ({ router, user, mutate, children }: any) => {
     "transactions",
     "my-profile",
     "edit-production",
-    "payroll"
+    "payroll",
+    "reports"
     // "/forgot-password",
     // "/login",
     // "/reset-password",

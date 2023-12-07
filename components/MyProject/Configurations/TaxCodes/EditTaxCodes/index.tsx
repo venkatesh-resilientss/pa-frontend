@@ -33,14 +33,13 @@ function EditTaxCode() {
 
   useEffect(() => {
     if (!taxcodesData) return;
-
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
     taxcodesData?.Description &&
       setValue("description", taxcodesData?.Description);
-    taxcodesData?.Name && setValue("name",taxcodesData.Name);
+    taxcodesData?.Name && setValue("taxcodename",taxcodesData.Name);
     const taxCodeCountry = {
       value : taxcodesData.Country.ID,
-      id : taxcodesData.Country.Name
+      label : taxcodesData.Country.Name
     }
     setValue("country",taxCodeCountry);
     setActiveStatus(taxcodesData?.IsActive);

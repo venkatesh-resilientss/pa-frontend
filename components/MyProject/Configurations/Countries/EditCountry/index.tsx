@@ -31,6 +31,8 @@ function EditCountry() {
     if (!countryData) return;
 
     countryData?.Name && setValue("countryname", countryData?.Name);
+    countryData?.Code && setValue("countrycode", countryData?.Code);
+    countryData?.Description && setValue("description",countryData?.Description);
     setActiveStatus(countryData?.IsActive);
   }, [countryData]);
 
@@ -115,7 +117,7 @@ function EditCountry() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label>Country name  <span className="required">*</span></Label>
+              <Label>Country Name  <span className="required">*</span></Label>
               <Controller
                 name="countryname"
                 control={control}
@@ -123,7 +125,7 @@ function EditCountry() {
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
-                    placeholder="Country name"
+                    placeholder="Country Name"
                     invalid={errors.countryname && true}
                     {...field}
                   />

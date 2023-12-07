@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { DepartmentsService } from "services";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
@@ -27,9 +27,7 @@ function EditDepartment() {
     reset,
   } = useForm();
 
-  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentService.getDepartments()
-  );
+  
   useEffect(() => {
     if (!departmentsData) return;
 
@@ -50,6 +48,7 @@ function EditDepartment() {
     const backendFormat = {
       name: data.name,
       description: data.description,
+      code: data.code,
       isActive: activeStatus,
       clientID
     };
@@ -58,7 +57,6 @@ function EditDepartment() {
       .editDepartment(id, backendFormat)
       .then(() => {
         toast.success("Department Edited successfully");
-        mutate(departmentMutate());
         router.back();
 
         reset();
