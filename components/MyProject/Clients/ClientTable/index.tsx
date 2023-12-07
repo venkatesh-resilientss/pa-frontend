@@ -41,7 +41,7 @@ const ClientsListTable = () => {
   const clientService = new ClientsService();
 
   const { data: clientData, mutate } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients()
+    clientService.getClients({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const columns = [

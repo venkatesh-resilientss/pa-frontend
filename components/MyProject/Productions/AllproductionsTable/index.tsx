@@ -290,7 +290,7 @@ const AllProductionsTable = () => {
       <GridTable
         rowData={projectsData}
         columnDefs={columnDefs}
-        pageSize={4}
+        pageSize={10}
         searchText={undefined}
       />
     </div>

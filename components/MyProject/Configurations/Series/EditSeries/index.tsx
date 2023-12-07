@@ -5,10 +5,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { SeriesService } from "services";
-
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function EditSeries() {
   const router = useRouter();
-
+  const seriesValidationRules = formValidationRules.series;
   const { id } = router.query;
 
   const fetchSeriesDetails = (id) => seriesService.seriesDetails(id);
@@ -44,11 +45,14 @@ function EditSeries() {
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.seriesname,
       description: data.description,
       isActive: activeStatus,
       code: data.Seriescode,
+      clientID,
+      projectID
     };
 
     seriesService
@@ -120,11 +124,11 @@ function EditSeries() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Series Name
+                Series Name <span className="required">*</span>
               </Label>
               <Controller
                 name="seriesname"
-                rules={{ required: "Series Name is required" }}
+                rules={seriesValidationRules.name}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -146,11 +150,11 @@ function EditSeries() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Series Code
+                Series Code <span className="required">*</span>
               </Label>
               <Controller
                 name="Seriescode"
-                rules={{ required: "Series Code is required" }}
+                rules={seriesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -177,7 +181,7 @@ function EditSeries() {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: "Description is required" }}
+                rules={seriesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{

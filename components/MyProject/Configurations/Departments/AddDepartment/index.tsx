@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { DepartmentsService } from "services";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
+
 function AddDepartment() {
   const router = useRouter();
   const departmentValidationRules = formValidationRules.department;
@@ -17,11 +19,12 @@ function AddDepartment() {
   } = useForm();
 
   const onSubmit = (data) => {
+    const {clientID} = getSessionVariables();
     const backendFormat = {
       name: data.departmentname,
       code: data.departmentcode,
       description: data.description,
-      isActive: false,
+      clientID
     };
 
     departmentService

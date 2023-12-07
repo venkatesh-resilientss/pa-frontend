@@ -1,8 +1,10 @@
-import ClientTabs from "components/MyProject/Clients/ClientDetails/ClientTabs";
 import { Button } from "reactstrap";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
+import ClientTabs from "@/components/clients/ClientTabs";
+
 import { ClientsService } from "services";
 
 function Clients() {
@@ -10,40 +12,62 @@ function Clients() {
   const clientService = new ClientsService();
 
   const defaultClientData: any = {
-    software: "",
-    name: "",
-    code: "",
-    legalName: "",
-    FEIN: "",
-    routing: "",
-    bankName: "",
-    accountNumber: "",
+    SoftwareID: "",
 
-    pAdd1: "",
-    pAdd2: "",
-    pCountry: null,
-    pState: null,
-    pCity: null,
-    pZip1: "",
+    Name: "",
+    Code: "",
+    LegalName: "",
+    clientType: null,
+    ClientTypeID: 0,
 
-    iAdd1: "",
-    iAdd2: "",
-    iCountry: null,
-    iState: null,
-    iCity: null,
-    iZip: "",
+    PhysicalAddress: {
+      Line1: "",
+      Line2: "",
+      CityName: "",
+      state: null,
+      country: null,
+      StateID: 0,
+      CountryID: 0,
+      Zipcode: "",
+    },
+    MailingAddress: {
+      Line1: "",
+      Line2: "",
+      CityName: "",
+      state: null,
+      country: null,
+      StateID: 0,
+      CountryID: 0,
+      Zipcode: "",
+    },
 
-    pContactName: "",
-    pTitle: "",
-    pOffice: "",
-    pCell: "",
-    pEmail: "",
+    Company: {
+      PrimaryContact: {
+        FullName: "",
+        Title: "",
+        OfficePhone: "",
+        CellPhone: "",
+        EmailID: "",
+      },
+      SecondaryContact: {
+        FullName: "",
+        Title: "",
+        OfficePhone: "",
+        CellPhone: "",
+        EmailID: "",
+      },
+    },
 
-    sContactName: "",
-    sTitle: "",
-    sOffice: "",
-    sCell: "",
-    sEmail: "",
+    Meta: { ClientFile: [] },
+
+    LogoUrl: "",
+    Tenant: {
+      Slug: "",
+    },
+    clientAdmin: null,
+    ClientAdminID: 0,
+    rsslSupportUser: null,
+    RsslSupportUserID: 0,
   };
   const [clientData, setClientData] = useState(defaultClientData);
 
@@ -53,7 +77,52 @@ function Clients() {
         const resp = await clientService.getClientDetails(
           Number(router.query.id)
         );
-        setClientData({ ...clientData, ...resp.Meta });
+        const tempObj: any = { ...clientData, ...resp };
+        tempObj.clientType = tempObj?.ClientType?.ID
+          ? {
+              label: tempObj?.ClientType?.Name,
+              value: tempObj?.ClientType?.ID,
+            }
+          : null;
+        tempObj.clientAdmin = tempObj?.ClientAdmin?.ID
+          ? {
+              label: tempObj?.ClientAdmin?.Name,
+              value: tempObj?.ClientAdmin?.ID,
+            }
+          : null;
+        tempObj.rsslSupportUser = tempObj?.RsslSupportUser?.ID
+          ? {
+              label: tempObj?.RsslSupportUser?.Name,
+              value: tempObj?.RsslSupportUser?.ID,
+            }
+          : null;
+
+        tempObj.PhysicalAddress.country = tempObj?.PhysicalAddress?.Country?.ID
+          ? {
+              label: tempObj?.PhysicalAddress?.Country?.Name,
+              value: tempObj?.PhysicalAddress?.Country?.ID,
+            }
+          : null;
+        tempObj.PhysicalAddress.state = tempObj?.PhysicalAddress?.State?.ID
+          ? {
+              label: tempObj?.PhysicalAddress?.State?.Name,
+              value: tempObj?.PhysicalAddress?.State?.ID,
+            }
+          : null;
+
+        tempObj.MailingAddress.country = tempObj?.MailingAddress?.Country?.ID
+          ? {
+              label: tempObj?.MailingAddress?.Country?.Name,
+              value: tempObj?.MailingAddress?.Country?.ID,
+            }
+          : null;
+        tempObj.MailingAddress.state = tempObj?.MailingAddress?.State?.ID
+          ? {
+              label: tempObj?.MailingAddress?.State?.Name,
+              value: tempObj?.MailingAddress?.State?.ID,
+            }
+          : null;
+        setClientData(tempObj);
       } catch (e) {
         toast.error(e?.error || e || "Error");
       }
@@ -63,22 +132,30 @@ function Clients() {
 
   return (
     <>
-      {clientData?.name ? (
+      {clientData?.Name ? (
         <div style={{ fontFamily: "Segoe UI" }} className="p-4 text-black">
           <div className="d-flex justify-content-between">
             <div className="d-flex gap-1">
-              <img
-                src="/endamol.svg"
-                style={{ width: "50px", height: "50px" }}
-              />
+              {clientData?.LogoUrl ? (
+                <img
+                  src={clientData?.LogoUrl || "/endamol.svg"}
+                  width={50}
+                  height={50}
+                  className="rounded-circle"
+                />
+              ) : (
+                <div className="img-div">
+                  {(clientData?.Name || "").charAt(0).toUpperCase()}
+                </div>
+              )}
 
               <div>
-                <div style={{ fontSize: "30px", fontWeight: "700" }}>
-                  {clientData?.name}
+                <div className="fw-bold f-20">{clientData?.Name}</div>
+                <div className="f-12">
+                  {clientData?.Tenant?.Slug &&
+                    `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
+                  {/* | Client Admin Name | Client Admin Email */}
                 </div>
-                {/* <div>
-                  endemol.rssl.io | Client Admin Name | Client Admin Email
-                </div> */}
               </div>
             </div>
             <div className="d-flex gap-1" style={{ height: "30px" }}>

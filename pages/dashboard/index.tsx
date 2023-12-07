@@ -15,9 +15,10 @@ function Index({ loginStatus, user, mutate, router }) {
 
         const res = await authService.getUserDetailsWithToken(accessToken);
         const email = res?.data?.email;
+        const isStaffUser = res?.data?.isStaffUser;
 
         const resp = await authService.checkTenant({ email });
-        const tenant = resp?.Slug.toLowerCase();
+        const tenant = isStaffUser ? "app" : resp?.Slug.toLowerCase();
         const prefix = window.location.hostname.split(".")[0];
         await authService.authenticateUser(accessToken);
 

@@ -798,3 +798,25 @@ font-weight: 600;
   background: #B5DEF0;
   padding: 5px;
 }
+
+.errorBorder {
+  border: 1px solid #dc3545;
+  border-radius: 5px;
+}
+.menu-item-text {
+  letter-spacing: 0.1px;
+  color: #4c4c61;
+  font-size: 14px;
+}
+.menu-item-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.menu-item {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: left;
+  text-align: center;
+}

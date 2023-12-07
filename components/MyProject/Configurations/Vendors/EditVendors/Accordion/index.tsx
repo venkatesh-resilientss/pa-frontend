@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import AddressService from "services/address.service";
 import useSWR from "swr";
 
 function VendorAccordion() {
@@ -22,7 +21,6 @@ function VendorAccordion() {
   const router = useRouter();
   const { id } = router.query;
   const vendorService = new VendorsService();
-  const addressService = new AddressService();
   const [open, setOpen] = useState("1");
   const fetchVendorData = (id) => vendorService.getVendorDetails(id);
   const toggle = (id) => {
@@ -134,10 +132,6 @@ function VendorAccordion() {
       toast.error("Data fetch failed");
       return;
     }
-    const contactAddressID = vendorData.PrimaryAddressID;
-    const mailingAddressID = vendorData.MailingAddressID;
-    const billingAddressID = vendorData.BillingAddressID;
-
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
       countryID: data.contactAddressState.countryId,
@@ -163,60 +157,33 @@ function VendorAccordion() {
       zipcode: parseInt(data.billingAddressPostalCode),
     };
 
-    addressService
-      .updateAddress(contactAddressID, contactAddressPaylaod) //contact address
-      .then(() => {
-        addressService
-          .updateAddress(mailingAddressID, mailingAddressPaylaod) //mailing address
-          .then(() => {
-            addressService
-              .updateAddress(billingAddressID, billingAddressPaylaod) //billing address
-              .then(() => {
-                const backendFormat = {
-                  Name: data.vendorName,
-                  TaxID: data.taxId,
-                  PaymentType: data.paymentType?.value,
-                  PayeeName: data.payeeName,
-                  PettyCashCustodianAccountID: parseInt(
-                    data.pettyCashCustodianAccountID
-                  ),
-                  PettyCashPCardAccountID: parseInt(
-                    data.pettyCashPCardAccountID
-                  ),
-                  // PettyCashPCardEnabled
-                  PettyCashAccountID: parseInt(data.pettyCashAccountID),
-                  // AliasName
-                  // PettyCashCustodian
-                  // LegalName
-                  // Description
-                  State: parseInt(data.workState?.value),
-                  EntityID: parseInt(data.entityType),
-                  // TaxCodeID
-                  // BankAchID
-                  PrimaryAddressID: contactAddressID,
-                  MailingAddressID: mailingAddressID,
-                  BillingAddressID: billingAddressID,
-                  // PrimaryContactID
-                  // SecondaryContactID
-                  // ParentID
-                };
-
-                vendorService
-                  .editVendor(id, backendFormat)
-                  .then(() => {
-                    toast.success("Vendor updated successfully");
-                    // reset();
-                    router.back();
-                  })
-                  .catch((error) => {
-                    toast.error(error?.error);
-                  });
-              });
-          });
-      })
-      .catch((error) => {
-        toast.error(error?.error);
-      });
+    const vendorsPayload = {
+      Name: data.vendorName,
+      Code : data.vendorCode,
+      PaymentType: data.paymentType,
+      LegalName : data.legalName,
+      Email : data.vendorEmail,
+      EntityID : data.entityType,
+      TaxID: data.taxId,
+      PayeeName: data.payeeName,
+      StateID : data.workState.value,
+      PettyCashPCardEnabled : data.isPettyCashEnabled,
+      PettyCashAccountID : data.pettyCashAccount,
+      DefaultAccount : data.defaultAccount,
+      DefaultAddress : data.defaultAddress,
+      AchBankAccountNUmber : parseInt(data.achAccountNumber),
+      AchRoutingNumber : parseInt(data.achRoutingNumber),
+      PrimaryAddress : contactAddressPaylaod,
+      MailingAddress  : mailingAddressPaylaod,
+      BillingAddress : billingAddressPaylaod
+    }
+    vendorService.editVendor(id,vendorsPayload).then(()=>{
+      toast.success("Vendor Edited successfully");
+        reset();
+        router.back();
+    }).catch(error=>{
+      toast.error(error.Message);
+    });
   };
 
   return (

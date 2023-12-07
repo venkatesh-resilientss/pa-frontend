@@ -47,13 +47,7 @@ body {
 p {
   margin: 0;
 }
-input {
-  border: 2px solid #c9c9c9;
-}
-input:focus {
-  // border: #dee2e6 !important;
-  box-shadow: none !important;
-}
+
 textarea:focus {
   // border: #dee2e6 !important;
   box-shadow: none !important;
@@ -282,11 +276,15 @@ footer {
   width: 342px;
 }
 
+.form-control:focus {
+  border-color: #a2cffe;
+}
+
 .form-lable-font {
   font-size: 16px;
 }
-.form-label{
-  span.required{
+.form-label {
+  span.required {
     color: #ff0000;
   }
 }
@@ -387,4 +385,24 @@ input::placeholder {
   text-decoration: none;
   color: #030229;
   font-size: 16px;
+}
+
+.configuration-table{
+  .title{
+    font-weight: 600;
+    font-family: "Segoe UI Semibold";
+  }
+}
+
+.configuration-add{
+  .title-head{
+    font-weight: 600;
+    font-family: "Segoe UI";
+    font-size: 1rem;
+  }
+  .title{
+    font-weight: 600;
+    font-family: "Segoe UI";
+    font-size: 2rem;
+  }
 }

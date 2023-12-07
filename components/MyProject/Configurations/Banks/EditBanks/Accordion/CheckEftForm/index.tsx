@@ -61,6 +61,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
               Check Range Start <span className="required">*</span>
             </Label>
             <Controller disabled={!check}
+              
               name="checkRangeStart"
               rules={{
                 required: check ? "Check Range Start is required" : false,

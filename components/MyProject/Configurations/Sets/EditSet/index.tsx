@@ -6,6 +6,7 @@ import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function EditSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
@@ -43,11 +44,14 @@ function EditSet() {
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.setname,
       description: data.description,
       isActive: activeStatus === "active" ? true : false,
       code: data.setcode,
+      clientID,
+      projectID
     };
 
     setService

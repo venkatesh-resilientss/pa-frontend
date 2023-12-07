@@ -1,14 +1,34 @@
 import { useDispatch, useSelector } from "react-redux";
-
 import { Button, Modal, ModalBody } from "reactstrap";
+import { Controller, useForm } from "react-hook-form";
 import { closeAddMoreLinesPopup } from "redux/slices/mySlices/transactions";
+import { useState } from "react";
 
-const AddMoreLinesPopup = () => {
+const AddMoreLinesPopup = ({ array, setArray }) => {
   const dispatch = useDispatch();
+
+  const { control, register, reset } = useForm();
 
   const popupStatus = useSelector(
     (state: any) => state.transactions.addMoreLinePopup.status
   );
+
+  const [numberOfElements, setNumberOfElements] = useState(0);
+
+  const handleAdd = () => {
+    const newArray = [...array];
+    for (let i = 0; i < numberOfElements; i++) {
+      newArray.push("");
+    }
+    setArray(newArray);
+    dispatch(closeAddMoreLinesPopup("close"));
+    reset();
+  };
+
+  const handleNumberChange = (event) => {
+    const value = parseInt(event.target.value, 10);
+    setNumberOfElements(isNaN(value) ? 1 : value);
+  };
 
   return (
     <Modal
@@ -43,16 +63,28 @@ const AddMoreLinesPopup = () => {
           }}
         >
           <div> No. of Lines</div>
-          <input
-            style={{
-              width: "37px",
-              height: "34px",
-              fontSize: "12px",
-              fontWeight: "400",
-              borderRadius: "4px",
-            }}
-            className="text-center"
-            placeholder="10"
+          <Controller
+            name="addNumber"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                {...register}
+                type="number"
+                // value={numberOfElements}
+                onChange={handleNumberChange}
+                style={{
+                  width: "37px",
+                  height: "34px",
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  borderRadius: "4px",
+                }}
+                className="text-center"
+                placeholder="10"
+                min={1}
+              />
+            )}
           />
         </div>
 
@@ -74,6 +106,7 @@ const AddMoreLinesPopup = () => {
               border: "none",
             }}
             // onClick={() => handleDeleteDepartment()}
+            onClick={handleAdd}
           >
             Add
           </Button>
