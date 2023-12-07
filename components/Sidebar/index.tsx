@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import {
@@ -30,7 +30,6 @@ const Sidebar = ({ props }) => {
   const [productionList, setProductionList] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState() as any;
   const [clickedItemIndex, setClickedItemIndex] = useState(null);
-  const divRef: any = useRef();
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
@@ -70,6 +69,25 @@ const Sidebar = ({ props }) => {
     props.mutate();
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
+
+  // useEffect(() => {
+  //   const handleOutsideClick = (event) => {
+  //     console.log(event.target, divRef.current, "divvvvvvvvv");
+  //     if (divRef.current && !divRef.current.contains(event.target)) {
+  //       // Clicked outside of the sidebar-body
+  //       setProductionList(false);
+  //       setSelectedProduction(null);
+  //     }
+  //   };
+
+  //   // Add event listener when the component mounts
+  //   document.addEventListener("click", handleOutsideClick);
+
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     document.removeEventListener("click", handleOutsideClick);
+  //   };
+  // }, []);
 
   useEffect(() => {
     /**get route names */
@@ -272,7 +290,12 @@ const Sidebar = ({ props }) => {
         <div
           className={"sidenavDropdown"}
           onClick={() => {
-            setProductionList(true);
+            if (productionList) {
+              setProductionList(false);
+              setSelectedProduction();
+            } else {
+              setProductionList(true);
+            }
           }}
         >
           {selectedProduction ? (
@@ -280,11 +303,18 @@ const Sidebar = ({ props }) => {
               {showSidebar ? (
                 <>
                   <div className="d-flex align-items-center justify-content-center">
+                    <Image
+                      src="/home.svg"
+                      alt="project"
+                      width="30"
+                      height="35"
+                      className="ms-2 me-2 cursor-pointer"
+                    />
                     <div className="text-container text-center">
                       <div className="d-flex align-items-start">
                         <p className="home mt-1 cursor-pointer ellipsis">
                           {selectedProduction.Name}
-                        </p>{" "}
+                        </p>
                       </div>
                       <div className="d-flex align-items-start">
                         <p className="ressl cursor-pointer">
@@ -294,14 +324,14 @@ const Sidebar = ({ props }) => {
                         </p>
                       </div>
                     </div>
+                    <Image
+                      src="/chevron-down.svg"
+                      alt="project"
+                      width="20"
+                      height="24"
+                      className="ms-auto me-2 cursor-pointer"
+                    />
                   </div>
-                  <Image
-                    src="/chevron-down.svg"
-                    alt="project"
-                    width="20"
-                    height="24"
-                    className="ms-auto me-2 cursor-pointer"
-                  />
                 </>
               ) : (
                 <Image
@@ -370,7 +400,6 @@ const Sidebar = ({ props }) => {
                 <div className="d-flex align-items-start ms-2">
                   <p
                     id="clicked"
-                    ref={divRef}
                     className="home cursor-pointer"
                     onClick={() => {
                       setProductionList(false);
@@ -384,7 +413,7 @@ const Sidebar = ({ props }) => {
               <Input
                 // onChange={(e) => setSearchText(e.target.value)}
                 type="search"
-                className="searchProduction mt-2 cursor-pointer"
+                className="searchProduction mt-2 ms-1 cursor-pointer"
                 placeholder="Search Production"
                 style={{ width: "217px", height: "38px" }}
               />
@@ -395,7 +424,6 @@ const Sidebar = ({ props }) => {
                 return (
                   <div
                     key={index}
-                    ref={divRef}
                     className={`d-flex align-items-center cursor-pointer flex-row${
                       isClicked ? " clicked" : ""
                     }`}
@@ -409,7 +437,7 @@ const Sidebar = ({ props }) => {
                     }}
                   >
                     <img
-                      className="rounded-circle cursor-pointer me-2 ms-1"
+                      className="rounded-circle cursor-pointer me-2 ms-2"
                       src={item.img || "/icons/dummy-client-logo.svg"}
                       width="20"
                       height="20"
@@ -419,14 +447,14 @@ const Sidebar = ({ props }) => {
                     <div className="d-flex flex-column">
                       <div className="d-flex align-items-start">
                         <p
-                          className={`home cursor-pointer mt-1 ${
+                          className={`home cursor-pointer mt-1 ms-2 ${
                             item?.Name.length > 5 ? "ellipsis" : ""
                           }`}
                         >
                           {item.Name}
                         </p>
                       </div>
-                      <div className="d-flex mb-1 cursor-pointer align-items-start">
+                      <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
                         <p className="ressl">
                           {item.Client.Name
                             ? item.Client.Name
@@ -437,7 +465,7 @@ const Sidebar = ({ props }) => {
                     {isClicked && (
                       <img
                         key={index}
-                        className="ms-3 cursor-pointer"
+                        className="ms-1 cursor-pointer"
                         src="/tick.svg"
                         alt="tickmark"
                         width="16"
@@ -451,7 +479,7 @@ const Sidebar = ({ props }) => {
           </>
         ) : userData?.data?.IsStaffUser ? (
           selectedProduction ? (
-            <div className="px-2 mt-2 sidebar-body">
+            <div className="px-3 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
                 if (!hasViewConfiguration && route?.name !== "Configurations") {
                   return (
@@ -465,7 +493,7 @@ const Sidebar = ({ props }) => {
               })}
             </div>
           ) : (
-            <div className="px-2 mt-2 sidebar-body">
+            <div className="px-3 mt-2 sidebar-body">
               {sidebarRoutesMaster.map((route, i) => {
                 if (
                   userData?.data?.Role?.Code === "SUPER_ADMIN" ||
@@ -497,7 +525,7 @@ const Sidebar = ({ props }) => {
             </div>
           )
         ) : selectedProduction ? (
-          <div className="px-2 mt-2 sidebar-body">
+          <div className="px-3 mt-2 sidebar-body">
             {sidebarRoutesProduction.map((route, i) => {
               if (!hasViewConfiguration && route?.name !== "Configurations") {
                 return (
@@ -511,7 +539,7 @@ const Sidebar = ({ props }) => {
             })}
           </div>
         ) : (
-          <div className="px-2 mt-2 sidebar-body">
+          <div className="px-3 mt-2 sidebar-body">
             {sidebarRoutesNonStaff.map((route: any, i) => {
               if (!hasViewConfiguration && route?.name !== "Configurations") {
                 return (

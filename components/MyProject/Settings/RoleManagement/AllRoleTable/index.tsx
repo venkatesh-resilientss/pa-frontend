@@ -19,11 +19,14 @@ import { hasPermission } from "commonFunctions/functions";
 import moment from "moment";
 import { Image } from "react-bootstrap";
 import { useState } from "react";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
 const AllRoleTable = () => {
   const router = useRouter();
   //
   const [searchText, setSearchText] = useState("");
+  const [rerender, setRerender] = useState(false);
+  const perPage = 10;
 
   const roleservice = new RoleService();
   const hasCreateRolePermission = hasPermission(
@@ -36,10 +39,30 @@ const AllRoleTable = () => {
   //   "deactivate_role"
   // );
 
-  const { data: rolesdata, isLoading: rolesLoading } = useSWR(
-    "LIST_ROLES",
-    () => roleservice.getRoles()
-  );
+  // const { data: rolesdata, isLoading: rolesLoading } = useSWR(
+  //   "LIST_ROLES",
+  //   () => roleservice.getRoles()
+  // );
+
+  const fetchData1 = async (pageNumber) => {
+    // setBankLoading(true)
+    try {
+      const response = await roleservice.getRoles({
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      });
+      const data = response.result; // Adjust based on the actual structure of the response
+      // setBankData(data)
+      // setTotalRecords(response.total_records)
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const columns = [
     {
@@ -169,7 +192,7 @@ const AllRoleTable = () => {
           </div>
         </CardBody>
       </Card>
-      {rolesLoading ? (
+      {/* {rolesLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={rolesdata}
@@ -200,7 +223,23 @@ const AllRoleTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columns}
+          searchText={searchText}
+          fetchData={fetchData1}
+          pageSize={perPage}
+          noDataPage={() => (
+            <NoDataPage
+              buttonName={hasCreateRolePermission ? "Create Role" : "No button"}
+              buttonLink={"/settings/add-role"}
+            />
+          )}
+        />
+      </div>
     </>
   );
 };

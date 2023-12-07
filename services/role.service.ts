@@ -2,8 +2,8 @@ import APIService from './api.service';
 import { GET_ROLES, GET_ROLE_BY_ID } from '../lib/endpoints';
 
 class RoleService extends APIService {
-  getRoles(): Promise<any> {
-    return this.get(`${GET_ROLES}`)
+  getRoles(params?): Promise<any> {
+    return this.get(`${GET_ROLES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })
