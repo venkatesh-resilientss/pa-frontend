@@ -20,6 +20,10 @@ const Sidebar = ({ props }) => {
   const toggleSidebar = () => {
     if (!showSidebar && childRoute) handleDropDownChange(parentRoute);
     setSidebar(!showSidebar);
+    if (showSidebar) {
+      setProductionList(false);
+      setSelectedProduction();
+    }
   };
   // const [searchText, setSearchText] = useState("");
   const authService = new AuthService();
@@ -244,9 +248,14 @@ const Sidebar = ({ props }) => {
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
           <div>
             {showSidebar ? (
-              <img src="/logo.svg" width={100} alt="" />
+              <img src="/logo.svg" width={100} height={38} alt="logo" />
             ) : (
-              <img src="/icons/logo-dark.svg" width={25} />
+              <img
+                src="/icons/logo-dark.svg"
+                width={25}
+                height={38}
+                alt="logo"
+              />
             )}
           </div>
           <div
@@ -269,55 +278,58 @@ const Sidebar = ({ props }) => {
         </div>
         <hr className="mt-2 mb-2" />
         {/* Drop downs */}
-        <div
-          className={"sidenavDropdown"}
-          onClick={() => {
-            setProductionList(true);
-          }}
-        >
-          {selectedProduction ? (
-            <div className="d-flex align-items-center cursor-pointer flex-row">
-              {showSidebar ? (
-                <>
-                  <div className="d-flex align-items-center justify-content-center">
-                    <div className="text-container text-center">
-                      <div className="d-flex align-items-start">
-                        <p className="home mt-1 cursor-pointer ellipsis">
-                          {selectedProduction.Name}
-                        </p>{" "}
-                      </div>
-                      <div className="d-flex align-items-start">
-                        <p className="ressl cursor-pointer">
-                          {selectedProduction.Client.Name
-                            ? selectedProduction.Client.Name
-                            : selectedProduction.Description}
-                        </p>
-                      </div>
+
+        {!showSidebar ? (
+          <div className="px-2 sidebar-body">
+            <div className="d-flex gap-2 cursor-pointer justify-content-center">
+              <Image
+                src="/home-white.svg"
+                alt="project"
+                width="20"
+                height="20"
+                className="cursor-pointer"
+                onClick={() => {
+                  toggleSidebar();
+                  handleDropDownChange(null);
+                  setProductionList(true);
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div
+            className="sidenavDropdown"
+            onClick={() => setProductionList(true)}
+          >
+            {selectedProduction ? (
+              <div className="d-flex align-items-center cursor-pointer flex-row">
+                <div className="d-flex align-items-center justify-content-center">
+                  <div className="text-container text-center">
+                    <div className="d-flex align-items-start">
+                      <p className="home mt-1 cursor-pointer ellipsis">
+                        {selectedProduction.Name}
+                      </p>{" "}
+                    </div>
+                    <div className="d-flex align-items-start">
+                      <p className="ressl cursor-pointer">
+                        {selectedProduction.Client.Name
+                          ? selectedProduction.Client.Name
+                          : selectedProduction.Description}
+                      </p>
                     </div>
                   </div>
-                  <Image
-                    src="/chevron-down.svg"
-                    alt="project"
-                    width="20"
-                    height="24"
-                    className="ms-auto me-2 cursor-pointer"
-                  />
-                </>
-              ) : (
+                </div>
                 <Image
-                  src="/home.svg"
+                  src="/chevron-down.svg"
                   alt="project"
-                  width="30"
-                  height="35"
-                  className="ms-2 me-2 cursor-pointer"
+                  width="20"
+                  height="24"
+                  className="ms-auto me-2 cursor-pointer"
                 />
-              )}
-            </div>
-          ) : (
-            <div className="d-flex align-items-center flex-row">
-              {showSidebar ? (
-                <>
-                  {" "}
+              </div>
+            ) : (
+              showSidebar && (
+                <div className="d-flex align-items-center flex-row">
                   <Image
                     src="/home.svg"
                     alt="project"
@@ -331,7 +343,7 @@ const Sidebar = ({ props }) => {
                     </div>
                     <div className="d-flex mb-1 align-items-start">
                       <p className="ressl cursor-pointer">
-                        Resillient Software Solutions
+                        Resilient Software Solutions
                       </p>
                     </div>
                   </div>
@@ -342,19 +354,11 @@ const Sidebar = ({ props }) => {
                     height="24"
                     className="ms-auto cursor-pointer me-2"
                   />
-                </>
-              ) : (
-                <Image
-                  src="/home.svg"
-                  alt="project"
-                  width="30"
-                  height="35"
-                  className="ms-2 me-2 cursor-pointer"
-                />
-              )}
-            </div>
-          )}
-        </div>
+                </div>
+              )
+            )}
+          </div>
+        )}
 
         {productionList ? (
           <>
@@ -384,9 +388,9 @@ const Sidebar = ({ props }) => {
               <Input
                 // onChange={(e) => setSearchText(e.target.value)}
                 type="search"
-                className="searchProduction mt-2 cursor-pointer"
+                className="searchProduction mt-2 w-100 mx-0"
                 placeholder="Search Production"
-                style={{ width: "217px", height: "38px" }}
+                style={{ height: "38px" }}
               />
 
               {(productionData || [])?.map((item: any, index: any) => {
@@ -531,75 +535,68 @@ const Sidebar = ({ props }) => {
       <div className="bottom-bar mb-2">
         <hr />
         {/* Help Button */}
-        <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
-          <div className="d-flex align-items-center">
-            <img src="/icons/help.svg" width={14} className="me-2" alt="" />
-            {showSidebar ? <p>Need Help ?</p> : ""}
-          </div>
-          {
-            <div className="cursor-pointer">
-              <img src="/icons/more_horiz.svg" alt="" />
-            </div>
-          }
+        <div className="d-flex py-2 align-items-center my-1 select-btn">
+          <img
+            src="/icons/help.svg"
+            width={14}
+            className={showSidebar ? "me-2" : "mx-auto"}
+            alt=""
+          />
+          <p className={showSidebar ? "" : "d-none"}>Need Help ? </p>
+          <img
+            src="/icons/more_horiz.svg"
+            alt="more"
+            className={showSidebar ? "ms-auto cursor-pointer" : "d-none"}
+          />
         </div>
         {/* Profile Button */}
-        <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
-          <div className="d-flex align-items-center">
-            <div>
-              {/* <img
-                src={
-                  props.profileImg
-                    ? props.profileImg
-                    : "/icons/sample-profile.png"
-                }
-                width={22}
-                className="me-2"
-                alt=""
-              /> */}
-              <img
-                className="rounded-circle me-3"
-                src={props.profileImg ? props.profileImg : "/newAvatar.svg"}
-                width="32"
-                height="32"
-              />
-            </div>
-            {showSidebar ? <p>{props.name ? props.name : "-"}</p> : ""}
-          </div>
-
-          <OverlayTrigger
-            placement={"right"}
-            trigger={"click"}
-            rootClose
-            overlay={
-              <Tooltip bsPrefix="custom-tooltip">
-                <Card>
-                  <div className="px-3 py-2 d-flex flex-column gap-1">
-                    <Link
-                      href="/my-profile"
-                      className="d-flex gap-2 align-item-center cursor-pointer"
-                    >
-                      <img src="/icons/profile.svg" width={14} alt="" />
-                      <p>My Profile</p>
-                    </Link>
-                    <div
-                      onClick={handleLogout}
-                      className="d-flex gap-2 align-item-center cursor-pointer"
-                    >
-                      <img src="/icons/logout.svg" width={14} alt="" />
-                      <p>Logout</p>
-                    </div>
+        <OverlayTrigger
+          placement={"right"}
+          trigger={"click"}
+          rootClose
+          overlay={
+            <Tooltip bsPrefix="custom-tooltip">
+              <Card>
+                <div className="px-3 py-2 d-flex flex-column gap-1">
+                  <Link
+                    href="/my-profile"
+                    className="d-flex gap-2 align-item-center cursor-pointer"
+                    onClick={() => document.body.click()}
+                  >
+                    <img src="/icons/profile.svg" width={14} alt="" />
+                    <p>My Profile</p>
+                  </Link>
+                  <div
+                    onClick={handleLogout}
+                    className="d-flex gap-2 align-item-center cursor-pointer"
+                  >
+                    <img src="/icons/logout.svg" width={14} alt="" />
+                    <p>Logout</p>
                   </div>
-                </Card>
-              </Tooltip>
-            }
-          >
+                </div>
+              </Card>
+            </Tooltip>
+          }
+        >
+          <div className="d-flex py-2 align-items-center my-1 select-btn cursor-pointer">
+            <img
+              className={
+                showSidebar ? "rounded-circle me-3" : "rounded-circle mx-auto"
+              }
+              src={userData?.data?.profile_image || "/newAvatar.svg"}
+              width="32"
+              height="32"
+            />
+            <p className={showSidebar ? "" : "d-none"}>
+              {userData?.data?.first_name || "-"}
+            </p>
             <img
               src="/icons/more_horiz.svg"
-              className="cursor-pointer"
-              alt=""
+              alt="more"
+              className={showSidebar ? "ms-auto" : "d-none"}
             />
-          </OverlayTrigger>
-        </div>
+          </div>
+        </OverlayTrigger>
       </div>
     </div>
   );

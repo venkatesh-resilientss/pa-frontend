@@ -77,7 +77,7 @@ function Clients() {
         const resp = await clientService.getClientDetails(
           Number(router.query.id)
         );
-        const tempObj: any = { ...clientData, ...resp };
+        const tempObj: any = { ...clientData, ...resp?.client };
         tempObj.clientType = tempObj?.ClientType?.ID
           ? {
               label: tempObj?.ClientType?.Name,
@@ -97,31 +97,43 @@ function Clients() {
             }
           : null;
 
-        tempObj.PhysicalAddress.country = tempObj?.PhysicalAddress?.Country?.ID
-          ? {
-              label: tempObj?.PhysicalAddress?.Country?.Name,
-              value: tempObj?.PhysicalAddress?.Country?.ID,
-            }
-          : null;
-        tempObj.PhysicalAddress.state = tempObj?.PhysicalAddress?.State?.ID
-          ? {
-              label: tempObj?.PhysicalAddress?.State?.Name,
-              value: tempObj?.PhysicalAddress?.State?.ID,
-            }
-          : null;
+        tempObj.PhysicalAddress.country =
+          tempObj?.PhysicalAddress?.CountryID &&
+          resp?.mailing_address?.country_name
+            ? {
+                label: resp?.mailing_address?.country_name,
+                value: tempObj?.PhysicalAddress?.CountryID,
+              }
+            : null;
 
-        tempObj.MailingAddress.country = tempObj?.MailingAddress?.Country?.ID
-          ? {
-              label: tempObj?.MailingAddress?.Country?.Name,
-              value: tempObj?.MailingAddress?.Country?.ID,
-            }
-          : null;
-        tempObj.MailingAddress.state = tempObj?.MailingAddress?.State?.ID
-          ? {
-              label: tempObj?.MailingAddress?.State?.Name,
-              value: tempObj?.MailingAddress?.State?.ID,
-            }
-          : null;
+        tempObj.PhysicalAddress.state =
+          tempObj?.PhysicalAddress?.StateID && resp?.mailing_address?.state_name
+            ? {
+                label: resp?.mailing_address?.state_name,
+                value: tempObj?.PhysicalAddress?.StateID,
+              }
+            : null;
+
+        tempObj.MailingAddress.country =
+          tempObj?.MailingAddress?.CountryID &&
+          resp?.mailing_address?.country_name
+            ? {
+                label: resp?.mailing_address?.country_name,
+                value: tempObj?.MailingAddress?.CountryID,
+              }
+            : null;
+
+        tempObj.MailingAddress.state =
+          tempObj?.MailingAddress?.StateID && resp?.mailing_address?.state_name
+            ? {
+                label: resp?.mailing_address?.state_name,
+                value: tempObj?.MailingAddress?.StateID,
+              }
+            : null;
+        tempObj.Company.PrimaryContact.EmailID =
+          resp?.primary_contactID?.email_id || "";
+        tempObj.Company.SecondaryContact.EmailID =
+          resp?.secondary_contactID?.email_id || "";
         setClientData(tempObj);
       } catch (e) {
         toast.error(e?.error || e || "Error");
