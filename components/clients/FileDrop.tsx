@@ -22,6 +22,7 @@ const FileDrop = ({ setName, uploadedFile, onFileSelect }) => {
     isDragAccept,
   } = useDropzone({
     onDrop,
+    accept: { "application/*": [".docx", ".doc", ".pdf"] },
     maxFiles: 1,
   });
 

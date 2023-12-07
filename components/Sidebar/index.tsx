@@ -130,8 +130,9 @@ const Sidebar = ({ props }) => {
   const SideBarRoute = ({ route }) => {
     return (
       <div
-        className={`route-button my-2 ${parentRoute === route.path ? "active" : ""
-          }`}
+        className={`route-button my-2 ${
+          parentRoute === route.path ? "active" : ""
+        }`}
       >
         {showSidebar ? (
           <div
@@ -174,10 +175,11 @@ const Sidebar = ({ props }) => {
                   src="/icons/arrow-left.svg"
                   alt=""
                   style={{
-                    transform: `${activeDropDown === route.path
-                      ? "rotate(90deg)"
-                      : "rotate(-90deg)"
-                      }`,
+                    transform: `${
+                      activeDropDown === route.path
+                        ? "rotate(90deg)"
+                        : "rotate(-90deg)"
+                    }`,
                     transformOrigin: "center center",
                   }}
                 />
@@ -231,8 +233,9 @@ const Sidebar = ({ props }) => {
                     >
                       <Link
                         href={fullPath}
-                        className={` child-route-name ${child.path === childRoute ? "active" : ""
-                          }`}
+                        className={` child-route-name ${
+                          child.path === childRoute ? "active" : ""
+                        }`}
                       >
                         {child.name}
                       </Link>
@@ -250,8 +253,9 @@ const Sidebar = ({ props }) => {
   };
   return (
     <div
-      className={`d-flex flex-column sidebar justify-content-between ${showSidebar ? "" : "minimized"
-        }`}
+      className={`d-flex flex-column sidebar justify-content-between ${
+        showSidebar ? "" : "minimized"
+      }`}
     >
       <div className="">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
@@ -284,7 +288,7 @@ const Sidebar = ({ props }) => {
         {/* Drop downs */}
 
         <div
-          className="sidenavDropdown"
+          className={showSidebar ? "sidenavDropdown" : "d-none"}
           onClick={() => {
             setProductionList(true);
           }}
@@ -388,8 +392,9 @@ const Sidebar = ({ props }) => {
                   <div
                     key={index}
                     ref={divRef}
-                    className={`d-flex align-items-center cursor-pointer flex-row${isClicked ? " clicked" : ""
-                      }`}
+                    className={`d-flex align-items-center cursor-pointer flex-row${
+                      isClicked ? " clicked" : ""
+                    }`}
                     onClick={() => {
                       setClickedItemIndex(index);
                       setSelectedProduction(item);
@@ -410,8 +415,9 @@ const Sidebar = ({ props }) => {
                     <div className="d-flex flex-column">
                       <div className="d-flex align-items-start">
                         <p
-                          className={`home cursor-pointer mt-1 ${item?.Name.length > 5 ? "ellipsis" : ""
-                            }`}
+                          className={`home cursor-pointer mt-1 ${
+                            item?.Name.length > 5 ? "ellipsis" : ""
+                          }`}
                         >
                           {item.Name}
                         </p>
@@ -453,7 +459,10 @@ const Sidebar = ({ props }) => {
           ) : (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesMaster.map((route, i) => {
-                if (userData?.data?.Role?.Code === "SUPER_ADMIN" || (userData?.data?.IsStaffUser && hasViewRoles)) {
+                if (
+                  userData?.data?.Role?.Code === "SUPER_ADMIN" ||
+                  (userData?.data?.IsStaffUser && hasViewRoles)
+                ) {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );
