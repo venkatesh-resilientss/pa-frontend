@@ -175,8 +175,8 @@ const Sidebar = ({ props }) => {
                   alt=""
                   style={{
                     transform: `${activeDropDown === route.path
-                        ? "rotate(90deg)"
-                        : "rotate(-90deg)"
+                      ? "rotate(90deg)"
+                      : "rotate(-90deg)"
                       }`,
                     transformOrigin: "center center",
                   }}
@@ -453,11 +453,7 @@ const Sidebar = ({ props }) => {
           ) : (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesMaster.map((route, i) => {
-                if (
-                  userData?.data?.IsStaffUser ||
-                  userData?.data?.Role?.Code === "SUPER_ADMIN" ||
-                  hasViewRoles
-                ) {
+                if (userData?.data?.Role?.Code === "SUPER_ADMIN" || (userData?.data?.IsStaffUser && hasViewRoles)) {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );

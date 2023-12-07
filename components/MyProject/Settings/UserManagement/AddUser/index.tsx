@@ -526,7 +526,6 @@ function AddUser() {
             </Col>
             {<Col xl="1">
               {index !== 0 && (<div className="d-flex align-items-end h-100 py-2 cursor-pointer">
-                {CPlist.client}
                 <img src="/deletebin.svg" alt="" width={15} onClick={() => {
                   const updatedData = clientProductionsList.filter((_, listIndex) => listIndex !== index)
                   setClientProductionsList([...updatedData])

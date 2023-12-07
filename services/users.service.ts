@@ -10,8 +10,8 @@ import {
 } from "../lib/endpoints";
 
 class UsersService extends APIService {
-  getUsers(): Promise<any> {
-    return this.get(`${GET_USERS}`)
+  getUsers(params): Promise<any> {
+    return this.get(`${GET_USERS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })
