@@ -130,7 +130,7 @@ const AllRoleTable = () => {
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
-                  name={"Edit User"}
+                  name={"View/Edit User"}
                   action={undefined}
                 />
               </DropdownItem>

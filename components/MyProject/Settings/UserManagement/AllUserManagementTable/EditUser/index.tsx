@@ -514,7 +514,7 @@ function EditUser() {
                     name="Client"
                     control={control}
                     render={({ field }) => (
-                      <AsyncSelect isDisabled={CPlist.disabledClient}
+                      <AsyncSelect isDisabled={!editMode || CPlist.disabledClient}
                         {...field}
                         isClearable={true}
                         className="react-select"
@@ -553,7 +553,7 @@ function EditUser() {
                         name="productions"
                         control={control}
                         render={({ field }) => (
-                          <Select
+                          <Select isDisabled={!editMode}
                             {...field}
                             closeMenuOnSelect={false}
                             isMulti
@@ -606,7 +606,7 @@ function EditUser() {
                 </div>)}
 
               </Col>}
-              {isCheckedStaffUser && (
+              {isCheckedStaffUser && editMode && (
                 <Col xl="3">
                   {index === clientProductionsList.length - 1 && (
                     <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
