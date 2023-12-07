@@ -9,9 +9,9 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function FormFields(props: any) {
-  const { fields, clientData, setClientData, back, step, setStep } = props;
+  const { fields, clientData, setClientData, step, setStep } = props;
   const { data, pStates, iStates, sUsers, loadOptions, hideBtns } = props;
-  const { err, setErr, validate, disabled, cls, router } = props;
+  const { err, setErr, validate, disabled, cls, router, isEditing } = props;
 
   const [loading, setLoading] = useState(false);
 
@@ -28,8 +28,8 @@ export default function FormFields(props: any) {
       },
       borderColor:
         err &&
-        state.selectProps.placeholder !== "Select Admin" &&
-        !state.hasValue
+          state.selectProps.placeholder !== "Select Admin" &&
+          !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
     }),
@@ -68,8 +68,8 @@ export default function FormFields(props: any) {
           ? pStates
           : iStates
         : lb === "RSSL Support User"
-        ? sUsers
-        : data) || [];
+          ? sUsers
+          : data) || [];
 
     return tempArr.map((e) => {
       return { label: e.Name, value: e.ID };
@@ -103,14 +103,14 @@ export default function FormFields(props: any) {
         (el.typ === "select"
           ? !getObjectValue(clientData, el.vl)
           : (el.vl === "Company.PrimaryContact.EmailID" &&
-              !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
-                getObjectValue(clientData, el.vl)
-              )) ||
-            (el.vl === "Tenant.Slug" &&
-              !new RegExp(/^[a-z0-9-_]{2,}$/).test(
-                getObjectValue(clientData, el.vl)
-              )) ||
-            !getObjectValue(clientData, el.vl).toString().trim())
+            !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
+              getObjectValue(clientData, el.vl)
+            )) ||
+          (el.vl === "Tenant.Slug" &&
+            !new RegExp(/^[a-z0-9-_]{2,}$/).test(
+              getObjectValue(clientData, el.vl)
+            )) ||
+          !getObjectValue(clientData, el.vl).toString().trim())
       )
         tempErr = true;
     });
@@ -159,6 +159,11 @@ export default function FormFields(props: any) {
     }
   };
 
+  const back = () => {
+    if (step != 1 && step > 1) {
+      setStep(step - 1)
+    }
+  }
   return (
     <>
       <div className="row">
@@ -194,13 +199,12 @@ export default function FormFields(props: any) {
             ) : el.typ === "file" ? (
               <div className="input-group">
                 <input
-                  className={`form-control ${
-                    err &&
+                  className={`form-control ${err &&
                     el.err &&
                     !getObjectValue(clientData, el.vl).toString().trim()
-                      ? "border-danger"
-                      : ""
-                  }`}
+                    ? "border-danger"
+                    : ""
+                    }`}
                   type={el.typ}
                   name={el.lb.replaceAll(" ", "") + idx}
                   accept="image/*"
@@ -227,13 +231,12 @@ export default function FormFields(props: any) {
             ) : el.typ === "domain" ? (
               <div className="input-group">
                 <input
-                  className={`form-control ${
-                    err &&
+                  className={`form-control ${err &&
                     el.err &&
                     !getObjectValue(clientData, el.vl).toString().trim()
-                      ? "border-danger"
-                      : ""
-                  }`}
+                    ? "border-danger"
+                    : ""
+                    }`}
                   placeholder={el.ph}
                   type={"text"}
                   name={el.lb.replaceAll(" ", "") + idx}
@@ -241,7 +244,7 @@ export default function FormFields(props: any) {
                   onChange={(e) =>
                     updateValue(clientData, el.vl, e.target.value)
                   }
-                  disabled={disabled || false}
+                  disabled={disabled || isEditing || false}
                 />
                 <span className="input-group-text">
                   {process.env.NEXT_PUBLIC_REDIRECT}
@@ -249,13 +252,12 @@ export default function FormFields(props: any) {
               </div>
             ) : (
               <input
-                className={`form-control ${
-                  err &&
+                className={`form-control ${err &&
                   el.err &&
                   !getObjectValue(clientData, el.vl).toString().trim()
-                    ? "border-danger"
-                    : ""
-                }`}
+                  ? "border-danger"
+                  : ""
+                  }`}
                 placeholder={el.ph}
                 type={el.typ}
                 name={el.lb.replaceAll(" ", "") + idx}
@@ -269,22 +271,22 @@ export default function FormFields(props: any) {
               (el.typ === "select"
                 ? !getObjectValue(clientData, el.vl)
                 : (el.vl === "Company.PrimaryContact.EmailID" &&
-                    !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
-                      getObjectValue(clientData, el.vl)
-                    )) ||
-                  (el.vl === "Tenant.Slug" &&
-                    !new RegExp(/^[a-z0-9-_]{2,}$/).test(
-                      getObjectValue(clientData, el.vl)
-                    )) ||
-                  !getObjectValue(clientData, el.vl).toString().trim()) && (
+                  !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
+                    getObjectValue(clientData, el.vl)
+                  )) ||
+                (el.vl === "Tenant.Slug" &&
+                  !new RegExp(/^[a-z0-9-_]{2,}$/).test(
+                    getObjectValue(clientData, el.vl)
+                  )) ||
+                !getObjectValue(clientData, el.vl).toString().trim()) && (
                 <span className="text-danger f-12">
                   {el.vl === "Company.PrimaryContact.EmailID" &&
-                  getObjectValue(clientData, el.vl).toString().trim()
+                    getObjectValue(clientData, el.vl).toString().trim()
                     ? "Email is invalid"
                     : el.vl === "Tenant.Slug" &&
                       getObjectValue(clientData, el.vl).toString().trim()
-                    ? "Domain should contain at least two characters of lowercase,numeric or symbols(-, _)"
-                    : el.err}
+                      ? "Domain should contain at least two characters of lowercase,numeric or symbols(-, _)"
+                      : el.err}
                 </span>
               )}
           </div>

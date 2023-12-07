@@ -6,8 +6,12 @@ const authService = new AuthService();
 
 export const checkTenant = async () => {
   const name = window.location.hostname.split(".")[0];
+ if (name === "app"){
+  cookie.set("tenant_id","1");
+ } else{
   const tenant = await authService.checkTenant({ name });
   if (tenant?.ID) cookie.set("tenant_id", tenant.ID);
+ }
 };
 
 export const appTenant = () => {

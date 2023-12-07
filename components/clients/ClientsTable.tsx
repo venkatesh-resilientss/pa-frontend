@@ -124,7 +124,7 @@ const ClientsListTable = () => {
               }}
             >
               <File size={14} className="me-50" />
-              <span className="align-middle p-1">View Details</span>
+              <span className="align-middle p-1">View/Edit Details</span>
             </DropdownItem>
             <DropdownItem
               tag="a"

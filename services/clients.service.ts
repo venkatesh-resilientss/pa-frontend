@@ -120,8 +120,8 @@ class ClientsService extends APIService {
       });
   }
 
-  editClient(id: any) {
-    return this.put(EDIT_CLIENTS(id))
+  editClient(id: any, data:any) {
+    return this.put(EDIT_CLIENTS(id), data)
       .then((response) => {
         return response?.data;
       })
