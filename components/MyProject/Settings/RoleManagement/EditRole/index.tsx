@@ -2,10 +2,17 @@ import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthService } from "services";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import useSWR from "swr";
+
+const authService = new AuthService();
 
 function EditRole() {
   const router = useRouter();
-
+  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
+    authService.getUserDetails()
+  );
   const [restricted, setRestricted] = useState(false);
 
   return (
@@ -81,22 +88,51 @@ function EditRole() {
           <div className="d-flex gap-1">
             <input
               type="radio"
+              name="ex1"
               id="ex1-active"
-              name="ex1"
-              onChange={() => {
-                setRestricted(false);
-              }}
-            />
-            <div>Full Access</div>
-          </div>
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              name="ex1"
-              id="ex1-inactive"
+              checked={restricted}
               onChange={() => setRestricted(true)}
             />
-            <div>Restricted Access</div>
+            <div style={{ fontSize: "15px" }}>Restricted Access</div>
+
+            {userData?.data?.Role?.AccessType === "full_access" ||
+            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
+              <>
+                <div className="d-flex gap-1 ms-3">
+                  <input
+                    type="radio"
+                    id="ex1-inactive"
+                    name="ex1"
+                    checked={!restricted}
+                    onChange={() => {
+                      setRestricted(false);
+                    }}
+                  />
+                  <div style={{ fontSize: "15px" }}>Full Access</div>
+                </div>
+              </>
+            ) : (
+              <>
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip className="mt-3" id="tooltip-engine">
+                      You didn&apos;t have access to this feature
+                    </Tooltip>
+                  }
+                >
+                  <div className="d-flex gap-1 ms-3">
+                    <input
+                      type="radio"
+                      id="ex1-inactive"
+                      name="ex1"
+                      disabled={true}
+                    />
+                    <div style={{ fontSize: "15px" }}>Full Access</div>
+                  </div>
+                </OverlayTrigger>
+              </>
+            )}
           </div>
         </div>
       </div>

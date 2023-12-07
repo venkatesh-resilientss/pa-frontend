@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import {
@@ -12,6 +12,7 @@ import { Card, Image } from "react-bootstrap";
 import { AuthService, ClientsService } from "services";
 import { Input } from "reactstrap";
 import useSWR from "swr";
+import { hasPermission } from "commonFunctions/functions";
 
 const Sidebar = ({ props }) => {
   const router = useRouter();
@@ -29,6 +30,7 @@ const Sidebar = ({ props }) => {
   const [productionList, setProductionList] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState() as any;
   const [clickedItemIndex, setClickedItemIndex] = useState(null);
+  const divRef: any = useRef();
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
@@ -41,6 +43,25 @@ const Sidebar = ({ props }) => {
     clientService.getProductions()
   );
 
+  const hasViewConfiguration = hasPermission(
+    "configuration_management",
+    "view_all_configurations"
+  );
+  // const hasViewProduction = hasPermission(
+  //   "production_management",
+  //   "view_all_productions"
+  // );
+
+  // const hasViewUsers = hasPermission(
+  //   "user_and_role_management",
+  //   "view_all_users"
+  // );
+  const hasViewRoles = hasPermission(
+    "user_and_role_management",
+    "view_all_roles"
+  );
+  // const hasViewClients = hasPermission("client_management", "view_all_clients");
+
   /**
    * User Profile
    */
@@ -49,6 +70,23 @@ const Sidebar = ({ props }) => {
     props.mutate();
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
+  useEffect(() => {
+    const handleOutsideClick = (event: any) => {
+      if (divRef.current && !divRef.current.contains(event.target)) {
+        // Clicked outside of the div
+        setClickedItemIndex(null);
+        // Handle other actions as needed
+      }
+    };
+
+    // Add event listener when the component mounts
+    document.addEventListener("click", handleOutsideClick);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
 
   useEffect(() => {
     /**get route names */
@@ -181,7 +219,7 @@ const Sidebar = ({ props }) => {
 
         {route.children && activeDropDown === route.path ? (
           <div className="sidebar-list">
-            <div className="ps-3">
+            <div className="ps-4">
               <ul>
                 {route.children.map((child, i) => {
                   const fullPath = `${route.path}${child.path}`;
@@ -256,22 +294,22 @@ const Sidebar = ({ props }) => {
           }}
         >
           {selectedProduction ? (
-            <div className="d-flex align-items-center flex-row">
+            <div className="d-flex align-items-center cursor-pointer flex-row">
               <Image
                 src="/home.svg"
                 alt="project"
                 width="30"
                 height="35"
-                className="ms-2 me-2"
+                className="ms-2 me-2 cursor-pointer"
               />
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column cursor-pointer">
                 <div className="d-flex align-items-start">
                   <p className="home mt-1 ellipsis">
                     {selectedProduction.Name}
                   </p>
                 </div>
-                <div className="d-flex mb-1 align-items-start">
-                  <p className="ressl">
+                <div className="d-flex mb-1 cursor-pointer align-items-start">
+                  <p className="ressl cursor-pointer">
                     {selectedProduction.Client.Name
                       ? selectedProduction.Client.Name
                       : selectedProduction.Description}
@@ -283,7 +321,7 @@ const Sidebar = ({ props }) => {
                 alt="project"
                 width="20"
                 height="24"
-                className="ms-auto me-2"
+                className="ms-auto me-2 cursor-pointer"
               />
             </div>
           ) : (
@@ -295,12 +333,14 @@ const Sidebar = ({ props }) => {
                 height="35"
                 className="ms-2 me-2"
               />
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column cursor-pointer">
                 <div className="d-flex align-items-start">
-                  <p className="home mt-1">Home</p>
+                  <p className="home mt-1 cursor-pointer">Home</p>
                 </div>
                 <div className="d-flex mb-1 align-items-start">
-                  <p className="ressl">Resillient Software Solutions</p>
+                  <p className="ressl cursor-pointer">
+                    Resillient Software Solutions
+                  </p>
                 </div>
               </div>
               <Image
@@ -308,7 +348,7 @@ const Sidebar = ({ props }) => {
                 alt="project"
                 width="20"
                 height="24"
-                className="ms-auto me-2"
+                className="ms-auto cursor-pointer me-2"
               />
             </div>
           )}
@@ -316,18 +356,18 @@ const Sidebar = ({ props }) => {
 
         {productionList ? (
           <>
-            <div className="container p-0">
+            <div className="container cursor-pointer p-0">
               <div className="d-flex align-items-center mt-2 flex-row">
                 <Image
                   src="/home.svg"
                   alt="project"
                   width="20"
                   height="24"
-                  className="ms-2 me-2"
+                  className="ms-2 cursor-pointer me-2"
                 />
                 <div className="d-flex align-items-start ms-2">
                   <p
-                    className="home"
+                    className="home cursor-pointer"
                     onClick={() => {
                       setProductionList(false);
                       setSelectedProduction();
@@ -340,18 +380,19 @@ const Sidebar = ({ props }) => {
               <Input
                 // onChange={(e) => setSearchText(e.target.value)}
                 type="search"
-                className="searchProduction"
+                className="searchProduction mt-2 cursor-pointer"
                 placeholder="Search Production"
                 style={{ width: "217px", height: "38px" }}
               />
 
-              {productionData?.map((item: any, index: any) => {
+              {(productionData || [])?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
                 return (
                   <div
                     key={index}
-                    className={`d-flex align-items-center flex-row${
+                    ref={divRef}
+                    className={`d-flex align-items-center cursor-pointer flex-row${
                       isClicked ? " clicked" : ""
                     }`}
                     onClick={() => {
@@ -364,7 +405,7 @@ const Sidebar = ({ props }) => {
                     }}
                   >
                     <img
-                      className="rounded-circle me-2 ms-1"
+                      className="rounded-circle cursor-pointer me-2 ms-1"
                       src={item.img || "/icons/dummy-client-logo.svg"}
                       width="20"
                       height="20"
@@ -374,14 +415,14 @@ const Sidebar = ({ props }) => {
                     <div className="d-flex flex-column">
                       <div className="d-flex align-items-start">
                         <p
-                          className={`home mt-1 ${
+                          className={`home cursor-pointer mt-1 ${
                             item?.Name.length > 5 ? "ellipsis" : ""
                           }`}
                         >
                           {item.Name}
                         </p>
                       </div>
-                      <div className="d-flex mb-1 align-items-start">
+                      <div className="d-flex mb-1 cursor-pointer align-items-start">
                         <p className="ressl">
                           {item.Client.Name
                             ? item.Client.Name
@@ -392,7 +433,7 @@ const Sidebar = ({ props }) => {
                     {isClicked && (
                       <img
                         key={index}
-                        className="ms-3"
+                        className="ms-3 cursor-pointer"
                         src="/tick.svg"
                         alt="tickmark"
                         width="16"
@@ -404,34 +445,68 @@ const Sidebar = ({ props }) => {
               })}
             </div>
           </>
-        ) : !userData?.data?.IsStaffUser ? (
+        ) : userData?.data?.IsStaffUser ? (
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
+                if (!hasViewConfiguration && route?.name !== "Configurations") {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
+                }
               })}
             </div>
           ) : (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesMaster.map((route, i) => {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
+                if (
+                  userData?.data?.IsStaffUser ||
+                  userData?.data?.Role?.Code === "SUPER_ADMIN" ||
+                  hasViewRoles
+                ) {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
+                } else {
+                  const filteredChildren = route?.children?.filter(
+                    (child) => child.name !== "Role Management"
+                  );
+
+                  // Create a new route object with filtered children
+                  const filteredRoute = {
+                    ...route,
+                    children: filteredChildren,
+                  };
+
+                  // Use filteredRoute when rendering
+                  return (
+                    <SideBarRoute
+                      route={filteredRoute}
+                      key={`sidebar-route-${i}`}
+                    />
+                  );
+                }
               })}
             </div>
           )
         ) : selectedProduction ? (
           <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesProduction.map((route, i) => {
-              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+              if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              }
             })}
           </div>
         ) : (
           <div className="px-2 mt-2 sidebar-body">
-            {sidebarRoutesNonStaff.map((route, i) => {
-              return <SideBarRoute route={route} key={`sidebar-route-${i}`} />;
+            {sidebarRoutesNonStaff.map((route: any, i) => {
+              if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              }
             })}
           </div>
         )}
