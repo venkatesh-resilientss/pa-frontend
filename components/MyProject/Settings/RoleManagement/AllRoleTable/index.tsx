@@ -8,7 +8,6 @@ import {
   Input,
 } from "reactstrap";
 import { RoleService } from "services";
-import CustomBadge from "components/Generic/CustomBadge";
 import Link from "next/link";
 import useSWR from "swr";
 import { MoreVertical, Plus } from "react-feather";
@@ -31,10 +30,7 @@ const AllRoleTable = () => {
     "user_and_role_management",
     "create_role"
   );
-  const hasEditrolePermission = hasPermission(
-    "user_and_role_management",
-    "edit_role"
-  );
+
   // const hasDeactivateRolePermission = hasPermission(
   //   "user_and_role_management",
   //   "deactivate_role"
@@ -44,19 +40,6 @@ const AllRoleTable = () => {
     "LIST_ROLES",
     () => roleservice.getRoles()
   );
-
-  const StateBadge = (props) => {
-    const sateDir = {
-      true: "success",
-      false: "danger",
-    };
-    return (
-      <CustomBadge
-        bg={sateDir[props.value]}
-        value={props.value === true ? "active" : "In-active"}
-      />
-    );
-  };
 
   const columns = [
     {
