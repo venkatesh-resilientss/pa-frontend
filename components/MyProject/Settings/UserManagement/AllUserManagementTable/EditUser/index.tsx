@@ -273,7 +273,8 @@ function EditUser() {
       // "IsStaffUser": isCheckedStaffUser,
       "Meta": {
         "userCPReference": []
-      }
+      },
+      "IsActive": activeStatus === "active" ? true : false,
     }
     const userPreferences = clientProductionsList.map(list => {
       return {
