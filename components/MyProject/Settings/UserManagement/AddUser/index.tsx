@@ -109,27 +109,6 @@ function AddUser() {
     }
   };
 
-  // const clientOptions = Array.isArray(clientData)
-  //   ? clientData.map((client) => ({
-  //     value: client.ID,
-  //     label: client.Name,
-  //   }))
-  //   : [];
-
-  //get roles
-
-
-
-  // const roleOptions = Array.isArray(rolesdata?.result)
-  //   ? rolesdata.result.map((role) => ({
-  //     value: role.ID,
-  //     label: role.RoleName,
-  //   }))
-  //   : [];
-
-  //get projects
-
-
   const getProductionOptions = (client, clientId) => {
     usersService
       .getProductionsByClient(clientId)
