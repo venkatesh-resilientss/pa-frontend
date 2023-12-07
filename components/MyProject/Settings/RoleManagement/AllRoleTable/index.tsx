@@ -9,10 +9,8 @@ import {
 } from "reactstrap";
 import { RoleService } from "services";
 import Link from "next/link";
-import useSWR from "swr";
 import { MoreVertical, Plus } from "react-feather";
 import { useRouter } from "next/router";
-import GridTable from "components/grid-tables/gridTable";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 // import { checkTenant } from "constants/function";
@@ -58,6 +56,7 @@ const AllRoleTable = () => {
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
+      setRerender(!rerender);
       return { data: null, totalRecords: 0 };
     } finally {
       // setBankLoading(false)
