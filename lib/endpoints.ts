@@ -167,7 +167,7 @@ export const EDIT_USERS = (id: any) => `${tenantIdEndpoint}/users/${id}`; //EDIT
 export const USERS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/users/${id}`; //Users Details
 
-export const GET_ROLE_BY_ID = (id: any) => `${tenantIdEndpoint}/roles/${id}`; //Users
+export const GET_ROLE_BY_ID = (id: any) => `${withoutTenantIdEndpoint}/roles/${id}`; //Users
 export const GET_USER_FROM_TOKEN = `${withoutTenantIdEndpoint}/users/me`;
 export const GET_USER_DETAILS = `${withoutTenantIdEndpoint}/users/me`; //GET USER FROM TOKEN
 

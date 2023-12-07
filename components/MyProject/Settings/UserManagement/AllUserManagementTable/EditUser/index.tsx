@@ -27,7 +27,7 @@ function EditUser() {
   const [initialClientOptions, setInitialClientOptions] = useState() as any
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [clientProductionsList, setClientProductionsList] = useState([{
-    client: "client_1", production: "production_1", client_id: 0, production_id: [], productionOptions: []
+    client: "client_1", production: "production_1", client_id: 0, production_id: [], productionOptions: [], disabledClient: true
   }])
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function EditUser() {
     if (userDetails) {
       if (!userDetails.IsStaffUser) {
         setClientProductionsList([{
-          client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: []
+          client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: [], disabledClient: true
         }])
         setInitialClientOptions([{ label: userDetails.Client.Name, value: userDetails.Client.ID }])
         usersService
@@ -52,7 +52,7 @@ function EditUser() {
               }
             })
             setClientProductionsList([{
-              client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: [...productions]
+              client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: [...productions], disabledClient: true
             }])
           })
 
@@ -181,24 +181,27 @@ function EditUser() {
       //   label: eachclicntdata?.production || "",
       // });
       setIsCheckedStaffUser(eachclicntdata.IsStaffUser)
-      if (eachclicntdata.Meta?.userCPReference && eachclicntdata.IsStaffUser) {
-        const list = eachclicntdata.Meta?.userCPReference.map((meta, index) => {
-          return {
-            client: `client_${index + 1}`,
-            production: `production_${index + 1}`,
-            client_id: meta.ClientID,
-            production_id: meta.ProjectIDs,
-            productionOptions: []
+      const getdata = async () => {
+
+        if (eachclicntdata.Meta?.userCPReference && eachclicntdata.IsStaffUser) {
+          const list = await Promise.all(eachclicntdata.Meta?.userCPReference.map(async (meta, index) => {
+            const productionOptions = await ProductionOptions(meta.ClientID);
+            return {
+              client: `client_${index + 1}`,
+              production: `production_${index + 1}`,
+              client_id: meta.ClientID,
+              production_id: meta.ProjectID,
+              productionOptions,
+              disabledClient: true,
+            };
+          }));
+
+          if (list.length > 0) {
+            setClientProductionsList([...list]);
           }
-        })
-        if (list.length > 0) {
-          setClientProductionsList([...list])
         }
       }
-
-
-
-
+      getdata()
 
 
 
@@ -207,63 +210,59 @@ function EditUser() {
     }
   }, [eachclicntdata, userLoading, reset]);
 
-  // const getProductionOptions = (client, clientId) => {
-  //   console.log(client, clientId, 'client, clientId')
-  //   usersService
-  //     .getProductionsByClient(clientId)
-  //     .then((res) => {
-  //       const productions = res.map((pr) => {
-  //         return {
-  //           label: pr.name, value: pr.id
-  //         }
-  //       })
+  const ProductionOptions = async (clientId) => {
+    const data = await usersService
+      .getProductionsByClient(clientId);
+    const updatedData = data.map((ele) => ({
+      label: ele.name, value: ele.id
+    }))
+    return updatedData
+  }
 
-  //       console.log('ress', productions)
-  //       setClientProductionsList(prevList => {
-  //         return prevList.map((item: any) => {
-  //           if (item.client == client) {
-  //             return {
-  //               ...item,
-  //               productionOptions: [...productions],
-  //               client_id: clientId
-  //             };
-  //           }
-  //           return item;
-  //         });
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       toast.error(error?.error);
-  //       setClientProductionsList(prevList => {
-  //         return prevList.map((item: any) => {
-  //           if (item.client == client) {
-  //             return {
-  //               ...item,
-  //               productionOptions: [],
-  //               client_id: clientId
-  //             };
-  //           }
-  //           return item;
-  //         });
-  //       });
-  //     })
+  const getProductionOptions = (client, clientId) => {
+    usersService
+      .getProductionsByClient(clientId)
+      .then((res) => {
+        const productions = res.map((pr) => {
+          return {
+            label: pr.name, value: pr.id
+          }
+        })
+        setClientProductionsList(prevList => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [...productions],
+                client_id: clientId
+              };
+            }
+            return item;
+          });
+        });
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+        setClientProductionsList(prevList => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [],
+                client_id: clientId
+              };
+            }
+            return item;
+          });
+        });
+      })
 
-  // }
+  }
 
 
   const usersService = new UsersService();
 
   const onSubmit = (data) => {
-    // const backendFormat = {
-    //   last_name: data.lastname,
-    //   first_name: data.firstname,
-    //   middle_name: data.middlename,
-    //   email: data.email,
-    //   client_id: selectedClient?.value,
-    //   roleID: selectedRole?.value,
-    //   IsActive: activeStatus === "active" ? true : false,
-    // };
-
     const userPayload = {
       "first_name": data.firstname,
       "last_name": data.lastname,
@@ -482,24 +481,24 @@ function EditUser() {
                 />
               </div>
             </Col>
-            {userDetails?.IsStaffUser && (
-              <Col xl="4">
-                <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
-                  <input readOnly
-                    type="checkbox"
-                    name="customSwitch"
-                    id="exampleCustomSwitch"
-                    className="mb-1"
-                    checked={isCheckedStaffUser}
-                  // onChange={(e) => {
-                  //   setIsCheckedStaffUser(e.target.checked)
-                  // }}
-                  />
+            {/* {userDetails?.IsStaffUser && ( */}
+            <Col xl="4">
+              <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
+                <input disabled
+                  type="checkbox"
+                  name="customSwitch"
+                  id="exampleCustomSwitch"
+                  className="mb-1"
+                  checked={isCheckedStaffUser}
+                // onChange={(e) => {
+                //   setIsCheckedStaffUser(e.target.checked)
+                // }}
+                />
 
-                  <Label className="mb-0">Is Staff User</Label>
-                </div>
-              </Col>
-            )}
+                <Label className="mb-0">Is Staff User</Label>
+              </div>
+            </Col>
+            {/* )} */}
 
           </Row>
           <Row className="mt-4 mb-2">
@@ -515,29 +514,24 @@ function EditUser() {
                     name="Client"
                     control={control}
                     render={({ field }) => (
-                      <AsyncSelect
+                      <AsyncSelect isDisabled={CPlist.disabledClient}
                         {...field}
-                        // isClearable={true}
+                        isClearable={true}
                         className="react-select"
                         classNamePrefix="select"
                         // loadOptions={loadClientOptions}
                         placeholder="Select Client"
                         defaultOptions={initialClientOptions}
-                        // defaultValue={{
-                        //   "value": 1,
-                        //   "label": "Endemol Shine Media"
-                        // }}
                         defaultValue={() => {
                           return initialClientOptions?.filter((option) => option.value === CPlist.client_id);
                         }}
-                      // defaultValue={initialClientOptionsfun(CPlist.client_id)}
-                      // defaultValue={() => { return initialClientOptionsfun(CPlist.ClientID) }}
-                      // defaultValue={() => { initialClientOptionsfun(CPlist.ClientID) }}
-                      // onChange={(client) => {
-                      //   console.log('heree', client)
-                      //   const clientToUpdate = `client_${index + 1}`
-                      //   getProductionOptions(clientToUpdate, client.value)
-                      // }}
+                        // defaultValue={initialClientOptionsfun(CPlist.client_id)}
+                        // defaultValue={() => { return initialClientOptionsfun(CPlist.ClientID) }}
+                        // defaultValue={() => { initialClientOptionsfun(CPlist.ClientID) }}
+                        onChange={(client) => {
+                          const clientToUpdate = `client_${index + 1}`
+                          getProductionOptions(clientToUpdate, client.value)
+                        }}
                       />
                     )}
                   />
@@ -564,6 +558,7 @@ function EditUser() {
                             closeMenuOnSelect={false}
                             isMulti
                             options={CPlist.productionOptions}
+                            defaultValue={() => { return CPlist.productionOptions.filter(item => CPlist?.production_id.includes(item.value)); }}
                             onChange={(e) => {
                               const temp = e.map(ele => ele.value)
                               const productionToUpdate = `production_${index + 1}`
@@ -618,7 +613,7 @@ function EditUser() {
                       <p className="my-2" ></p>
                       <p className="mb-2" onClick={() => {
                         const id = clientProductionsList.length + 1
-                        const tempObj = { client: `client_${id}`, production: `production_${id}`, client_id: 0, production_id: [], productionOptions: [] }
+                        const tempObj = { client: `client_${id}`, production: `production_${id}`, client_id: 0, production_id: [], productionOptions: [], disabledClient: false }
                         setClientProductionsList([...clientProductionsList, tempObj]);
 
                       }}> <img src="/add-client-icon.svg" alt="" width={15} /> Add Cient</p>
