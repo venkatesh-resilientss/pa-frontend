@@ -281,12 +281,16 @@ function AddRole() {
       toast.error("Please enter role name");
       return;
     }
+
+    const stringWithoutSpaces = role_id.replace(/ /g, "_");
+    // Convert the string to uppercase
+    const uppercaseString = stringWithoutSpaces.toUpperCase();
     // return;
     const payload: any = {
       CreatedBy: 2,
       IsActive: true,
       RoleName: role_name,
-      RoleID: parseInt(role_id),
+      Code: uppercaseString,
       AccessType: restricted ? "restricted" : "full_access",
     };
     if (restricted) {
@@ -502,9 +506,9 @@ function AddRole() {
             <div style={{ fontSize: "15px" }}>Restricted Access</div>
 
             {userData?.data?.Role?.AccessType === "full_access" ||
-            userData?.data?.Role?.RoleName === "SUPER_ADMIN" ? (
+            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
               <>
-                <div className="d-flex gap-1 ms-3">
+                <div className="d-flex gap-1 cursor-pointer ms-3">
                   <input
                     type="radio"
                     id="ex1-inactive"
@@ -523,12 +527,12 @@ function AddRole() {
                 <OverlayTrigger
                   placement="bottom"
                   overlay={
-                    <Tooltip className="mt-3" id="tooltip-engine">
+                    <Tooltip className="mt-1" id="tooltip-engine">
                       You didn&apos;t have access to this feature
                     </Tooltip>
                   }
                 >
-                  <div className="d-flex gap-1 ms-3">
+                  <div className="d-flex gap-1 cursor-pointer ms-3">
                     <input
                       type="radio"
                       id="ex1-inactive"
@@ -666,7 +670,7 @@ const CustomPermissions = ({
     <>
       <div className="d-flex gap-2">
         <Input
-          className="ms-3"
+          className="ms-3 cursor-pointer"
           type="checkbox"
           checked={value.state}
           disabled={viewmode}
@@ -683,8 +687,9 @@ const CustomPermissions = ({
               className="d-flex align-items-center justify-content-between"
             >
               <p className="">{k}</p>
-              <div className="form-check form-switch">
+              <div className="form-check form-switch cursor-pointer">
                 <Input
+                  className="cursor-pointer"
                   type="checkbox"
                   checked={v.state}
                   disabled={viewmode}

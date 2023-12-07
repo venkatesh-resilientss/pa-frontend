@@ -49,8 +49,7 @@ export default function ForgotPassword({ router }) {
       });
       setLoading(false);
       toast.success("Password has been updated successfully");
-
-      setLoading(false);
+      router.replace("/")
     } catch (e) {
       setLoading(false);
       toast.error(e?.error || e || "Error");

@@ -80,9 +80,11 @@ export default function Home({ router }) {
           password: getValues("password"),
         });
         authService.authenticateUser(resp?.token);
-        window.location.href = `http://${getValues("tenant")}.${
-          process.env.NEXT_PUBLIC_REDIRECT
-        }/dashboard/?accessToken=${resp?.token}`;
+        window.location.href = `http://${
+          resp?.isStaffUser ? "app" : getValues("tenant")
+        }.${process.env.NEXT_PUBLIC_REDIRECT}/dashboard/?accessToken=${
+          resp?.token
+        }`;
       }
       setLoading(false);
     } catch (e) {

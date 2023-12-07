@@ -7,6 +7,11 @@ import {
   GET_CLIENTS,
   GET_SOFTWARES,
   GET_PRODUCTIONS,
+  GET_CLIENT_TYPES,
+  GET_CLIENT_COUNTRIES,
+  GET_STATES_BY_COUNTRY,
+  GET_USERS_BY_ROLE,
+  UPLOAD_FILE_S3,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
@@ -17,6 +22,53 @@ class ClientsService extends APIService {
       })
       .catch((error: any) => {
         throw error?.response?.data;
+      });
+  }
+
+  getClientTypes(): Promise<any> {
+    return this.get(`${GET_CLIENT_TYPES}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getCountries(): Promise<any> {
+    return this.get(`${GET_CLIENT_COUNTRIES}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getStates(id: any): Promise<any> {
+    return this.get(`${GET_STATES_BY_COUNTRY(id)}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getUsersByRole(id: any): Promise<any> {
+    return this.get(`${GET_USERS_BY_ROLE(id)}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+  s3upload(data: any): Promise<any> {
+    return this.postWithMultiPartHeaders(`${UPLOAD_FILE_S3}`, data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        throw error.response.data?.msg || error.response.data;
       });
   }
 

@@ -5,7 +5,6 @@ import APIService from "./api.service";
 import {
   LOGIN,
   TENANT_LOGIN,
-  GET_USER_FROM_TOKEN,
   OKTA_LOGIN,
   GET_USER_DETAILS,
 } from "lib/endpoints";
@@ -24,15 +23,7 @@ class AuthService extends APIService {
   logout() {
     this.purgeAuth();
   }
-  getUserFromToken(): Promise<any> {
-    return this.get(`${GET_USER_FROM_TOKEN}`)
-      .then((res) => {
-        return res.data;
-      })
-      .catch((error: any) => {
-        throw error.response;
-      });
-  }
+
   getUserDetails(): Promise<any> {
     return this.get(`${GET_USER_DETAILS}`)
       .then((res) => {

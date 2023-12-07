@@ -96,7 +96,7 @@ function EditRole() {
             <div style={{ fontSize: "15px" }}>Restricted Access</div>
 
             {userData?.data?.Role?.AccessType === "full_access" ||
-            userData?.data?.Role?.RoleName === "SUPER_ADMIN" ? (
+            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
               <>
                 <div className="d-flex gap-1 ms-3">
                   <input
