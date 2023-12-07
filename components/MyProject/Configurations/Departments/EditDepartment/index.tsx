@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 
 function EditDepartment() {
   const router = useRouter();
@@ -45,10 +46,12 @@ function EditDepartment() {
   // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
   const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
   const onSubmit = (data) => {
+    const {clientID} = getSessionVariables();
     const backendFormat = {
       name: data.name,
       description: data.description,
       isActive: activeStatus,
+      clientID
     };
 
     departmentService

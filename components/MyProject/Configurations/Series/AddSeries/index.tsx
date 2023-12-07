@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { SeriesService } from "services";
-
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function AddSeries() {
   const router = useRouter();
-
+  const seriesValidationRules = formValidationRules.series;
   const seriesService = new SeriesService();
   const {
     control,
@@ -16,11 +17,14 @@ function AddSeries() {
   } = useForm();
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.seriesname,
       code: data.Seriescode,
       description: data.description,
       is_active: false,
+      clientID,
+      projectID
     };
 
     seriesService
@@ -89,10 +93,10 @@ function AddSeries() {
           >
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Name</Label>
+                <Label className="form-lable-font">Series Name <span className="required">*</span></Label>
                 <Controller
                   name="seriesname"
-                  rules={{ required: "Series Name is required" }}
+                  rules={seriesValidationRules.name}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -113,10 +117,10 @@ function AddSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Code</Label>
+                <Label className="form-lable-font">Series Code <span className="required">*</span></Label>
                 <Controller
                   name="Seriescode"
-                  rules={{ required: "Series Code is required" }}
+                  rules={seriesValidationRules.code}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -141,7 +145,7 @@ function AddSeries() {
                 <Controller
                   name="description"
                   control={control}
-                  rules={{ required: "Description is required" }}
+                  rules={seriesValidationRules.description}
                   render={({ field }) => (
                     <Input
                       style={{

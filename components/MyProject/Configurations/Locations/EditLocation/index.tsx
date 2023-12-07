@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
+
 function EditLocation() {
   const router = useRouter();
   const { id } = router.query;
@@ -48,11 +50,14 @@ function EditLocation() {
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.locationname,
       description: data.description,
       isActive: activeStatus,
       code: data.locationcode,
+      clientID,
+      projectID
     };
 
     locationsService

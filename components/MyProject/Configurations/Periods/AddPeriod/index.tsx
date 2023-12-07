@@ -7,6 +7,8 @@ import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker"; // Import the CSS
 import moment from "moment";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
+
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -38,12 +40,14 @@ function AddPeriod() {
       toast.warning('End Date must be greater than Start Date');
       return;
     }
-
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.periodname,
       description: data.description,
       start: startDate,
       endDate: endDate,
+      clientID,
+      projectID
     };
 
     periodsService
@@ -113,14 +117,12 @@ function AddPeriod() {
             <Col xl="4" className="d-flex flex-column">
               <Label className="form-lable-font">Start Date<span className="required" >*</span></Label>
               <Controller
-                name="startDate"
+                name="startdate"
                 control={control}
                 // rules={periodValidationRules.startDate}
                 render={({ field }) => (
                   <DatePicker
                     {...field}
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                    id="startDatePicker" // Add the id here
                     className="w-100 form-control"
                     placeholderText="Select Start date"
                     selected={startDate}
@@ -129,9 +131,9 @@ function AddPeriod() {
                   />
                 )}
               />
-              {/* {errors.startDate && (
+              {/* {errors.startdate && (
                   <span style={{ color: "red" }}>
-                    {errors.startDate.message as React.ReactNode}
+                    {errors.startdate.message as React.ReactNode}
                   </span>
                 )} */}
             </Col>
@@ -145,7 +147,6 @@ function AddPeriod() {
                   <DatePicker
                     {...field}
                     style={{ fontSize: "12px", fontWeight: "400" }}
-                    id="endDatePicker" // Add the id here
                     className="w-100 form-control "
                     placeholderText="Select End date"
                     selected={endDate}

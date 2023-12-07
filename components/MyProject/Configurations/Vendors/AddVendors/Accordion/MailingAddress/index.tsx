@@ -4,9 +4,10 @@ import Select from "react-select";
 import { StatesService } from "services";
 import useSWR from "swr";
 import { selectStyles } from "constants/common";
-
+import { formValidationRules } from "constants/common";
 function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
+  const addressValidationRules = formValidationRules.address;
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
@@ -26,18 +27,16 @@ function MailingAddressForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1
+              Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddress1"
-              rules={{
-                required: "Contact Address Line 1 is required",
-              }}
+              rules={addressValidationRules.line1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -55,7 +54,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
@@ -65,9 +64,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddress2"
-              rules={{
-                required: "  Contact Address Line 2 is required",
-              }}
+              rules={addressValidationRules.line2}
               control={control}
               render={({ field }) => (
                 <Input
@@ -85,19 +82,72 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          
+
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Postal Code <span className="requierd">*</span>
+            </Label>
+            <Controller
+              name="mailingAddressPostalCode"
+              rules={addressValidationRules.zipCode}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Postal Code"
+                  invalid={errors.mailingAddressPostalCode && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.mailingAddressPostalCode && (
+              <span className="text-danger">
+                {errors.mailingAddressPostalCode.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State{" "}
+              Country <span className="required">*</span>
+            </Label>
+            <Controller
+              name="mailingAddressCountry"
+              rules={addressValidationRules.country}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={[]}
+                  placeholder="Select Country"
+                  {...field}
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.mailingAddressCountry && (
+              <span className="text-danger">
+                {errors.mailingAddressCountry.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              State <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressState"
-              rules={{
-                required: " State is required",
-              }}
+              rules={addressValidationRules.state}
               control={control}
               render={({ field }) => (
                 <Select
@@ -115,36 +165,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              Postal Code
-            </Label>
-            <Controller
-              name="mailingAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Postal Code"
-                  invalid={errors.mailingAddressPostalCode && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.mailingAddressPostalCode && (
-              <span className="text-danger">
-                {errors.mailingAddressPostalCode.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}

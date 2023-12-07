@@ -26,12 +26,12 @@ function BillingAddressForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1
+              Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="billingAddress1"
@@ -53,7 +53,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
@@ -82,12 +82,12 @@ function BillingAddressForm({ onSubmit, control, errors }) {
           </Col>
 
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Postal Code
+              Postal Code <span className="required">*</span>
             </Label>
             <Controller
               name="billingAddressPostalCode"
@@ -109,13 +109,13 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Country{" "}
+              Country <span className="required">*</span>
             </Label>
             <Controller
               name="billingAddressCountry"
@@ -137,13 +137,13 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State{" "}
+              State <span className="required">*</span>
             </Label>
             <Controller
               name="billingAddressState"
@@ -165,12 +165,12 @@ function BillingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              City
+              City <span className="required">*</span>
             </Label>
             <Controller
               name="billingAddressCity"

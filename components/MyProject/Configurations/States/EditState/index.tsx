@@ -225,7 +225,7 @@ function EditState() {
               <Controller
                 name="description"
                 control={control}
-                rules={statesValidationRules.country}
+                rules={statesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{

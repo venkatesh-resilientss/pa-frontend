@@ -41,7 +41,6 @@ function AddState() {
       code: data.Statecode,
       Description: data.description,
       CountryID: data.country?.value,
-      is_active: false,
     };
 
     statesService

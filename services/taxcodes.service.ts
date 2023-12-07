@@ -2,8 +2,8 @@ import APIService from './api.service';
 import {CREATE_TAXCODES, DELETE_TAXCODES, EDIT_TAXCODES, GET_TAXCODES, TAXCODES_DETAIL_ENDPOINT,UPLOAD_TAX_CODE_LIST} from '../lib/endpoints';
 
 class TaxCodesService extends APIService {
-  getTaxCodes(): Promise<any> {
-    return this.get(`${GET_TAXCODES}`)
+  getTaxCodes(params?): Promise<any> {
+    return this.get(`${GET_TAXCODES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
       .then((res) => {
         return res?.data;
       })

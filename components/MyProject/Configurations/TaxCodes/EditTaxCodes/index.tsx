@@ -2,15 +2,20 @@ import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { TaxCodesService } from "services";
+import { TaxCodesService, CountryService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
+import AsyncSelect from "react-select/async";
+import { selectStyles } from "@/constants/common";
+
 function EditTaxCode() {
   const router = useRouter();
   const { id } = router.query;
   const taxCodeValidationRules = formValidationRules.taxCodes;
   const taxCodeService = new TaxCodesService();
+  const countryService = new CountryService();
+
   const fetchTaxCodeDetails = (id) => taxCodeService.taxCodeDetails(id);
 
   const { data: taxcodesData } = useSWR(
@@ -30,9 +35,14 @@ function EditTaxCode() {
     if (!taxcodesData) return;
 
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
-
     taxcodesData?.Description &&
       setValue("description", taxcodesData?.Description);
+    taxcodesData?.Name && setValue("name",taxcodesData.Name);
+    const taxCodeCountry = {
+      value : taxcodesData.Country.ID,
+      id : taxcodesData.Country.Name
+    }
+    setValue("country",taxCodeCountry);
     setActiveStatus(taxcodesData?.IsActive);
   }, [taxcodesData]);
 
@@ -41,12 +51,26 @@ function EditTaxCode() {
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
+  const { data: countryData } = useSWR("LIST_COUNTRY", () =>
+    countryService.getCountries()
+  );
 
+  const countrySelectFormat = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const loadCountryOptions = ( callBack) => {
+    callBack(countrySelectFormat);
+  };
   const onSubmit = (data) => {
     const backendFormat = {
+      name : data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      isActive: activeStatus,
+      countryID : parseInt(data.country)
     };
 
     taxCodeService
@@ -115,9 +139,7 @@ function EditTaxCode() {
       >
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-label" for="login-email">
-              Tax Code
-            </Label>
+            <Label className="form-lable-font">Tax Code<span className="required">*</span> </Label>
             <Controller
               name="taxcode"
               rules={taxCodeValidationRules.code}
@@ -138,10 +160,59 @@ function EditTaxCode() {
             )}
           </div>
         </Col>
-
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-label" for="login-email">
+            <Label className="form-lable-font">Tax Code Name<span className="required">*</span> </Label>
+            <Controller
+              name="taxcodename"
+              rules={taxCodeValidationRules.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Tax Code"
+                  invalid={errors.taxcodename && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.taxcodename && (
+              <span style={{ color: "red" }}>
+                {errors.taxcodename.message as React.ReactNode}
+              </span>
+            )}
+          </div>
+        </Col>
+        <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Country <span className="required">*</span></Label>
+              <Controller
+                name="country"
+                control={control}
+                rules={taxCodeValidationRules.country}
+                render={({ field }) => (
+                  <AsyncSelect
+                    {...field}
+                    isClearable={true}
+                    className="react-select"
+                    classNamePrefix="select"
+                    loadOptions={loadCountryOptions}
+                    placeholder="Select Country"
+                    defaultOptions={countrySelectFormat}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+              {errors.country && (
+                <span style={{ color: "red" }}>
+                  {errors.country.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
+        <Col xl="4">
+          <div className="mb-1">
+            <Label className="form-lable-font" f>
               Description
             </Label>
             <Controller
@@ -169,7 +240,6 @@ function EditTaxCode() {
             )}
           </div>
         </Col>
-
         <div className="d-flex flex-column mt-1">
           <Label
             className="text-black"

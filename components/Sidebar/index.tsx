@@ -404,7 +404,7 @@ const Sidebar = ({ props }) => {
               })}
             </div>
           </>
-        ) : !userData?.data?.IsStaffUser ? (
+        ) : userData?.data?.IsStaffUser ? (
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {

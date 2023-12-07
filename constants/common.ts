@@ -27,8 +27,6 @@ export const selectStyles = {
   option: (provided, state) => {
     return {
       ...provided,
-      backgroundColor: state.isDisabled ? 'red' : 'blue',
-      color: '#FFF',
       cursor: state.isDisabled ? 'not-allowed' : 'default',
     };
   },
@@ -512,16 +510,74 @@ const CODE_PATTERN = /^[A-Za-z0-9]+$/i;
 const NUMERIC = /^[0-9.]+[ ]*$/i;
 const EMAIL_PATTERN = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
 const TAX_ID_PATTERN = /^\d{2}-\d{7}$/i;
+const ZIP_CODE_PATTERN = /^[0-9-]+$/i;
 const PHONE_NUMBER_PATTERN = /(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/i;
+const FULL_NAME_PATTERN = /^[A-Za-z0-9_. ]+$/i;
+const CONTACT_TITLE_MAX_LENGTH = 10;
 const NAME_MAX_LENGTH = 30;
+const FULL_NAME_MAX_LENGTH = 100;
 const CODE_MAX_LENGTH = 10;
 const DESCRIPTION_MAX_LENGTH = 250;
 const ADDRESS_LINE_MAX_LENGTH = 50;
 const ZIP_CODE_MAX_LENGTH = 12;
 const ACCOUNT_NUMBER_MAX_LENGTH = 12;
-const ROUTING_NUMBER_MAX_LENGTH = 12;
+const ROUTING_NUMBER_MAX_LENGTH = 9;
+const EMAIL_MAX_LENGTH = 30;
+const PHONE_MAX_LENGTH = 30;
 
-
+const contactValidationRules  ={
+  fullName : {
+    maxLength : {
+      value : FULL_NAME_MAX_LENGTH,
+      message : `Name must not contain more than ${FULL_NAME_MAX_LENGTH} characters`
+    },
+    pattern : {
+      value : FULL_NAME_PATTERN,
+      message : "Name cannot contain special characters"
+    }
+  },
+  title : {
+    maxLength : {
+      value : CONTACT_TITLE_MAX_LENGTH,
+      message : `Title cannot contain more than ${CONTACT_TITLE_MAX_LENGTH} characters`
+    },
+    pattern : {
+      value : FULL_NAME_PATTERN,
+      message : "Title cannot contain special characters"
+    }
+  },
+  officePhone : {
+    maxLength : {
+      value : PHONE_MAX_LENGTH,
+      message : `Phone Number cannot contain more than ${PHONE_MAX_LENGTH} characters`
+    },
+    pattern : {
+      value : PHONE_NUMBER_PATTERN,
+      message : "Invalid Phone Number"
+    }
+  },
+  cellPhone : {
+    maxLength : {
+      value : PHONE_MAX_LENGTH,
+      message : `Cell Phone Number cannot contain more than ${PHONE_MAX_LENGTH} characters`
+    },
+    pattern : {
+      value : PHONE_NUMBER_PATTERN,
+      message : "Invalid Phone Number"
+    }
+  },
+  email: {
+    required: "Email is required",
+    pattern: {
+      value: EMAIL_PATTERN,
+      message: "Please enter a valid email"
+    },
+    maxLength : {
+      value : EMAIL_MAX_LENGTH,
+      message : `Email must contain less than ${EMAIL_MAX_LENGTH} characters`
+    }
+  },
+};
 export const formValidationRules = {
   department: {
     name: {
@@ -889,19 +945,22 @@ export const formValidationRules = {
       required: 'Start Date is required'
     }
   },
-  address: {
-    line1: {
-      required: 'Address Line 1 is required',
-      maxLength: {
-        value: ADDRESS_LINE_MAX_LENGTH,
-        message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
+  address :{
+    line1 : {
+      required : 'Address Line 1 is required',
+      maxLength : {
+        value : ADDRESS_LINE_MAX_LENGTH,
+        message : `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
+      },
+      pattern : {
+        value : ALPHA_NUMERIC,
+        message : "Special characters are not allowed"
       }
     },
-    line2: {
-      required: 'Address Line 2 is required',
-      maxLength: {
-        value: ADDRESS_LINE_MAX_LENGTH,
-        message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
+    line2 : {
+      maxLength : {
+        value : ADDRESS_LINE_MAX_LENGTH,
+        message : `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`
       }
     },
     city: {
@@ -918,6 +977,10 @@ export const formValidationRules = {
       maxLength: {
         value: ZIP_CODE_MAX_LENGTH,
         message: `Zip Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`
+      },
+      pattern : {
+        value : ZIP_CODE_PATTERN,
+        message : "Zip Code cannot contain special characters"
       }
     }
   },
@@ -1001,14 +1064,22 @@ export const formValidationRules = {
       required: "Account Number is required",
       maxLength: {
         value: ACCOUNT_NUMBER_MAX_LENGTH,
-        message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`
+        message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} numbers`
+      },
+      pattern : {
+        value : NUMERIC,
+        message : "Account Number must contain only numbers"
       }
     },
     routingNumber: {
       required: "Routing Number is required",
       maxLength: {
         value: ROUTING_NUMBER_MAX_LENGTH,
-        message: `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} characters`
+        message: `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} numbers`
+      },
+      pattern : {
+        value : NUMERIC,
+        message : "Routing Number must contain only numbers"
       }
     },
     taxID: {
@@ -1017,34 +1088,83 @@ export const formValidationRules = {
         message: "Required Tax ID pattern (xx-xxxxxxx)"
       }
     },
-    email: {
-      required: "Email is required",
-      pattern: {
-        value: EMAIL_PATTERN,
-        message: "Please enter a valid email"
-      }
-    },
     pettyCashAccount: {
       required: "Petty Cash Account is required",
     },
-    contactname: {
-      required: "Contact Name is required",
+    email: contactValidationRules.email,
+    contactname: contactValidationRules.fullName,
+    contactNumber: contactValidationRules.officePhone
+  },
+  banks : {
+    name: {
+      required: "Bank Name is required",
       maxLength: {
         value: NAME_MAX_LENGTH,
-        message: `Contact Name must be contain less than ${NAME_MAX_LENGTH} characters`,
+        message: `Bank Name must be contain less than ${NAME_MAX_LENGTH} characters`,
       },
       pattern: {
         value: ALPHA_NUMERIC,
         message: "Special characters are not allowed",
       },
     },
-    contactNumber: {
-      required: "Contact Number is required",
+    code: {
+      required: "Bank Code is required",
+      maxLength: {
+        value: CODE_MAX_LENGTH,
+        message: `Vendor Code must be contain less than ${CODE_MAX_LENGTH} characters`
+      },
       pattern: {
-        value: PHONE_NUMBER_PATTERN,
-        message: "Invalid Phone"
+        value: CODE_PATTERN,
+        message: 'Special characters and spaces are not allowed'
       }
-    }
+    },
+    description: {
+      maxLength: {
+        value: DESCRIPTION_MAX_LENGTH,
+        message: `Description cannot contain more than ${DESCRIPTION_MAX_LENGTH} characters`
+      }
+    },
+    accountNumber : {
+      required : 'Account Number is required',
+      maxLength: {
+        value: ACCOUNT_NUMBER_MAX_LENGTH,
+        message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`
+      },
+      pattern : {
+        value : NUMERIC,
+        message : 'Account Number must contain only numbers'
+      }
+    },
+    routingNumber: {
+      required: "Routing Number is required",
+      maxLength: {
+        value: ROUTING_NUMBER_MAX_LENGTH,
+        message: `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} characters`
+      },
+      pattern : {
+        value : NUMERIC,
+        message : "Routing Number must contain only numbers"
+      }
+    },
+    currency : {
+      required : "Currency is required",
+    },
+    branchNumber : {
+      required : "Branch Number is required",
+      pattern : {
+        value : NUMERIC,
+        message : "Branch Number must contain only numbers"
+      },
+      maxLength : {
+      value : 10, 
+        message : 'Branch Number must be less than 10 numbers'
+      }
+    },
+    accountFraction : {
+      required : "Account Fraction is required",
+    },
+    email : contactValidationRules.email,
+    contactName : contactValidationRules.fullName,
   }
 }
 

@@ -4,9 +4,10 @@ import Select from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
 import useSWR from "swr";
-
+import { formValidationRules } from "constants/common";
 function ContactAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
+  const addressValidationRules = formValidationRules.address;
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
@@ -26,18 +27,16 @@ function ContactAddressForm({ onSubmit, control, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1
+              Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="contactAddress1"
-              rules={{
-                required: "Contact Address Line 1 is required",
-              }}
+              rules={addressValidationRules.line1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -55,7 +54,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
             {" "}
             <Label
               className="text-black"
@@ -65,9 +64,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="contactAddress2"
-              rules={{
-                required: "  Contact Address Line 2 is required",
-              }}
+              rules={addressValidationRules.line1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -84,43 +81,12 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-
-          <Col xl="4">
-            {" "}
+          <Col xl="4" className="mt-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State{" "}
-            </Label>
-            <Controller
-              name="contactAddressState"
-              rules={{
-                required: " State is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Select
-                  options={stateSelectOptions}
-                  placeholder="Enter State"
-                  {...field}
-                  styles={selectStyles}
-                />
-              )}
-            />
-            {errors.contactAddressState && (
-              <span className="text-danger">
-                {errors.contactAddressState.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              Postal Code
+              Postal Code <span className="required">*</span>
             </Label>
             <Controller
               name="contactAddressPostalCode"
@@ -143,13 +109,67 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-
-          <Col xl="4">
+          <Col xl="4" className="mt-2">
+            {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              City
+              Country <span className="required">*</span>
+            </Label>
+            <Controller
+              name="contactAddressCountry"
+              rules={addressValidationRules.state}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={[]}
+                  placeholder="Select Country"
+                  {...field}
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.contactAddressCountry && (
+              <span className="text-danger">
+                {errors.contactAddressCountry.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              State <span className="required">*</span>
+            </Label>
+            <Controller
+              name="contactAddressState"
+              rules={addressValidationRules.state}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={stateSelectOptions}
+                  placeholder="Select State"
+                  {...field}
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.contactAddressState && (
+              <span className="text-danger">
+                {errors.contactAddressState.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              City <span className="required">*</span>
             </Label>
             <Controller
               name="contactAddressCity"

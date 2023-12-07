@@ -9,7 +9,7 @@ import { COAAccountyTypeOptions } from "@/constants/common";
 import { formValidationRules } from "@/constants/common";
 import { selectStyles } from "constants/common";
 import Select from "react-select";
-
+import { getSessionVariables } from "@/constants/function";
 function EditChartOfAccounts() {
   const router = useRouter();
   const coaValidationRules = formValidationRules.chartofaccounts;
@@ -59,6 +59,7 @@ function EditChartOfAccounts() {
   );
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.COAName,
       description: data.Description,
@@ -67,6 +68,8 @@ function EditChartOfAccounts() {
       parentID: parseInt(data.COAParent),
       accountType: data.AccountType,
       postable: coaData?.IsActive,
+      clientID,
+      projectID
     };
 
     cOAAccountsService
