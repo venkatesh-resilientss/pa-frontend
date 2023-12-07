@@ -47,9 +47,8 @@ export default function Documents(props) {
       {!disabled && (
         <div className="d-inline-flex flex-column">
           <input
-            className={`form-control ${
-              err && !name.trim() ? "border-danger" : ""
-            }`}
+            className={`form-control ${err && !name.trim() ? "border-danger" : ""
+              }`}
             placeholder="Enter Document Name"
             type="text"
             name="Document Name"
@@ -90,7 +89,7 @@ export default function Documents(props) {
             variant="outline-primary"
             loading={loading}
             disabled={loading}
-            className="f-12 px-4"
+            className="f-12 px-4" spinColor="#00a1ab"
             onClick={async () => {
               try {
                 let tempErr = false;

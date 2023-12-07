@@ -52,7 +52,7 @@ export const EDIT_BANKS = (id: any) => `${tenantIdEndpoint}/banks/${id}`; //EDIT
 export const BANKS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/banks/${id}`; // Bank Details
 
-export const GET_ROLES = `${tenantIdEndpoint}/roles/`; //Users
+export const GET_ROLES = `${withoutTenantIdEndpoint}/roles/`; //Users
 
 export const GET_SERIES = `${tenantIdEndpoint}/series/`; //Series
 export const CREATE_SERIES = `${tenantIdEndpoint}/series/`; //Create Series
@@ -149,7 +149,7 @@ export const COAACCOUNTS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/coaaccounts/${id}`; //coa Accounts Details
 
 export const GET_CLIENTS = `${withoutTenantIdEndpoint}/clients/`; //Clients
-export const DELETE_CLIENTS = (id: any) => `${tenantIdEndpoint}/clients/${id}`; //DELETE clients
+export const DELETE_CLIENTS = (id: any) => `${withoutTenantIdEndpoint}/clients/${id}`; //DELETE clients
 export const EDIT_CLIENTS = (id: any) => `${tenantIdEndpoint}/clients/${id}`; //EDIT clients
 export const CREATE_CLIENT = `${withoutTenantIdEndpoint}/clients/`; //CREATE clients
 export const CLIENTS_DETAIL_ENDPOINT = (id: any) =>
@@ -167,7 +167,7 @@ export const EDIT_USERS = (id: any) => `${tenantIdEndpoint}/users/${id}`; //EDIT
 export const USERS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/users/${id}`; //Users Details
 
-export const GET_ROLE_BY_ID = (id: any) => `${tenantIdEndpoint}/roles/${id}`; //Users
+export const GET_ROLE_BY_ID = (id: any) => `${withoutTenantIdEndpoint}/roles/${id}`; //Users
 export const GET_USER_FROM_TOKEN = `${withoutTenantIdEndpoint}/users/me`;
 export const GET_USER_DETAILS = `${withoutTenantIdEndpoint}/users/me`; //GET USER FROM TOKEN
 
@@ -217,3 +217,5 @@ export const GET_STATES_BY_COUNTRY = (id) =>
   `${tenantIdEndpoint}/states/country/${id}`;
 export const UPLOAD_FILE_S3 = `/s3-upload`;
 export const GET_USERS_BY_ROLE = (id) => `${tenantIdEndpoint}/users/role/${id}`; //Users
+
+export const getProductionByClint = (id)=>`${tenantIdEndpoint}/projects/clientprojects/${id}`;

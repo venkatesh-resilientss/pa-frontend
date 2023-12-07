@@ -38,7 +38,7 @@ const AllRoleTable = () => {
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
   }
-  
+
 
   const DeleteModal = () => (
     <Modal
@@ -79,17 +79,17 @@ const AllRoleTable = () => {
           >
             Cancel
           </a>
-          
+
         </div>
       </ModalBody>
     </Modal>
   );
 
-  const clientService = new UsersService();
+  const userService = new UsersService();
 
-  const { data: clientData} = useSWR(
+  const { data: clientData } = useSWR(
     ["LIST_CLIENTS", searchText],
-    () => clientService.getUsers()
+    () => userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
   );
 
   const StateBadge = (props) => {
@@ -130,7 +130,7 @@ const AllRoleTable = () => {
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
-                  name={"Edit User"}
+                  name={"View/Edit User"}
                   action={undefined}
                 />
               </DropdownItem>
@@ -181,7 +181,7 @@ const AllRoleTable = () => {
     },
     {
       headerName: "Role",
-      field: "rollname",
+      field: "rollName",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
@@ -239,45 +239,45 @@ const AllRoleTable = () => {
 
   return (
     <>
-     <div className="section mt-4">
-      <div>
-        <Card
-          style={{
-            backgroundColor: "#E7EFFF",
-            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-          }}
-        >
-          <CardBody>
-            <div className="d-flex justify-content-between">
-            <div>
-              <p className="m-2" style={{ fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>
-                User Management
-              </p>
-            </div>
-            <div className="d-flex align-items-center">
-              <Form>
-                <input
-                  className="search mr-2"
-                  onChange={(e) => setSearchText(e.target.value)}
-                  type="search"
-                  placeholder="Search..."
-                />
-              </Form>
-              {hasCreateUseerPermission && (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => router.push("/settings/add-user")}
-                >
-                  <Plus size={16} /> Add User
-                </button>
-              )}
-            </div>
-          </div>
-          </CardBody>
-        </Card>
+      <div className="section mt-4">
+        <div>
+          <Card
+            style={{
+              backgroundColor: "#E7EFFF",
+              boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <CardBody>
+              <div className="d-flex justify-content-between">
+                <div>
+                  <p className="m-2" style={{ fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>
+                    User Management
+                  </p>
+                </div>
+                <div className="d-flex align-items-center">
+                  <Form>
+                    <input
+                      className="search mr-2"
+                      onChange={(e) => setSearchText(e.target.value)}
+                      type="search"
+                      placeholder="Search..."
+                    />
+                  </Form>
+                  {hasCreateUseerPermission && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => router.push("/settings/add-user")}
+                    >
+                      <Plus size={16} /> Add User
+                    </button>
+                  )}
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
       </div>
-      </div>
-    
+
       <div className="mt-3">
         <GridTable
           rowData={clientData?.data}
