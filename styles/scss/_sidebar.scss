@@ -106,12 +106,17 @@ a {
   z-index: 999;
 }
 .custom-tooltip-card {
-  color: #4c4c61;
+  color: #030229;
   background: #fff;
-  font-size: 12px;
-  width: 10rem;
+  font-size: 14px;
+  width: 15rem;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   text-align: justify;
+}
+
+.iconsSpace {
+  padding: 0px 0px 0px 13px;
+  ;
 }
