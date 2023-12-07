@@ -485,11 +485,13 @@ input::placeholder {
 .custom-radio-input {
   /* Set the color you want for the radio button */
   color: #000;
+  width: 18px;
 }
 
 .custom-radio-input:checked::before {
   /* Set the color of the dot when the radio button is checked */
   background-color: #000;
+  width: 18px;
 }
 
 footer {

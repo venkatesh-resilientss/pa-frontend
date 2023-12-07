@@ -80,7 +80,7 @@ function AddProjectType() {
                     control={control}
                     render={({ field }) => (
                       <Input
-                        className="inputFeild"
+                        className="p-2"
                         placeholder="Project Type"
                         invalid={errors.ProjectType && true}
                         {...field}
@@ -104,7 +104,7 @@ function AddProjectType() {
                     control={control}
                     render={({ field }) => (
                       <Input
-                        className="inputFeild"
+                        className="p-2"
                         placeholder="Project Description"
                         invalid={errors.ProjectDescription && true}
                         {...field}
@@ -116,75 +116,6 @@ function AddProjectType() {
                       {errors.ProjectDescription.message as React.ReactNode}
                     </span>
                   )}
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Crew</Label>
-                  <Controller
-                    name="crew"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Select
-                          className="selectField"
-                          value={field.value}
-                          onChange={(selectedOption) => field.onChange(selectedOption)}
-                          options={[
-                            { value: true, label: 'True' },
-                            { value: false, label: 'False' },
-                          ]}
-                        />
-                      </>
-                    )}
-                  />
-                </div>
-              </Col>
-
-            </Row>
-            <Row>
-            <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">DGA</Label>
-                  <Controller
-                    name="DGA"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Select
-                          className="selectField"
-                          value={field.value}
-                          onChange={(selectedOption) => field.onChange(selectedOption)}
-                          options={[
-                            { value: true, label: 'True' },
-                            { value: false, label: 'False' },
-                          ]}
-                        />
-                      </>
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Video Tape</Label>
-                  <Controller
-                    name="VideoTape"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        <Select
-                          className="selectField"
-                          value={field.value}
-                          onChange={(selectedOption) => field.onChange(selectedOption)}
-                          options={[
-                            { value: true, label: 'True' },
-                            { value: false, label: 'False' },
-                          ]}
-                        />
-                      </>
-                    )}
-                  />
                 </div>
               </Col>
               <Col xl="4">
@@ -215,6 +146,90 @@ function AddProjectType() {
                   />
                 </div>
               </Col>
+             
+
+            </Row>
+            <Row>
+            <Col xl="4">
+                <div className="mb-1">
+                  <Controller
+                    name="Crew"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                      type="checkbox"
+                        className="p-2 checkBocMargin"
+                        placeholder="Crew"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Label className="form-lable-font">Crew</Label>
+                </div>
+              </Col>
+            <Col xl="4">
+                <div className="mb-1">
+                  <Controller
+                    name="DGA"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                      type="checkbox"
+                        className="p-2 checkBocMargin"
+                        placeholder="DGA"
+                        {...field}
+                      />
+                    )}
+                    
+                  />
+                  <Label className="form-lable-font">DGA</Label>
+                </div>
+              </Col>
+              <Col xl="4">
+                <div className="mb-1">
+                  <Controller
+                    name="Video Tape"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                      type="checkbox"
+                        className="p-2 checkBocMargin"
+                        placeholder="Video Tape"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Label className="form-lable-font">Video Tape</Label>
+                </div>
+              </Col>
+             
+            </Row>
+            <Row>
+              <Col>
+            <div className="d-flex flex-column mt-1">
+          <Label className="form-lable-font">Status </Label>
+          <div className="d-flex gap-1">
+            <div className="d-flex gap-1">
+              <input
+                className="custom-radio-input"
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+              />
+              <div className="radio-text">Active</div>
+            </div>
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                className="custom-radio-input"
+                name="ex1"
+                id="ex1-inactive"
+              />
+              <div className="radio-text">In-Active</div>
+            </div>
+          </div>
+        </div>
+            </Col>
             </Row>
             <Row style={{ marginTop: '20px' }}>
               <Col>
