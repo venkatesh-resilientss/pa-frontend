@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
+
 function AddLocation() {
   const router = useRouter();
   const locationValidationRules = formValidationRules.locations;
@@ -17,11 +19,14 @@ function AddLocation() {
   } = useForm();
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.locationname,
       code: data.locationcode,
       description: data.description,
       IsActive: false,
+      clientID,
+      projectID
     };
 
     locationService

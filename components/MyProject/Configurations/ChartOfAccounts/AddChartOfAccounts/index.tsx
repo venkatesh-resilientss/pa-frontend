@@ -8,6 +8,7 @@ import Select from "react-select";
 import { selectStyles } from "constants/common";
 import { useState } from "react";
 import { COAAccountyTypeOptions } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 import useSWR from "swr";
 function AddChartOfAccounts() {
   const router = useRouter();
@@ -31,6 +32,7 @@ function AddChartOfAccounts() {
   } = useForm();
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.COAName,
       code: data.COACode,
@@ -38,7 +40,9 @@ function AddChartOfAccounts() {
       IsActive: false,
       description: data.Description,
       type: data.AccountType,
-      postable : postableActiveStatus
+      postable : postableActiveStatus,
+      clientID,
+      projectID
     };
 
     coaAccountsService

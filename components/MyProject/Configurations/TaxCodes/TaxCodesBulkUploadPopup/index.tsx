@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody, Spinner } from "reactstrap";
 import { closeBulkUploadTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
@@ -10,9 +10,8 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { TaxCodesService } from "services";
 
-const TaxCodesBulkUploadPopup = () => {
+const TaxCodesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
-
   const popupStatus = useSelector(
     (state: any) => state.configurations.taxcodes.bulkUploadPopup.status
   );
@@ -31,11 +30,14 @@ const TaxCodesBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
+
+    setLoader(true);
 
     const fileName = uploadedFiles[0];
     const taxCodeService = new TaxCodesService();
@@ -45,14 +47,13 @@ const TaxCodesBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
+        setRerender(!rerender);
 
         dispatch(closeBulkUploadTaxCodesPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        toast.error(error.Message || error.error || 'Failed to insert data');
+        setLoader(false);
       });
   };
 
@@ -186,8 +187,13 @@ const TaxCodesBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

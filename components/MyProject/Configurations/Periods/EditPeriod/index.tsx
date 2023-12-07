@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { getSessionVariables } from "@/constants/function";
 
 import moment from "moment";
 
@@ -70,13 +71,15 @@ function EditPeriod() {
       toast.warning('End Date must be greater than Start Date');
       return 
     }
-
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.periodname,
       description: data.description,
       isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
+      clientID,
+      projectID
     };
 
     periodsService

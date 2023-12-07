@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { SetsService } from "services";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function AddSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
@@ -17,10 +18,13 @@ function AddSet() {
   const setsService = new SetsService();
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.setname,
       code: data.setcode,
       description: data.description,
+      clientID,
+      projectID
     };
 
     setsService

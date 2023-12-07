@@ -33,7 +33,7 @@ const setsService = new SetsService();
 const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   // const setsService = new SetsService();
   const router = useRouter();
-  const perPage = 3;
+  const perPage = 10;
   // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
@@ -350,8 +350,8 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
         pageSize={perPage}
         noDataPage={() => (
           <NoDataPage
-            buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
-            buttonLink={"/configurations/add-bank"}
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
           />
         )}
       />

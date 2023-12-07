@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import useSWR from "swr";
-import { StatesService } from "services";
+import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
 import { COAAccountsService } from "services";
 import {
@@ -15,10 +15,10 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const {
     // control,
     handleSubmit,
-    clearErrors
   } = useForm();
   const [isPettyCashEnabled, setPettyCashEnabled] = useState(false);
   const statesService = new StatesService();
+  const countryService = new CountryService();
   const vendorsValidationRules = formValidationRules.vendors;
 
   const coaAccountsService = new COAAccountsService();
@@ -36,7 +36,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
-
   const stateSelectOptions = statesData?.data.map((b) => {
     return {
       value: b.ID,
@@ -44,6 +43,13 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
     };
   });
 
+  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const countrySelectOptions = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -249,6 +255,33 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
+              Country <span className="required">*</span>
+            </Label>
+            <Controller
+              name="workState"
+              rules={vendorsValidationRules.workState}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={countrySelectOptions}
+                  placeholder="Select Country"
+                  styles={selectStyles}
+                />
+              )}
+            />
+            {errors.workState && (
+              <span className="text-danger">
+                {errors.workState.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <Col xl="4" className="mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
               Work State <span className="required">*</span>
             </Label>
             <Controller
@@ -259,7 +292,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 <Select
                   {...field}
                   options={stateSelectOptions}
-                  placeholder="Select state"
+                  placeholder="Select State"
                   styles={selectStyles}
                 />
               )}
@@ -416,9 +449,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                     checked={isPettyCashEnabled}
                     onChange={() => {
                       setPettyCashEnabled(!isPettyCashEnabled);
-                      if (isPettyCashEnabled) {
-                        clearErrors("pettyCashAccount");
-                      }
                     }}
                   />
                 )}
@@ -431,37 +461,34 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               </Label>
             </div>
           </Col>
-          <Col xl="4" className="mt-2">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              Petty Cash Account <span className="required">*</span>
-            </Label>
-            <Controller
-              name="pettyCashAccount"
-              rules={
-                isPettyCashEnabled
-                  ? vendorsValidationRules.pettyCashAccount
-                  : {}
-              }
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={[]}
-                  placeholder="Select an option"
-                  styles={selectStyles}
-                  isDisabled={!isPettyCashEnabled}
-                />
+          {isPettyCashEnabled && (
+            <Col xl="4" className="mt-2">
+              <Label
+                className="text-black"
+                style={{ fontSize: "12px", fontWeight: "400" }}
+              >
+                Petty Cash Account <span className="required">*</span>
+              </Label>
+              <Controller
+                name="pettyCashAccount"
+                rules={vendorsValidationRules.pettyCashAccount}
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={[]}
+                    placeholder="Select an option"
+                    styles={selectStyles}
+                  />
+                )}
+              />
+              {errors.pettyCashAccount && (
+                <span style={{ color: "red" }}>
+                  {errors.pettyCashAccount.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.pettyCashAccount && (
-              <span style={{ color: "red" }}>
-                {errors.pettyCashAccount.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
+            </Col>
+          )}
 
           <Col xl="4" className="mt-2">
             <Label
