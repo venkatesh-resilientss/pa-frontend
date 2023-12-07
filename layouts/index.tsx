@@ -15,6 +15,7 @@ const MainLayout = ({ router, user, mutate, children }: any) => {
     "productions",
     "sandbox",
     "settings",
+    "production",  
     "singlesignon",
     "transactions",
     "my-profile",
@@ -29,6 +30,7 @@ const MainLayout = ({ router, user, mutate, children }: any) => {
 
   const isProtectedRoute = (route: string) => {
     const parentRoute = route.split("/")[1] || "";
+    console.log({route})
     if (layoutRoutes.includes(parentRoute)) return true;
     else return false;
   };

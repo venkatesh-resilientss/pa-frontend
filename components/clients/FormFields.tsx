@@ -206,8 +206,13 @@ export default function FormFields(props: any) {
                   accept="image/*"
                   onChange={async (e: any) => {
                     try {
+                      const file = e.target.files[0];
+                      if (!(file?.type || "").includes("image/")) {
+                        toast.error("File rejected");
+                        return;
+                      }
                       const formData = new FormData();
-                      formData.append("file", e.target.files[0]);
+                      formData.append("file", file);
                       formData.append("name", "uploadedFile");
                       const fileUpload = await clientService.s3upload(formData);
                       const url = fileUpload.url;
@@ -238,7 +243,9 @@ export default function FormFields(props: any) {
                   }
                   disabled={disabled || false}
                 />
-                <span className="input-group-text">.rssl.io</span>
+                <span className="input-group-text">
+                  {process.env.NEXT_PUBLIC_REDIRECT}
+                </span>
               </div>
             ) : (
               <input

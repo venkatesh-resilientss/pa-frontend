@@ -5,7 +5,7 @@ import CreateClient from "@/components/clients/CreateClient";
 
 import { SoftwaresModal } from "@/components/clients";
 
-function Index() {
+function Index({ router }) {
   const [show, setShow] = useState(true);
 
   const defaultClientData: any = {
@@ -80,7 +80,9 @@ function Index() {
         <PayrollCreateClient />
       )}
 
-      <SoftwaresModal {...{ show, setShow, clientData, setClientData }} />
+      <SoftwaresModal
+        {...{ router, show, setShow, clientData, setClientData }}
+      />
     </div>
   );
 }
