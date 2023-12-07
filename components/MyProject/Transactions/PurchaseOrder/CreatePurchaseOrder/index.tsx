@@ -220,7 +220,7 @@ const CreatePurchaseOrder = () => {
   const clientService = new ClientsService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients()
+    clientService.getClients({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const clientSelectFormat = clientData?.map((b) => {
