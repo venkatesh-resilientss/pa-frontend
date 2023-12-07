@@ -190,11 +190,12 @@ const AllRoleTable = () => {
     },
     {
       headerName: "Client",
-      field: "client_name",
+      field: "clientNames",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => { return params.value.map(ele => ele) },
       unSortIcon: true
     },
     // { headerName: "id", field: "id", sortable: true, resizable: true, cellStyle: { fontSize: "16px", fontWeight: "400" }, headerClass: "custom-header-class", },
@@ -209,7 +210,7 @@ const AllRoleTable = () => {
     // },
     {
       headerName: "Created On",
-      field: "created_on",
+      field: "createdOn",
       sortable: true,
       resizable: true,
       unSortIcon: true,

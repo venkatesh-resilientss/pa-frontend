@@ -163,7 +163,8 @@ const CreatePurchaseOrder = () => {
 
   const bankService = new BankService();
 
-  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks());
+
+  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks({ search: "", pageLimit: 25, offset: 0 }));
 
   const bankSelectFormat = bankData?.data.map((b) => {
     return {
