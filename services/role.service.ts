@@ -11,6 +11,7 @@ class RoleService extends APIService {
         throw error?.response?.data;
       });
   }
+  
   post_roles(data): Promise<any> {
     return this.post(`${GET_ROLES}`,data)
       .then((res) => {

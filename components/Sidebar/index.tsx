@@ -70,23 +70,6 @@ const Sidebar = ({ props }) => {
     props.mutate();
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
-  useEffect(() => {
-    const handleOutsideClick = (event: any) => {
-      if (divRef.current && !divRef.current.contains(event.target)) {
-        // Clicked outside of the div
-        setClickedItemIndex(null);
-        // Handle other actions as needed
-      }
-    };
-
-    // Add event listener when the component mounts
-    document.addEventListener("click", handleOutsideClick);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
 
   useEffect(() => {
     /**get route names */
@@ -286,70 +269,89 @@ const Sidebar = ({ props }) => {
         </div>
         <hr className="mt-2 mb-2" />
         {/* Drop downs */}
-
         <div
-          className={showSidebar ? "sidenavDropdown" : "d-none"}
+          className={"sidenavDropdown"}
           onClick={() => {
             setProductionList(true);
           }}
         >
           {selectedProduction ? (
             <div className="d-flex align-items-center cursor-pointer flex-row">
-              <Image
-                src="/home.svg"
-                alt="project"
-                width="30"
-                height="35"
-                className="ms-2 me-2 cursor-pointer"
-              />
-              <div className="d-flex flex-column cursor-pointer">
-                <div className="d-flex align-items-start">
-                  <p className="home mt-1 ellipsis">
-                    {selectedProduction.Name}
-                  </p>
-                </div>
-                <div className="d-flex mb-1 cursor-pointer align-items-start">
-                  <p className="ressl cursor-pointer">
-                    {selectedProduction.Client.Name
-                      ? selectedProduction.Client.Name
-                      : selectedProduction.Description}
-                  </p>
-                </div>
-              </div>
-              <Image
-                src="/chevron-down.svg"
-                alt="project"
-                width="20"
-                height="24"
-                className="ms-auto me-2 cursor-pointer"
-              />
+              {showSidebar ? (
+                <>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <div className="text-container text-center">
+                      <div className="d-flex align-items-start">
+                        <p className="home mt-1 cursor-pointer ellipsis">
+                          {selectedProduction.Name}
+                        </p>{" "}
+                      </div>
+                      <div className="d-flex align-items-start">
+                        <p className="ressl cursor-pointer">
+                          {selectedProduction.Client.Name
+                            ? selectedProduction.Client.Name
+                            : selectedProduction.Description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Image
+                    src="/chevron-down.svg"
+                    alt="project"
+                    width="20"
+                    height="24"
+                    className="ms-auto me-2 cursor-pointer"
+                  />
+                </>
+              ) : (
+                <Image
+                  src="/home.svg"
+                  alt="project"
+                  width="30"
+                  height="35"
+                  className="ms-2 me-2 cursor-pointer"
+                />
+              )}
             </div>
           ) : (
             <div className="d-flex align-items-center flex-row">
-              <Image
-                src="/home.svg"
-                alt="project"
-                width="30"
-                height="35"
-                className="ms-2 me-2"
-              />
-              <div className="d-flex flex-column cursor-pointer">
-                <div className="d-flex align-items-start">
-                  <p className="home mt-1 cursor-pointer">Home</p>
-                </div>
-                <div className="d-flex mb-1 align-items-start">
-                  <p className="ressl cursor-pointer">
-                    Resillient Software Solutions
-                  </p>
-                </div>
-              </div>
-              <Image
-                src="/chevron-down.svg"
-                alt="project"
-                width="20"
-                height="24"
-                className="ms-auto cursor-pointer me-2"
-              />
+              {showSidebar ? (
+                <>
+                  {" "}
+                  <Image
+                    src="/home.svg"
+                    alt="project"
+                    width="30"
+                    height="35"
+                    className="ms-2 me-2"
+                  />
+                  <div className="d-flex flex-column cursor-pointer">
+                    <div className="d-flex align-items-start">
+                      <p className="home mt-1 cursor-pointer">Home</p>
+                    </div>
+                    <div className="d-flex mb-1 align-items-start">
+                      <p className="ressl cursor-pointer">
+                        Resillient Software Solutions
+                      </p>
+                    </div>
+                  </div>
+                  <Image
+                    src="/chevron-down.svg"
+                    alt="project"
+                    width="20"
+                    height="24"
+                    className="ms-auto cursor-pointer me-2"
+                  />
+                </>
+              ) : (
+                <Image
+                  src="/home.svg"
+                  alt="project"
+                  width="30"
+                  height="35"
+                  className="ms-2 me-2 cursor-pointer"
+                />
+              )}
             </div>
           )}
         </div>
@@ -367,6 +369,8 @@ const Sidebar = ({ props }) => {
                 />
                 <div className="d-flex align-items-start ms-2">
                   <p
+                    id="clicked"
+                    ref={divRef}
                     className="home cursor-pointer"
                     onClick={() => {
                       setProductionList(false);
@@ -453,6 +457,10 @@ const Sidebar = ({ props }) => {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );
+                } else {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
                 }
               })}
             </div>
@@ -495,6 +503,10 @@ const Sidebar = ({ props }) => {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                 );
+              } else {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
               }
             })}
           </div>
@@ -502,6 +514,10 @@ const Sidebar = ({ props }) => {
           <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesNonStaff.map((route: any, i) => {
               if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              } else {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                 );

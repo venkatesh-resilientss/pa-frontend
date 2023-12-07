@@ -65,7 +65,11 @@ const AllRoleTable = () => {
       // selector: (row) => row?.RollName,
       cell: (row) => row.RoleName,
     },
-
+    {
+      sortable: true,
+      field: "Code",
+      selector: (row) => row.Code,
+    },
     {
       sortable: true,
       field: "AccessType",
@@ -84,16 +88,6 @@ const AllRoleTable = () => {
     },
 
     {
-      name: <div>Status</div>,
-      field: "IsActive",
-      cellRenderer: StateBadge,
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      // cellRenderer: (row) => (row.IsActive ? "Active" : "In-active"),
-    },
-    {
       field: "Options",
       cellRenderer: (row) => {
         return (
@@ -102,7 +96,10 @@ const AllRoleTable = () => {
               <MoreVertical size={17} className="cursor-pointer" />
             </DropdownToggle>
             <DropdownMenu end container="body">
-              <Link href={`/settings/roles?q=view_role&role_id=${row.data.ID}`}>
+              <>{row.ID}</>
+              <Link
+                href={`/settings/roles?q=view_role&role_id=${row?.data?.ID}`}
+              >
                 <DropdownItem
                   onClick={() => {
                     document.body.click();
@@ -110,14 +107,14 @@ const AllRoleTable = () => {
                   className="menu-item"
                 >
                   <div className="d-flex flex-row">
-                    <Image src="/list_alt.svg" className="menu-item-icon" />
-                    <p className="menu-item-text mb-0">View Details</p>
+                    <Image src="/edit_square.svg" className="menu-item-icon" />
+                    <p className="menu-item-text mb-0">View/Edit Role</p>
                   </div>
                 </DropdownItem>
               </Link>
-              {hasEditrolePermission && (
+              {/* {hasEditrolePermission && (
                 <Link
-                  href={`/settings/roles?q=edit_role&role_id=${row.data.ID}`}
+                  href={`/settings/roles?q=edit_role&role_id=${row?.data?.ID}`}
                 >
                   <DropdownItem
                     onClick={() => {
@@ -134,7 +131,7 @@ const AllRoleTable = () => {
                     </div>
                   </DropdownItem>
                 </Link>
-              )}
+              )} */}
             </DropdownMenu>
           </UncontrolledDropdown>
         );
@@ -190,7 +187,7 @@ const AllRoleTable = () => {
         </CardBody>
       </Card>
       {rolesLoading ? (
-        <div className="mt-2">
+        <div className="mt-3">
           <GridTable
             rowData={rolesdata}
             columnDefs={columns}
@@ -201,7 +198,7 @@ const AllRoleTable = () => {
       ) : (
         <>
           {rolesdata?.length > 0 ? (
-            <div className="mt-2">
+            <div className="mt-3">
               <GridTable
                 rowData={rolesdata}
                 columnDefs={columns}
