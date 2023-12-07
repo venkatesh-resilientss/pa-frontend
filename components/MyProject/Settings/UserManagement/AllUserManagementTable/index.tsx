@@ -181,7 +181,7 @@ const AllRoleTable = () => {
     },
     {
       headerName: "Role",
-      field: "rollname",
+      field: "rollName",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
