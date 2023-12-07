@@ -386,3 +386,23 @@ input::placeholder {
   color: #030229;
   font-size: 16px;
 }
+
+.configuration-table{
+  .title{
+    font-weight: 600;
+    font-family: "Segoe UI Semibold";
+  }
+}
+
+.configuration-add{
+  .title-head{
+    font-weight: 600;
+    font-family: "Segoe UI";
+    font-size: 1rem;
+  }
+  .title{
+    font-weight: 600;
+    font-family: "Segoe UI";
+    font-size: 2rem;
+  }
+}

@@ -14,14 +14,12 @@ import { useForm } from "react-hook-form";
 import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import AddressService from "services/address.service";
 function VendorAccordion() {
   const { reset } = useForm();
 
   const [open, setOpen] = useState("1");
-   
+  
   const vendorService = new VendorsService();
-  const addressService = new AddressService();
   const toggle = (id) => {
     if (open === id) {
       reset();
@@ -57,68 +55,34 @@ function VendorAccordion() {
       "zipcode": parseInt(data.billingAddressPostalCode)
     }
 
-
-    
-
-
-  
-    addressService.createAddress(contactAddressPaylaod)//contact address
-    .then(res=>{
-      const contactAddressID = res.ID;
-      addressService.createAddress(mailingAddressPaylaod)//mailing address
-      .then(res=>{
-        const mailingAddressID = res.ID;
-        addressService.createAddress(billingAddressPaylaod)//billing address
-        .then(res=>{
-          const billingAddressID = res.ID;
-          const backendFormat = {
-            Name: data.vendorName,
-            TaxID: data.taxId,
-            PaymentType: data.paymentType?.value,
-            PayeeName: data.payeeName,
-            PettyCashCustodianAccountID : null,
-            PettyCashPCardAccountID : null,
-            Code : data.vendorCode,
-            StateID : parseInt(data.workState.value),
-            Email : data.vendorEmail,
-            // PettyCashPCardEnabled
-            PettyCashAccountID : null,
-            // AliasName
-            // PettyCashCustodian
-            LegalName : data.legalName,
-            // Description
-            EntityID : parseInt(data.entityType),
-            // TaxCodeID
-            // BankAchID
-            PrimaryAddressID : contactAddressID,
-            MailingAddressID : mailingAddressID,
-            BillingAddressID : billingAddressID,
-            DefaultAccount : data.defaultAccount,
-            DefaultAddress : data.defaultAddress,
-            AchBankAccountNUmber : parseInt(data.achAccountNumber),
-            AchRoutingNumber : parseInt(data.achRoutingNumber),
-            // PrimaryContactID
-            // SecondaryContactID
-            // ParentID
-          };
-
-                vendorService
-                  .createVendor(backendFormat)
-                  .then(() => {
-                    toast.success("Vendor Added successfully");
-                    // reset();
-                    router.back();
-                  })
-                  .catch((error) => {
-                    toast.error(error?.error);
-                  });
-              });
-          });
-      })
-      .catch((error) => {
-        toast.error(error?.error);
-      });
-  };
+    const vendorsPayload = {
+      Name: data.vendorName,
+      Code : data.vendorCode,
+      PaymentType: data.paymentType,
+      LegalName : data.legalName,
+      Email : data.vendorEmail,
+      EntityID : data.entityType,
+      TaxID: data.taxId,
+      PayeeName: data.payeeName,
+      StateID : data.workState.value,
+      PettyCashPCardEnabled : data.isPettyCashEnabled,
+      PettyCashAccountID : data.pettyCashAccount,
+      DefaultAccount : data.defaultAccount,
+      DefaultAddress : data.defaultAddress,
+      AchBankAccountNUmber : parseInt(data.achAccountNumber),
+      AchRoutingNumber : parseInt(data.achRoutingNumber),
+      PrimaryAddress : contactAddressPaylaod,
+      MailingAddress  : mailingAddressPaylaod,
+      BillingAddress : billingAddressPaylaod
+    }
+    vendorService.createVendor(vendorsPayload).then(()=>{
+      toast.success("Vendors Added successfully");
+        reset();
+        router.back();
+    }).catch(error=>{
+      toast.error(error.Message);
+    });
+};
 
   const router = useRouter();
 

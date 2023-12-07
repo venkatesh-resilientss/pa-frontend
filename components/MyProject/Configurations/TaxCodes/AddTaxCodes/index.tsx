@@ -20,6 +20,7 @@ function AddTaxCode() {
   const taxCodeService = new TaxCodesService();
   const countryService = new CountryService();
 
+
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
     countryService.getCountries()
   );
@@ -31,14 +32,15 @@ function AddTaxCode() {
     };
   });
 
-  const loadCountryOptions = (values, callBack) => {
+  const loadCountryOptions = ( callBack) => {
     callBack(countrySelectFormat);
   };
   const onSubmit = (data) => {
     const backendFormat = {
+      name : data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      
+      countryID : parseInt(data.country)
     };
 
     taxCodeService
