@@ -32,7 +32,7 @@ const StatsHorizontal = ({
                 className="card-text m-auto"
                 style={{
                   color: "#4C4C61",
-                  fontSize: "16px",
+                  fontSize: "14px",
                   fontWeight: 600,
                 }}
               >
