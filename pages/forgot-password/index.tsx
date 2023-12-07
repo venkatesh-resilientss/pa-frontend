@@ -34,8 +34,7 @@ export default function ForgotPassword({ router }) {
       });
       setLoading(false);
       toast.success("Email has been sent to your registered email");
-
-      setLoading(false);
+      router.replace("/");
     } catch (e) {
       setLoading(false);
       toast.error(e?.error || e || "Error");
