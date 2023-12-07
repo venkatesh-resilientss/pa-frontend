@@ -4,12 +4,18 @@ import {
   DELETE_DEPARTMENTS,
   DEPARTMENT_DETAIL_ENDPOINT,
   EDIT_DEPARTMENTS,
-  GET_DEPARTMENTS,UPLOAD_DEPARTMENT_LIST
+  GET_DEPARTMENTS,
+  UPLOAD_DEPARTMENT_LIST,
 } from "../lib/endpoints";
 
 class DepartmentsService extends APIService {
-  getDepartments(): Promise<any> {
-    return this.get(`${GET_DEPARTMENTS}`)
+  getDepartments(data, params?): Promise<any> {
+    return this.post(
+      params
+        ? `${GET_DEPARTMENTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
+        : `${GET_DEPARTMENTS}`,
+      data
+    )
       .then((res) => {
         return res?.data;
       })
@@ -19,8 +25,7 @@ class DepartmentsService extends APIService {
   }
 
   createDepartment(data: any) {
-    return this
-      .post(CREATE_DEPARTMENTS, data)
+    return this.post(CREATE_DEPARTMENTS, data)
       .then((response) => {
         return response.data;
       })
@@ -29,17 +34,16 @@ class DepartmentsService extends APIService {
       });
   }
 
+  uploaddepartmentlist(fileName: any) {
+    // Create a FormData object
+    const formData = new FormData();
 
-    uploaddepartmentlist(fileName: any) {
-      // Create a FormData object
-      const formData = new FormData();
+    // Append the file name to the FormData object with the specified field name
+    formData.append("file", fileName);
 
-      // Append the file name to the FormData object with the specified field name
-      formData.append("file", fileName);
-
-      return this.post(UPLOAD_DEPARTMENT_LIST, formData,  {
-          'Content-Type': 'multipart/form-data',
-        },)
+    return this.post(UPLOAD_DEPARTMENT_LIST, formData, {
+      "Content-Type": "multipart/form-data",
+    })
       .then((response) => {
         return response.data;
       })
@@ -49,11 +53,10 @@ class DepartmentsService extends APIService {
         console.log("Error Response:", error.response);
         throw error.response.data;
       });
-    }
+  }
 
   departmentDetails(id: any) {
-    return this
-      .get(DEPARTMENT_DETAIL_ENDPOINT(id))
+    return this.get(DEPARTMENT_DETAIL_ENDPOINT(id))
       .then((response) => {
         return response.data;
       })
@@ -63,8 +66,7 @@ class DepartmentsService extends APIService {
   }
 
   deleteDepartment(id: any) {
-    return this
-      .delete(DELETE_DEPARTMENTS(id))
+    return this.delete(DELETE_DEPARTMENTS(id))
       .then((response) => {
         return response?.data;
       })
@@ -74,8 +76,7 @@ class DepartmentsService extends APIService {
   }
 
   editDepartment(id: any, updatedData: any) {
-    return this
-      .put(EDIT_DEPARTMENTS(id), updatedData)
+    return this.put(EDIT_DEPARTMENTS(id), updatedData)
       .then((response) => {
         return response?.data;
       })

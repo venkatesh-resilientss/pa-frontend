@@ -119,7 +119,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="contactAddressCountry"
-              rules={addressValidationRules.state}
+              rules={addressValidationRules.country}
               control={control}
               render={({ field }) => (
                 <Select

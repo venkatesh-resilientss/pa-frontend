@@ -183,22 +183,25 @@ const CreatePurchaseOrder = () => {
     callBack(bankSelectFormat);
   };
 
-  const departmentsService = new DepartmentsService();
+  /**
+   * TO DO - adjust get departments function - refer 'departments.services.ts'
+   */
+  // const departmentsService = new DepartmentsService();
 
-  const { data: departmentsData } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments()
-  );
+  // const { data: departmentsData } = useSWR("LIST_DEPARTMENTS", () =>
+  //   departmentsService.getDepartments()
+  // );
 
-  const departmentSelectFormat = departmentsData?.result?.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
+  // const departmentSelectFormat = departmentsData?.result?.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
 
-  const loadDepartmentOptions = (values, callBack) => {
-    callBack(departmentSelectFormat);
-  };
+  // const loadDepartmentOptions = (values, callBack) => {
+  //   callBack(departmentSelectFormat);
+  // };
 
   const periodsService = new PeriodsService();
 
@@ -1347,9 +1350,10 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                loadOptions={loadDepartmentOptions}
+                                // loadOptions={loadDepartmentOptions}
                                 placeholder="Select Department"
-                                defaultOptions={departmentSelectFormat}
+                                // defaultOptions={departmentSelectFormat}
+                                defaultOptions={[]}
                                 styles={{
                                   control: (provided) => ({
                                     ...provided,
@@ -1757,7 +1761,7 @@ import {
   BankService,
   ClientsService,
   DashboardService,
-  DepartmentsService,
+  // DepartmentsService,
   LocationsService,
   PeriodsService,
   PurchaseOrderService,

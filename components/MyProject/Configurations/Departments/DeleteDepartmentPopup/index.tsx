@@ -4,7 +4,6 @@ import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import { DepartmentsService } from "services";
 import { closeDeleteDepartmentPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 
 const DeleteDepartmentPopup = () => {
@@ -12,9 +11,6 @@ const DeleteDepartmentPopup = () => {
 
   const departmentsService = new DepartmentsService();
 
-  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments()
-  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.deleteDepartmentPopup.status
@@ -30,7 +26,6 @@ const DeleteDepartmentPopup = () => {
       await departmentsService.deleteDepartment(helperData);
       toast.success("Department Deleted Successfully");
       dispatch(closeDeleteDepartmentPopup("delete"))
-      mutate(departmentMutate());
     } catch (error) {
       console.error("Error deleting Department:", error);
     }

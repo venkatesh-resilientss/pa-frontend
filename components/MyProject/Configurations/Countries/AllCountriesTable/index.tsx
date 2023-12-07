@@ -14,7 +14,6 @@ import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 
 import { useRouter } from "next/router";
 import CountryService from "services/country.service";
@@ -25,7 +24,6 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadCountriesPopup,
-  openDeleteCountryPopup,
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
@@ -43,10 +41,6 @@ const AllCountriesTable = () => {
   const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
-  );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
   );
 
   const dispatch = useDispatch();
@@ -115,21 +109,20 @@ const AllCountriesTable = () => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100"
-                onClick={() => dispatch(openDeleteCountryPopup(props.data.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
     );
   };
   const columnDefs = [
+    {
+      headerName: "Code",
+      field: "Code",
+      sortable: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+    },
     {
       headerName: "Country Name",
       field: "Name",

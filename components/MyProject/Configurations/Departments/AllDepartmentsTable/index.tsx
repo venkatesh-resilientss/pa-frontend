@@ -8,30 +8,28 @@ import {
   Button,
   Input,
 } from "reactstrap";
-import GridTable from "components/grid-tables/gridTable";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
 import { useRouter } from "next/router";
-import useSWR from "swr";
 import { DepartmentsService } from "services";
 import moment from "moment";
 import {
   openBulkUploadDepartmentPopup,
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
 
 import Image from "next/image";
 import NoDataPage from "components/NoDataPage";
 
-const AllDepartmentsTable = () => {
+const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -47,13 +45,28 @@ const AllDepartmentsTable = () => {
   // );
 
   const departmentsService = new DepartmentsService();
+  
+  // const { data: departmentsData, isLoading: departmentLoading } = useSWR(
+  //   ["LIST_DEPARTMENTS", searchText],
+  //   () => departmentsService.getDepartments()
+  // );
 
-  const { data: departmentsData, isLoading: departmentLoading } = useSWR(
-    ["LIST_DEPARTMENTS", searchText],
-    () => departmentsService.getDepartments()
-  );
-
-  const dataSource = departmentsData && departmentsData.result;
+  // const dataSource = departmentsData && departmentsData.result;
+  const fetchData = async (pageNumber) => {
+    const clientId = parseInt(sessionStorage.getItem("clientId")) || 0;
+    try {
+      const response = await departmentsService.getDepartments({clientId : clientId},{
+        search: searchText,
+        pageLimit: recordsPerPage,
+        offset: pageNumber,
+      });
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -220,7 +233,7 @@ const AllDepartmentsTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {departmentsData?.result.length} Departments
+                  Departments
                 </div>
 
                 <Input
@@ -295,7 +308,7 @@ const AllDepartmentsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {departmentLoading ? (
+      {/* {departmentLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -322,12 +335,27 @@ const AllDepartmentsTable = () => {
                 buttonName={
                   hasCreateConfiguration ? "Create Department" : "No button"
                 }
-                buttonLink={"/configurations/Create Department"}
+                buttonLink={"/configurations/add-department"}
               />
             </div>
           )}
         </>
-      )}
+      )} */}
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+              buttonLink={"/configurations/add-set"}
+            />
+          )}
+        />
+      </div>
     </div>
   );
 };

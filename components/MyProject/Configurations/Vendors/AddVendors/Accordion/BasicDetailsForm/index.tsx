@@ -20,7 +20,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const statesService = new StatesService();
   const countryService = new CountryService();
   const vendorsValidationRules = formValidationRules.vendors;
-
   const coaAccountsService = new COAAccountsService();
 
   const { data: COAData } = useSWR("LIST_COA", () =>
