@@ -904,7 +904,7 @@ const CreatePurchaseOrder = () => {
                               // defaultOptions={vendorSelectFormat}
                               // onChange={handleVendorChange}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -1218,7 +1218,7 @@ const CreatePurchaseOrder = () => {
                                 placeholder="Select Client"
                                 defaultOptions={clientSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1249,7 +1249,7 @@ const CreatePurchaseOrder = () => {
                                 loadOptions={loadProductionOptions}
                                 defaultOptions={productionSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1280,7 +1280,7 @@ const CreatePurchaseOrder = () => {
                                 placeholder="Select Bank"
                                 defaultOptions={bankSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1312,7 +1312,7 @@ const CreatePurchaseOrder = () => {
                               //   placeholder="Select Currency"
                               //   defaultOptions={currenciesSelectFormat}
                               //   styles={{
-                              //     control: (provided) => ({
+                              //     control: (provided:any) => ({
                               //       ...provided,
                               //       height: "34px",
                               //       minHeight: "34px",
@@ -1356,7 +1356,7 @@ const CreatePurchaseOrder = () => {
                                 // defaultOptions={departmentSelectFormat}
                                 defaultOptions={[]}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1387,7 +1387,7 @@ const CreatePurchaseOrder = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={periodSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",

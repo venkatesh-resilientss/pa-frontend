@@ -51,20 +51,20 @@ const ClientsListTable = () => {
           <div className="d-flex flex-column" style={{ gap: "3px" }}>
             <div className="m-auto fw-bolder">{row?.Company.name}</div>
             <div className="f-10">{row?.Name}</div>
-            <div className="f-10">&nbsp; - </div>
+            <div className="f-10">{row?.ClientAdmin?.email} &nbsp; </div>
           </div>
         </div>
       ),
     },
 
-    {
-      name: <div>Active Productions</div>,
-      width: "170px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.active_projects,
-    },
+    // {
+    //   name: <div>Active Productions</div>,
+    //   width: "170px",
+    //   sortable: true,
+    //   sortField: "production_name",
+    //   selector: (row) => row?.production_name,
+    //   cell: (row) => row?.active_projects,
+    // },
 
     {
       name: <div>RSSL Support User</div>,
@@ -72,7 +72,7 @@ const ClientsListTable = () => {
       sortable: true,
       sortField: "production_name",
       selector: (row) => row?.production_name,
-      cell: (row) => row?.active_projects,
+      cell: (row) => row?.RsslSupportUser?.email,
     },
 
     {
