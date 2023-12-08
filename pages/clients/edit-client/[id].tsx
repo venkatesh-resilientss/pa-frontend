@@ -149,9 +149,7 @@ function Clients() {
       // form submission
       setLoading(true);
       try {
-        const payload = {
-          ...clientData,
-        };
+        const payload = { ...clientData };
         if (clientData.clientType)
           payload["ClientTypeID"] = clientData.clientType.value;
         if (clientData.clientAdmin)
@@ -193,7 +191,7 @@ function Clients() {
 
   return (
     <>
-      {clientData?.Name ? (
+      {clientData?.ID && (
         <div style={{ fontFamily: "Segoe UI" }} className="p-4 text-black">
           <div className="d-flex justify-content-between">
             <div className="d-flex gap-1">
@@ -246,8 +244,6 @@ function Clients() {
             {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
           />
         </div>
-      ) : (
-        <></>
       )}
     </>
   );
