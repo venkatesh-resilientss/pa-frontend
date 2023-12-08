@@ -4,9 +4,19 @@ import AsyncSelect from "react-select/async";
 
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
-function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, setPositivePay, ACHExport, setACHExport }) {
+function CheckEFTForm({
+  onSubmit,
+  control,
+  errors,
+  eft,
+  setEft,
+  positivePay,
+  setPositivePay,
+  ACHExport,
+  setACHExport,
+}) {
   const { handleSubmit } = useForm();
-  const [check, setCheck] = useState(false)
+  const [check, setCheck] = useState(false);
   // const [eft, setEft] = useState(false)
   // const [positivePay, setPositivePay] = useState(false)
   // const [ACHExport, setACHExport] = useState(false)
@@ -15,7 +25,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
     { label: "JSON", value: "json" },
     { label: "XML", value: "xml" },
     { label: "CSV", value: "csv" },
-  ]
+  ];
   const PPDataFormatOptions = PPDataFormat.map((data) => {
     return {
       value: data.value,
@@ -26,7 +36,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
     { label: "JSON", value: "json" },
     { label: "XML", value: "xml" },
     { label: "CSV", value: "csv" },
-  ]
+  ];
   const ACHDataFormatOptions = ACHDataFormat.map((data) => {
     return {
       value: data.value,
@@ -35,10 +45,10 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
   });
   useEffect(() => {
     if (!eft) {
-      setACHExport(false)
-      setPositivePay(false)
+      setACHExport(false);
+      setPositivePay(false);
     }
-  }, [eft])
+  }, [eft]);
   return (
     <div className="text-black">
       <Form
@@ -71,22 +81,22 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
               onChange={(e) => setCheck(e.target.checked)}
             />
 
-
             <div>Check</div>
           </div>
         </div>
         <Row className="mx-2">
-          <Col xl="4" className="my-2" >
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Check Range Start
             </Label>
-            <Controller disabled={!check}
+            <Controller
+              disabled={!check}
               name="checkRangeStart"
               rules={{
-                required: "Check Range Start is required",
+                required: check ? "Check Range Start is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -111,10 +121,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Check Range End
             </Label>
-            <Controller disabled={!check}
+            <Controller
+              disabled={!check}
               name="checkRangeEnd"
               rules={{
-                required: "Check Range End is required",
+                required: check ? "Check Range End is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -139,10 +150,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Check Copies
             </Label>
-            <Controller disabled={!check}
+            <Controller
+              disabled={!check}
               name="checkCopies"
               rules={{
-                required: "Check Copies is required",
+                required: check ? "Check Copies is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -163,7 +175,8 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
         </Row>
         <div className="d-flex" style={{ gap: "5px" }}>
           <div className="form-check form-switch ">
-            <Input onChange={(e) => setEft(e.target.checked)}
+            <Input
+              onChange={(e) => setEft(e.target.checked)}
               checked={eft}
               type="switch"
               name="customSwitch"
@@ -180,10 +193,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               EFT Range Start
             </Label>
-            <Controller disabled={!eft}
+            <Controller
+              disabled={!eft}
               name="ACHeftRangeStart"
               rules={{
-                required: "EFT Range Start is required",
+                required: eft ? "EFT Range Start is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -208,10 +222,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               EFT Range End
             </Label>
-            <Controller disabled={!eft}
+            <Controller
+              disabled={!eft}
               name="ACHeftRangeEnd"
               rules={{
-                required: "EFT Range End is required",
+                required: eft ? "EFT Range End is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -236,10 +251,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               EFT Copies
             </Label>
-            <Controller disabled={!eft}
+            <Controller
+              disabled={!eft}
               name="ACHeftCopies"
               rules={{
-                required: "EFT Copies is required",
+                required: eft ? "EFT Copies is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -267,9 +283,13 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             }}
           >
             <div className="d-flex" style={{ gap: "5px" }}>
-              <input type="checkbox" disabled={!eft} checked={ACHExport} onChange={(e) => setACHExport(e.target.checked)} />
+              <input
+                type="checkbox"
+                disabled={!eft}
+                checked={ACHExport}
+                onChange={(e) => setACHExport(e.target.checked)}
+              />
               <div>ACH Export</div>
-
             </div>
           </div>
           <Col xl="4" className="my-2">
@@ -280,10 +300,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Host
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHhost"
               rules={{
-                required: "  Host is required",
+                required: ACHExport ? "Host is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -308,10 +329,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               User Name
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHuserName"
               rules={{
-                required: " User Name is required",
+                required: ACHExport ? " User Name is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -325,7 +347,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             />
             {errors.ACHuserName && (
               <span className="text-danger">
-                {errors.userName.message as React.ReactNode}
+                {errors.ACHuserName.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -336,14 +358,16 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Password
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHpassword"
               rules={{
-                required: " Password is required",
+                required: ACHExport ? " Password is required" : false,
               }}
               control={control}
               render={({ field }) => (
-                <Input type="password"
+                <Input
+                  type="password"
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Password"
                   invalid={errors.ACHpassword && true}
@@ -364,10 +388,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Inbound Path
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHinboundPath"
               rules={{
-                required: "   Inbound Path is required",
+                required: ACHExport ? "Inbound Path is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -392,10 +417,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Outbound Path
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHoutboundPath"
               rules={{
-                required: "  Outbound Path is required",
+                required: ACHExport ? "Outbound Path is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -423,7 +449,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller
               name="ACHdataFormat"
               rules={{
-                required: "   Data Format is required",
+                required: ACHExport ? "Data Format is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -452,10 +478,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Certificate
             </Label>
-            <Controller disabled={!ACHExport}
+            <Controller
+              disabled={!ACHExport}
               name="ACHcertificate"
               rules={{
-                required: "  Certificate is required",
+                required: ACHExport ? "Certificate is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -485,7 +512,12 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             }}
           >
             <div className="d-flex" style={{ gap: "5px" }}>
-              <input type="checkbox" disabled={!eft} checked={positivePay} onChange={(e) => setPositivePay(e.target.checked)} />
+              <input
+                type="checkbox"
+                disabled={!eft}
+                checked={positivePay}
+                onChange={(e) => setPositivePay(e.target.checked)}
+              />
               <div>Positive Pay</div>
             </div>
           </div>
@@ -581,10 +613,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Host
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPhost"
               rules={{
-                required: "  Host is required",
+                required: positivePay ? "Host is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -610,10 +643,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Port
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPport"
               rules={{
-                required: "Port is required",
+                required: positivePay ? "Port is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -638,10 +672,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               User Name
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPuserName"
               rules={{
-                required: " User Name is required",
+                required: positivePay ? "User Name is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -666,10 +701,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Password
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPpassword"
               rules={{
-                required: " Password is required",
+                required: positivePay ? "Password is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -695,10 +731,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Outbound Path
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPoutboundPath"
               rules={{
-                required: "  Outbound Path is required",
+                required: positivePay ? "Outbound Path is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -726,7 +763,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller
               name="PPdataFormat"
               rules={{
-                required: "   Data Format is required",
+                required: positivePay ? "Data Format is required" : false,
               }}
               control={control}
               // render={({ field }) => (
@@ -764,10 +801,11 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Certificate
             </Label>
-            <Controller disabled={!positivePay}
+            <Controller
+              disabled={!positivePay}
               name="PPcertificate"
               rules={{
-                required: "Certificate is required",
+                required: positivePay ? "Certificate is required" : false,
               }}
               control={control}
               render={({ field }) => (
@@ -789,10 +827,12 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
         </Row>
         <div className="d-flex mt-2" style={{ gap: "5px" }}>
           <div className="form-check form-switch ">
-            <Input onChange={(e) => setWireTransfer(e.target.checked)}
+            <Input
+              onChange={(e) => setWireTransfer(e.target.checked)}
               type="switch"
               name="customSwitch"
               id="exampleCustomSwitch"
+              checked={wireTransfer}
             />
             <div>Wire Transfer</div>
           </div>
@@ -805,10 +845,13 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Wire Transafer Range Start
             </Label>
-            <Controller disabled={!wireTransfer}
+            <Controller
+              disabled={!wireTransfer}
               name="wireTransaferRangeStart"
               rules={{
-                required: "Wire Transafer Range Start is required",
+                required: wireTransfer
+                  ? "Wire Transafer Range Start is required"
+                  : false,
               }}
               control={control}
               render={({ field }) => (
@@ -833,10 +876,13 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Wire Transfer Range End
             </Label>
-            <Controller disabled={!wireTransfer}
+            <Controller
+              disabled={!wireTransfer}
               name="wireTransaferRangeEnd"
               rules={{
-                required: " Wire Transfer Range End is required",
+                required: wireTransfer
+                  ? "Wire Transfer Range End is required"
+                  : false,
               }}
               control={control}
               render={({ field }) => (
@@ -861,10 +907,13 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             >
               Wire Transfer Copies
             </Label>
-            <Controller disabled={!wireTransfer}
+            <Controller
+              disabled={!wireTransfer}
               name="wireTransferCopies"
               rules={{
-                required: "Wire Transfer Copies is required",
+                required: wireTransfer
+                  ? "Wire Transfer Copies is required"
+                  : false,
               }}
               control={control}
               render={({ field }) => (
