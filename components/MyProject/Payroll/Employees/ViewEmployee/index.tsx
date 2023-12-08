@@ -1,4 +1,4 @@
-import { Col, Row, Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
+import { Col, Row, Button, Modal, ModalBody, ModalHeader } from "reactstrap";
 import GridTable from "components/grid-tables/gridTable";
 import { useState } from "react";
 
