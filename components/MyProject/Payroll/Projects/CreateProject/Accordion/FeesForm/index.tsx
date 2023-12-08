@@ -12,6 +12,10 @@ function FeesForm({ control, errors }) {
   const toggle = () => setFeeModal(!feeModal);
 
   const form = [
+    { name: 'ficaSocialSecurity', label: 'FICA-Social Security', placeholder: 'Enter FICA-Social Security' },
+    { name: 'medicare', label: 'Medicare', placeholder: 'Enter Medicare' },
+    { name: 'futa', label: 'FUTA', placeholder: 'Enter FUTA' },
+    { name: 'futaCrs', label: 'FUTA-CRS', placeholder: 'Enter FUTA-CRS' },
     { name: 'wcMargin', label: 'WC Margin', type: 'select', placeholder: 'Enter WC Margin' },
     { name: 'sutaMargin', label: 'SUTA Margin', type: 'select', placeholder: 'Enter SUTA Margin' },
     { name: 'breakageat', label: 'Breakage at', type: 'select', placeholder: 'Breakage at' },
@@ -56,7 +60,7 @@ function FeesForm({ control, errors }) {
         {form.map((formField, index) => (
          <Col xl="4" className="p-2" key={index}>
           {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                {formField.label}{formField.required && '*'}
+                {formField.label}{formField.required && <span className='text-danger'>*</span>}
         </Label>}
          {formField.type === 'select' ? (
             <Controller

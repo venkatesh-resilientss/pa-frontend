@@ -1,5 +1,6 @@
-import { Col, Row, Button } from "reactstrap";
+import { Col, Row, Button, Modal, ModalBody, ModalHeader, ModalFooter } from "reactstrap";
 import GridTable from "components/grid-tables/gridTable";
+import { useState } from "react";
 
 const employee = {
   last_name: 'Tom',
@@ -25,24 +26,6 @@ const employee = {
       hours: '8',
       days: '8',
       aggrements: 'Signed'
-    },
-    {
-      name: 'Rainy Days',
-      worked_from: 'Aug 15th, 2023 - Sep 14th, 2023',
-      location: 'CA Street',
-      dollars: '200.50',
-      hours: '8',
-      days: '8',
-      aggrements: 'Signed'
-    },
-    {
-      name: 'Smuggler Film',
-      worked_from: 'Aug 15th, 2023 - Sep 14th, 2023',
-      location: 'CA Street',
-      dollars: '200.50',
-      hours: '8',
-      days: '8',
-      aggrements: 'Signed'
     }
   ],
   payments: [
@@ -57,6 +40,9 @@ const employee = {
 }
 
 function ViewEmployee() {
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+
   const searchText = ""
   const columns = [
     {
@@ -87,6 +73,7 @@ function ViewEmployee() {
     }
   ];
   return (
+    <div>
     <div className="p-4">
       <div
         className="text-black form-label"
@@ -103,7 +90,7 @@ function ViewEmployee() {
           >
             <img
               src="/defaultemployee.jpeg"
-              className="profile-img"
+              className="employee-profile-img"
               alt=""
             />
             <div className="text-black form-label">
@@ -197,12 +184,202 @@ function ViewEmployee() {
               </div>
             ))
           }
+          <Row>
+            <Col xl="6">
+              <div className="card">
+              <div
+                  className="text-black form-label text-bold m-auto mt-3"
+                >
+                  DIRECT DEPOSIT
+                </div>
+                <hr />
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Bank Name</div>
+                  <div>Wells fargo</div>
+                </div>
+                <div className="card p-3 mb-3 border-0">
+                  <div>Routing No</div>
+                  <div>123456789</div>
+                </div>
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Account</div>
+                  <div>123456789</div>
+                </div>
+                <div className="card p-3 mb-3 border-0">
+                  <div>Amount</div>
+                  <div>$123456789</div>
+                </div>
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Account Type</div>
+                  <div>Checking</div>
+                </div>
+                <Row>
+                  <Col xl="12">
+                    <Button
+                      className="button-props mt-3 m-3"
+                    >
+                      View Details
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+            <Col xl="6">
+              <div className="card">
+              <div
+                  className="text-black form-label text-bold m-auto mt-3"
+                >
+                  AGENT INFORMATION
+                </div>
+                <hr />
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Agency Name</div>
+                  <div>CAA</div>
+                </div>
+                <div className="card p-3 mb-3 border-0">
+                  <div>Attention</div>
+                  <div>1234</div>
+                </div>
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Agency Address</div>
+                  <div>CA Street</div>
+                </div>
+                <div className="card p-3 mb-3 border-0">
+                  <div>As of Date</div>
+                  <div>10-12-2023</div>
+                </div>
+                <div className="card p-3 mb-3 border-0 bg-light">
+                  <div>Rate %</div>
+                  <div>10</div>
+                </div>
+                <Row>
+                  <Col xl="12">
+                    <Button
+                      className="button-props mt-3 m-3"
+                    >
+                      View Details
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col xl="12">
+            <div className="card p-4 text-center pe-auto cursor-pointer" onClick={toggle}>
+            DEAL MEMO
+            </div>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row>
-        <GridTable rowData={employee.payments} columnDefs={columns} pageSize={4} searchText={searchText} />
+        <h5 className="mb-3">Payments</h5>
+        <GridTable rowData={{data: employee.payments}} columnDefs={columns} pageSize={4} searchText={searchText} />
       </Row>
       <hr />
+      
+    </div>
+    <Modal isOpen={modal} toggle={toggle} className="modal-xl">
+        <ModalHeader toggle={toggle}>DEAL DEMO</ModalHeader>
+        <ModalBody>
+          <div>
+            <div className="card mb-3">
+            <Row>
+            <Col xl="12" className="m-3 mb-0"><h6><strong>View Form</strong></h6></Col>
+            </Row>
+            <hr></hr>
+            <Row className="p-2 m-2 bg-white">
+              <Col>EMPLOYEE START DATE</Col>
+              <Col>: 10/05/2023</Col>
+              <Col>JOB DESCRIPTION OVERRIDE</Col>
+              <Col>: CLT</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-light">
+              <Col>UNION/GUILD</Col>
+              <Col>: Directors Guild of America</Col>
+              <Col>FLSA</Col>
+              <Col>: Non-Exempt</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-white">
+              <Col>OCC CODE</Col>
+              <Col>: Vo-Voice Over</Col>
+              <Col>DEPT</Col>
+              <Col>: DGA</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-light">
+              <Col>SCHEDULE</Col>
+              <Col>: A</Col>
+              <Col>HIRING LOCATION</Col>
+              <Col>: CA, US, Woodland Hills</Col>
+            </Row>
+            </div>
+            <div className="card mb-3">
+            <Row className="p-2">
+            <Col xl="12" className="m-3 mb-0"><h6><strong>Pay Rates</strong></h6></Col>
+            </Row>
+            <hr></hr>
+            <Row className="p-2 m-2 bg-white">
+              <Col>Location</Col>
+              <Col>: Studio</Col>
+              <Col>Location</Col>
+              <Col>: Distant</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-light">
+              <Col>Schedule</Col>
+              <Col>: Weekly</Col>
+              <Col>Schedule</Col>
+              <Col>: Daily</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-white">
+              <Col>Hourly Rate</Col>
+              <Col>: $ 58.5678</Col>
+              <Col>Hourly Rate</Col>
+              <Col>: $ 58.5678</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-light">
+              <Col>Weekly Rate</Col>
+              <Col>: $ 2,321.00</Col>
+              <Col>Weekly Rate</Col>
+              <Col>: $ 2,321.00</Col>
+            </Row>
+            </div>
+            <div className="card">
+            <Row className="p-2">
+            <Col xl="12" className="m-3 mb-0"><h6><strong>Allowances/Rentals</strong></h6></Col>
+            </Row>
+            <hr></hr>
+            <Row className="p-2 m-2 bg-white">
+              <Col>KIT</Col>
+              <Col>Amount</Col>
+              <Col>: $200.00</Col>
+              <Col>Schedule</Col>
+              <Col>: Weekly</Col>
+              <Col>Pay only on Worked Days</Col>
+              <Col>: YES</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-light">
+              <Col>CAR</Col>
+              <Col>Amount</Col>
+              <Col>: $15.00</Col>
+              <Col>Schedule</Col>
+              <Col>: Daily</Col>
+              <Col>Pay only on Worked Days</Col>
+              <Col>: YES</Col>
+            </Row>
+            <Row className="p-2 m-2 bg-white">
+              <Col>Cellphone</Col>
+              <Col>Amount</Col>
+              <Col>: $200.00</Col>
+              <Col>Schedule</Col>
+              <Col>: Weekly</Col>
+              <Col>Pay only on Worked Days</Col>
+              <Col>: No</Col>
+            </Row>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   )
 }

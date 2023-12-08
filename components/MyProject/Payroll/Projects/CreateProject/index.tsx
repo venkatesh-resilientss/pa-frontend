@@ -12,6 +12,7 @@ import ApprovalInformationForm from "./Accordion/ApprovalInformationForm";
 
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const completedStep = "/completedStep.svg";
 const currentStep = "/currentStep.svg";
@@ -49,6 +50,7 @@ function CreateClient() {
   const [steps, setSteps] = useState(sections);
   const [activeStep, setActiveStep] = useState(0);
   const laststep = steps.length - 1
+  const router = useRouter();
 
   const { control, handleSubmit, formState: { errors } } = useForm();
   const handleNext = () => {
@@ -69,6 +71,7 @@ function CreateClient() {
     });
     if (activeStep === laststep) {
       toast.success("Project Created successfully");
+      router.push("/payroll/projects");
     }
   };
 
