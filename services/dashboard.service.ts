@@ -1,5 +1,5 @@
 import APIService from './api.service';
-import { GET_DASHBOARD_STATS, GET_ONBOARDED_CLIENTS, GET_RECENT_PRODUCTIONS, ON_BOARDED_PROJECTS } from 'lib/endpoints';
+import { GET_DASHBOARD_STATS, GET_ONBOARDED_CLIENTS, GET_RECENT_PRODUCTIONS, ON_BOARDED_PROJECTS, PRODUCTION_DASHBOARD_CARDS } from 'lib/endpoints';
 
 class DashboardService extends APIService {
   static getProductionDetails(production_id: string | string[]): any {
@@ -39,8 +39,19 @@ class DashboardService extends APIService {
   }
 
     getProductionDetails(id: any) {
-      // console.log(id)
+      console.log(id)
     return this.get(ON_BOARDED_PROJECTS(id))
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+
+    getDashboardCards(id: any) {
+      console.log(id)
+    return this.get(PRODUCTION_DASHBOARD_CARDS(id))
       .then((response) => {
         return response.data;
       })
