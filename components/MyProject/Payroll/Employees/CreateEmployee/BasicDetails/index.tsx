@@ -7,7 +7,7 @@ function BasicDetailsForm({ control, errors }) {
     const formData = [
         { name: 'last_name', label: 'Last Name', required: true, placeholder: 'Last Name' },
         { name: 'first_name', label: 'First Name', required: true, placeholder: 'First Name' },
-        { name: 'middle_name', label: 'Middle Name', required: true, placeholder: 'Middle Name' },
+        { name: 'middle_name', label: 'Middle Name', placeholder: 'Middle Name' },
         { name: 'phone_number', label: 'Phone Number', placeholder: 'Phone Number' },
         { name: 'email', label: 'Email', placeholder: 'Email' },
         { name: 'gender', label: 'Gender', type: 'select', placeholder: 'Gender' }
@@ -23,7 +23,7 @@ function BasicDetailsForm({ control, errors }) {
               {formData.map((formField) => (
                 <Col xl="4" key={formField.name}>
                   {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
             </Label>}
                   {formField.type === 'select' ? (
                     <Controller

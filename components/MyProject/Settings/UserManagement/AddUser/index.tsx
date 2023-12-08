@@ -27,6 +27,7 @@ function AddUser() {
   // const [selectedRole, setSelectedRole] = useState(null);
   const [selectedClient] = useState(true);
   const [userDetails, setUserDetails] = useState() as any;
+  const [clientDetails, setClientDetails] = useState(null) as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
   const [clientProductionsList, setClientProductionsList] = useState([
@@ -62,9 +63,13 @@ function AddUser() {
 
   useEffect(() => {
     if (userDetails) {
-      if (!userDetails.IsStaffUser) {
+      if (!userDetails.IsStaffUser && userDetails?.Client?.ID) {
         setInitialClientOptions([
-          { label: userDetails.Client.Name, value: userDetails.Client.ID },
+          {
+            label: userDetails?.Client?.Name,
+            value: userDetails?.Client?.ID,
+            field: userDetails?.Client?.tenant_id,
+          },
         ]);
         usersService
           .getProductionsByClient(userDetails.Client.ID)
@@ -107,6 +112,7 @@ function AddUser() {
           ?.map((item) => ({
             value: item.ID,
             label: item.Name,
+            field: item?.tenant_id,
           }));
         setInitialClientOptions(options);
       } catch (error) {
@@ -207,13 +213,26 @@ function AddUser() {
   // }
 
   const onSubmit = async (data) => {
+    if (userDetails?.IsStaffUser && !isCheckedStaffUser && !clientDetails) {
+      toast.error("Select Client");
+      return;
+    }
     const userPayload: any = {
       first_name: data.firstname,
       last_name: data.lastname,
       middle_name: data.middlename,
       email: data.email,
-      client_id: userDetails.Client.ID,
+      client_id: userDetails?.IsStaffUser
+        ? isCheckedStaffUser
+          ? 0
+          : clientDetails?.value
+        : userDetails.Client.ID,
       roleID: data?.role?.value,
+      tenant_id: userDetails?.IsStaffUser
+        ? isCheckedStaffUser
+          ? 0
+          : clientDetails?.field
+        : userDetails.Client.tenant_id,
       // tenant_id: userDetails.tenant_id,
       IsStaffUser: isCheckedStaffUser,
       Meta: {
@@ -227,9 +246,7 @@ function AddUser() {
       };
     });
     userPayload.Meta.userCPReference = userPreferences;
-    if (!isCheckedStaffUser) {
-      userPayload.tenant_id = clientProductionsList[0]?.tenant_id;
-    }
+
     usersService
       .postUsers(userPayload)
       .then(() => {
@@ -453,7 +470,6 @@ function AddUser() {
                     render={({ field }) => (
                       <AsyncSelect
                         {...field}
-                        isClearable={true}
                         className="react-select"
                         classNamePrefix="select"
                         loadOptions={loadClientOptions}
@@ -465,6 +481,7 @@ function AddUser() {
                           //     (ele) => ele.value !== client.value
                           //   );
                           // setInitialClientOptions([...updatedCLientOptions]);
+                          if (index === 0) setClientDetails(client);
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
@@ -491,13 +508,12 @@ function AddUser() {
                       <AsyncSelect
                         isDisabled={true}
                         {...field}
-                        isClearable={true}
                         className="react-select"
                         classNamePrefix="select"
                         placeholder="Select Client"
                         defaultOptions={initialClientOptions}
-                        defaultValue={initialClientOptions[0]}
                         onChange={(client) => {
+                          setClientDetails(client);
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
