@@ -288,7 +288,12 @@ const AllProductionsTable = () => {
         </Col>
       </Row>
       <GridTable
-        rowData={projectsData}
+        rowData={{
+          data: projectsData,
+          limit: 10,
+          offset: 0,
+          total_records: 25,
+        }}
         columnDefs={columnDefs}
         pageSize={10}
         searchText={undefined}
