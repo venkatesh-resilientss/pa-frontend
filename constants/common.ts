@@ -553,6 +553,7 @@ const PHONE_MAX_LENGTH = 30;
 
 const contactValidationRules = {
   fullName: {
+    required : "Name is required",
     maxLength: {
       value: FULL_NAME_MAX_LENGTH,
       message: `Name must not contain more than ${FULL_NAME_MAX_LENGTH} characters`,
@@ -573,6 +574,7 @@ const contactValidationRules = {
     },
   },
   officePhone: {
+    required : "Phone Number is required",
     maxLength: {
       value: PHONE_MAX_LENGTH,
       message: `Phone Number cannot contain more than ${PHONE_MAX_LENGTH} characters`,
@@ -971,7 +973,6 @@ export const formValidationRules = {
   },
   address: {
     line1: {
-      required: "Address Line 1 is required",
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
         message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
@@ -988,16 +989,14 @@ export const formValidationRules = {
       },
     },
     city: {
-      required: "City is required",
+      
     },
     state: {
-      required: "State is required",
+
     },
     country: {
-      required: "Country is required",
     },
     zipCode: {
-      required: "Zip Code is required",
       maxLength: {
         value: ZIP_CODE_MAX_LENGTH,
         message: `Zip Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`,
@@ -1056,7 +1055,6 @@ export const formValidationRules = {
       },
     },
     legalName: {
-      required: "Vendor Legal Name is required",
       maxLength: {
         value: NAME_MAX_LENGTH,
         message: `Vendor Legal Name must be contain less than ${NAME_MAX_LENGTH} characters`,
@@ -1076,6 +1074,9 @@ export const formValidationRules = {
     defaultAddress: {
       required: "Default Address is required",
     },
+    country : {
+      required : "Country is required"
+    },
     workState: {
       required: "Work State is required",
     },
@@ -1083,7 +1084,6 @@ export const formValidationRules = {
       required: "Default Account is required",
     },
     payeename: {
-      required: "Payee Name is required",
       maxLength: {
         value: NAME_MAX_LENGTH,
         message: `Payee Name must be contain less than ${NAME_MAX_LENGTH} characters`,

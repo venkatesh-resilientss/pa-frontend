@@ -171,7 +171,7 @@ function EditCurrency() {
                 )}
               />
               <Label className="form-lable-font mb-0">
-                Is Base Currency<span className="required">*</span>
+                Is Base Currency
               </Label>
             </div>
           </Col>

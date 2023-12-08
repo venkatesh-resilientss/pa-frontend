@@ -1,2 +1,2 @@
-Code,Name,Description,CountryID
-123,Test Tax,Test Tax Code,US
+Code,Name,Description,CountryID,TaxYear
+123,Test Tax,Test Tax Code,US,2022

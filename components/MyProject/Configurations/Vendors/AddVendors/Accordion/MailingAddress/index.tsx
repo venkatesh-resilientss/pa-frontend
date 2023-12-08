@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
-import { StatesService } from "services";
+import { StatesService, CountryService } from "services";
 import useSWR from "swr";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
@@ -9,15 +9,24 @@ function MailingAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
   const addressValidationRules = formValidationRules.address;
   const statesService = new StatesService();
+  const countryService = new CountryService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
-
+  
   const stateSelectOptions = statesData?.data.map((b) => {
     return {
       value: b.ID,
       label: b.Name,
       countryId: b.CountryID,
+    };
+  });
+
+  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const countrySelectOptions = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
     };
   });
   return (
@@ -32,7 +41,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1 <span className="required">*</span>
+              Address Line 1 
             </Label>
             <Controller
               name="mailingAddress1"
@@ -116,7 +125,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Country <span className="required">*</span>
+              Country 
             </Label>
             <Controller
               name="mailingAddressCountry"
@@ -124,7 +133,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={[]}
+                  options={countrySelectOptions}
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
@@ -143,7 +152,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State <span className="required">*</span>
+              State 
             </Label>
             <Controller
               name="mailingAddressState"
@@ -174,9 +183,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressCity"
-              rules={{
-                required: "  City is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
