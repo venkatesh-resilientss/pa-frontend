@@ -11,7 +11,7 @@ function ContactInformationForm({ control, errors }) {
     { name: 'primaryTitle', label: 'Title', required: true, placeholder: 'Enter Title' },
     { name: 'primaryOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone' },
     { name: 'primaryphoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number' },
-    { name: 'primaryEmail', label: 'Email', required: true, placeholder: 'Enter Email' }
+    { name: 'primaryEmail', label: 'Email', placeholder: 'Enter Email' }
   ]
 
   const secondaryContact = [
@@ -23,11 +23,11 @@ function ContactInformationForm({ control, errors }) {
   ]
 
   const additionalContact = [
-    { name: 'additionalContact', label: 'Company Additional Contact', required: true, placeholder: 'Enter Additional Contact' },
-    { name: 'additionalTitle', label: 'Title', required: true, placeholder: 'Enter Title' },
-    { name: 'additionalOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Office Phone' },
-    { name: 'additionalPhoneNumber', label: 'Phone Number', required: true, placeholder: 'Enter Phone Number' },
-    { name: 'additionalEmail', label: 'Email', required: true, placeholder: 'Enter Email' }
+    { name: 'additionalContact', label: 'Company Additional Contact', placeholder: 'Enter Additional Contact' },
+    { name: 'additionalTitle', label: 'Title', placeholder: 'Enter Title' },
+    { name: 'additionalOfficePhone', label: 'Office Phone', placeholder: 'Enter Office Phone' },
+    { name: 'additionalPhoneNumber', label: 'Phone Number', placeholder: 'Enter Phone Number' },
+    { name: 'additionalEmail', label: 'Email', required: false, placeholder: 'Enter Email' }
   ]
 
   const [formData, setFormData] = useState([primaryContact, secondaryContact]);
@@ -59,7 +59,7 @@ function ContactInformationForm({ control, errors }) {
                 <Label
                   className="text-black form-label"
                 >
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
                 </Label>
                 <Controller
                   name={index + '_' + formField.name}

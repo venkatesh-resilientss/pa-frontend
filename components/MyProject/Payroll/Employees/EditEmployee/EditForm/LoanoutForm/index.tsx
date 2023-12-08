@@ -7,7 +7,7 @@ function LoanoutForm({ control, errors }) {
     const formData = [
       { name: 'loanout_name', label: 'Loanout Name', required: true, placeholder: 'Loanout Name' },
       { name: 'fein', label: 'FEIN', required: true, placeholder: 'FEIN' },
-      { name: 'loanout_registered_in', label: 'Loanout Registered In', placeholder: 'Loanout Registered In' },
+      { name: 'loanout_registered_in', label: 'Loanout Registered In', required: true, placeholder: 'Loanout Registered In' },
       { name: 'is_loanout', label: 'Is Loanout', type: 'check', placeholder: 'Is Loanout' },
     ];
 
@@ -19,7 +19,7 @@ function LoanoutForm({ control, errors }) {
                 <Col xl="4" key={formField.name}>
                   {formField.type !== 'check' && <Label className="form-lable-font text-black form-label"
                   >
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
             </Label>}
                   {formField.type === 'select' ? (
                     <Controller

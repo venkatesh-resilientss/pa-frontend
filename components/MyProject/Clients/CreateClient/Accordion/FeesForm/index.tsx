@@ -12,19 +12,23 @@ function FeesForm({ control, errors }) {
   const toggle = () => setFeeModal(!feeModal);
 
   const form = [
-    { name: 'wcTable', label: 'WC Table', type: 'select', placeholder: 'Enter WC Table' },
+    { name: 'ficaSocialSecurity', label: 'FICA-Social Security', placeholder: 'Enter FICA-Social Security' },
+    { name: 'medicare', label: 'Medicare', placeholder: 'Enter Medicare' },
+    { name: 'futa', label: 'FUTA', placeholder: 'Enter FUTA' },
+    { name: 'futaCrs', label: 'FUTA-CRS', placeholder: 'Enter FUTA-CRS' },
+    { name: 'wcMargin', label: 'WC Margin', required: true,  placeholder: 'Enter WC Margin' },
+    { name: 'breakageat', label: 'Breakage at', required: true, type: 'select', options: [{label: 'Project', value: 'Project'}, {label: 'Client', value: 'Client'}, {label: 'Parent', value: 'Parent'}], placeholder: 'Breakage at' },
+    { name: 'sutaMargin', label: 'SUTA Margin', required: true, placeholder: 'Enter SUTA Margin' },
+    { name: 'hfRebateAmount', label: 'HF Rebate Amount', placeholder: 'HF Rebate Amount' },
+    { name: 'wcRebateAmount', label: 'W/C Rebate Amount', placeholder: 'W/C Rebate Amount' },
+    { name: 'deliveryBy', label: 'Delivery By', required: true,  type: 'select', options: [{label: 'Pick-Up', value: 'Pick-Up'}, {label: 'Messenger', value: 'Messenger'}, {label: 'Mail', value: 'Mail'}, {label: 'FedEx', value: 'FedEx'}], placeholder: 'Delivery By' },
+    { name: 'cost', label: 'Cost', placeholder: 'Cost' },
+    { name: 'per', label: 'Per', type: 'select', options: [{label: 'Employee', value: 'Employee'}, {label: 'Check', value: 'Check'}, {label: 'Invoice', value: 'Invoice'}, {label: 'Delivery', value: 'Delivery'}, {label: 'Week', value: 'Week'}], placeholder: 'Per' },
     { name: 'weeklyCutoffs', label: 'Weekly Cutoffs', type: 'check', placeholder: 'Weekly Cutoffs' },
     { name: 'billonPremiumOT', label: 'Bill on Premium OT', type: 'check', placeholder: 'Bill on Premium OT' },
-    { name: 'sutaTable', label: 'SUTA Table', type: 'select', placeholder: 'Enter SUTA Table' },
     { name: 'taxableAllow', label: 'Taxable Allow', type: 'check', placeholder: 'Taxable Allow' },
     { name: 'taxCutoffs', label: 'P/R Tax Cutoffs', type: 'check', placeholder: 'P/R Tax Cutoffs' },
-    { name: 'breakageat', label: 'Breakage at', type: 'select', placeholder: 'Breakage at' },
-    { name: 'reduceOnPreTax', label: 'Reduce On PreTax', required: true, placeholder: 'Reduce On PreTax' },
-    { name: 'hfRebateAmount', label: 'HF Rebate Amount', required: true, placeholder: 'HF Rebate Amount' },
-    { name: 'wcRebateAmount', label: 'W/C Rebate Amount', required: true, placeholder: 'W/C Rebate Amount' },
-    { name: 'deliveryBy', label: 'Delivery By', type: 'select', placeholder: 'Delivery By' },
-    { name: 'cost', label: 'Cost', required: true, placeholder: 'Cost' },
-    { name: 'per', label: 'Per', type: 'select', placeholder: 'Per' }
+    { name: 'reduceOnPreTax', label: 'Reduce On PreTax', type: 'check', placeholder: 'Reduce On PreTax' }
   ]
 
 
@@ -56,7 +60,7 @@ function FeesForm({ control, errors }) {
           {form.map((formField, index) => (
             <Col xl="4" className="p-2" key={index}>
               {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                {formField.label}{formField.required && '*'}
+                {formField.label}{formField.required && <span className='text-danger'>*</span>}
               </Label>}
               {formField.type === 'select' ? (
                 <Controller
@@ -64,7 +68,10 @@ function FeesForm({ control, errors }) {
                   control={control}
                   rules={{ required: formField.required && `${formField.label} is required` }}
                   render={({ field }) => (
-                    <ReactSelect {...field} isClearable />
+                    <ReactSelect 
+                    value={field.value}
+                    onChange={(selectedOption) => field.onChange(selectedOption)}
+                    className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
                   )}
                 />
               ) : formField.type === 'check' ? (

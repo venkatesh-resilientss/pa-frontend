@@ -50,7 +50,7 @@ function DDForm({ control, errors }) {
               {form.map((formField) => (
                 <Col xl="4" key={formField.name}>
                   {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
                   </Label>}
                   {formField.type === 'select' ? (
                     <Controller

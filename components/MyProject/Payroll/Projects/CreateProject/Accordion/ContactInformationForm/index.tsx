@@ -8,11 +8,10 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 function ContactInformationForm({ control, errors }) {
 
   const contacts = [
-    { name: 'accountantType', label: 'Production Accountant', type: 'select', placeholder: 'Enter Accountant' },
-    { name: 'productionAccountant', label: 'Production Accountant', required: true, placeholder: 'Enter Accountant' },
+    { name: 'accountantType', label: 'Production Accountant', required: true, type: 'select', options: [{label: 'Production Accountant', value: 'Production Accountant'}, {label: 'Asst. Production Accountant', value: 'Asst. Production Accountant'}, {label: 'Payroll Accountant', value: 'Payroll Accountant'}, {label: 'UPM', value: 'UPM'}, {label: 'For W/C', value: 'For W/C'}], placeholder: 'Enter Accountant' },
     { name: 'productionAccountantOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Accountant Office Phone' },
     { name: 'productionAccountantCellPhone', label: 'Cell Phone', required: true, placeholder: 'Enter Accountant Cell Phone' },
-    { name: 'productionAccountantEmailPhone', label: 'Email', required: true, placeholder: 'Enter Email' }]
+    { name: 'productionAccountantEmailPhone', label: 'Email', required: false, placeholder: 'Enter Email' }]
 
   const [formData, setFormData] = useState([contacts]);
 
@@ -45,7 +44,7 @@ function ContactInformationForm({ control, errors }) {
                 <Label
                   className="text-black form-label"
                 >
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
                 </Label>
                 {formField.type === 'select' ? (
                   <Controller
@@ -53,7 +52,10 @@ function ContactInformationForm({ control, errors }) {
                     control={control}
                     rules={{ required: formField.required && `${formField.label} is required` }}
                     render={({ field }) => (
-                      <ReactSelect {...field} isClearable />
+                      <ReactSelect 
+                      value={field.value}
+                      onChange={(selectedOption) => field.onChange(selectedOption)}
+                      className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
                     )}
                   />
                 ) : (
