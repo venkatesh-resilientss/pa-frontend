@@ -97,9 +97,6 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="contactAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -180,9 +177,6 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="contactAddressCity"
-              rules={{
-                required: "  City is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

@@ -183,9 +183,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressCity"
-              rules={{
-                required: "  City is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

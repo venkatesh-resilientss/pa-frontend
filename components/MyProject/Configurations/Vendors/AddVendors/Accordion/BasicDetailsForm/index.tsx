@@ -4,7 +4,7 @@ import Select from "react-select";
 import useSWR from "swr";
 import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
-import { COAAccountsService } from "services";
+import { COAAccountsService,EntitiesService } from "services";
 import {
   formValidationRules,
   PaymentOptions,
@@ -14,7 +14,6 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-import EntitiesService from "@/services/entities.services";
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const {
     // control,
@@ -122,7 +121,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
-  const stateSelectOptions = statesData?.data.map((b) => {
+  const stateSelectOptions = statesData?.data.filter(item => item.IsActive).map((b) => {
     return {
       value: b.ID,
       label: b.Name,
@@ -130,10 +129,10 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   });
 
   const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
-  const countrySelectOptions = countryData?.data.map((b) => {
+  const countrySelectOptions = countryData?.data.filter(item => item.IsActive).map((item) => {
     return {
-      value: b.ID,
-      label: b.Name,
+      value: item.ID,
+      label: item.Name,
     };
   });
   return (
@@ -348,7 +347,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               Country <span className="required">*</span>
             </Label>
             <Controller
-              name="country"
+              name="vendorcountry"
               rules={vendorsValidationRules.country}
               control={control}
               render={({ field }) => (
@@ -360,9 +359,9 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 />
               )}
             />
-            {errors.workState && (
+            {errors.country && (
               <span className="text-danger">
-                {errors.workState.message as React.ReactNode}
+                {errors.country.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -625,7 +624,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder=" Enter Payee Name"
+                  placeholder="Enter Contact Number"
                   invalid={errors.contactNumber && true}
                   {...field}
                 />

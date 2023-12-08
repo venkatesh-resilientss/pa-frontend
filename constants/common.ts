@@ -525,7 +525,7 @@ export const PaymentOptions = [
 /**Address Types */
 export const VendorsAddressTypes = [
   { label: "Mailing Address", value: "mailing_address" },
-  { label: "Billing Address", value: "billing address" },
+  { label: "Billing Address", value: "billing_address" },
   { label: "Contact Address", value: "contact_address" },
 ];
 
