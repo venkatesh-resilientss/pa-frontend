@@ -4,8 +4,7 @@ import { Row, Col } from "react-bootstrap";
 
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import { openAssignRSSLPopup } from "../../../../redux/slices/mySlices/productions";
+import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
 
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
@@ -29,7 +28,7 @@ const AllProductionsTable = () => {
   const projectService = new ProjectService();
 
   const { data: projectsData } = useSWR(["LIST_PROJECTS", ""], () =>
-    projectService.getProjects()
+    projectService.getProjectsList("?limit=50&offset=0")
   );
 
   const router = useRouter();
@@ -159,8 +158,16 @@ const AllProductionsTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
-
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
     },
