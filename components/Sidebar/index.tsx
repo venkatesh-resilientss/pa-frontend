@@ -345,6 +345,7 @@ const Sidebar = ({ props }) => {
               if (productionList) {
                 setProductionList(false);
                 setSelectedProduction();
+                setClickedItemIndex(null);
               } else {
                 setProductionList(true);
               }
@@ -424,6 +425,7 @@ const Sidebar = ({ props }) => {
                 onClick={() => {
                   setProductionList(false);
                   setSelectedProduction();
+                  setClickedItemIndex(null);
                 }}
               >
                 <Image
@@ -440,6 +442,7 @@ const Sidebar = ({ props }) => {
                     onClick={() => {
                       setProductionList(false);
                       setSelectedProduction();
+                      setClickedItemIndex(null);
                     }}
                   >
                     Home
@@ -466,7 +469,9 @@ const Sidebar = ({ props }) => {
                     onClick={() => {
                       setTemp1(item);
                       setTemp2(index);
-                      setSwitcProduction(!switcProduction);
+                      if (!isClicked) {
+                        setSwitcProduction(!switcProduction);
+                      }
                     }}
                   >
                     <img
@@ -675,7 +680,7 @@ const Sidebar = ({ props }) => {
         <Modal.Body className="mb-0 mt-0 d-flex justify-content-center align-items-center pt-0">
           <div className="d-flex flex-column">
             <p className="d-flex justify-content-center mt-3 mb-0 align-items-center">
-              Do you want to switch another production!!
+              Do you want to switch production!!
             </p>
           </div>
         </Modal.Body>
@@ -685,6 +690,7 @@ const Sidebar = ({ props }) => {
             onClick={() => {
               setSwitcProduction(!switcProduction);
               setTemp1("");
+              setTemp2("");
             }}
           >
             Cancel
