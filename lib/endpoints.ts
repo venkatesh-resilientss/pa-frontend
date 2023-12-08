@@ -42,6 +42,8 @@ export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard S
 export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
 export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
+// export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects/${id}`; //onboarded projects
+export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects/${id}`; //onboarded projects
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 

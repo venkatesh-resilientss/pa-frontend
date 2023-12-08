@@ -393,7 +393,15 @@ const Sidebar = ({ props }) => {
                       setSelectedProduction();
                     }}
                   >
-                    Home
+                   <div
+                    onClick={() => {
+                      // Redirect to the dashboard when clicking on "HOME"
+                      router.push('/dashboard');
+                    }}
+                  >
+                    HOME
+                  </div>
+
                   </p>
                 </div>
               </div>
@@ -408,6 +416,7 @@ const Sidebar = ({ props }) => {
               {(productionData || [])?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
+                console.log(item.ID)
                 return (
                   <div
                     key={index}
@@ -418,7 +427,7 @@ const Sidebar = ({ props }) => {
                       setClickedItemIndex(index);
                       setSelectedProduction(item);
                       setProductionList(false);
-
+                       router.push(`/production/${item.ID}/dashboard`);
                       sessionStorage.setItem("clientid", item.Client.ID);
                       sessionStorage.setItem("projectid", item.ID);
                     }}

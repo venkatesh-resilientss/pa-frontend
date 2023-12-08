@@ -4,12 +4,41 @@ import helpcenter2 from 'assets/DashboardIcons/helpcenter2.svg'
 import helpcenter3 from 'assets/DashboardIcons/helpcenter3.svg'
 import { Card } from "react-bootstrap";
 import HelpCenterCard from "@/components/MyProject/Dashboard/HelpCenter/HelpCenterCard";
-
-
-
+import { useRouter } from "next/router";
+import dashboardService from "@/services/dashboard.service";
+import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 export default function ProductionDashboard() {
+ const router = useRouter();
+  const { production_id } = router.query;
 
+  const [productionData, setProductionData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProductionDetails = async () => {
+      try {
+        setLoading(true); // Set loading to true when starting the fetch
+        const data = await dashboardService.getProductionDetails(production_id);
+        setProductionData(data);
+        setLoading(false);
+        console.log('Production Details Response:', data);
+      } catch (error) {
+        console.error('Error fetching production details:', error);
+        setLoading(false);
+      }
+    };
+
+    // Add additional logging to help debug
+    console.log('Component is mounted. production_id:', production_id);
+
+    if (production_id) {
+      fetchProductionDetails();
+    }
+  }, [production_id]);
+ 
+ 
     const createCard = (title, iconSrc, subTitle, content) => (
     <Col>
       <Card border="primary" className="productionCards">
@@ -60,18 +89,15 @@ export default function ProductionDashboard() {
           {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>$150,000</p>)}
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
             <div className="row">
-              <div className="col-md-4">
+               <div className="col-md-6 text-nowrap">
+                <h6 className="text-center">Purchase Order</h6>
+                <p className="text-center font-size-16">21</p>
+              </div>
+              <div className="col-md-6">
                 <h6 className="text-center">Account Payable</h6>
                 <p className="text-center">21</p>
               </div>
-              <div className="col-md-4 text-nowrap">
-                <h6 className="text-center">Petty Cash</h6>
-                <p className="text-center font-size-16">21</p>
-              </div>
-              <div className="col-md-4">
-                <h6 className="text-center">Journal Entry</h6>
-                <p className="text-center font-size-16">21</p>
-              </div>
+             
             </div>
           ))}
         </Row>
@@ -97,6 +123,7 @@ export default function ProductionDashboard() {
           <div className="d-flex justify-content-between mt-2">
             <div>
                 <p>Payroll Coordinator : John Duo</p>
+                
             </div>
             <div>
                 <div>
