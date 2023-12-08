@@ -640,7 +640,7 @@ const Sidebar = ({ props }) => {
               className={
                 showSidebar ? "rounded-circle me-3" : "rounded-circle mx-auto"
               }
-              src={userData?.data?.profile_image || "./default.svg"}
+              src={userData?.data?.profile_image || "/default.svg"}
               width="32"
               height="32"
             />
