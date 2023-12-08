@@ -4,39 +4,11 @@ import helpcenter2 from 'assets/DashboardIcons/helpcenter2.svg'
 import helpcenter3 from 'assets/DashboardIcons/helpcenter3.svg'
 import { Card } from "react-bootstrap";
 import HelpCenterCard from "@/components/MyProject/Dashboard/HelpCenter/HelpCenterCard";
-import { useRouter } from "next/router";
-import dashboardService from "@/services/dashboard.service";
-import useSWR from "swr";
-import { useEffect, useState } from "react";
+
+
 
 export default function ProductionDashboard() {
- const router = useRouter();
-  const { production_id } = router.query;
 
-  const [productionData, setProductionData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProductionDetails = async () => {
-      try {
-        setLoading(true); // Set loading to true when starting the fetch
-        const data = await dashboardService.getProductionDetails(production_id);
-        setProductionData(data);
-        setLoading(false);
-        console.log('Production Details Response:', data);
-      } catch (error) {
-        console.error('Error fetching production details:', error);
-        setLoading(false);
-      }
-    };
-
-    // Add additional logging to help debug
-    console.log('Component is mounted. production_id:', production_id);
-
-    if (production_id) {
-      fetchProductionDetails();
-    }
-  }, [production_id]);
  
  
     const createCard = (title, iconSrc, subTitle, content) => (

@@ -1,2 +1,2 @@
-name,code,country,description,
-Tax Code 23,TD23,IND,lorem ipsum de amet,
+Code,Name,Description,CountryID
+123,Test Tax,Test Tax Code,US

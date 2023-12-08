@@ -5,21 +5,22 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function BasicDetailsForm({ control, errors }) {
     const formData = [
-      { name: 'project_name', label: 'Project', required: true, placeholder: 'Project' },
-      { name: 'project_#', label: 'Project#', required: true, placeholder: 'Project #' },
-      { name: 'client_name', label: 'Client', required: true, placeholder: 'Client' },
-      { name: 'ssn', label: 'SSN/EIN', placeholder: 'SSN/EIN' },
+      { name: 'project_name', label: 'Project', placeholder: 'Project' },
+      { name: 'project_#', label: 'Project#', placeholder: 'Project #' },
+      { name: 'client_name', label: 'Client', placeholder: 'Client' },
+      { name: 'ssn', label: 'SSN/EIN', required: true, placeholder: 'SSN/EIN' },
       { name: 'last_name', label: 'Last Name', required: true, placeholder: 'Last Name' },
       { name: 'first_name', label: 'First Name', required: true, placeholder: 'First Name' },
-      { name: 'middle_name', label: 'Middle Name', required: true, placeholder: 'Middle Name' },
+      { name: 'middle_name', label: 'Middle Name', placeholder: 'Middle Name' },
       { name: 'suffix', label: 'Suffix', placeholder: 'Suffix' },
-      { name: 'dob', label: 'Birth Date', type: 'date', placeholder: 'Birth Date' },
-      { name: 'email', label: 'Email Address', placeholder: 'Email' },
-      { name: 'phone_number', label: 'Phone Number', placeholder: 'Phone Number' },
+      { name: 'dob', label: 'Birth Date', required: true, type: 'date', placeholder: 'Birth Date' },
+      { name: 'email', label: 'Email Address', required: true, placeholder: 'Email' },
+      { name: 'phone_number', label: 'Phone Number', required: true, placeholder: 'Phone Number' },
       { name: 'ethnicity', label: 'Ethnicity', placeholder: 'Ethnicity' },
       { name: 'gender', label: 'Gender', type: 'select', placeholder: 'Gender' },
       { name: 'citizenship', label: 'Citizenship', placeholder: 'Citizenship' },
-      { name: 'visa_type', label: 'Visa Type', placeholder: 'Visa Type' }
+      { name: 'visa_type', label: 'Visa Type', placeholder: 'Visa Type' },
+      { name: 'unionDuesApproval', label: 'Union Dues Approval', type: 'check', placeholder: 'Union Dues Approval' }
       ];
 
     const exempt = [
@@ -37,7 +38,7 @@ function BasicDetailsForm({ control, errors }) {
               {formData.map((formField) => (
                 <Col xl="4" key={formField.name}>
                   {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
             </Label>}
                   {formField.type === 'select' ? (
                     <Controller

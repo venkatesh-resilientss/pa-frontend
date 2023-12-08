@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { FcFilmReel } from "react-icons/fc";
-import { hasPermission } from "commonFunctions/functions";
 import ReactSelect from "react-select";
 
 import {
@@ -24,10 +22,8 @@ import {
 } from "reactstrap";
 import { useRouter } from "next/router";
 import {
-  Edit,
   File,
   MoreVertical,
-  Trash,
   Users,
 } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
@@ -171,7 +167,7 @@ const ProjectsListTable = () => {
               <File size={14} className="me-50" />
               <span className="align-middle">Edit Details</span>
             </DropdownItem>
-            <DropdownItem
+            {/* <DropdownItem
               tag="a"
               href="/"
               className="w-100"
@@ -179,7 +175,7 @@ const ProjectsListTable = () => {
             >
               <FcFilmReel size={14} className="me-50" />
               <span className="align-middle">View Project</span>
-            </DropdownItem>
+            </DropdownItem> */}
             {/* <DropdownItem className="w-100">
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
@@ -191,7 +187,7 @@ const ProjectsListTable = () => {
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem> */}
-            {hasPermission("project_management", "edit_project") && (
+            {/* {hasPermission("project_management", "edit_project") && (
               <DropdownItem className="w-100">
                 <Edit size={14} className="me-50 cursor-pointer" />
                 <span className="align-middle">Edit</span>
@@ -202,7 +198,7 @@ const ProjectsListTable = () => {
                 <Trash size={14} className="me-50 cursor-pointer" />
                 <span className="align-middle">Delete</span>
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -225,7 +221,7 @@ const ProjectsListTable = () => {
     {
       headerName: "Project Type",
       sortable: true,
-      field: "production_name"
+      field: "project_type"
     },
 
     {
@@ -287,7 +283,7 @@ const ProjectsListTable = () => {
           )} */}
         </div>
       </Card>
-      <GridTable rowData={rowData} columnDefs={columns} pageSize={4} searchText={searchText} />
+      <GridTable rowData={{data: rowData}} columnDefs={columns} pageSize={4} searchText={searchText} />
       {/* <DataTableWithButtons
         tableTitle={"All Projects"}
         data={projectData}

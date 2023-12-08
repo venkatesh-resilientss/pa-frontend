@@ -6,24 +6,65 @@ import { COAAccountsService } from "services";
 import { formValidationRules } from "@/constants/common";
 import Select from "react-select";
 import { selectStyles } from "constants/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COAAccountyTypeOptions } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
-import useSWR from "swr";
+import AsyncSelect from "react-select/async";
 function AddChartOfAccounts() {
   const router = useRouter();
   const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
-  
-  const {data : COAData} = useSWR("LIST_COA",()=>coaAccountsService.getCoasAccounts());
-  const COASelectOptions = COAData?.result.map((account)=>{
-    return {
-      value : account.ID,
-      label : `${account.Code}-${account.Name}`
-    }
-  })
 
-  const [postableActiveStatus,setPostableActiveStatus] = useState(false);
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  const [postableActiveStatus, setPostableActiveStatus] = useState(false);
   const {
     control,
     handleSubmit,
@@ -32,17 +73,17 @@ function AddChartOfAccounts() {
   } = useForm();
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       name: data.COAName,
       code: data.COACode,
       parentID: parseInt(data.COAParent),
       IsActive: false,
       description: data.Description,
-      type: data.AccountType,
-      postable : postableActiveStatus,
+      type: data.AccountType.value,
+      postable: postableActiveStatus,
       clientID,
-      projectID
+      projectID,
     };
 
     coaAccountsService
@@ -111,7 +152,9 @@ function AddChartOfAccounts() {
           {" "}
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Name <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                COA Name <span className="required">*</span>
+              </Label>
               <Controller
                 name="COAName"
                 rules={coaValidationRules.name}
@@ -134,7 +177,9 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Code <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                COA Code <span className="required">*</span>
+              </Label>
               <Controller
                 name="COACode"
                 rules={coaValidationRules.code}
@@ -163,11 +208,16 @@ function AddChartOfAccounts() {
                 control={control}
                 rules={coaValidationRules.parent}
                 render={({ field }) => (
-                  <Select
+                  <AsyncSelect
                   {...field}
-                  options={COASelectOptions}
-                  placeholder="Select an option"
-                  styles={selectStyles}/>
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
+                />
                 )}
               />
               {errors.COAParent && (
@@ -179,18 +229,21 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font"> Account Type <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                {" "}
+                Account Type <span className="required">*</span>
+              </Label>
               <Controller
                 name="AccountType"
                 rules={coaValidationRules.accountType}
                 control={control}
                 render={({ field }) => (
                   <Select
-                  {...field}
-                  options={COAAccountyTypeOptions}
-                  placeholder="Select an option"
-                  styles={selectStyles}
-                />
+                    {...field}
+                    options={COAAccountyTypeOptions}
+                    placeholder="Select an option"
+                    styles={selectStyles}
+                  />
                 )}
               />
               {errors.AccountType && (
@@ -230,7 +283,9 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Postable <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                Postable <span className="required">*</span>
+              </Label>
               <div className="d-flex gap-1">
                 <div className="d-flex gap-1">
                   <input

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody,Spinner } from "reactstrap";
 
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
@@ -34,12 +34,13 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
     setUploadedFiles(updatedFiles);
   };
 
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
-
+    setLoader(true)
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
@@ -49,14 +50,11 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
         // Handle success
         setRerender(!rerender)
         toast.success("Data inserted successfully.");
-
         dispatch(closeBulkUploadLocationsPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        setLoader(false)
+        toast.error(error.Message|| error.error || "Failed to insert data.");
       });
   };
   const handleDownload = () => {
@@ -189,8 +187,13 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

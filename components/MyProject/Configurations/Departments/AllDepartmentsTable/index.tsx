@@ -37,6 +37,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"
@@ -250,26 +251,28 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() =>
-                    dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
-                  }
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   onClick={() => router.push(`/configurations/add-department`)}

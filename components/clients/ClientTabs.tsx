@@ -40,7 +40,7 @@ function ClientTabs(props) {
         ))}
       </Nav>
 
-      <TabContent className="py-50" activeTab={step}>
+      <TabContent className="py-3" activeTab={step}>
         <TabPane tabId={1}>
           <BasicInformation {...tabProps} />
         </TabPane>

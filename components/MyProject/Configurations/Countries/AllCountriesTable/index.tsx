@@ -8,16 +8,13 @@ import {
   Button,
   Input,
 } from "reactstrap";
-import useSWR from "swr";
 import moment from "moment";
-import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 import { useRouter } from "next/router";
 import CountryService from "services/country.service";
-import { useState } from "react";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
@@ -26,10 +23,10 @@ import { openBulkUploadCountriesPopup } from "redux/slices/mySlices/configuratio
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
 
-const AllCountriesTable = () => {
+const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
   const countryService = new CountryService();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -40,15 +37,26 @@ const AllCountriesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
+  
   const dispatch = useDispatch();
 
-  const { data: countryData, isLoading: countryLoading } = useSWR(
-    ["LIST_USERS", searchText],
-    () => countryService.getCountries()
-  );
-
-  const dataSource = countryData;
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await countryService.getCountries(
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
+      const data = response.data; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   // console.log("", countryData);
 
@@ -208,7 +216,7 @@ const AllCountriesTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {countryData?.data.length} Countries
+                  Countries
                 </div>
 
                 <Input
@@ -219,26 +227,28 @@ const AllCountriesTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() =>
-                    dispatch(openBulkUploadCountriesPopup("upload"))
-                  }
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadCountriesPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -281,39 +291,22 @@ const AllCountriesTable = () => {
           </CardBody>
         </Card>
       </div>
-      {countryLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.data?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={9}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add Country"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Country" : "No button"
-                }
-                buttonLink={"/configurations/add-country"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={hasCreateConfiguration ? "Create COA" : ""}
+              buttonLink={"/configurations/add-chart-of-accounts"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };
