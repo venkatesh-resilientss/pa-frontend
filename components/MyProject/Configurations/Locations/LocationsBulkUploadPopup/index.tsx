@@ -11,7 +11,7 @@ import cancelIcon from "assets/myIcons/cancel.svg";
 import { closeBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { LocationsService } from "services";
 
-const LocationsBulkUploadPopup = () => {
+const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const locationService = new LocationsService();
@@ -47,6 +47,7 @@ const LocationsBulkUploadPopup = () => {
       .uploadlocationlist(fileName)
       .then(() => {
         // Handle success
+        setRerender(!rerender)
         toast.success("Data inserted successfully.");
 
         dispatch(closeBulkUploadLocationsPopup("close"));

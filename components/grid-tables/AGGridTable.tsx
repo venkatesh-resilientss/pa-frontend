@@ -47,6 +47,12 @@ function AGGridTable({
         } else {
           setNoData(true);
           setLoading(false); // Make sure to set loading to false in this case
+          gridApi.setDatasource({
+            getRows: async (params) => {
+              params.successCallback([], 0);
+              setLoading(false);
+            },
+          });
         }
       } catch (error) {
         console.error("Error fetching data:", error);

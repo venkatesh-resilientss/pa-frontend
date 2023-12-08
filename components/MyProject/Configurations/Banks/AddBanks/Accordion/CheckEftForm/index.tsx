@@ -1,34 +1,89 @@
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import AsyncSelect from "react-select/async";
+
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
-function CheckEFTForm({ onSubmit, control, errors }) {
+function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, setPositivePay, ACHExport, setACHExport }) {
   const { handleSubmit } = useForm();
+  const [check, setCheck] = useState(false)
+  // const [eft, setEft] = useState(false)
+  // const [positivePay, setPositivePay] = useState(false)
+  // const [ACHExport, setACHExport] = useState(false)
+  const [wireTransfer, setWireTransfer] = useState(false);
+  const PPDataFormat = [
+    { label: "JSON", value: "json" },
+    { label: "XML", value: "xml" },
+    { label: "CSV", value: "csv" },
+  ]
+  const PPDataFormatOptions = PPDataFormat.map((data) => {
+    return {
+      value: data.value,
+      label: data.label,
+    };
+  });
+  const ACHDataFormat = [
+    { label: "JSON", value: "json" },
+    { label: "XML", value: "xml" },
+    { label: "CSV", value: "csv" },
+  ]
+  const ACHDataFormatOptions = ACHDataFormat.map((data) => {
+    return {
+      value: data.value,
+      label: data.label,
+    };
+  });
+  useEffect(() => {
+    if (!eft) {
+      setACHExport(false)
+      setPositivePay(false)
+    }
+  }, [eft])
   return (
     <div className="text-black">
       <Form
-        style={{ fontSize: "12px", fontWeight: "400", gap: "14px" }}
+        style={{ fontSize: "12px", fontWeight: "400" }}
         onSubmit={handleSubmit(onSubmit)}
         className="d-flex flex-column "
       >
-        <Row>
-          <div className="d-flex" style={{ gap: "5px" }}>
-            <div className="form-check form-switch ">
-              <Input
-                type="switch"
-                name="customSwitch"
-                id="exampleCustomSwitch"
-              />
-              <div>Check</div>
-            </div>
-          </div>{" "}
-          <Col xl="4">
+        <div className="d-flex" style={{ gap: "5px" }}>
+          <div className="form-check form-switch ">
+            {/* <Controller disabled={!check}
+              name="IsCheck"
+              rules={{
+                required: "Check Range Start is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input onChange={(e) => setCheck(e.target.checked)}
+                  type="switch"
+                  name="customSwitch"
+                  id="exampleCustomSwitch"
+                  checked={check}
+                />
+              )}
+            /> */}
+            <Input
+              type="switch"
+              name="customSwitch"
+              id="exampleCustomSwitch"
+              checked={check}
+              onChange={(e) => setCheck(e.target.checked)}
+            />
+
+
+            <div>Check</div>
+          </div>
+        </div>
+        <Row className="mx-2">
+          <Col xl="4" className="my-2" >
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Check Range Start
             </Label>
-            <Controller
+            <Controller disabled={!check}
               name="checkRangeStart"
               rules={{
                 required: "Check Range Start is required",
@@ -49,14 +104,14 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Check Range End
             </Label>
-            <Controller
+            <Controller disabled={!check}
               name="checkRangeEnd"
               rules={{
                 required: "Check Range End is required",
@@ -77,14 +132,14 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Check Copies
             </Label>
-            <Controller
+            <Controller disabled={!check}
               name="checkCopies"
               rules={{
                 required: "Check Copies is required",
@@ -106,46 +161,27 @@ function CheckEFTForm({ onSubmit, control, errors }) {
             )}
           </Col>
         </Row>
-        <Row>
-          <div className="d-flex" style={{ gap: "5px" }}>
-            <div className="form-check form-switch ">
-              <Input
-                type="switch"
-                name="customSwitch"
-                id="exampleCustomSwitch"
-              />
-              <div>EFT</div>
-            </div>
+        <div className="d-flex" style={{ gap: "5px" }}>
+          <div className="form-check form-switch ">
+            <Input onChange={(e) => setEft(e.target.checked)}
+              checked={eft}
+              type="switch"
+              name="customSwitch"
+              id="exampleCustomSwitch"
+            />
+            <div>EFT</div>
           </div>
-
-          <div
-            className="d-flex"
-            style={{
-              gap: "14px",
-              fontSize: "14px",
-              fontWeight: "400",
-              marginBottom: "5px",
-            }}
-          >
-            <div className="d-flex" style={{ gap: "5px" }}>
-              <input type="checkbox" />
-              <div>ACH Export</div>
-            </div>
-            <div className="d-flex" style={{ gap: "5px" }}>
-              <input type="checkbox" />
-              <div>Positive Pay</div>
-            </div>
-          </div>
-
-          <Col xl="4">
+        </div>
+        <Row className="mx-2">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               EFT Range Start
             </Label>
-            <Controller
-              name="eftRangeStart"
+            <Controller disabled={!eft}
+              name="ACHeftRangeStart"
               rules={{
                 required: "EFT Range Start is required",
               }}
@@ -154,14 +190,330 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter EFT Range Start"
-                  invalid={errors.eftRangeStart && true}
+                  invalid={errors.ACHeftRangeStart && true}
                   {...field}
                 />
               )}
             />
-            {errors.eftRangeStart && (
+            {errors.ACHeftRangeStart && (
               <span className="text-danger">
-                {errors.eftRangeStart.message as React.ReactNode}
+                {errors.ACHeftRangeStart.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              EFT Range End
+            </Label>
+            <Controller disabled={!eft}
+              name="ACHeftRangeEnd"
+              rules={{
+                required: "EFT Range End is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter EFT Range End"
+                  invalid={errors.ACHeftRangeEnd && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHeftRangeEnd && (
+              <span className="text-danger">
+                {errors.ACHeftRangeEnd.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              EFT Copies
+            </Label>
+            <Controller disabled={!eft}
+              name="ACHeftCopies"
+              rules={{
+                required: "EFT Copies is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter EFT Copies"
+                  invalid={errors.ACHeftCopies && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHeftCopies && (
+              <span className="text-danger">
+                {errors.ACHeftCopies.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <div
+            className="d-flex mt-2"
+            style={{
+              gap: "14px",
+              fontSize: "14px",
+              fontWeight: "400",
+              marginBottom: "5px",
+            }}
+          >
+            <div className="d-flex" style={{ gap: "5px" }}>
+              <input type="checkbox" disabled={!eft} checked={ACHExport} onChange={(e) => setACHExport(e.target.checked)} />
+              <div>ACH Export</div>
+
+            </div>
+          </div>
+          <Col xl="4" className="my-2">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Host
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHhost"
+              rules={{
+                required: "  Host is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Host"
+                  invalid={errors.ACHhost && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHhost && (
+              <span className="text-danger">
+                {errors.ACHhost.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              User Name
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHuserName"
+              rules={{
+                required: " User Name is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter User Name"
+                  invalid={errors.ACHuserName && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHuserName && (
+              <span className="text-danger">
+                {errors.userName.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Password
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHpassword"
+              rules={{
+                required: " Password is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input type="password"
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Password"
+                  invalid={errors.ACHpassword && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHpassword && (
+              <span className="text-danger">
+                {errors.ACHpassword.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Inbound Path
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHinboundPath"
+              rules={{
+                required: "   Inbound Path is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter   Inbound Path"
+                  invalid={errors.ACHinboundPath && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHinboundPath && (
+              <span className="text-danger">
+                {errors.ACHinboundPath.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Outbound Path
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHoutboundPath"
+              rules={{
+                required: "  Outbound Path is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Outbound Path"
+                  invalid={errors.ACHoutboundPath && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHoutboundPath && (
+              <span className="text-danger">
+                {errors.ACHoutboundPath.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Data Format
+            </Label>
+            <Controller
+              name="ACHdataFormat"
+              rules={{
+                required: "   Data Format is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  // loadOptions={loadStateOptions}
+                  placeholder="Select  Data Format"
+                  defaultOptions={ACHDataFormatOptions}
+                  isDisabled={!ACHExport}
+                />
+              )}
+            />
+            {errors.ACHdataFormat && (
+              <span className="text-danger">
+                {errors.ACHdataFormat.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Certificate
+            </Label>
+            <Controller disabled={!ACHExport}
+              name="ACHcertificate"
+              rules={{
+                required: "  Certificate is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="textarea"
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Certificate"
+                  invalid={errors.ACHcertificate && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.ACHcertificate && (
+              <span className="text-danger">
+                {errors.ACHcertificate.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+
+          <div
+            className="d-flex my-2"
+            style={{
+              gap: "14px",
+              fontSize: "14px",
+              fontWeight: "400",
+              marginBottom: "5px",
+            }}
+          >
+            <div className="d-flex" style={{ gap: "5px" }}>
+              <input type="checkbox" disabled={!eft} checked={positivePay} onChange={(e) => setPositivePay(e.target.checked)} />
+              <div>Positive Pay</div>
+            </div>
+          </div>
+          {/* <Col xl="4">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              EFT Range Start
+            </Label>
+            <Controller disabled={!positivePay}
+              name="PPeftRangeStart"
+              rules={{
+                required: "EFT Range Start is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter EFT Range Start"
+                  invalid={errors.PPeftRangeStart && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.PPeftRangeStart && (
+              <span className="text-danger">
+                {errors.PPeftRangeStart.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -172,8 +524,8 @@ function CheckEFTForm({ onSubmit, control, errors }) {
             >
               EFT Range End
             </Label>
-            <Controller
-              name="eftRangeEnd"
+            <Controller disabled={!positivePay}
+              name="PPeftRangeEnd"
               rules={{
                 required: "EFT Range End is required",
               }}
@@ -182,14 +534,14 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter EFT Range End"
-                  invalid={errors.eftRangeEnd && true}
+                  invalid={errors.PPeftRangeEnd && true}
                   {...field}
                 />
               )}
             />
-            {errors.eftRangeEnd && (
+            {errors.PPeftRangeEnd && (
               <span className="text-danger">
-                {errors.eftRangeEnd.message as React.ReactNode}
+                {errors.PPeftRangeEnd.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -200,8 +552,8 @@ function CheckEFTForm({ onSubmit, control, errors }) {
             >
               EFT Copies
             </Label>
-            <Controller
-              name="eftCopies"
+            <Controller disabled={!positivePay}
+              name="PPeftCopies"
               rules={{
                 required: "EFT Copies is required",
               }}
@@ -210,18 +562,18 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter EFT Copies"
-                  invalid={errors.eftCopies && true}
+                  invalid={errors.PPeftCopies && true}
                   {...field}
                 />
               )}
             />
-            {errors.eftCopies && (
+            {errors.PPeftCopies && (
               <span className="text-danger">
-                {errors.eftCopies.message as React.ReactNode}
+                {errors.PPeftCopies.message as React.ReactNode}
               </span>
             )}
-          </Col>
-          <Col xl="4">
+          </Col> */}
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -229,8 +581,8 @@ function CheckEFTForm({ onSubmit, control, errors }) {
             >
               Host
             </Label>
-            <Controller
-              name="host"
+            <Controller disabled={!positivePay}
+              name="PPhost"
               rules={{
                 required: "  Host is required",
               }}
@@ -239,26 +591,55 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Host"
-                  invalid={errors.host && true}
+                  invalid={errors.PPhost && true}
                   {...field}
                 />
               )}
             />
-            {errors.host && (
+            {errors.PPhost && (
               <span className="text-danger">
-                {errors.host.message as React.ReactNode}
+                {errors.PPhost.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
+            {" "}
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Port
+            </Label>
+            <Controller disabled={!positivePay}
+              name="PPport"
+              rules={{
+                required: "Port is required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Port"
+                  invalid={errors.PPport && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.PPport && (
+              <span className="text-danger">
+                {errors.PPport.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               User Name
             </Label>
-            <Controller
-              name="userName"
+            <Controller disabled={!positivePay}
+              name="PPuserName"
               rules={{
                 required: " User Name is required",
               }}
@@ -267,26 +648,26 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter User Name"
-                  invalid={errors.userName && true}
+                  invalid={errors.PPuserName && true}
                   {...field}
                 />
               )}
             />
-            {errors.userName && (
+            {errors.PPuserName && (
               <span className="text-danger">
-                {errors.userName.message as React.ReactNode}
+                {errors.PPuserName.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Password
             </Label>
-            <Controller
-              name="password"
+            <Controller disabled={!positivePay}
+              name="PPpassword"
               rules={{
                 required: " Password is required",
               }}
@@ -295,54 +676,27 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Password"
-                  invalid={errors.password && true}
+                  invalid={errors.PPpassword && true}
                   {...field}
                 />
               )}
             />
-            {errors.password && (
+            {errors.PPpassword && (
               <span className="text-danger">
-                {errors.password.message as React.ReactNode}
+                {errors.PPpassword.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              Inbound Path
-            </Label>
-            <Controller
-              name="inboundPath"
-              rules={{
-                required: "   Inbound Path is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter   Inbound Path"
-                  invalid={errors.inboundPath && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.inboundPath && (
-              <span className="text-danger">
-                {errors.inboundPath.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col xl="4">
+
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Outbound Path
             </Label>
-            <Controller
-              name="outboundPath"
+            <Controller disabled={!positivePay}
+              name="PPoutboundPath"
               rules={{
                 required: "  Outbound Path is required",
               }}
@@ -351,18 +705,18 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Outbound Path"
-                  invalid={errors.outboundPath && true}
+                  invalid={errors.PPoutboundPath && true}
                   {...field}
                 />
               )}
             />
-            {errors.outboundPath && (
+            {errors.PPoutboundPath && (
               <span className="text-danger">
-                {errors.outboundPath.message as React.ReactNode}
+                {errors.PPoutboundPath.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -370,37 +724,50 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               Data Format
             </Label>
             <Controller
-              name="dataFormat"
+              name="PPdataFormat"
               rules={{
                 required: "   Data Format is required",
               }}
               control={control}
+              // render={({ field }) => (
+              //   <Input
+              //     style={{ fontSize: "12px", fontWeight: "400" }}
+              //     placeholder="Enter  Data Format"
+              //     invalid={errors.dataFormat && true}
+              //     {...field}
+              //   />
+              // )}
+
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter  Data Format"
-                  invalid={errors.dataFormat && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  // loadOptions={loadStateOptions}
+                  placeholder="Select  Data Format"
+                  defaultOptions={PPDataFormatOptions}
+                  isDisabled={!positivePay}
                 />
               )}
             />
-            {errors.dataFormat && (
+            {errors.PPdataFormat && (
               <span className="text-danger">
-                {errors.dataFormat.message as React.ReactNode}
+                {errors.PPdataFormat.message as React.ReactNode}
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Certificate
             </Label>
-            <Controller
-              name="certificate"
+            <Controller disabled={!positivePay}
+              name="PPcertificate"
               rules={{
-                required: "  Certificate is required",
+                required: "Certificate is required",
               }}
               control={control}
               render={({ field }) => (
@@ -408,37 +775,37 @@ function CheckEFTForm({ onSubmit, control, errors }) {
                   type="textarea"
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Certificate"
-                  invalid={errors.certificate && true}
+                  invalid={errors.PPcertificate && true}
                   {...field}
                 />
               )}
             />
-            {errors.certificate && (
+            {errors.PPcertificate && (
               <span className="text-danger">
-                {errors.certificate.message as React.ReactNode}
+                {errors.PPcertificate.message as React.ReactNode}
               </span>
             )}
           </Col>
         </Row>
-        <Row>
-          <div className="d-flex" style={{ gap: "5px" }}>
-            <div className="form-check form-switch ">
-              <Input
-                type="switch"
-                name="customSwitch"
-                id="exampleCustomSwitch"
-              />
-              <div>Wire Transfer</div>
-            </div>
-          </div>{" "}
-          <Col xl="4">
+        <div className="d-flex mt-2" style={{ gap: "5px" }}>
+          <div className="form-check form-switch ">
+            <Input onChange={(e) => setWireTransfer(e.target.checked)}
+              type="switch"
+              name="customSwitch"
+              id="exampleCustomSwitch"
+            />
+            <div>Wire Transfer</div>
+          </div>
+        </div>
+        <Row className="mx-2">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Wire Transafer Range Start
             </Label>
-            <Controller
+            <Controller disabled={!wireTransfer}
               name="wireTransaferRangeStart"
               rules={{
                 required: "Wire Transafer Range Start is required",
@@ -459,14 +826,14 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Wire Transfer Range End
             </Label>
-            <Controller
+            <Controller disabled={!wireTransfer}
               name="wireTransaferRangeEnd"
               rules={{
                 required: " Wire Transfer Range End is required",
@@ -487,14 +854,14 @@ function CheckEFTForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
               Wire Transfer Copies
             </Label>
-            <Controller
+            <Controller disabled={!wireTransfer}
               name="wireTransferCopies"
               rules={{
                 required: "Wire Transfer Copies is required",
