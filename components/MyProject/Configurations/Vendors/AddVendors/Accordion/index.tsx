@@ -32,33 +32,33 @@ function VendorAccordion() {
   const onSubmit = (data) => {
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
-      countryID: data.contactAddressState.countryId,
+      countryID: data.contactAddressState,
       line1: data.contactAddress1,
       line2: data.contactAddress2,
-      stateID: data.contactAddressState.value,
+      stateID: data.contactAddressState,
       zipcode: parseInt(data.contactAddressPostalCode),
     };
     const mailingAddressPaylaod = {
       "cityName": data.mailingAddressCity,
-      "countryID": data.mailingAddressState.countryId,
+      "countryID": data.mailingAddressState,
       "line1": data.mailingAddress1,
       "line2":data.mailingAddress2,
-      "stateID": data.mailingAddressState.value,
+      "stateID": data.mailingAddressState,
       "zipcode": parseInt(data.mailingAddressPostalCode)
     };
     const billingAddressPaylaod = {
       "cityName": data.billingAddressCity,
-      "countryID": data.billingAddressState.countryId,
+      "countryID": data.billingAddressState,
       "line1": data.billingAddress1,
       "line2":data.billingAddress2,
-      "stateID": data.billingAddressState.value,
+      "stateID": data.billingAddressState,
       "zipcode": parseInt(data.billingAddressPostalCode)
     }
 
     const vendorsPayload = {
       Name: data.vendorName,
       Code : data.vendorCode,
-      PaymentType: data.paymentType,
+      PaymentType: data.paymentType.value,
       LegalName : data.legalName,
       Email : data.vendorEmail,
       EntityID : data.entityType,
@@ -68,7 +68,7 @@ function VendorAccordion() {
       PettyCashPCardEnabled : data.isPettyCashEnabled,
       PettyCashAccountID : data.pettyCashAccount,
       DefaultAccount : data.defaultAccount,
-      DefaultAddress : data.defaultAddress,
+      DefaultAddress : data.defaultAddress.value,
       AchBankAccountNUmber : parseInt(data.achAccountNumber),
       AchRoutingNumber : parseInt(data.achRoutingNumber),
       PrimaryAddress : contactAddressPaylaod,
@@ -80,7 +80,7 @@ function VendorAccordion() {
         reset();
         router.back();
     }).catch(error=>{
-      toast.error(error.Message);
+      toast.error(error.Message || error.error || 'Unable to add vendor');
     });
 };
 

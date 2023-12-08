@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
+import EntitiesService from "@/services/entities.services";
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const {
     // control,
@@ -91,6 +92,14 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
       label: b.Name,
     };
   });
+  const entityService = new EntitiesService();
+  const {data:entityData} = useSWR("LIST_ENTITIES", ()=>entityService.getEntities());
+  const entitySelectOptions = entityData?.map((b)=>{
+    return {
+      value : b.ID,
+      label : b.Name
+    }
+  })
   return (
     <div className="text-black">
       <Form
@@ -187,7 +196,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Legal Name <span className="required">*</span>
+              Vendor Legal Name 
             </Label>
             <Controller
               name="legalName"
@@ -249,11 +258,11 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               rules={vendorsValidationRules.entityType}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter entity"
-                  invalid={errors.entityType && true}
+                <Select
                   {...field}
+                  options={entitySelectOptions}
+                  placeholder="Select Entity"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -460,7 +469,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Payee Name <span className="required">*</span>
+              Payee Name 
             </Label>
             <Controller
               name="payeeName"

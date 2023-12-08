@@ -61,7 +61,7 @@ export const EDIT_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //ED
 export const SERIES_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/series/${id}`; //Series Details
 
-export const GET_ENTITIES = `${tenantIdEndpoint}/entitytypes`; // Entities
+export const GET_ENTITIES = `${tenantIdEndpoint}/entitytypes/`; // Entities
 export const CREATE_ENTITIES = `${tenantIdEndpoint}/entitytypes`; // Entity Types
 export const EDIT_ENTITIY = (id: any) =>
   `${tenantIdEndpoint}/entitytypes/${id}`;

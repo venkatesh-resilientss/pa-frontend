@@ -42,6 +42,14 @@ function MailingAddressForm({ onSubmit, control, errors }) {
       console.error('Error loading options:', error);
     }
   };
+
+  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const countrySelectOptions = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
   return (
     <div className="text-black">
       <Form
