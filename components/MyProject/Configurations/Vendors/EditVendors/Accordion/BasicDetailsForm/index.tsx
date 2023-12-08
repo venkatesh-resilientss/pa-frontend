@@ -6,6 +6,9 @@ import useSWR from "swr";
 import { selectStyles } from "constants/common";
 import { COAAccountsService } from "services";
 import { useState } from "react";
+import AsyncSelect from "react-select/async";
+import { getSessionVariables } from "@/constants/function";
+import { useEffect } from "react";
 import { formValidationRules,PaymentOptions,VendorsAddressTypes } from "constants/common";
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const {handleSubmit} = useForm();
@@ -14,15 +17,54 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
 
   const coaAccountsService = new COAAccountsService();
 
-  const { data: COAData } = useSWR("LIST_COA", () =>
-    coaAccountsService.getCoasAccounts()
-  );
-  const COASelectOptions = COAData?.result.map((account) => {
-    return {
-      value: account.ID,
-      label: `${account.Code}-${account.Name}`,
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
@@ -301,12 +343,16 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             rules={vendorsValidationRules.deafultAccount}
             control={control}
             render={({ field }) => (
-              <Select
-                {...field}
-                options={COASelectOptions}
-                placeholder="Select an option"
-                styles={selectStyles}
-              />
+              <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
+                />
             )}
           />
           {errors.defaultAccount && (

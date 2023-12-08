@@ -34,6 +34,7 @@ const AllVendorsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
+  
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"

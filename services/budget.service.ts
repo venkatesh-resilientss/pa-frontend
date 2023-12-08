@@ -2,8 +2,13 @@ import APIService from "./api.service";
 import {  BUDGETS_DETAIL_ENDPOINT, CREATE_BUDGET, DELETE_BUDGET, EDIT_BUDGET, GET_BUDGETS, GET_COMPANIES,UPLOAD_BUDGET_LIST } from "../lib/endpoints";
 
 class BudgetService extends APIService {
-  getBudgets(): Promise<any> {
-    return this.get(`${GET_BUDGETS}`)
+  getBudgets(data,params?): Promise<any> {
+    return this.post(
+      params ?
+      `${GET_BUDGETS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+      `${GET_BUDGETS}`,
+      data
+    )
       .then((res) => {
         return res?.data;
       })

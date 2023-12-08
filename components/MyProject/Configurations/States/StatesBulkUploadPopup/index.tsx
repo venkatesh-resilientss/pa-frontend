@@ -50,7 +50,7 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
         dispatch(closeBulkUploadStatesPopup("close"));
       })
       .catch((error) => {
-        toast.error(error.Message);
+        toast.error(error.error || error.Message || "Unable to insert data");
         setLoader(false);
       });
   };

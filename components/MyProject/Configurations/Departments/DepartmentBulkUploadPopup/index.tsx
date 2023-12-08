@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody, Spinner } from "reactstrap";
 
 import { DepartmentsService } from "services";
 import { closeBulkUploadDepartmentPopup } from "redux/slices/mySlices/configurations";
@@ -42,12 +42,13 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
     setUploadedFiles(updatedFiles);
   };
 
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
-
+    setLoader(true);
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
@@ -60,9 +61,8 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
         dispatch(closeBulkUploadDepartmentPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error(error.Message || error.error || "Upload failed");
-        toast.error("Failed to insert data.");
+        setLoader(false);
+        toast.error(error.Message || error.error || "Upload failed");
       });
   };
 
@@ -195,8 +195,13 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

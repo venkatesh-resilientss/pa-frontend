@@ -17,9 +17,7 @@ import moment from "moment";
 import { PeriodsService } from "services";
 import useSWR from "swr";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadPeriodsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadPeriodsPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -40,6 +38,7 @@ const AllPeriodsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"
@@ -235,11 +234,7 @@ const AllPeriodsTable = () => {
           <CardBody>
             <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="title mt-2"
-                >
-                  All Periods
-                </div>
+                <div className="title mt-2">All Periods</div>
               </div>
 
               <div
@@ -258,24 +253,28 @@ const AllPeriodsTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadPeriodsPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: " 14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadPeriodsPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: " 14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{

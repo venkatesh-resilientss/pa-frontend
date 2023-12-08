@@ -163,7 +163,7 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created.full_name",
       sortable: true,
       unSortIcon: true,
       resizable: true,

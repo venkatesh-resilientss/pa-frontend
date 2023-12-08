@@ -10,9 +10,7 @@ import {
 } from "reactstrap";
 import { useRouter } from "next/router";
 import { CurrencyService } from "services";
-import useSWR from "swr";
 import moment from "moment";
-import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
@@ -20,15 +18,15 @@ import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
 import { openBulkUploadCurrenciesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 
-const AllCurrencyTable = () => {
+const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
-
+  const recordsPerPage = 10;
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
@@ -38,6 +36,7 @@ const AllCurrencyTable = () => {
     "configuration_management",
     "edit_configuration"
   );
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"
@@ -46,13 +45,23 @@ const AllCurrencyTable = () => {
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
-
-  const { data: currencyData, isLoading: currenciesLoading } = useSWR(
-    ["LIST_CURRENCIES", searchText],
-    () =>
-      currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
-  );
-  const dataSource = currencyData?.result;
+  const fetchData = async () => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const response = await currencyService.getCurrencies(
+        {
+          clientID,
+          projectID,
+        }
+      );
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
+  
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -146,7 +155,7 @@ const AllCurrencyTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created.first_name",
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -208,7 +217,7 @@ const AllCurrencyTable = () => {
                   style={{ gap: "10px" }}
                 >
                   <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                    {currencyData?.result.length} Currencies
+                    Currencies
                   </div>
 
                   <Input
@@ -219,7 +228,8 @@ const AllCurrencyTable = () => {
                     style={{ width: "217px", height: "38px" }}
                   />
 
-                  <Button
+                  {
+                    hasUploadConfigurationPermission && <Button
                     onClick={() =>
                       dispatch(openBulkUploadCurrenciesPopup("upload"))
                     }
@@ -239,6 +249,7 @@ const AllCurrencyTable = () => {
                     />{" "}
                     Bulk Upload
                   </Button>
+                  }
 
                   {/* <Button
                     onClick={() => router.push(`/configurations/add-currency`)}
@@ -283,39 +294,22 @@ const AllCurrencyTable = () => {
             </CardBody>
           </Card>
         </div>
-        {currenciesLoading ? (
-          <div className="mt-3">
-            <GridTable
-              rowData={dataSource}
-              columnDefs={columnDefs}
-              pageSize={10}
-              searchText={searchText}
+        <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={hasCreateConfiguration ? "Create COA" : ""}
+              buttonLink={"/configurations/add-chart-of-accounts"}
             />
-          </div>
-        ) : (
-          <>
-            {currencyData?.result.length > 0 ? (
-              <div className="mt-3">
-                <GridTable
-                  rowData={dataSource}
-                  columnDefs={columnDefs}
-                  pageSize={9}
-                  searchText={searchText}
-                />
-              </div>
-            ) : (
-              <div>
-                <NoDataPage
-                  // buttonName={"Create Currency"}
-                  buttonName={
-                    hasCreateConfiguration ? "Create Currency" : "No button"
-                  }
-                  buttonLink={"/configurations/add-currency"}
-                />
-              </div>
-            )}
-          </>
-        )}
+          )}
+        />
+      </div>
       </div>
     </>
   );
