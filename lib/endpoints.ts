@@ -43,7 +43,8 @@ export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; 
 export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
 export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
 // export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects/${id}`; //onboarded projects
-export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects/${id}`; //onboarded projects
+export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects?id=${id}`; //onboarded projects
+export const PRODUCTION_DASHBOARD_CARDS = (id: any) => `${tenantIdEndpoint}/production-overview?id=${id}`; //production overview
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 
