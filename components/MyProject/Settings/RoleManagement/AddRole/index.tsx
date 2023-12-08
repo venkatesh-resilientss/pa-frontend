@@ -331,6 +331,9 @@ function AddRole() {
   const updateRole = (roleId) => {
     setLoading(true);
     const { clientID, projectID } = getSessionVariables();
+    const stringWithoutSpaces = role_name.replace(/ /g, "_");
+
+    const uppercaseString = stringWithoutSpaces.toUpperCase();
 
     if (!role_name) {
       toast.error("Please enter role name");
@@ -343,7 +346,7 @@ function AddRole() {
       CreatedBy: 2,
       IsActive: true,
       RoleName: role_name,
-      RoleID: parseInt(role_id),
+      Code: uppercaseString,
       clientID,
       projectID,
       AccessType: restricted ? "restricted" : "full_access",
