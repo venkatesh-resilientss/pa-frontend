@@ -50,7 +50,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
           offset: pageNumber,
         }
       );
-      const data = response.result; // Adjust based on the actual structure of the response
+      const data = response.data; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {

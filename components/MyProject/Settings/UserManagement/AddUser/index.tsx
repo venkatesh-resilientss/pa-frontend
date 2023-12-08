@@ -301,7 +301,7 @@ function AddUser() {
         <Row>
           <Col xl="4">
             <div className="mb-1">
-              <Label>Middle Initial Name *</Label>
+              <Label>Middle Initial Name</Label>
               <Controller
                 name="middlename"
                 control={control}

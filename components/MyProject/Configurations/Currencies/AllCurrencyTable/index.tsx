@@ -22,7 +22,6 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
-import { getSessionVariables } from "@/constants/function";
 
 const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
   const router = useRouter();
@@ -45,13 +44,13 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
-  const fetchData = async () => {
-    const { clientID, projectID } = getSessionVariables();
+  const fetchData = async (pageNumber) => {
     try {
       const response = await currencyService.getCurrencies(
         {
-          clientID,
-          projectID,
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
         }
       );
       const data = response.result; // Adjust based on the actual structure of the response
