@@ -57,14 +57,14 @@ const ClientsListTable = () => {
       ),
     },
 
-    {
-      name: <div>Active Productions</div>,
-      width: "170px",
-      sortable: true,
-      sortField: "production_name",
-      selector: (row) => row?.production_name,
-      cell: (row) => row?.active_projects,
-    },
+    // {
+    //   name: <div>Active Productions</div>,
+    //   width: "170px",
+    //   sortable: true,
+    //   sortField: "production_name",
+    //   selector: (row) => row?.production_name,
+    //   cell: (row) => row?.active_projects,
+    // },
 
     {
       name: <div>RSSL Support User</div>,
