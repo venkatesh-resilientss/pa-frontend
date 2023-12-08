@@ -331,6 +331,9 @@ function AddRole() {
   const updateRole = (roleId) => {
     setLoading(true);
     const { clientID, projectID } = getSessionVariables();
+    const stringWithoutSpaces = role_name.replace(/ /g, "_");
+
+    const uppercaseString = stringWithoutSpaces.toUpperCase();
 
     if (!role_name) {
       toast.error("Please enter role name");
@@ -343,15 +346,21 @@ function AddRole() {
       CreatedBy: 2,
       IsActive: true,
       RoleName: role_name,
-      RoleID: parseInt(role_id),
+      Code: uppercaseString,
       clientID,
       projectID,
       AccessType: restricted ? "restricted" : "full_access",
     };
     if (restricted) {
-      const convertedPayload = convertToNewFormat(permissionSet);
-      // const convertedPayload = convertToPayload(permissionSet);
-      payload.permissions = convertedPayload;
+      const convertedPayload = convertToNewFormat(permissionSet) || {};
+      const convertedPayload1 = convertToNewFormat(permissionSet1) || {};
+      const convertedPayload2 = convertToNewFormat(permissionSet2) || {};
+
+      payload.permissions = {
+        ...convertedPayload,
+        ...convertedPayload1,
+        ...convertedPayload2,
+      };
     }
 
     roleservice

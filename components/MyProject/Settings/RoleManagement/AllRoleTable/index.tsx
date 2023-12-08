@@ -5,7 +5,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Input,
+  Form,
 } from "reactstrap";
 import { RoleService } from "services";
 import Link from "next/link";
@@ -135,13 +135,14 @@ const AllRoleTable = () => {
               </p>
             </div>
             <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-              <Input
-                onChange={(e) => setSearchText(e.target.value)}
-                type="search"
-                className="searchConfig"
-                placeholder="Search..."
-                style={{ width: "217px", height: "38px" }}
-              />
+              <Form>
+                <input
+                  className="search mr-2"
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  placeholder="Search..."
+                />
+              </Form>
               {hasCreateRolePermission && (
                 <button
                   className="btn btn-primary"
