@@ -335,19 +335,21 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
         </Card>
       </div>
 
-      <AGGridTable
-        rerender={rerender}
-        columnDefs={columnDefs}
-        searchText={searchText}
-        fetchData={fetchData1}
-        pageSize={perPage}
-        noDataPage={() => (
-          <NoDataPage
-            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-            buttonLink={"/configurations/add-set"}
-          />
-        )}
-      />
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData1}
+          pageSize={perPage}
+          noDataPage={() => (
+            <NoDataPage
+              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+              buttonLink={"/configurations/add-set"}
+            />
+          )}
+        />
+      </div>
       {/* {seriesLoading ? (
         <div className="mt-3">
           <GridTable

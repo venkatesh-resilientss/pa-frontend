@@ -332,6 +332,7 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
           )}
         </>
       )} */}
+      <div className="mt-3">
       <AGGridTable
         rerender={rerender}
         columnDefs={columnDefs}
@@ -345,6 +346,7 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
           />
         )}
       />
+      </div>
     </div>
   );
 };

@@ -61,7 +61,7 @@ export const EDIT_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //ED
 export const SERIES_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/series/${id}`; //Series Details
 
-export const GET_ENTITIES = `${tenantIdEndpoint}/entitytypes`; // Entities
+export const GET_ENTITIES = `${tenantIdEndpoint}/entitytypes/`; // Entities
 export const CREATE_ENTITIES = `${tenantIdEndpoint}/entitytypes`; // Entity Types
 export const EDIT_ENTITIY = (id: any) =>
   `${tenantIdEndpoint}/entitytypes/${id}`;
@@ -110,7 +110,7 @@ export const CREATE_SETS = `${tenantIdEndpoint}/sets/`; //Create Sets
 export const SETS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/sets/${id}`; //Sets Details
 
-export const GET_VENDORS = `${tenantIdEndpoint}/vendors/`; //Vendors
+export const GET_VENDORS = `${tenantIdEndpoint}/vendors/search`; //Vendors
 export const CREATE_VENDORS = `${tenantIdEndpoint}/vendors/`; //Create vendors
 
 export const DELETE_VENDORS = (id: any) => `${tenantIdEndpoint}/vendors/${id}`; //DELETE vendors
@@ -159,7 +159,7 @@ export const CREATE_CLIENT = `${withoutTenantIdEndpoint}/clients/`; //CREATE cli
 export const CLIENTS_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}`; //clients Details
 
-export const GET_PERIODS = `${tenantIdEndpoint}/periods/`; //periods
+export const GET_PERIODS = `${tenantIdEndpoint}/periods/search`; //periods
 export const DELETE_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //DELETE periods
 export const EDIT_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //EDIT periods
 export const PERIODS_DETAIL_ENDPOINT = (id: any) =>

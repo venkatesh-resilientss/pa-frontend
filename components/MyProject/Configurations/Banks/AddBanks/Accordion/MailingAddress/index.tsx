@@ -201,9 +201,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

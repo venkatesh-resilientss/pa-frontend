@@ -10,6 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { closeBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { LocationsService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
 const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
 
   const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
+    const {clientID,projectID} = getSessionVariables();
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
@@ -45,7 +47,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
 
     // Call the uploadbanklist function from your service with only the file name
     locationService
-      .uploadlocationlist(fileName)
+      .uploadlocationlist(fileName,clientID,projectID)
       .then(() => {
         // Handle success
         setRerender(!rerender)

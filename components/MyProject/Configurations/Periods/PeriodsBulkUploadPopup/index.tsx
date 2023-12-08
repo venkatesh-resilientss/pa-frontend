@@ -9,8 +9,9 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { PeriodsService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
-const PeriodsBulkUploadPopup = () => {
+const PeriodsBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const periodsService = new PeriodsService();
@@ -36,6 +37,7 @@ const PeriodsBulkUploadPopup = () => {
   };
   const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
+    const {clientID,projectID} = getSessionVariables();
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
@@ -45,11 +47,11 @@ const PeriodsBulkUploadPopup = () => {
 
     // Call the uploadbanklist function from your service with only the file name
     periodsService
-      .uploadperiodslist(fileName)
+      .uploadperiodslist(fileName,clientID,projectID)
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeBulkUploadPeriodsPopup("close"));
       })
       .catch((error) => {

@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { PeriodsService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -60,9 +60,7 @@ function EditPeriod() {
     setActiveStatus(periodData.IsActive);
   }, [periodData]);
 
-  const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodsService.getPeriods()
-  );
+ 
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
 
@@ -86,7 +84,6 @@ function EditPeriod() {
       .editPeriod(id, backendFormat)
       .then(() => {
         toast.success("Period Edited successfully");
-        mutate(bankMutate());
         router.back();
 
         reset();

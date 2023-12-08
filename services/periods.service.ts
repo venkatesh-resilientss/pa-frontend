@@ -2,10 +2,15 @@
   import {DELETE_PERIODS, EDIT_PERIODS, GET_CLIENTS, GET_PERIODS, PERIODS_DETAIL_ENDPOINT,UPLOAD_PERIODS_LIST} from '../lib/endpoints';
 
   class PeriodsService extends APIService {
-    getPeriods(): Promise<any> {
-      return this.get(`${GET_PERIODS}`)
+    getPeriods(data,params?): Promise<any> {
+      return this.post(
+        params ? 
+        `${GET_PERIODS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+        `${GET_PERIODS}`,
+        data
+        )
         .then((res) => {
-          return res?.data;
+          return res?.data; 
         })
         .catch((error: any) => {
           throw error?.response?.data;
@@ -23,12 +28,14 @@
         });
     }
 
-       uploadperiodslist(fileName: any) {
+       uploadperiodslist(fileName: any,clientId : any,projectId : any) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
+      formData.append("clientId",clientId);
+      formData.append("projectId",projectId);
 
       return this.post(UPLOAD_PERIODS_LIST, formData,  {
           'Content-Type': 'multipart/form-data',

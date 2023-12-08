@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SeriesService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
 const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -40,18 +41,20 @@ const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
     }
     setLoader(true);
     const fileName = uploadedFiles[0];
-
+    const {clientID,projectID} = getSessionVariables();
     // Call the uploadbanklist function from your service with only the file name
     seriesService
-      .uploadserieslist(fileName)
+      .uploadserieslist(fileName,clientID,projectID)
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
         setRerender(!rerender)
         dispatch(closeBulkUploadSeriesPopup("close"));
+        setLoader(false)
       })
       .catch((error) => {
         toast.error(error.Message || error.error || "Failed to insert data.");
+        setLoader(false)
       });
   };
   const handleDownload = () => {
