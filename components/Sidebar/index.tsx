@@ -594,12 +594,13 @@ const Sidebar = ({ props }) => {
               className={
                 showSidebar ? "rounded-circle me-3" : "rounded-circle mx-auto"
               }
-              src={userData?.data?.profile_image || "/newAvatar.svg"}
+              src={userData?.data?.profile_image || "./default.svg"}
               width="32"
               height="32"
             />
             <p className={showSidebar ? "" : "d-none"}>
-              {userData?.data?.first_name || "-"}
+              {userData?.data?.first_name || ""}&nbsp;
+              {userData?.data?.last_name || ""}
             </p>
             <img
               src="/icons/more_horiz.svg"

@@ -10,7 +10,7 @@ import { ClientsService } from "services";
 function Clients() {
   const router = useRouter();
   const clientService = new ClientsService();
-  const [isEditing, setEditing] = useState(false)
+  const [isEditing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const defaultClientData: any = {
@@ -82,55 +82,55 @@ function Clients() {
         const tempObj: any = { ...clientData, ...resp?.client };
         tempObj.clientType = tempObj?.ClientType?.ID
           ? {
-            label: tempObj?.ClientType?.Name,
-            value: tempObj?.ClientType?.ID,
-          }
+              label: tempObj?.ClientType?.Name,
+              value: tempObj?.ClientType?.ID,
+            }
           : null;
         tempObj.clientAdmin = tempObj?.ClientAdmin?.ID
           ? {
-            label: tempObj?.ClientAdmin?.Name,
-            value: tempObj?.ClientAdmin?.ID,
-          }
+              label: tempObj?.ClientAdmin?.Name,
+              value: tempObj?.ClientAdmin?.ID,
+            }
           : null;
         tempObj.rsslSupportUser = tempObj?.RsslSupportUser?.ID
           ? {
-            label: tempObj?.RsslSupportUser?.Name,
-            value: tempObj?.RsslSupportUser?.ID,
-          }
+              label: tempObj?.RsslSupportUser?.Name,
+              value: tempObj?.RsslSupportUser?.ID,
+            }
           : null;
 
         tempObj.PhysicalAddress.country =
           tempObj?.PhysicalAddress?.CountryID &&
-            resp?.mailing_address?.country_name
+          resp?.mailing_address?.country_name
             ? {
-              label: resp?.mailing_address?.country_name,
-              value: tempObj?.PhysicalAddress?.CountryID,
-            }
+                label: resp?.mailing_address?.country_name,
+                value: tempObj?.PhysicalAddress?.CountryID,
+              }
             : null;
 
         tempObj.PhysicalAddress.state =
           tempObj?.PhysicalAddress?.StateID && resp?.mailing_address?.state_name
             ? {
-              label: resp?.mailing_address?.state_name,
-              value: tempObj?.PhysicalAddress?.StateID,
-            }
+                label: resp?.mailing_address?.state_name,
+                value: tempObj?.PhysicalAddress?.StateID,
+              }
             : null;
 
         tempObj.MailingAddress.country =
           tempObj?.MailingAddress?.CountryID &&
-            resp?.mailing_address?.country_name
+          resp?.mailing_address?.country_name
             ? {
-              label: resp?.mailing_address?.country_name,
-              value: tempObj?.MailingAddress?.CountryID,
-            }
+                label: resp?.mailing_address?.country_name,
+                value: tempObj?.MailingAddress?.CountryID,
+              }
             : null;
 
         tempObj.MailingAddress.state =
           tempObj?.MailingAddress?.StateID && resp?.mailing_address?.state_name
             ? {
-              label: resp?.mailing_address?.state_name,
-              value: tempObj?.MailingAddress?.StateID,
-            }
+                label: resp?.mailing_address?.state_name,
+                value: tempObj?.MailingAddress?.StateID,
+              }
             : null;
         tempObj.Company.PrimaryContact.EmailID =
           resp?.primary_contactID?.email_id || "";
@@ -144,15 +144,14 @@ function Clients() {
     if (Number(router.query.id)) getClientDetails();
   }, [router.query.id]);
 
-
   const handleEdit = async () => {
     if (isEditing) {
       // form submission
-      setLoading(true)
+      setLoading(true);
       try {
         const payload = {
           ...clientData,
-        }
+        };
         if (clientData.clientType)
           payload["ClientTypeID"] = clientData.clientType.value;
         if (clientData.clientAdmin)
@@ -179,19 +178,18 @@ function Clients() {
         if (clientData.PhysicalAddress.Zipcode)
           payload["PhysicalAddress"]["Zipcode"] =
             Number(clientData.PhysicalAddress.Zipcode) || 0;
-        await clientService.editClient(Number(router.query.id), payload)
-        setEditing(false)
-        setLoading(false)
-        toast.success("Client Updated Successfully")
+        await clientService.editClient(Number(router.query.id), payload);
+        setEditing(false);
+        setLoading(false);
+        toast.success("Client Updated Successfully");
       } catch (e) {
-        setLoading(false)
+        setLoading(false);
         toast.error(e?.error || e || "Error");
       }
-
     } else {
-      setEditing(true)
+      setEditing(true);
     }
-  }
+  };
 
   return (
     <>
@@ -221,14 +219,22 @@ function Clients() {
                 </div>
               </div>
             </div>
-            <div className="d-flex gap-1" style={{ height: "30px" }}>
+            <div className="my-auto">
               <button
                 onClick={() => router.push("/clients")}
-                className="btn"
+                className="btn f-14"
               >
                 Dismiss
               </button>
-              <Button size="sm" color="info" onClick={handleEdit} loading={loading} disabled={loading} spinColor="#ffffff">
+              <Button
+                size="sm"
+                color="info"
+                onClick={handleEdit}
+                loading={loading}
+                disabled={loading}
+                spinColor="#ffffff"
+                className="px-3 py-2"
+              >
                 {isEditing ? "Save" : "Edit"}
               </Button>
             </div>
@@ -236,7 +242,9 @@ function Clients() {
 
           <hr style={{ height: "2px" }} />
 
-          <ClientTabs {...{ clientData, setClientData, disabled: !isEditing, isEditing }} />
+          <ClientTabs
+            {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
+          />
         </div>
       ) : (
         <></>

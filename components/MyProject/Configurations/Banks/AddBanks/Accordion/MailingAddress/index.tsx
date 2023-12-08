@@ -286,7 +286,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder=" Enter Email ID"
+                      placeholder="Enter Phone Number"
                       invalid={errors.mailingPhoneNumber && true}
                       {...field}
                     />

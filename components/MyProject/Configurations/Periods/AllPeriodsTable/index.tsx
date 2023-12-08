@@ -17,9 +17,7 @@ import moment from "moment";
 import { PeriodsService } from "services";
 import useSWR from "swr";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadPeriodsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadPeriodsPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -181,7 +179,16 @@ const AllPeriodsTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -235,11 +242,7 @@ const AllPeriodsTable = () => {
           <CardBody>
             <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="title mt-2"
-                >
-                  All Periods
-                </div>
+                <div className="title mt-2">All Periods</div>
               </div>
 
               <div

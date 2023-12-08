@@ -282,7 +282,7 @@ const AllRoleTable = () => {
 
       <div className="mt-3">
         <GridTable
-          rowData={clientData?.data}
+          rowData={clientData}
           columnDefs={columnDefs}
           pageSize={10}
           searchText={searchText}

@@ -6,13 +6,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { formValidationRules } from "@/constants/common";
-import Button from "react-bootstrap-button-loader";
-import { AuthService, ProjectService } from "services";
+import { ProjectService } from "services";
 
 const productionService = new ProjectService();
-const authService = new AuthService();
 
-function AddProductions() {
+function Production() {
   const router = useRouter();
   const productionRules = formValidationRules.productions;
   const [purchaseOrderValue, setPurchaseOrderValue] = useState(false);
@@ -21,12 +19,13 @@ function AddProductions() {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
   const [staffUser, setStaffUser] = useState<any>(false);
   const [err, setErr] = useState<any>(false);
-  const [loading, setLoading] = useState<any>(false);
+  //   const [loading, setLoading] = useState<any>(false);
   const [client, setClient] = useState<any>(null);
   const [pAUser, setPAUser] = useState<any>(null);
   const [tenantId, setTenantId] = useState<any>("");
@@ -44,27 +43,51 @@ function AddProductions() {
   );
 
   useEffect(() => {
-    const getTenant = async () => {
+    const getTenantDetails = async () => {
       try {
+        const resp = await productionService.getProjectDetails(
+          Number(router.query.production_id)
+        );
         const name = window.location.hostname.split(".")[0];
-        if (name === "app") {
-          setStaffUser(true);
-          return;
-        }
-        const tenant = await authService.checkTenant({ name });
-        if (Number(tenant?.ID)) setTenantId(Number(tenant?.ID));
-        if (Number(tenant?.clientId))
-          setClient({
-            name: tenant?.ClientName,
-            value: Number(tenant?.ClientID),
-          });
-        //  eslint-disable-next-line @typescript-eslint/no-unused-vars
+        if (name === "app") setStaffUser(true);
+        setClient({
+          label: resp?.projects?.Client?.Name,
+          value: resp?.projects?.Client?.ID,
+          field: resp?.projects?.Client?.tenant_id,
+        });
+        setValue("productionCode", resp?.projects?.Code);
+        setValue("productionName", resp?.projects?.Name);
+        setPAUser(
+          resp?.projects?.ProjectAccountantID
+            ? {
+                label:
+                  (resp?.projects?.ProjectAccountant?.first_name || "") +
+                  " " +
+                  (resp?.projects?.ProjectAccountant?.last_name || ""),
+                value: resp?.projects?.ProjectAccountantID,
+              }
+            : null
+        );
+        const po = resp?.po_approvers.map((e) => ({
+          label: (e?.User?.first_name || "") + " " + (e?.User?.last_name || ""),
+          value: e.UserID,
+        }));
+
+        setPoValues(po);
+        setPurchaseOrderValue(po.length > 0);
+        const ap = resp?.ap_approvers.map((e) => ({
+          label: (e?.User?.first_name || "") + " " + (e?.User?.last_name || ""),
+          value: e.UserID,
+        }));
+
+        setApValues(ap);
+        setAccountPayableValue(ap.length > 0);
       } catch (e) {
-        //
+        toast.error(e?.error || e || "Error");
       }
     };
-    getTenant();
-  }, []);
+    if (Number(router.query.production_id)) getTenantDetails();
+  }, [router.query.production_id]);
 
   useEffect(() => {
     mutate();
@@ -93,7 +116,7 @@ function AddProductions() {
       return;
     }
     try {
-      setLoading(true);
+      //   setLoading(true);
       const payload = {
         code: data.productionCode || "",
         name: data.productionName || "",
@@ -105,9 +128,9 @@ function AddProductions() {
         const index = Number(idx);
         const user_id = poValues[index]?.value;
         const pyld = {
-          approverType: index + 1,
+          approverType: index,
           TransactionType: "PO",
-          UserID: user_id,
+          user_id,
           projectID: resp?.ID,
         };
         await productionService.createProjectApprover(tenantId, pyld);
@@ -116,16 +139,16 @@ function AddProductions() {
         const index = Number(idx);
         const user_id = apValues[index]?.value;
         const pyld = {
-          approverType: index + 1,
+          approverType: index,
           TransactionType: "AP",
           UserID: user_id,
           projectID: resp?.ID,
         };
         await productionService.createProjectApprover(tenantId, pyld);
       }
-      router.replace(`/production/${resp?.ID}`);
+      router.push(`/productions/${resp?.ID}`);
     } catch (e) {
-      setLoading(false);
+      //   setLoading(false);
       toast.error(e?.error || e || "Error");
     }
   };
@@ -211,7 +234,7 @@ function AddProductions() {
             >
               Dismiss
             </button>
-            <Button
+            {/* <Button
               type="submit"
               loading={loading}
               disabled={loading}
@@ -219,7 +242,7 @@ function AddProductions() {
               spinColor="#ffffff"
             >
               Save
-            </Button>
+            </Button> */}
           </div>
         </div>
         <hr />
@@ -244,6 +267,7 @@ function AddProductions() {
                       "form-control f-12 py-2" +
                       (errors.productionCode && true ? " border-danger" : "")
                     }
+                    disabled
                   />
                 )}
               />
@@ -270,6 +294,7 @@ function AddProductions() {
                       "form-control f-12 py-2" +
                       (errors.productionName && true ? " border-danger" : "")
                     }
+                    disabled
                   />
                 )}
               />
@@ -295,7 +320,7 @@ function AddProductions() {
                     setApValues([null, null]);
                     setPoValues([null, null]);
                   }}
-                  // isDisabled={disabled || false}
+                  isDisabled={true}
                 />
                 {err && !client && (
                   <span className="text-danger f-12">Select Client</span>
@@ -320,6 +345,7 @@ function AddProductions() {
                 setPurchaseOrderValue(e.target.checked);
                 if (!e.target.checked) setPoValues([null, null]);
               }}
+              disabled
             />
             <label htmlFor={"Purchase Order"} className="ms-1">
               {"Purchase Order"}
@@ -367,7 +393,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setPoValues(tempArr);
                     }}
-                    // isDisabled={disabled || false}
+                    isDisabled={true}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -396,6 +422,7 @@ function AddProductions() {
                 setAccountPayableValue(e.target.checked);
                 if (!e.target.checked) setApValues([null, null]);
               }}
+              disabled
             />
             <label htmlFor={"Account Payable"} className="ms-1">
               {"Account Payable"}
@@ -443,7 +470,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setApValues(tempArr);
                     }}
-                    // isDisabled={disabled || false}
+                    isDisabled={true}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -477,7 +504,7 @@ function AddProductions() {
             loadOptions={(value) => loadOptions(value, "users")}
             value={pAUser}
             onChange={(e) => setPAUser(e)}
-            // isDisabled={disabled || false}
+            isDisabled={true}
           />
         </div>
       </div>
@@ -485,4 +512,4 @@ function AddProductions() {
   );
 }
 
-export default AddProductions;
+export default Production;

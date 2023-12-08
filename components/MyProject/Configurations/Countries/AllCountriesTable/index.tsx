@@ -22,9 +22,7 @@ import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadCountriesPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadCountriesPopup } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
 
@@ -50,7 +48,7 @@ const AllCountriesTable = () => {
     () => countryService.getCountries()
   );
 
-  const dataSource = countryData?.data;
+  const dataSource = countryData;
 
   // console.log("", countryData);
 
@@ -134,7 +132,16 @@ const AllCountriesTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -285,7 +292,7 @@ const AllCountriesTable = () => {
         </div>
       ) : (
         <>
-          {dataSource?.length > 0 ? (
+          {dataSource?.data?.length > 0 ? (
             <div className="mt-3">
               <GridTable
                 rowData={dataSource}

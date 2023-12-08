@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useRef, useCallback } from "react";
 
-const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
+const GridTable = ({ rowData, columnDefs, pageSize, searchText }: any) => {
   const gridRef = useRef(null);
 
   const [isGridReady, setIsGridReady] = useState(false);

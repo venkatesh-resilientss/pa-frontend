@@ -52,7 +52,7 @@ const AllCurrencyTable = () => {
     () =>
       currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
-  const dataSource = currencyData?.result;
+  const dataSource = { data: currencyData?.result };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -146,7 +146,16 @@ const AllCurrencyTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
