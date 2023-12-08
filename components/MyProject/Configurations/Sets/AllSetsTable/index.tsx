@@ -16,9 +16,7 @@ import { useRouter } from "next/router";
 import { SetsService } from "services";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSetsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -26,6 +24,7 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 const setsService = new SetsService();
 
 const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
@@ -51,13 +50,15 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   // const dataSource = setsData?.result;
 
   const fetchData1 = async (pageNumber) => {
-    // setBankLoading(true)
     try {
-      const response = await setsService.getSets({
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      });
+      };
+      const payload = { clientId: clientID, projectId: projectID };
+      const response = await setsService.getSets(queryParams, payload);
       const data = response.result; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
@@ -154,7 +155,16 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },

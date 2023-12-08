@@ -55,7 +55,7 @@ export default function ProductionDashboard() {
     <>
       <div className="rounded mt-3">
         <Row noGutters className="d-flex gap-2">
-          {createCard("Total Active Productions", "/total_budget.svg", null, <h4>2</h4>)}
+          {createCard("Total Active Productions", "/total_budget.svg", null, <h4>1</h4>)}
           {createCard("Total Budget Vs Actual Spending", "/total_budget.svg", "The Lost Heirloom", <p>$500,000 vs $350,000</p>)}
           {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>$150,000</p>)}
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
@@ -91,7 +91,7 @@ export default function ProductionDashboard() {
                 <div>
                     <img src="/view_details.svg" style={{ height: "11px", width: "11px" }} alt="" />
                 </div>{" "}
-                <p>View Details</p>
+                <p style={{fontSize:"14px"}}>View Details</p>
                 </div>
           </div>
           <div className="d-flex justify-content-between mt-2">
@@ -156,7 +156,7 @@ export default function ProductionDashboard() {
 
     </Card>
       </div>
-      <div className="my-1 mt-2 mb-2" style={{ fontSize: '18px', fontWeight: '600', color: '#030229' }}>
+      <div className="my-1 mt-3 mb-2" style={{ fontSize: '18px', fontWeight: '600', color: '#030229' }}>
         Help Center
       </div>
       <div style={{ marginBottom: '4rem' }}>

@@ -61,23 +61,21 @@ function EditUser() {
   }, [userDetails])
 
 
-  useEffect(() => {
-    const fetchInitialClients = async () => {
-      try {
-        // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
-        const res = await clientService.getClients({ search: "", pageLimit: 25, offset: 0 });
-        const options = res?.map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
-        setInitialClientOptions(options);
-      } catch (error) {
-        console.error('Error fetching initial options:', error);
-      }
-    };
+  const fetchInitialClients = async (selectedClietIds) => {
+    try {
+      // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
+      const res = await clientService.getClients({ search: "", pageLimit: 25, offset: 0 });
+      const options = res?.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      const updatedClientOptions = options.filter((ele) => !selectedClietIds.includes(ele.value))
 
-    fetchInitialClients();
-  }, []);
+      setInitialClientOptions(updatedClientOptions);
+    } catch (error) {
+      console.error('Error fetching initial options:', error);
+    }
+  };
 
   // const loadClientOptions: any = async (inputValue, callback) => {
   //   try {
@@ -121,18 +119,6 @@ function EditUser() {
   const [selectedClient, setSelectedClient] = useState(null);
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
-  //get projects
-  // const projectservice = new ProjectService();
-  // const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
-  //   projectservice.getProjects()
-  // );
-
-  // const projectOptions = Array.isArray(projectsdata)
-  //   ? projectsdata.map((project) => ({
-  //     value: project.ID,
-  //     label: project.Name,
-  //   }))
-  //   : [];
 
   const roleSelectStyles = {
     control: (provided) => ({
@@ -197,6 +183,8 @@ function EditUser() {
           }));
 
           if (list.length > 0) {
+            const clientIds = list.map(ele => ele.client_id)
+            fetchInitialClients(clientIds)
             setClientProductionsList([...list]);
           }
         }
@@ -530,6 +518,8 @@ function EditUser() {
                         // defaultValue={() => { return initialClientOptionsfun(CPlist.ClientID) }}
                         // defaultValue={() => { initialClientOptionsfun(CPlist.ClientID) }}
                         onChange={(client) => {
+                          const updatedCLientOptions = initialClientOptions.filter((ele) => ele.value !== client.value)
+                          setInitialClientOptions([...updatedCLientOptions])
                           const clientToUpdate = `client_${index + 1}`
                           getProductionOptions(clientToUpdate, client.value)
                         }}
@@ -578,8 +568,6 @@ function EditUser() {
                           />
                         )}
                       />
-
-
                     </>
                   ) : (
                     <div>
@@ -599,7 +587,7 @@ function EditUser() {
                 </div>
               </Col>
               {<Col xl="1">
-                {index !== 0 && (<div className="d-flex align-items-end h-100 py-2 cursor-pointer">
+                {index !== 0 && !CPlist.disabledClient && (<div className="d-flex align-items-end h-100 py-2 cursor-pointer">
                   <img src="/deletebin.svg" alt="" width={15} onClick={() => {
                     const updatedData = clientProductionsList.filter((_, listIndex) => listIndex !== index)
                     setClientProductionsList([...updatedData])

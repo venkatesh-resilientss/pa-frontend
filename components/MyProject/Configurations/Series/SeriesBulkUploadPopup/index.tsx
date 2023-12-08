@@ -10,7 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SeriesService } from "services";
 
-const SeriesBulkUploadPopup = () => {
+const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const seriesService = new SeriesService();
@@ -47,7 +47,7 @@ const SeriesBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeBulkUploadSeriesPopup("close"));
       })
       .catch((error) => {

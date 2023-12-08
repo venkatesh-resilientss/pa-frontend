@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { useRef, useCallback } from "react";
 
-const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
+const GridTable = ({ rowData, columnDefs, pageSize, searchText }: any) => {
   const gridRef = useRef(null);
 
   const [isGridReady, setIsGridReady] = useState(false);
@@ -14,7 +14,7 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
 
   /**Row update */
   useEffect(() => {
-    if (isGridReady) gridRef.current.api.setRowData(rowData);
+    if (isGridReady) gridRef.current.api.setRowData(rowData?.data || []);
   }, [rowData]);
 
   const gridOptions = {
@@ -65,7 +65,7 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
       <AgGridReact
         ref={gridRef}
         gridOptions={gridOptions} // Pass the grid options
-        rowData={rowData}
+        rowData={rowData?.data || []}
         columnDefs={columnDefs}
         domLayout="autoHeight"
         onGridReady={gridReady}

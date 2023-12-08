@@ -9,8 +9,8 @@ import {
 } from "../lib/endpoints";
 
 class SetsService extends APIService {
-  getSets(params?): Promise<any> {
-    return this.get(`${GET_SETS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+  getSets(params?, data?): Promise<any> {
+    return this.post(`${GET_SETS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,data)
       .then((res) => {
         return res?.data;
       })

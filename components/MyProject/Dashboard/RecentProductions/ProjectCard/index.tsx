@@ -3,7 +3,7 @@ import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
 import budget from "assets/DashboardIcons/budget.svg";
 import budgetSpend from "assets/DashboardIcons/budget_spend.svg";
 import Image from "next/image";
-import calenderMonth from "assets/DashboardIcons/calenderMonth.svg";
+
 
 // ** Reactstrap Imports
 import { Card, CardBody } from "reactstrap";
@@ -76,7 +76,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
             {/* Add margin to create space */}
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 iconsSpace">
             <Image
               src={budgetSpend}
               alt=""
@@ -134,12 +134,11 @@ const ProjectCard = ({ data }) => {
                 <div></div>
               </div>
               <div className="d-flex gap-2">
-                <Image
-                  src={calenderMonth}
-                  style={{ width: "16px" }} alt={""}                />
-                <div>
-                  <div>Last payroll Date</div>
-                </div>
+                
+                 <div className="d-flex gap-2">
+              <img src="calender.svg" alt="" />
+              Last Payroll Date
+            </div>
               </div>
             </div>
             <div>

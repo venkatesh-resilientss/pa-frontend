@@ -51,8 +51,8 @@ const ClientsListTable = () => {
           <div className="d-flex flex-column" style={{ gap: "3px" }}>
             <div className="m-auto fw-bolder">{row?.Company.name}</div>
             <div className="f-10">{row?.Name}</div>
-            <div className="f-10">&nbsp;</div>
-          </div>{" "}
+            <div className="f-10">&nbsp; - </div>
+          </div>
         </div>
       ),
     },
@@ -67,7 +67,7 @@ const ClientsListTable = () => {
     },
 
     {
-      name: <div>Rss Support User</div>,
+      name: <div>RSSL Support User</div>,
       width: "150px",
       sortable: true,
       sortField: "production_name",
@@ -81,7 +81,10 @@ const ClientsListTable = () => {
       sortable: true,
       sortField: "CreatedBy",
       selector: (row) => row?.CreatedBy,
-      cell: (row) => row?.Created?.username,
+      cell: (row) =>
+        (row?.Created?.first_name || "") +
+        " " +
+        (row?.Created?.last_name || ""),
     },
 
     {
@@ -124,7 +127,7 @@ const ClientsListTable = () => {
               }}
             >
               <File size={14} className="me-50" />
-              <span className="align-middle p-1">View Details</span>
+              <span className="align-middle p-1">View/Edit Details</span>
             </DropdownItem>
             <DropdownItem
               tag="a"

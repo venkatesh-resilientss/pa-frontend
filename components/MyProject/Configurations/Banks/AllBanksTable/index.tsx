@@ -53,19 +53,26 @@ const AllBanksTable = () => {
   // );
 
   const fetchData1 = async (pageNumber) => {
-    try {
-      const response = await bankService.getBanks({
-        search: searchText,
-        pageLimit: perPage,
-        offset: pageNumber,
-      });
-      const data = response.data; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
+    const clientId = sessionStorage.getItem("clientid");
+    const projectId = sessionStorage.getItem("projectid");
+    if (clientId && projectId) {
+      try {
+        const response = await bankService.getBanksNew(
+          {
+            search: searchText,
+            pageLimit: perPage,
+            offset: pageNumber,
+          },
+          { clientId: parseInt(clientId), projectId: parseInt(projectId) }
+        );
+        const data = response.data; // Adjust based on the actual structure of the response
+        const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+        return { data, totalRecords };
+      } catch (error) {
+        return { data: null, totalRecords: 0 };
+      } finally {
+        // setBankLoading(false)
+      }
     }
   };
 
@@ -174,7 +181,16 @@ const AllBanksTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },

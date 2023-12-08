@@ -9,9 +9,9 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function FormFields(props: any) {
-  const { fields, clientData, setClientData, back, step, setStep } = props;
+  const { fields, clientData, setClientData, step, setStep } = props;
   const { data, pStates, iStates, sUsers, loadOptions, hideBtns } = props;
-  const { err, setErr, validate, disabled, cls, router } = props;
+  const { err, setErr, validate, disabled, cls, router, isEditing } = props;
 
   const [loading, setLoading] = useState(false);
 
@@ -159,6 +159,11 @@ export default function FormFields(props: any) {
     }
   };
 
+  const back = () => {
+    if (step != 1 && step > 1) {
+      setStep(step - 1);
+    }
+  };
   return (
     <>
       <div className="row">
@@ -241,7 +246,7 @@ export default function FormFields(props: any) {
                   onChange={(e) =>
                     updateValue(clientData, el.vl, e.target.value)
                   }
-                  disabled={disabled || false}
+                  disabled={disabled || isEditing || false}
                 />
                 <span className="input-group-text">
                   {process.env.NEXT_PUBLIC_REDIRECT}
@@ -300,7 +305,7 @@ export default function FormFields(props: any) {
           </button>
           {step == 5 ? (
             <Button loading={loading} disabled={loading} onClick={next}>
-              Continue
+              Submit
             </Button>
           ) : (
             <button className="btn btn-primary" onClick={next}>

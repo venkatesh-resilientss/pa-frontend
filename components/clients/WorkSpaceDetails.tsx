@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import useSWR from "swr";
 
 import FormFields from "@/components/clients/FormFields";
 
-import { ClientsService } from "services";
-
-const clientService = new ClientsService();
 
 export default function WorkSpaceDetails(props) {
   const { step } = props;
@@ -42,22 +38,26 @@ export default function WorkSpaceDetails(props) {
     },
   ];
 
-  const { data } = useSWR("ClientAdmins", () =>
-    clientService.getUsersByRole(1)
-  );
-  const { data: sUsers } = useSWR("SupportUsers", () =>
-    clientService.getUsersByRole(2)
-  );
+  // const { data } = useSWR("ClientAdmins", () =>
+  //   clientService.getUsersByRole(1)
+  // );
+  // const { data: sUsers } = useSWR("SupportUsers", () =>
+  //   clientService.getUsersByRole(2)
+  // );
+
+  const data = [], sUsers = []
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
-    return clientService
-      .getUsersByRole(vl.includes("clientAdmin") ? 1 : 2)
-      .then((res) => {
-        return [...(res || [])].map((e) => {
-          return { label: e.Name, value: e.ID };
-        });
-      });
+    // return clientService
+    //   .getUsersByRole(vl.includes("clientAdmin") ? 1 : 2)
+    //   .then((res) => {
+    //     return [...(res || [])].map((e) => {
+    //       return { label: e.Name, value: e.ID };
+    //     });
+    //   });
+    return new Promise((resolve) => setTimeout(() => resolve([]), 500));
+
   };
 
   const workSpaceProps = { ...props, data, sUsers, loadOptions };

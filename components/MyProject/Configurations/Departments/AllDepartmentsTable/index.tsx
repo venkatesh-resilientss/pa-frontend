@@ -172,7 +172,16 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
     },
     {
       headerName: "Created By",
-      field: "Created.first_name",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,

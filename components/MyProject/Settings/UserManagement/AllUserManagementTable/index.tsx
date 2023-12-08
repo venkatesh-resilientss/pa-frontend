@@ -157,7 +157,7 @@ const AllRoleTable = () => {
           />
         </div>
         <div>
-          <p style={{ fontSize: "14px" }}>{props.data.adminname}</p>
+          <p style={{ fontSize: "14px" }}>{props.data.adminName}</p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
             {props.data.email}
           </p>
@@ -175,7 +175,7 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params.data.adminname}${params.data.email}`;
+        const res = `${params.data.adminName}${params.data.email}`;
         return res;
       },
     },
@@ -186,15 +186,17 @@ const AllRoleTable = () => {
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => (params.data.roleName),
       unSortIcon: true
     },
     {
       headerName: "Client",
-      field: "client_name",
+      field: "clientNames",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => { return params.value.map(ele => ele) },
       unSortIcon: true
     },
     // { headerName: "id", field: "id", sortable: true, resizable: true, cellStyle: { fontSize: "16px", fontWeight: "400" }, headerClass: "custom-header-class", },
@@ -209,7 +211,7 @@ const AllRoleTable = () => {
     // },
     {
       headerName: "Created On",
-      field: "created_on",
+      field: "createdOn",
       sortable: true,
       resizable: true,
       unSortIcon: true,
@@ -280,7 +282,7 @@ const AllRoleTable = () => {
 
       <div className="mt-3">
         <GridTable
-          rowData={clientData?.data}
+          rowData={clientData}
           columnDefs={columnDefs}
           pageSize={10}
           searchText={searchText}

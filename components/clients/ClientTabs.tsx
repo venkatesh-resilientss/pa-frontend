@@ -17,7 +17,7 @@ function ClientTabs(props) {
 
   const toggle = (tab) => setStep(tab);
 
-  const tabProps = { ...props, step, hideBtns: true, disabled: true };
+  const tabProps = { ...props, step, setStep, hideBtns: true };
 
   return (
     <div className="f-14">

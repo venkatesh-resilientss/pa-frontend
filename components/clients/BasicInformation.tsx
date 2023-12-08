@@ -8,7 +8,7 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function BasicInformation(props: any) {
-  const { step } = props;
+  const { step, setStep } = props;
   const [err, setErr] = useState(false);
 
   const fields = [
@@ -58,7 +58,7 @@ export default function BasicInformation(props: any) {
     <div>
       <p className="text-black f-20 fw-600">Basic Information</p>
 
-      <FormFields {...props} {...{ fields, data, loadOptions, err, setErr }} />
+      <FormFields {...props} {...{ fields, data, loadOptions, err, setErr, setStep }} />
     </div>
   );
 }
