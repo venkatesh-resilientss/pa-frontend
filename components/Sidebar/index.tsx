@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { Modal, Button } from "react-bootstrap";
+
 import {
   sidebarRoutesMaster,
   sidebarRoutesNonStaff,
@@ -25,6 +27,8 @@ const Sidebar = ({ props }) => {
       setSelectedProduction();
     }
   };
+  const [switcProduction, setSwitcProduction] = useState(false);
+
   // const [searchText, setSearchText] = useState("");
   const authService = new AuthService();
   const clientService = new ClientsService();
@@ -34,6 +38,10 @@ const Sidebar = ({ props }) => {
   const [productionList, setProductionList] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState() as any;
   const [clickedItemIndex, setClickedItemIndex] = useState(null);
+
+  const [temp1, setTemp1] = useState() as any;
+  const [temp2, setTemp2] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
@@ -86,6 +94,41 @@ const Sidebar = ({ props }) => {
       setChildRoute(null);
     }
   }, [router.pathname]);
+
+  const filteredProductionData = (productionData || []).filter(
+    (item) =>
+      item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+      (item.Client.Name &&
+        item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
+      item.Description.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const getPlaceholderImage = (name) => {
+    const firstLetter = name ? name.charAt(0).toUpperCase() : "";
+    const randomColor = getRandomColor(); // Function to generate a random color
+    const textColor = "#ffffff"; // Text color for the first letter
+
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${randomColor}" style="border-radius: 50%;"><circle cx="50%" cy="50%" r="50%" fill="${randomColor}"/><text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="10" font-weight="bold" font-family="font-Segoe-UI" fill="${textColor}">${firstLetter}</text></svg>`;
+
+    const encodedSVG = encodeURIComponent(svgString)
+      .replace(/%2F/g, "/")
+      .replace(/%22/g, "'")
+      .replace(/%3D/g, "=")
+      .replace(/%3A/g, ":")
+      .replace(/%20/g, " ");
+
+    return `data:image/svg+xml;utf8,${encodedSVG}`;
+  };
+
+  // Function to generate a random color
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
 
   const IconLink = ({ title, children, placement }) => (
     <OverlayTrigger
@@ -320,14 +363,14 @@ const Sidebar = ({ props }) => {
                   <div className="text-container text-center">
                     <div className="d-flex align-items-start">
                       <p className="home mt-1 cursor-pointer ellipsis">
-                        {selectedProduction.Name}
+                        {selectedProduction?.Name}
                       </p>
                     </div>
-                    <div className="d-flex align-items-start">
+                    <div className="d-flex mt-1 mb-1 align-items-start">
                       <p className="ressl cursor-pointer">
-                        {selectedProduction.Client.Name
-                          ? selectedProduction.Client.Name
-                          : selectedProduction.Description}
+                        {selectedProduction?.Client?.Name
+                          ? selectedProduction?.Client?.Name
+                          : selectedProduction?.Description}
                       </p>
                     </div>
                   </div>
@@ -365,7 +408,7 @@ const Sidebar = ({ props }) => {
                     alt="project"
                     width="20"
                     height="24"
-                    className="ms-auto cursor-pointer me-2"
+                    className="ms-auto cursor-pointer me-3"
                   />
                 </div>
               )
@@ -376,7 +419,13 @@ const Sidebar = ({ props }) => {
         {productionList ? (
           <>
             <div className="container cursor-pointer p-0">
-              <div className="d-flex align-items-center mt-2 flex-row">
+              <div
+                className="d-flex align-items-center mt-2 flex-row"
+                onClick={() => {
+                  setProductionList(false);
+                  setSelectedProduction();
+                }}
+              >
                 <Image
                   src="/home.svg"
                   alt="project"
@@ -398,36 +447,33 @@ const Sidebar = ({ props }) => {
                 </div>
               </div>
               <Input
-                // onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => setSearchText(e.target.value)}
                 type="search"
-                className="searchProduction mt-2 ms-1 cursor-pointer w-100 mx-0"
+                className="searchProduction1 mt-2 ms-1 cursor-pointer w-100 mx-0"
                 placeholder="Search Production"
                 style={{ height: "38px" }}
               />
 
-              {(productionData || [])?.map((item: any, index: any) => {
+              {(filteredProductionData || [])?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
                 return (
                   <div
                     key={index}
-                    className={`d-flex align-items-center cursor-pointer flex-row${
+                    className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
                       isClicked ? " clicked" : ""
                     }`}
                     onClick={() => {
-                      setClickedItemIndex(index);
-                      setSelectedProduction(item);
-                      setProductionList(false);
-
-                      sessionStorage.setItem("clientid", item.Client.ID);
-                      sessionStorage.setItem("projectid", item.ID);
+                      setTemp1(item);
+                      setTemp2(index);
+                      setSwitcProduction(!switcProduction);
                     }}
                   >
                     <img
-                      className="rounded-circle cursor-pointer me-2 ms-2"
-                      src={item.img || "/icons/dummy-client-logo.svg"}
-                      width="20"
-                      height="20"
+                      className="rounded-circle cursor-pointer me-1 ms-2"
+                      src={item.img || getPlaceholderImage(item.Name)}
+                      width="22"
+                      height="22"
                       alt="avatar"
                       key={index}
                     />
@@ -452,7 +498,7 @@ const Sidebar = ({ props }) => {
                     {isClicked && (
                       <img
                         key={index}
-                        className="ms-1 cursor-pointer"
+                        className="me-4 cursor-pointer"
                         src="/tick.svg"
                         alt="tickmark"
                         width="16"
@@ -594,7 +640,7 @@ const Sidebar = ({ props }) => {
               className={
                 showSidebar ? "rounded-circle me-3" : "rounded-circle mx-auto"
               }
-              src={userData?.data?.profile_image || "./default.svg"}
+              src={userData?.data?.profile_image || "/default.svg"}
               width="32"
               height="32"
             />
@@ -610,6 +656,60 @@ const Sidebar = ({ props }) => {
           </div>
         </OverlayTrigger>
       </div>
+
+      <Modal
+        show={switcProduction}
+        onHide={() => {
+          setSwitcProduction(!switcProduction);
+        }}
+        // show={show}
+        // onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+        // dialogClassName="modal-40w"
+      >
+        <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 ps-4">
+          <Modal.Title className="mb-0">Confirm action!!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="mb-0 mt-0 d-flex justify-content-center align-items-center pt-0">
+          <div className="d-flex flex-column">
+            <p className="d-flex justify-content-center mt-3 mb-0 align-items-center">
+              Do you want to switch another production!!
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 mt-2 mb-2 d-flex justify-content-center align-items-center">
+          <button
+            className="btn ms-3 bg-white"
+            onClick={() => {
+              setSwitcProduction(!switcProduction);
+              setTemp1("");
+            }}
+          >
+            Cancel
+          </button>
+
+          <Button
+            className="text-white"
+            onClick={() => {
+              setProductionList(false);
+              setClickedItemIndex(temp2);
+              setSelectedProduction(temp1);
+              sessionStorage.setItem(
+                "clientid",
+                selectedProduction?.Client?.ID
+              );
+              sessionStorage.setItem("projectid", selectedProduction?.ID);
+              router.push("/dashboard");
+              setSwitcProduction(!switcProduction);
+            }}
+            style={{ width: 150 }}
+          >
+            Yes, Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -244,10 +244,6 @@ export const sidebarRoutesMaster = [
         path: "/countries",
       },
       {
-        name: "Departments",
-        path: "/departments",
-      },
-      {
         name: "States",
         path: "/states",
       },
@@ -359,7 +355,10 @@ export const sidebarRoutesProduction = [
         name: "Chart of Accounts (COA)",
         path: "/coaaccounts",
       },
-
+      {
+        name: "Departments",
+        path: "/departments",
+      },
       {
         name: "Locations",
         path: "/locations",

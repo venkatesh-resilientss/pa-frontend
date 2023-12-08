@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Image } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import Button from "react-bootstrap-button-loader";
@@ -9,6 +8,7 @@ import { Eye } from "@styled-icons/bootstrap/Eye";
 import { EyeSlash } from "@styled-icons/bootstrap/EyeSlash";
 
 import { ForgotPasswordService } from "services";
+import Footer from "@/components/login/Footer";
 
 const forgotPassword = new ForgotPasswordService();
 
@@ -49,7 +49,7 @@ export default function ForgotPassword({ router }) {
       });
       setLoading(false);
       toast.success("Password has been updated successfully");
-      router.replace("/")
+      router.replace("/");
     } catch (e) {
       setLoading(false);
       toast.error(e?.error || e || "Error");
@@ -69,7 +69,12 @@ export default function ForgotPassword({ router }) {
       </div>
       <div className="overflow-auto p-3 p-sm-5 w-100 login-card">
         <div className="d-flex flex-column mx-auto h-100">
-          <Image src="/logo.svg" alt="logo" className="img-fluid" width={110} />
+          <Image
+            src="/logo.svg"
+            alt="logo"
+            className="img-fluid mt-auto"
+            width={110}
+          />
           <p className="fw-bold f-24 f-almarai py-2 mt-5 mb-0">
             Reset Password
           </p>
@@ -142,29 +147,7 @@ export default function ForgotPassword({ router }) {
 
           <hr />
 
-          <div className="text-center mt-auto f-12 clr-dblack">
-            <p className="mt-3">If you need help, contact support</p>
-            <p className="">
-              Please&nbsp;
-              <a href="mailto:support@example.com">
-                <u className="fw-bold">email</u>
-              </a>
-              &nbsp;support or call &nbsp;
-              <a href="tel:805-428-8024">
-                <u className="fw-bold">805-428-8024</u>
-              </a>
-            </p>
-            <p className="">Powered by Resilient Software Solutions LLC</p>
-
-            <div className="d-flex justify-content-between my-2">
-              <Link href="/">
-                <u className="fw-bold">Terms & conditions</u>
-              </Link>
-              <Link href="/">
-                <u className="fw-bold">Privacy Policy</u>
-              </Link>
-            </div>
-          </div>
+          <Footer />
         </div>
       </div>
     </div>
