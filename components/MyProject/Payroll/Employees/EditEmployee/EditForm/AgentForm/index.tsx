@@ -12,7 +12,8 @@ function AgentForm({ control, errors }) {
       { name: 'agency_address', label: 'Agency Address', required: false, placeholder: 'Agency Address' },
       { name: 'as_of_date', label: 'As Of Date', placeholder: 'As Of Date' },
       { name: 'rate', label: 'Rate %', placeholder: 'Rate %' },
-      { name: 'active', label: 'Active', type: 'check', placeholder: 'Active' }
+      { name: 'active', label: 'Active', type: 'check', placeholder: 'Active' },
+      { name: 'mailtoAgent', label: 'Mail to Agent', type: 'check', placeholder: 'Mail to Agent' }
       ];
       const [formData, setFormData] = useState([details]);
 
@@ -49,7 +50,7 @@ function AgentForm({ control, errors }) {
                   {form.map((formField) => (
                     <Col xl="4" key={formField.name}>
                       {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                        {formField.label}{formField.required && '*'}
+                        {formField.label}{formField.required && <span className='text-danger'>*</span>}
                       </Label>}
                       {formField.type === 'select' ? (
                         <Controller

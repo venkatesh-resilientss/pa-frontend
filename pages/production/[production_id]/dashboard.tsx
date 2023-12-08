@@ -7,9 +7,10 @@ import HelpCenterCard from "@/components/MyProject/Dashboard/HelpCenter/HelpCent
 
 
 
-
 export default function ProductionDashboard() {
 
+ 
+ 
     const createCard = (title, iconSrc, subTitle, content) => (
     <Col>
       <Card border="primary" className="productionCards">
@@ -60,18 +61,15 @@ export default function ProductionDashboard() {
           {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>$150,000</p>)}
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
             <div className="row">
-              <div className="col-md-4">
+               <div className="col-md-6 text-nowrap">
+                <h6 className="text-center">Purchase Order</h6>
+                <p className="text-center font-size-16">21</p>
+              </div>
+              <div className="col-md-6">
                 <h6 className="text-center">Account Payable</h6>
                 <p className="text-center">21</p>
               </div>
-              <div className="col-md-4 text-nowrap">
-                <h6 className="text-center">Petty Cash</h6>
-                <p className="text-center font-size-16">21</p>
-              </div>
-              <div className="col-md-4">
-                <h6 className="text-center">Journal Entry</h6>
-                <p className="text-center font-size-16">21</p>
-              </div>
+             
             </div>
           ))}
         </Row>
@@ -97,6 +95,7 @@ export default function ProductionDashboard() {
           <div className="d-flex justify-content-between mt-2">
             <div>
                 <p>Payroll Coordinator : John Duo</p>
+                
             </div>
             <div>
                 <div>
