@@ -88,13 +88,20 @@ function Clients() {
           : null;
         tempObj.clientAdmin = tempObj?.ClientAdmin?.ID
           ? {
-              label: tempObj?.ClientAdmin?.Name,
+              label:
+                (tempObj?.ClientAdmin?.first_name || "") +
+                " " +
+                (tempObj?.ClientAdmin?.last_name || ""),
               value: tempObj?.ClientAdmin?.ID,
             }
           : null;
+
         tempObj.rsslSupportUser = tempObj?.RsslSupportUser?.ID
           ? {
-              label: tempObj?.RsslSupportUser?.Name,
+              label:
+                (tempObj?.RsslSupportUser?.first_name || "") +
+                " " +
+                (tempObj?.RsslSupportUser?.last_name || ""),
               value: tempObj?.RsslSupportUser?.ID,
             }
           : null;

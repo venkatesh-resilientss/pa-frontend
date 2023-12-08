@@ -78,7 +78,10 @@ const AllProductionsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={() => router.push(`/production/${props.data.ID}`)}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
@@ -88,7 +91,7 @@ const AllProductionsTable = () => {
               />
             </DropdownItem>
 
-            <DropdownItem
+            {/* <DropdownItem
               className="w-100"
               onClick={() => router.push(`/edit-production/${props.data.ID}`)}
             >
@@ -99,7 +102,7 @@ const AllProductionsTable = () => {
                   //
                 }}
               />
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}

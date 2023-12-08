@@ -42,22 +42,28 @@ export default function WorkSpaceDetails(props) {
     },
   ];
 
-  let usersData: any = [];
-
   const { data: users } = useSWR("Users", () =>
     clientService.getUsers(
       `?client_id=${clientData?.ID || ""}&limit=50&offset=0`
     )
   );
-  usersData = [...(users?.data || [])];
+  const { data: supportUsers } = useSWR("Support Users", () =>
+    clientService.getUsers(`?limit=50&offset=0`)
+  );
 
-  const data = usersData?.filter((e) => e?.Role?.Code === "CLIENT_ADMIN");
-  const sUsers = usersData?.filter((e) => e.IsStaffUser);
+  const data = [...(users?.data || [])]?.filter(
+    (e) => e?.Role?.Code === "CLIENT_ADMIN"
+  );
+  const sUsers = [...(supportUsers?.data || [])]?.filter((e) => e.IsStaffUser);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
     return clientService
-      .getUsers(`?client_id=${clientData?.ID || ""}&limit=50&offset=0`)
+      .getUsers(
+        `?${
+          vl === "rsslSupportUser" ? "" : `client_id=${clientData?.ID || ""}&`
+        }limit=50&offset=0`
+      )
       .then((res) => {
         const getName = (e) =>
           (e?.first_name || "") + " " + (e?.last_name || "");
