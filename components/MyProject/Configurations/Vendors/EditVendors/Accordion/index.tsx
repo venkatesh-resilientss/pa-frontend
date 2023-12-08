@@ -54,31 +54,31 @@ function VendorAccordion() {
     data.Name && setValue("vendorName", data.Name);
     data.Code && setValue("vendorCode", data.Code);
 
-    const paymentType = paymentTypes.find(type=> type.value === data.PaymentType);
+    const paymentType = paymentTypes.find(type => type.value === data.PaymentType);
     data.PaymentType && setValue("paymentType", paymentType); //
 
     data.LegalName && setValue("legalName", data.LegalName);
     data.Email && setValue("vendorEmail", data.Email);
     // data.EntityID && setValue("entityType", data.EntityID);
     const vendorEntity = {
-      value : data.EntityType.ID,
-      label : data.EntityType.Name
+      value: data.EntityType.ID,
+      label: data.EntityType.Name
     }
-    setValue("entityType",vendorEntity)
+    setValue("entityType", vendorEntity)
     // data.DefaultAddress && setValue("defaultAddress", data.DefaultAddress);
-    const defaultAddress = VendorsAddressTypes.find(el=> el.value === data.DefaultAddress);
-    setValue("defaultAddress",defaultAddress);
+    const defaultAddress = VendorsAddressTypes.find(el => el.value === data.DefaultAddress);
+    setValue("defaultAddress", defaultAddress);
     const basicInfoCountry = {
-      label : data.State?.Country?.Name,
-      value : data.State?.Country?.Id
+      label: data.State?.Country?.Name,
+      value: data.State?.Country?.Id
     }
-    setValue('vendorcountry',basicInfoCountry);
+    setValue('vendorcountry', basicInfoCountry);
     // data.State && setValue("workState", data.State); //
     const basicInfoState = {
-      label : data.State?.Name,
-      value : data.State?.Id
+      label: data.State?.Name,
+      value: data.State?.Id
     }
-    setValue('workState',basicInfoState)
+    setValue('workState', basicInfoState)
     // console.log({state : data.State});
     data.TaxID && setValue("taxId", data.TaxID);
     data.DefaultAccount && setValue("defaultAccount", data.DefaultAccount);
@@ -86,11 +86,11 @@ function VendorAccordion() {
     data.AchBankAccountNUmber &&
       setValue("achAccountNumber", data.AchBankAccountNUmber);
     data.PayeeName && setValue("payeeName", data.PayeeName);
-    if(data.PrimaryContact){
+    if (data.PrimaryContact) {
       const primaryContactData = data.PrimaryContact;
-      setValue("contactName",primaryContactData.FullName);
-      setValue("contactNumber",primaryContactData.CellPhone);
-      setValue("vendorEmail",primaryContactData.EmailID);
+      setValue("contactName", primaryContactData.FullName);
+      setValue("contactNumber", primaryContactData.CellPhone);
+      setValue("vendorEmail", primaryContactData.EmailID);
     }
   };
 
@@ -163,7 +163,7 @@ function VendorAccordion() {
       "cityName": data.mailingAddressCity,
       "countryID": data.mailingAddressCountry?.value,
       "line1": data.mailingAddress1,
-      "line2":data.mailingAddress2,
+      "line2": data.mailingAddress2,
       "stateID": data.mailingAddressState?.value,
       "zipcode": parseInt(data.mailingAddressPostalCode)
     };
@@ -171,42 +171,42 @@ function VendorAccordion() {
       "cityName": data.billingAddressCity,
       "countryID": data.billingAddressCountry?.value,
       "line1": data.billingAddress1,
-      "line2":data.billingAddress2,
+      "line2": data.billingAddress2,
       "stateID": data.billingAddressState?.value,
       "zipcode": parseInt(data.billingAddressPostalCode)
     }
 
     const vendorsPayload = {
       Name: data.vendorName,
-      Code : data.vendorCode,
+      Code: data.vendorCode,
       PaymentType: data.paymentType.value,
-      LegalName : data.legalName,
-      Email : data.vendorEmail,
-      EntityTypeID : parseInt(data.entityType.value),
+      LegalName: data.legalName,
+      Email: data.vendorEmail,
+      EntityTypeID: parseInt(data.entityType.value),
       TaxID: data.taxId,
       PayeeName: data.payeeName,
-      StateID : data.workState.value,
-      PettyCashPCardEnabled : data.isPettyCashEnabled,
-      PettyCashAccountID : data.pettyCashAccount,
-      DefaultAccount : data.defaultAccount,
-      DefaultAddress : data.defaultAddress.value,
-      AchBankAccountNUmber : parseInt(data.achAccountNumber),
-      AchRoutingNumber : parseInt(data.achRoutingNumber),
-      PrimaryAddress : contactAddressPaylaod,
-      MailingAddress  : mailingAddressPaylaod,
-      BillingAddress : billingAddressPaylaod,
-      PrimaryContact : {
-        FullName : data.contactName,
-        CellPhone : data.contactNumber,
-        EmailID : data.vendorEmail
+      StateID: data.workState.value,
+      PettyCashPCardEnabled: data.isPettyCashEnabled,
+      PettyCashAccountID: data.pettyCashAccount,
+      DefaultAccount: data.defaultAccount,
+      DefaultAddress: data.defaultAddress.value,
+      AchBankAccountNUmber: parseInt(data.achAccountNumber),
+      AchRoutingNumber: parseInt(data.achRoutingNumber),
+      PrimaryAddress: contactAddressPaylaod,
+      MailingAddress: mailingAddressPaylaod,
+      BillingAddress: billingAddressPaylaod,
+      PrimaryContact: {
+        FullName: data.contactName,
+        CellPhone: data.contactNumber,
+        EmailID: data.vendorEmail
       }
     }
-    vendorService.editVendor(id,vendorsPayload).then(()=>{
+    vendorService.editVendor(id, vendorsPayload).then(() => {
       toast.success("Vendor Edited successfully");
-        reset();
-        router.back();
-    }).catch(error=>{
-      toast.error(error.Message || error.error || 'Unable to add vendor');
+      reset();
+      router.back();
+    }).catch(error => {
+      toast.error(error.Message || error.error || 'Unable to edit vendor');
     });
   };
 
