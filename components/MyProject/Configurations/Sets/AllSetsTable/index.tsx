@@ -16,9 +16,7 @@ import { useRouter } from "next/router";
 import { SetsService } from "services";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSetsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -58,8 +56,8 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      }
-      const payload = { clientId: clientID, projectId: projectID }
+      };
+      const payload = { clientId: clientID, projectId: projectID };
       const response = await setsService.getSets(queryParams, payload);
       const data = response.result; // Adjust based on the actual structure of the response
       // setBankData(data)
@@ -161,14 +159,18 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
-      cellRenderer: (params) => {
-        if (params?.data?.Created) {
-          return params.data.Created.first_name + " " + params.data?.Created.last_name
-        }
-      },
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },

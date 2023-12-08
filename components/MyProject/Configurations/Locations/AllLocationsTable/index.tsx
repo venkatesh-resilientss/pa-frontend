@@ -46,7 +46,6 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
 
   const locationsService = new LocationsService();
 
-
   const fetchData1 = async (pageNumber) => {
     try {
       const { clientID, projectID } = getSessionVariables();
@@ -54,9 +53,12 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      }
-      const payload = { clientId: clientID, projectId: projectID }
-      const response = await locationsService.getLocations(queryParams, payload);
+      };
+      const payload = { clientId: clientID, projectId: projectID };
+      const response = await locationsService.getLocations(
+        queryParams,
+        payload
+      );
       const data = response.result; // Adjust based on the actual structure of the response
       // setBankData(data)
       // setTotalRecords(response.total_records)
@@ -168,14 +170,18 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
-      cellRenderer: (params) => {
-        if (params.data?.Created) {
-          return params.data.Created.first_name + " " + params.data?.Created.last_name
-        }
-      },
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",

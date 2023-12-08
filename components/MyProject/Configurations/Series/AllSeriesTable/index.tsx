@@ -66,8 +66,8 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      }
-      const payload = { clientId: clientID, projectId: projectID }
+      };
+      const payload = { clientId: clientID, projectId: projectID };
       const response = await seriesService.getSeries(queryParams, payload);
       const data = response.data; // Adjust based on the actual structure of the response
       // setBankData(data)
@@ -190,14 +190,18 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
-      cellRenderer: (params) => {
-        if (params?.data?.Created) {
-          return params.data.Created.first_name + " " + params.data?.Created.last_name
-        }
-      },
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
