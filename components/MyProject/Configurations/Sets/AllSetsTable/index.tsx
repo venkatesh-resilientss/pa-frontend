@@ -60,14 +60,10 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
       const payload = { clientId: clientID, projectId: projectID };
       const response = await setsService.getSets(queryParams, payload);
       const data = response.result; // Adjust based on the actual structure of the response
-      // setBankData(data)
-      // setTotalRecords(response.total_records)
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
       return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
     }
   };
 

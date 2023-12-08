@@ -8,31 +8,27 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import { BudgetService } from "services";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import deleteIcon from "assets/myIcons/delete.svg";
-import useSWR from "swr";
 import moment from "moment";
 import { hasPermission } from "commonFunctions/functions";
 import {
-  openBulkUploadBudgetsPopup,
   openDeleteBudgetPopup,
 } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { useState } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-
-const AllBudgetTable = () => {
+import { getSessionVariables } from "@/constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -49,12 +45,27 @@ const AllBudgetTable = () => {
 
   const budgetService = new BudgetService();
 
-  const { data: budgetData, isLoading: budgetLoading } = useSWR(
-    ["LIST_BUDGETS", searchText],
-    () => budgetService.getBudgets()
-  );
-
-  const dataSource = budgetData?.data;
+  const fetchData = async (pageNumber) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const response = await budgetService.getBudgets(
+        {
+          clientID,
+          projectID,
+        },
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -234,7 +245,7 @@ const AllBudgetTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {budgetData?.data.length} Budgets
+                  Budgets
                 </div>
 
                 <Input
@@ -245,24 +256,7 @@ const AllBudgetTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadBudgetsPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                
 
                 {/* <Button
                   style={{
@@ -305,37 +299,23 @@ const AllBudgetTable = () => {
           </CardBody>
         </Card>
       </div>
-      {budgetLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
+      
+      <div className="mt-3">
+      <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
                 // buttonName={"Add Budget"}
                 buttonName={hasCreateConfiguration ? "Create Budget" : ""}
                 buttonLink={"/configurations/add-budget"}
               />
-            </div>
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

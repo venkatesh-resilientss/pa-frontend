@@ -1,2 +1,2 @@
-name,code,DEA,parentID,IsActive,description,type
-Test COA - 947 11272023,1134,false,lorem ipsum de amet,lorem ipsum de amet
+Code,Name,Description,ParentID,Postable,AccountType
+C34,TR COA,Lorem ipsum de amet,COA1,false,Asset : Inventory

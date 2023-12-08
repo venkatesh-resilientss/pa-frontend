@@ -77,7 +77,7 @@ export const EDIT_CURRENCIES = (id: any) =>
 export const CURRENCY_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/currencies/${id}`; //currencies Details
 
-export const GET_BUDGETS = `${tenantIdEndpoint}/budgets/`; //budgets
+export const GET_BUDGETS = `${tenantIdEndpoint}/budgets/search`; //budgets
 export const CREATE_BUDGET = `${tenantIdEndpoint}/budgets/`; //Create Currencies
 
 export const DELETE_BUDGET = (id: any) => `${tenantIdEndpoint}/budgets/${id}`; //DELETE budgets
@@ -142,7 +142,7 @@ export const LOCATION_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/locations/${id}`; //Location Details
 
 export const CREATE_COAACCOUNTS = `${tenantIdEndpoint}/coaaccounts/`;
-export const GET_COAACCOUNTS = `${tenantIdEndpoint}/coaaccounts/`; //COA(ACCOUNTS)
+export const GET_COAACCOUNTS = `${tenantIdEndpoint}/coaaccounts/search`; //COA(ACCOUNTS)
 export const DELETE_COAACCOUNTS = (id: any) =>
   `${tenantIdEndpoint}/coaaccounts/${id}`; //DELETE coaaccounts
 export const EDIT_COAACCOUNTS = (id: any) =>
@@ -189,6 +189,7 @@ export const UPLOAD_STATES_LIST = `${tenantIdEndpoint}/states/upload`;
 export const UPLOAD_SERIES_LIST = `${tenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
+export const UPLOAD_COA_LIST = `${tenantIdEndpoint}/coaaccounts/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 

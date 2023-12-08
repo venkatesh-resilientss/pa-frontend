@@ -10,7 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BudgetService } from "services";
 
-const BudgetBulkUploadPopup = () => {
+const BudgetBulkUploadPopup = ({rerender,setRerender}) => {
   const dispatch = useDispatch();
   const budgetService = new BudgetService();
 
@@ -46,7 +46,7 @@ const BudgetBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender);
         dispatch(closeBulkUploadBudgetsPopup("close"));
       })
       .catch((error) => {
