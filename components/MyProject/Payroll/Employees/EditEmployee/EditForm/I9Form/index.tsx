@@ -25,7 +25,7 @@ function I9Form({ control, errors }) {
             {formField.map((formField, formindex) => (
               <Col key={formindex} xl="4">
                 {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
                   </Label>}
                 {formField.type === 'select' ? (
                     <Controller
@@ -107,7 +107,7 @@ function I9Form({ control, errors }) {
               <strong>{formField.title}</strong>
             </div>
             {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
           </Label>}
           {formField.type === 'file' ? (
             <Controller

@@ -33,7 +33,7 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {physicalAddress.map((formField) => (
             <Col xl="4" className="p-2" key={formField.name}>
-              <Label className="form-lable-font">{formField.label}{formField.required && '*'}</Label>
+              <Label className="form-lable-font">{formField.label}{formField.required && <span className='text-danger'>*</span>}</Label>
               <Controller
                 name={formField.name}
                 control={control}
@@ -60,7 +60,7 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {invoiceAddress.map((formField) => (
             <Col xl="4" className="p-2" key={formField.name}>
-              <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
+              <Label className="text-black form-label">{formField.label}{formField.required && <span className='text-danger'>*</span>}</Label>
               <Controller
                 name={formField.name}
                 control={control}

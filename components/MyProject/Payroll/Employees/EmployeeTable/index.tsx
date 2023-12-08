@@ -246,7 +246,7 @@ const EmployeesListTable = () => {
           )} */}
         </div>
       </Card>
-      <GridTable rowData={rowData} columnDefs={columns} pageSize={4} searchText={searchText} />
+      <GridTable rowData={{data: rowData}} columnDefs={columns} pageSize={4} searchText={searchText} />
       {/* <DataTableWithButtons
         tableTitle={"All Employees"}
         data={employeeData}
