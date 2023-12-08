@@ -334,7 +334,7 @@ function EditUser() {
           <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label>Last Name</Label>
+                <Label>Last Name <span className="text-danger">*</span></Label>
                 <Controller
                   name="lastname"
                   control={control}
@@ -361,7 +361,7 @@ function EditUser() {
 
             <Col xl="4">
               <div className="mb-1 mr-3">
-                <Label>First Name</Label>
+                <Label>First Name <span className="text-danger">*</span></Label>
                 <Controller
                   name="firstname"
                   control={control}
@@ -404,21 +404,16 @@ function EditUser() {
                         {...field}
                         disabled={!editMode}
                       />
-                      {errors.middlename && (
-                        <div className="text-danger">
-                          {String(errors.middlename.message)}
-                        </div>
-                      )}
+                      
                     </>
                   )}
-                  rules={{ required: "Middle Name is required" }}
                 />
               </div>
             </Col>
 
             <Col xl={4}>
               <div className="mb-1">
-                <Label>Email</Label>
+                <Label>Email <span className="text-danger">*</span></Label>
                 <Controller
                   name="email"
                   control={control}
@@ -454,7 +449,7 @@ function EditUser() {
           <Row>
             <Col xl="4">
               <div className="mt-1">
-                <Label>Select Role *</Label>
+                <Label>Select Role <span className="text-danger">*</span></Label>
                 <Controller
                   name="role"
                   control={control}

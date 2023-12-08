@@ -9,7 +9,7 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function FormFields(props: any) {
-  const { fields, clientData, setClientData, step, setStep } = props;
+  const { fields, clientData, setClientData, step, setStep, hideUsers } = props;
   const { data, pStates, iStates, sUsers, loadOptions, hideBtns } = props;
   const { err, setErr, validate, disabled, cls, router, isEditing } = props;
 
@@ -70,9 +70,12 @@ export default function FormFields(props: any) {
         : lb === "RSSL Support User"
         ? sUsers
         : data) || [];
-
+    const getName = (e) =>
+      !e?.Name
+        ? (e?.first_name || "") + " " + (e?.last_name || "")
+        : e?.Name || "";
     return tempArr.map((e) => {
-      return { label: e.Name, value: e.ID };
+      return { label: getName(e), value: e.ID };
     });
   };
 
@@ -169,7 +172,11 @@ export default function FormFields(props: any) {
       <div className="row">
         {fields.map((el, idx) => (
           <div
-            className={"col-12 col-lg-4 py-1" + (cls ? " col-lg-6" : "")}
+            className={
+              "col-12 col-lg-4 py-1" +
+              (cls ? " col-lg-6" : "") +
+              (el.typ === "select" && hideUsers ? " d-none" : "")
+            }
             key={idx}
           >
             <label className="form-label text-black f-12">
