@@ -131,9 +131,9 @@ function EditUser() {
   );
   const roleOptions = Array.isArray(rolesdata)
     ? rolesdata.map((role) => ({
-        value: role.ID,
-        label: role.RoleName,
-      }))
+      value: role.ID,
+      label: role.RoleName,
+    }))
     : [];
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -141,7 +141,7 @@ function EditUser() {
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
   const roleSelectStyles = {
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       width: "100%",
     }),
@@ -511,9 +511,9 @@ function EditUser() {
                   id="exampleCustomSwitch"
                   className="mb-1"
                   checked={isCheckedStaffUser}
-                  // onChange={(e) => {
-                  //   setIsCheckedStaffUser(e.target.checked)
-                  // }}
+                // onChange={(e) => {
+                //   setIsCheckedStaffUser(e.target.checked)
+                // }}
                 />
 
                 <Label className="mb-0">Is Staff User</Label>
@@ -595,9 +595,8 @@ function EditUser() {
                               }}
                               onChange={(e) => {
                                 const temp = e.map((ele) => ele.value);
-                                const productionToUpdate = `production_${
-                                  index + 1
-                                }`;
+                                const productionToUpdate = `production_${index + 1
+                                  }`;
                                 setClientProductionsList((prevList) => {
                                   return prevList.map((item: any) => {
                                     if (item.production == productionToUpdate) {
