@@ -347,6 +347,7 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
           )}
         </>
       )} */}
+      <div className="mt-3">
       <AGGridTable
         rerender={rerender}
         columnDefs={columnDefs}
@@ -360,6 +361,7 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
           />
         )}
       />
+      </div>
     </div>
   );
 };

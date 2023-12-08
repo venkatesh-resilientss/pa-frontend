@@ -30,12 +30,14 @@ class SetsService extends APIService {
       });
   }
 
-  uploadsetlist(fileName: any) {
+  uploadsetlist(fileName: any,clientId,projectId) {
       // Create a FormData object
       const formData = new FormData();
 
     // Append the file name to the FormData object with the specified field name
     formData.append("file", fileName);
+    formData.append("clientId",clientId);
+    formData.append("projectId",projectId);
 
       return this.post(UPLOAD_SET_LIST, formData,  {
           'Content-Type': 'multipart/form-data',

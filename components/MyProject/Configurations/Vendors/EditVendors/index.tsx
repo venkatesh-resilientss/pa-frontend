@@ -2,7 +2,7 @@ import VendorAccordion from "./Accordion";
 
 function EditVendor() {
   return (
-    <div style={{ fontFamily: "Segoe UI" }} className="overflow-auto">
+    <div style={{ fontFamily: "Segoe UI" }}>
       <VendorAccordion />
     </div>
   );

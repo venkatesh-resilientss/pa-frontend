@@ -35,7 +35,7 @@ class COAAccountsService extends APIService {
       });
   }
 
-  uploadList(fileName : any,clientId,projetId){
+  uploadList(fileName: any, clientId : any, projetId : any) {
     // Create a FormData object
     const formData = new FormData();
 

@@ -134,7 +134,7 @@ function VendorAccordion() {
     }
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
-      countryID: data.contactAddressState.countryId,
+      countryID: data.contactAddressState,
       line1: data.contactAddress1,
       line2: data.contactAddress2,
       stateID: data.contactAddressState.value,
@@ -142,7 +142,7 @@ function VendorAccordion() {
     };
     const mailingAddressPaylaod = {
       cityName: data.mailingAddressCity,
-      countryID: data.mailingAddressState.countryId,
+      countryID: data.mailingAddressState,
       line1: data.mailingAddress1,
       line2: data.mailingAddress2,
       stateID: data.mailingAddress2.value,
@@ -150,7 +150,7 @@ function VendorAccordion() {
     };
     const billingAddressPaylaod = {
       cityName: data.billingAddressCity,
-      countryID: data.billingAddressState.countryId,
+      countryID: data.billingAddressState,
       line1: data.billingAddress1,
       line2: data.billingAddress2,
       stateID: data.billingAddressState.value,

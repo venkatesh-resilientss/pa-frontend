@@ -75,6 +75,50 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
     }
   };
 
+  const [initialEntityOptions,setInitialEntityOptions] = useState([]);
+  const entityServices = new EntitiesService();
+  useEffect(()=>{
+    const fetchInitialEntityOptions = async () => {
+      try {
+        const res = await entityServices.getEntities(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialEntityOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialEntityOptions();
+  },[])
+
+  const loadEntityOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await entityServices.getEntities(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      setInitialEntityOptions(options);
+      callback(options);
+    } catch (error) {
+      console.error("Error fetching initial options:", error);
+    }
+  };
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
@@ -92,14 +136,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
       label: b.Name,
     };
   });
-  const entityService = new EntitiesService();
-  const {data:entityData} = useSWR("LIST_ENTITIES", ()=>entityService.getEntities());
-  const entitySelectOptions = entityData?.map((b)=>{
-    return {
-      value : b.ID,
-      label : b.Name
-    }
-  })
   return (
     <div className="text-black">
       <Form
@@ -258,10 +294,14 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               rules={vendorsValidationRules.entityType}
               control={control}
               render={({ field }) => (
-                <Select
+                <AsyncSelect
                   {...field}
-                  options={entitySelectOptions}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadEntityOptions}
                   placeholder="Select Entity"
+                  defaultOptions={initialEntityOptions}
                   styles={selectStyles}
                 />
               )}
@@ -308,8 +348,8 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               Country <span className="required">*</span>
             </Label>
             <Controller
-              name="workState"
-              rules={vendorsValidationRules.workState}
+              name="country"
+              rules={vendorsValidationRules.country}
               control={control}
               render={({ field }) => (
                 <Select

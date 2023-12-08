@@ -1075,6 +1075,9 @@ export const formValidationRules = {
     defaultAddress: {
       required: "Default Address is required",
     },
+    country : {
+      required : "Country is required"
+    },
     workState: {
       required: "Work State is required",
     },

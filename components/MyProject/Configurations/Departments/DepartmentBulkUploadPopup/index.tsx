@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
+import { getSessionVariables } from "@/constants/function";
 
 const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
 
   const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
+    const {clientID} = getSessionVariables();
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
@@ -53,7 +55,7 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
 
     // Call the uploadbanklist function from your service with only the file name
     departmentsService
-      .uploaddepartmentlist(fileName)
+      .uploaddepartmentlist(fileName,clientID)
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");

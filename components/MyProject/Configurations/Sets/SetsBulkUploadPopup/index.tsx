@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SetsService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
 const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -42,10 +43,10 @@ const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
 
     setLoader(true);
     const fileName = uploadedFiles[0];
-
+    const {clientID,projectID} = getSessionVariables()
     // Call the uploadbanklist function from your service with only the file name
     setsService
-      .uploadsetlist(fileName)
+      .uploadsetlist(fileName,clientID,projectID)
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
