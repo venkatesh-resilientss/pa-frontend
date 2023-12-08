@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { FcFilmReel } from "react-icons/fc";
-import { hasPermission } from "commonFunctions/functions";
 import ReactSelect from "react-select";
 
 import {
@@ -24,10 +22,8 @@ import {
 } from "reactstrap";
 import { useRouter } from "next/router";
 import {
-  Edit,
   File,
   MoreVertical,
-  Trash,
   Users,
 } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
