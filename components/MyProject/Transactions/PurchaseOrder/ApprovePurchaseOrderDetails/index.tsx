@@ -570,7 +570,7 @@ const ApprovePurchaseOrder = () => {
                             placeholder="Select Vendor"
                             // defaultOptions={seriesSelectFormat}
                             styles={{
-                              control: (provided) => ({
+                              control: (provided: any) => ({
                                 ...provided,
                                 height: "34px",
                                 minHeight: "34px",
@@ -774,7 +774,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Client"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -796,7 +796,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Production"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -816,7 +816,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Bank"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -838,7 +838,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Currency"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -860,7 +860,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Department"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -880,7 +880,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Period"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",

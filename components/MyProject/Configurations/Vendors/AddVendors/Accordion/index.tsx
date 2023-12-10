@@ -32,55 +32,60 @@ function VendorAccordion() {
   const onSubmit = (data) => {
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
-      countryID: data.contactAddressState.countryId,
+      countryID: data.contactAddressCountry?.value,
       line1: data.contactAddress1,
       line2: data.contactAddress2,
-      stateID: data.contactAddressState.value,
+      stateID: data.contactAddressState?.value,
       zipcode: parseInt(data.contactAddressPostalCode),
     };
     const mailingAddressPaylaod = {
       "cityName": data.mailingAddressCity,
-      "countryID": data.mailingAddressState.countryId,
+      "countryID": data.mailingAddressCountry?.value,
       "line1": data.mailingAddress1,
       "line2":data.mailingAddress2,
-      "stateID": data.mailingAddressState.value,
+      "stateID": data.mailingAddressState?.value,
       "zipcode": parseInt(data.mailingAddressPostalCode)
     };
     const billingAddressPaylaod = {
       "cityName": data.billingAddressCity,
-      "countryID": data.billingAddressState.countryId,
+      "countryID": data.billingAddressCountry?.value,
       "line1": data.billingAddress1,
       "line2":data.billingAddress2,
-      "stateID": data.billingAddressState.value,
+      "stateID": data.billingAddressState?.value,
       "zipcode": parseInt(data.billingAddressPostalCode)
     }
 
     const vendorsPayload = {
       Name: data.vendorName,
       Code : data.vendorCode,
-      PaymentType: data.paymentType,
+      PaymentType: data.paymentType.value,
       LegalName : data.legalName,
       Email : data.vendorEmail,
-      EntityID : data.entityType,
+      EntityTypeID : parseInt(data.entityType.value),
       TaxID: data.taxId,
       PayeeName: data.payeeName,
       StateID : data.workState.value,
       PettyCashPCardEnabled : data.isPettyCashEnabled,
       PettyCashAccountID : data.pettyCashAccount,
       DefaultAccount : data.defaultAccount,
-      DefaultAddress : data.defaultAddress,
+      DefaultAddress : data.defaultAddress.value,
       AchBankAccountNUmber : parseInt(data.achAccountNumber),
       AchRoutingNumber : parseInt(data.achRoutingNumber),
       PrimaryAddress : contactAddressPaylaod,
       MailingAddress  : mailingAddressPaylaod,
-      BillingAddress : billingAddressPaylaod
+      BillingAddress : billingAddressPaylaod,
+      PrimaryContact : {
+        FullName : data.contactName,
+        CellPhone : data.contactNumber,
+        EmailID : data.vendorEmail
+      }
     }
     vendorService.createVendor(vendorsPayload).then(()=>{
       toast.success("Vendors Added successfully");
         reset();
         router.back();
     }).catch(error=>{
-      toast.error(error.Message);
+      toast.error(error.Message || error.error || 'Unable to add vendor');
     });
 };
 

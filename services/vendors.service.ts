@@ -9,8 +9,13 @@ import {
 } from "../lib/endpoints";
 
 class VendorsService extends APIService {
-  getVendors(): Promise<any> {
-    return this.get(`${GET_VENDORS}`)
+  getVendors(data,params?): Promise<any> {
+    return this.post(
+      params ? 
+      `${GET_VENDORS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+      `${GET_VENDORS}`,
+      data
+      )
       .then((res) => {
         return res?.data;
       })

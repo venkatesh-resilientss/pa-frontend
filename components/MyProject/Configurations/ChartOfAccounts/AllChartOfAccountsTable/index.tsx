@@ -20,10 +20,13 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import { openBulkUploadCOAPopup } from "redux/slices/mySlices/configurations";
+import {
+  openBulkUploadCOAPopup,
+} from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
 import { getSessionVariables } from "@/constants/function";
+
 
 const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
@@ -40,21 +43,20 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
 
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
+  const hasUploadConfigurationPermission = hasPermission(
+    "",
+    "bulk_upload"
+  )
   const fetchData = async (pageNumber) => {
-    const { clientID, projectID } = getSessionVariables();
+    const {clientID,projectID} = getSessionVariables()
     try {
-      const response = await coasService.getCoasAccounts(
-        {
-          clientID,
-          projectID,
-        },
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
+      const response = await coasService.getCoasAccounts({
+        clientID,projectID
+      },{
+        search: searchText,
+        pageLimit: recordsPerPage,
+        offset: pageNumber,
+      });
       const data = response.result; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
@@ -62,7 +64,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       return { data: null, totalRecords: 0 };
     }
   };
-
+  
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -232,6 +234,9 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                  COAs
+                </div>
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -307,21 +312,52 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create COA" : ""}
-              buttonLink={"/configurations/add-chart-of-accounts"}
-            />
+      {/* {coasLoading ? (
+        <div className="mt-3">
+          <GridTable
+            rowData={dataSource}
+            columnDefs={columnDefs}
+            pageSize={10}
+            searchText={searchText}
+          />
+        </div>
+      ) : (
+        <>
+          {coasData?.result.length > 0 ? (
+            <div className="mt-3">
+              <GridTable
+                rowData={dataSource}
+                columnDefs={columnDefs}
+                pageSize={9}
+                searchText={searchText}
+              />
+            </div>
+          ) : (
+            <div>
+              <NoDataPage
+                // buttonName={"Create COA"}
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
+                buttonLink={"/configurations/add-chart-of-accounts"}
+              />
+            </div>
           )}
-        />
+        </>
+      )} */}
+      <div className="mt-3">
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData}
+        pageSize={recordsPerPage}
+        noDataPage={() => (
+          <NoDataPage
+                // buttonName={"Create COA"}
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
+                buttonLink={"/configurations/add-chart-of-accounts"}
+              />
+        )}
+      />
       </div>
     </div>
   );

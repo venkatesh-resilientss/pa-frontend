@@ -301,8 +301,8 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
           noDataPage={() => (
             <NoDataPage
               // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create COA" : ""}
-              buttonLink={"/configurations/add-chart-of-accounts"}
+              buttonName={hasCreateConfiguration ? "Create Country" : ""}
+              buttonLink={"/configurations/add-country"}
             />
           )}
         />

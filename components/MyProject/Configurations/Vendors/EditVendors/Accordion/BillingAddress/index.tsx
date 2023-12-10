@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
-import { StatesService } from "services";
+import { StatesService, CountryService } from "services";
 import useSWR from "swr";
 import Select from "react-select";
 import { selectStyles } from "constants/common";
@@ -19,6 +19,14 @@ function BillingAddressForm({ onSubmit, control, errors }) {
       countryId: b.CountryID,
     };
   });
+  const countryService = new CountryService();
+  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const countrySelectOptions = countryData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
   return (
     <div className="text-black">
       <Form
@@ -31,7 +39,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1 <span className="required">*</span>
+              Address Line 1 
             </Label>
             <Controller
               name="billingAddress1"
@@ -87,7 +95,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Postal Code <span className="required">*</span>
+              Postal Code 
             </Label>
             <Controller
               name="billingAddressPostalCode"
@@ -115,7 +123,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Country <span className="required">*</span>
+              Country 
             </Label>
             <Controller
               name="billingAddressCountry"
@@ -123,7 +131,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={[]}
+                  options={countrySelectOptions}
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
@@ -143,7 +151,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State <span className="required">*</span>
+              State 
             </Label>
             <Controller
               name="billingAddressState"
@@ -170,7 +178,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              City <span className="required">*</span>
+              City 
             </Label>
             <Controller
               name="billingAddressCity"

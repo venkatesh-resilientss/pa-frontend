@@ -5,7 +5,7 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 function SoftwaresForm() {
   const { register } = useForm();
   const customStyles = {
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       width: "120px",
     }),

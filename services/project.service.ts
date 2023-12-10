@@ -61,6 +61,15 @@ class ProjectService extends APIService {
         throw error?.response?.data;
       });
   }
+  getProjectsList(query: any): Promise<any> {
+    return this.get(`${GET_ALL_PROJECTS}${query}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
 
   getPOApprovers(id: any): Promise<any> {
     return this.get(`${GET_PO_APPROVERS(id)}`)

@@ -60,7 +60,7 @@ export default function CreateClient(props) {
       <Address {...tabProps} />
       <ContactInformation {...tabProps} />
       <Documents {...tabProps} />
-      <WorkSpaceDetails {...tabProps} {...{ router }} />
+      <WorkSpaceDetails {...tabProps} {...{ router }} hideUsers={true} />
     </div>
   );
 }

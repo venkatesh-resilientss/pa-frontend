@@ -282,7 +282,7 @@ function EditProductions() {
                       placeholder="Select User"
                       // defaultOptions={seriesSelectFormat}
                       styles={{
-                        control: (provided) => ({
+                        control: (provided: any) => ({
                           ...provided,
                           height: "34px",
                           minHeight: "34px",
@@ -333,7 +333,7 @@ function EditProductions() {
                   placeholder="Select User"
                   // defaultOptions={seriesSelectFormat}
                   styles={{
-                    control: (provided) => ({
+                    control: (provided: any) => ({
                       ...provided,
                       height: "34px",
                       minHeight: "34px",
@@ -383,7 +383,7 @@ function EditProductions() {
                 placeholder="Select User"
                 defaultOptions={userSelectFormat}
                 styles={{
-                  control: (provided) => ({
+                  control: (provided: any) => ({
                     ...provided,
                     height: "34px",
                     minHeight: "34px",

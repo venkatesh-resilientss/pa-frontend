@@ -359,7 +359,7 @@ function Production() {
                   <label className="form-label d-flex justify-content-between">
                     Level {index + 1} Approver
                     <span
-                      className="f-12 text-danger ms-auto cursor-pointer"
+                      className="f-12 text-danger ms-auto cursor-pointer d-none"
                       onClick={() => {
                         const tempArr = [...poValues];
                         tempArr.splice(index, 1);
@@ -436,7 +436,7 @@ function Production() {
                   <label className="form-label d-flex justify-content-between">
                     Level {index + 1} Approver
                     <span
-                      className="f-12 text-danger ms-auto cursor-pointer"
+                      className="f-12 text-danger ms-auto cursor-pointer d-none"
                       onClick={() => {
                         const tempArr = [...apValues];
                         tempArr.splice(index, 1);

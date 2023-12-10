@@ -21,15 +21,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-    const fileData = acceptedFiles.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      lastModified: file.lastModified,
-    }));
-
-    setUploadedFiles(fileData);
+    setUploadedFiles(acceptedFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

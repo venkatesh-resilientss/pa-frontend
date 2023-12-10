@@ -163,7 +163,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                // type="textarea"
+                  // type="textarea"
                 />
               )}
             />
@@ -304,9 +304,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="branchNumber"
-              rules={{
-                required: " Branch Number is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -317,11 +314,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 />
               )}
             />
-            {errors.branchNumber && (
-              <span className="text-danger">
-                {errors.branchNumber.message as React.ReactNode}
-              </span>
-            )}
           </Col>
           <Col xl="4" className="my-2">
             <Label
