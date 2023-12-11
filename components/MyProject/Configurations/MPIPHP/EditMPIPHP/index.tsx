@@ -33,29 +33,26 @@ function EditMPIPHPTable() {
   } = useForm();
   return (
     <>
-      <div className="overflow-auto mt-4">
+      <div className="overflow-auto mt-4 add-agents ">
         <div
-          className="text-black"
-          style={{ fontSize: "16px", fontWeight: "600" }}
+          className="text-black add-agents-header"
         >
           MPIPHP Production Code
         </div>
 
         <div className="d-flex justify-content-between">
           <div
-            className="text-black"
-            style={{ fontSize: "32px", fontWeight: "600" }}
+            className="text-black add-agents-subheader"
           >
             Edit MPIPHP Production Code
           </div>
           
         </div>
 
-        <hr style={{ height: "2px" }} />
+        <hr className="height-2"/>
 
         <Form
-            style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-            className=" mt-2 d-flex flex-column"
+            className=" mt-2 d-flex flex-column add-form"
             onClick={handleSubmit(onSubmit)}
           >
             <Row>
@@ -76,7 +73,7 @@ function EditMPIPHPTable() {
                     )}
                   />
                   {errors.ProjectType && (
-                    <span style={{ color: "red" }}>
+                    <span className="text-danger">
                       {errors.ProjectType.message as React.ReactNode}
                     </span>
                   )}
@@ -137,7 +134,7 @@ function EditMPIPHPTable() {
                     )}
                   />
                   {errors.MPIPHPProductionCode && (
-                    <span style={{ color: "red" }}>
+                    <span className="text-danger">
                       {errors.MPIPHPProductionCode.message as React.ReactNode}
                     </span>
                   )}
@@ -166,9 +163,9 @@ function EditMPIPHPTable() {
               </div>
               </Col>
             </Row>
-            <Row style={{ marginTop: '20px' }}>
+            <Row className="margin-t-20">
               <Col>
-                <div className="d-flex me-2 " style={{ gap: "20px" }}>
+                <div className="d-flex me-2 gap-20 ">
                   <Button
                     onClick={() => router.back()}
                     className="buttonStyle buttons-width"

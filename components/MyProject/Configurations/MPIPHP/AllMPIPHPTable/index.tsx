@@ -186,47 +186,34 @@ const AllMPIPHPTable = () => {
     <div>
       <div className="section mt-4">
         <Card
-          className="mt-2"
-          style={{
-            backgroundColor: "#E7EFFF",
-            boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-          }}
+          className="mt-2 agents-list"
         >
           <CardBody>
             <div className="d-flex justify-content-between">
               <div>
                 <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
+                  className="m-2 agents-header"
                 >
                   MPIPHP Production Code List
                 </div>
               </div>
 
               <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
+                className="d-flex align-items-center gap-10"
               >
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
-                  className="searchConfig"
+                  className="searchConfig agents-search"
                   placeholder="Search..."
-                  style={{ width: "217px", height: "38px" }}
                 />
 
                 <Button
                   onClick={() => router.push(`/configurations/add-MPIPHP`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
+                  className="agents-new-button"
                 >
                   <Image
-                    style={{ width: "14px", height: "14px" }}
+                  className="agents-plus-image"
                     src={plusWhiteIcon}
                     alt="plus-icon"
                   />{" "}
