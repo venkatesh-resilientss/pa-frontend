@@ -24,3 +24,4 @@ export { default as BudgetService } from "./budget.service";
 export { default as AddressService } from "services/address.service";
 export {default as PurchaseOrderService} from "services/purchaseorders.service"
 export { default as EmployeeService } from "services/employee.service";
+export { default as ProjectTypesService } from "services/projecttypes.service";

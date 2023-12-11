@@ -193,6 +193,7 @@ export const UPLOAD_SERIES_LIST = `${tenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 export const UPLOAD_COA_LIST = `${tenantIdEndpoint}/coaaccounts/upload`;
+export const UPLOAD_PROJECTTYPE_LIST = `${tenantIdEndpoint}/projecttypes/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
@@ -207,17 +208,6 @@ export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
 export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;
 export const GET_PRODUCTIONS = `${tenantIdEndpoint}/projects/userprojects`;
 
-// EMPLOYEE ENDPOINTS
-export const GET_EMPLOYEES = (tenant_id) =>
-  `${baseUrl}/api/${tenant_id}/employees/?limit=100&offset=0`; //Employees
-export const CREATE_EMPLOYEE = (tenant_id) =>
-  `${baseUrl}/api/${tenant_id}/employees/`; //Create Employees
-export const EDIT_EMPLOYEE = (tenant_id: any, id: any) =>
-  `${baseUrl}/api/${tenant_id}/employees/${id}`; //EDIT employees
-export const EMPLOYEES_DETAIL_ENDPOINT = (tenant_id: any, id: any) =>
-  `${baseUrl}/api/${tenant_id}/employees/${id}`; //Employees Details
-export const DELETE_EMPLOYEE = (tenant_id: any, id: any) =>
-  `${baseUrl}/api/${tenant_id}/employees/${id}`; //DELETE employees
 
 // create client
 export const GET_CLIENT_TYPES = `${tenantIdEndpoint}/clienttypes/`;
@@ -242,3 +232,17 @@ export const PROJECT_DETAILS = (id: any) =>
 export const GET_ALL_USERS = `${withoutTenantIdEndpoint}/users/`; //get Users
 
 export const GET_ALL_PROJECTS = `${withoutTenantIdEndpoint}/projects/`; //Projects
+
+export const GET_EMPLOYEES = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/?limit=100&offset=0`; //Employees
+export const CREATE_EMPLOYEE = (tenant_id) => `${baseUrl}/api/${tenant_id}/employees/`; //Create Employees
+export const EDIT_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //EDIT employees
+export const EMPLOYEES_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //Employees Details
+export const DELETE_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //DELETE employees
+
+//PROJECTTYPES ENDPOINTS
+
+export const GET_PROJECTTYPES = `${tenantIdEndpoint}/projecttypes/?limit=${100}&offset=0`; //Projecttypes
+export const CREATE_PROJECTTYPE = `${tenantIdEndpoint}/projecttypes/`; //Create Projecttypes
+export const DELETE_PROJECTTYPE = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`; //DELETE Projecttypes
+export const EDIT_PROJECTTYPE = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`; //EDIT Projecttypes
+export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`;
