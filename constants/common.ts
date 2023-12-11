@@ -260,10 +260,11 @@ export const sidebarRoutesMaster = [
       {
         name: "Occupation Codes",
         path: "/OccupationCodes",
+      },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
       }
-
-
-
     ],
   },
   {
@@ -398,6 +399,10 @@ export const sidebarRoutesProduction = [
       {
         name: "Occupation Codes",
         path: "/OccupationCodes",
+      },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
       }
     ]
   },
@@ -437,8 +442,11 @@ export const sidebarRoutesNonStaff = [
       {
         name: "Occupation Codes",
         path: "/OccupationCodes",
+      },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
       }
-
     ],
   },
   {

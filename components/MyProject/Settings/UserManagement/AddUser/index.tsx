@@ -283,7 +283,7 @@ function AddUser() {
         </div>
       </div>
 
-      <hr style={{ height: "2px" }} />
+      <hr className="height-2" />
 
       <Form className=" mt-2" onSubmit={handleSubmit(onSubmit)}>
         {/* <div className="d-flex gap-4"> */}

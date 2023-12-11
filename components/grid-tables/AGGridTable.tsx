@@ -10,7 +10,7 @@ function AGGridTable({
   fetchData,
   pageSize,
   noDataPage,
-  rerender,
+  rerender
 }) {
   const [gridApi, setGridApi] = useState(null);
   const gridRef = useRef(null);

@@ -9,10 +9,19 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
+import { ProjectTypesService } from "services";
+import useSWR from "swr";
 
 const AllProjectTypeTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const projectTypesService = new ProjectTypesService();
+
+  const { data: rowData } = useSWR(
+    ["LIST_PROJECTTYPES", searchText],
+    () => projectTypesService.getProjecttypes()
+  );
+  
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -40,21 +49,21 @@ const AllProjectTypeTable = () => {
   const columnDefs = [
     {
       headerName: "Project Type",
-      field: "CompanyCode",
+      field: "Name",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Project Description",
-      field: "CompanyName",
+      field: "Description",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Crew",
-      field: "CompanyAddress",
+      field: "Crew",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -68,7 +77,7 @@ const AllProjectTypeTable = () => {
     },
     {
       headerName: "DGA",
-      field: "CompanyAddress",
+      field: "DGA",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -82,7 +91,7 @@ const AllProjectTypeTable = () => {
     },
     {
       headerName: "Video Tape",
-      field: "CompanyAddress",
+      field: "VideoTape",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -96,7 +105,7 @@ const AllProjectTypeTable = () => {
     },
     {
       headerName: "Project Category",
-      field: "projectCategory",
+      field: "ProjectCategory",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -108,45 +117,7 @@ const AllProjectTypeTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      CompanyCode: "001",
-      CompanyName: "Resilient Software Solutions LLC",
-      CompanyAddress: true,
-      projectCategory:'TH'
-    },
-    {
-      id: 2,
-      CompanyCode: "002",
-      CompanyName: "Resilient Software Solutions LLC",
-      CompanyAddress: true,
-      projectCategory:'COM'
-
-    },
-    {
-      id: 3,
-      CompanyCode: "003",
-      CompanyName: "Resilient Software Solutions LLC",
-      CompanyAddress: false,
-      projectCategory:'TH'
-    },
-    {
-      id: 4,
-      CompanyCode: "004",
-      CompanyName: "Resilient Software Solutions LLC",
-      CompanyAddress: true,
-      projectCategory:'TH'
-    },
-    {
-      id: 5,
-      CompanyCode: "005",
-      CompanyName: "Resilient Software Solutions LLC",
-      CompanyAddress: false,
-      projectCategory:'COM'
-    },
-  ];
-
+  
   return (
     <div>
       <div className="section mt-4">
