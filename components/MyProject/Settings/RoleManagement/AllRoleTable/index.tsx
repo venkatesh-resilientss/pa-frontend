@@ -66,13 +66,17 @@ const AllRoleTable = () => {
     },
     {
       sortable: true,
-      field: "Code",
-      selector: (row) => row.Code,
-    },
-    {
-      sortable: true,
       field: "AccessType",
-      selector: (row) => row.AccessType,
+
+      cellRenderer: (params) => {
+        if (params?.data?.AccessType === "restricted") {
+          return "Restricted Access";
+        } else if (params?.data?.AccessType === "full_access") {
+          return "Full Access";
+        }
+        // If the condition does not match, return the original value
+        return params?.data?.AccessType;
+      },
     },
 
     {
