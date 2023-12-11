@@ -29,7 +29,10 @@ const CurrenciesBulkUploadPopup = () => {
     setUploadedFiles(fileData);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept : {
+    'text/csv' : ['.csv'],
+    'application/vnd.ms-excel' : ['.xls','.xlsx']
+  } });
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -111,7 +114,7 @@ const CurrenciesBulkUploadPopup = () => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx and .xls file types are allowed
+                  All .xlsx,  .xlsa and .csv file types are allowed
                 </div>
               </div>
             )}

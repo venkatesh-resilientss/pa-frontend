@@ -70,7 +70,7 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
     return (
       <CustomBadge
         bg={sateDir[props.value]}
-        value={props.value === true ? "active" : "In-active"}
+        value={props.value === true ? "Active" : "In-active"}
       />
     );
   };

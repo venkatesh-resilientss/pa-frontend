@@ -23,7 +23,10 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
     setUploadedFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept : {
+    'text/csv' : ['.csv'],
+    'application/vnd.ms-excel' : ['.xls','.xlsx']
+  } });
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -46,7 +49,7 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
         // Handle success
         toast.success("Data inserted successfully.");
         setRerender(!rerender);
-
+        setLoader(false);
         dispatch(closeBulkUploadStatesPopup("close"));
       })
       .catch((error) => {
@@ -56,7 +59,7 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/states_sample.csv";
+    const url = "/upload-sample-files/States_Sample.xlsx";
     window.open(url);
   };
   return (
@@ -134,7 +137,7 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx and .xls file types are allowed
+                  All .xlsx,  .xlsa and .csv file types are allowed
                 </div>
               </div>
             )}

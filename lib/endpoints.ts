@@ -163,6 +163,7 @@ export const CLIENTS_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}`; //clients Details
 
 export const GET_PERIODS = `${tenantIdEndpoint}/periods/search`; //periods
+export const CREATE_PERIOD = `${tenantIdEndpoint}/periods/`
 export const DELETE_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //DELETE periods
 export const EDIT_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //EDIT periods
 export const PERIODS_DETAIL_ENDPOINT = (id: any) =>

@@ -51,12 +51,10 @@ function EditPeriod() {
 
     if (!periodData) return;
 
-    periodData?.Name && setValue("periodname", periodData?.Name);
 
     periodData?.Description && setValue("description", periodData?.Description);
     handleStartDateChange(periodData?.Start);
     handleEndDateChange(periodData?.EndDate);
-
     setActiveStatus(periodData.IsActive);
   }, [periodData]);
 
@@ -71,11 +69,10 @@ function EditPeriod() {
     }
     const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
-      name: data.periodname,
       description: data.description,
       isActive: activeStatus,
-      start: data.startDate,
-      endDate: data.endDate,
+      start: startDate,
+      endDate: endDate,
       clientID,
       projectID
     };
@@ -141,30 +138,6 @@ function EditPeriod() {
         className=" mt-2 d-flex flex-column"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Col xl="4">
-          <div className="mb-1">
-            <Label> Period Name</Label>
-            <Controller
-              name="periodname"
-              rules={{ required: "Period Name  is required" }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Period name"
-                  invalid={errors.periodname && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.periodname && (
-              <span className="text-danger">
-                {errors.periodname.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-
         <Col xl="4" className="d-flex flex-column">
               <Label className="form-lable-font">Start Date<span className="required" >*</span></Label>
               <Controller
