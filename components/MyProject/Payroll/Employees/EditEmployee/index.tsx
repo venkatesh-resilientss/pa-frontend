@@ -16,9 +16,9 @@ function EditEmployee() {
 
   const onSubmit = () => {
     setActiveStep((prev) => {
-      return Math.min(Number(prev) + 1, 8).toLocaleString();
+      return Math.min(Number(prev) + 1, 9).toLocaleString();
     });
-    if (activeStep === '8') {
+    if (activeStep === '9') {
       toast.success("Employee updated successfully");
       router.push({
         pathname: `/payroll/employees`,
@@ -52,7 +52,7 @@ function EditEmployee() {
             className="button-props"
             onClick={handleFormSubmit}
             >
-            {activeStep === '8' ? ('Update Employee') : ('Continue')}
+            {activeStep === '9' ? ('Update Employee') : ('Continue')}
             </Button>
         </div>
         <hr/>

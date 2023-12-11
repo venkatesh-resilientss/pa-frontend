@@ -16,13 +16,13 @@ function FeesForm({ control, errors }) {
     { name: 'medicare', label: 'Medicare', placeholder: 'Enter Medicare' },
     { name: 'futa', label: 'FUTA', placeholder: 'Enter FUTA' },
     { name: 'futaCrs', label: 'FUTA-CRS', placeholder: 'Enter FUTA-CRS' },
-    { name: 'wcMargin', label: 'WC Margin', type: 'select', placeholder: 'Enter WC Margin' },
-    { name: 'sutaMargin', label: 'SUTA Margin', type: 'select', placeholder: 'Enter SUTA Margin' },
-    { name: 'breakageat', label: 'Breakage at', type: 'select', placeholder: 'Breakage at' },
-    { name: 'hfRebateAmount', label: 'HF Rebate Amount', required: true, placeholder: 'HF Rebate Amount' },
-    { name: 'wcRebateAmount', label: 'W/C Rebate Amount', required: true, placeholder: 'W/C Rebate Amount' },
+    { name: 'wcMargin', label: 'WC Margin', required: true, placeholder: 'Enter WC Margin' },
+    { name: 'sutaMargin', label: 'SUTA Margin', required: true, placeholder: 'Enter SUTA Margin' },
+    { name: 'breakageat', label: 'Breakage at', required: true, type: 'select', options: [{label: 'Project', value: 'Project'}, {label: 'Client', value: 'Client'}, {label: 'Parent', value: 'Parent'}], placeholder: 'Breakage at' },
+    { name: 'hfRebateAmount', label: 'HF Rebate Amount', placeholder: 'HF Rebate Amount' },
+    { name: 'wcRebateAmount', label: 'W/C Rebate Amount', placeholder: 'W/C Rebate Amount' },
     { name: 'deliveryBy', label: 'Delivery By', type: 'select', placeholder: 'Delivery By' },
-    { name: 'cost', label: 'Cost', required: true, placeholder: 'Cost' },
+    { name: 'cost', label: 'Cost', placeholder: 'Cost' },
     { name: 'per', label: 'Per', type: 'select', placeholder: 'Per' },
     { name: 'weeklyCutoffs', label: 'Weekly Cutoffs', type: 'check', placeholder: 'Weekly Cutoffs' },
     { name: 'billonPremiumOT', label: 'Bill on Premium OT', type: 'check', placeholder: 'Bill on Premium OT' },
@@ -68,7 +68,10 @@ function FeesForm({ control, errors }) {
             control={control}
             rules={{ required: formField.required && `${formField.label} is required` }}
             render={({ field }) => (
-              <ReactSelect {...field} isClearable />
+              <ReactSelect 
+              value={field.value}
+              onChange={(selectedOption) => field.onChange(selectedOption)}
+              className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
             )}
             />
          ) : formField.type === 'check'? (
