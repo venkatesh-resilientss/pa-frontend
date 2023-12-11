@@ -21,63 +21,83 @@ function EditUser() {
     () => getUserdetails(id)
   );
 
-
-
   const [userDetails, setUserDetails] = useState() as any;
-  const [initialClientOptions, setInitialClientOptions] = useState() as any
+  const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
-  const [clientProductionsList, setClientProductionsList] = useState([{
-    client: "client_1", production: "production_1", client_id: 0, production_id: [], productionOptions: [], disabledClient: true
-  }])
+  const [clientProductionsList, setClientProductionsList] = useState([
+    {
+      client: "client_1",
+      production: "production_1",
+      client_id: 0,
+      production_id: [],
+      productionOptions: [],
+      disabledClient: true,
+    },
+  ]);
 
   useEffect(() => {
-
-    setUserDetails(eachclicntdata)
-
-  }, [eachclicntdata])
+    setUserDetails(eachclicntdata);
+  }, [eachclicntdata]);
 
   useEffect(() => {
     if (userDetails) {
       if (!userDetails.IsStaffUser) {
-        setClientProductionsList([{
-          client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: [], disabledClient: true
-        }])
-        setInitialClientOptions([{ label: userDetails.Client.Name, value: userDetails.Client.ID }])
+        setClientProductionsList([
+          {
+            client: "client_1",
+            production: "production_1",
+            client_id: userDetails.Client.ID,
+            production_id: [],
+            productionOptions: [],
+            disabledClient: true,
+          },
+        ]);
+        setInitialClientOptions([
+          { label: userDetails.Client.Name, value: userDetails.Client.ID },
+        ]);
         usersService
           .getProductionsByClient(userDetails.Client.ID)
           .then((res) => {
             const productions = res.map((pr) => {
               return {
-                label: pr.name, value: pr.id
-              }
-            })
-            setClientProductionsList([{
-              client: "client_1", production: "production_1", client_id: userDetails.Client.ID, production_id: [], productionOptions: [...productions], disabledClient: true
-            }])
-          })
-
+                label: pr.Name,
+                value: pr.ID,
+              };
+            });
+            setClientProductionsList([
+              {
+                client: "client_1",
+                production: "production_1",
+                client_id: userDetails.Client.ID,
+                production_id: [],
+                productionOptions: [...productions],
+                disabledClient: true,
+              },
+            ]);
+          });
       }
     }
-  }, [userDetails])
+  }, [userDetails]);
 
+  const fetchInitialClients = async () => {
+    try {
+      // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
+      const res = await clientService.getClients({
+        search: "",
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      // const updatedClientOptions = options.filter((ele) => !selectedClietIds.includes(ele.value))
 
-  useEffect(() => {
-    const fetchInitialClients = async () => {
-      try {
-        // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
-        const res = await clientService.getClients({ search: "", pageLimit: 25, offset: 0 });
-        const options = res?.map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
-        setInitialClientOptions(options);
-      } catch (error) {
-        console.error('Error fetching initial options:', error);
-      }
-    };
-
-    fetchInitialClients();
-  }, []);
+      setInitialClientOptions(options);
+    } catch (error) {
+      console.error("Error fetching initial options:", error);
+    }
+  };
 
   // const loadClientOptions: any = async (inputValue, callback) => {
   //   try {
@@ -106,7 +126,6 @@ function EditUser() {
   //   }))
   //   : [];
 
-
   const { data: rolesdata } = useSWR("LIST_ROLES", () =>
     roleservice.getRoles()
   );
@@ -121,21 +140,8 @@ function EditUser() {
   const [selectedClient, setSelectedClient] = useState(null);
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
-  //get projects
-  // const projectservice = new ProjectService();
-  // const { data: projectsdata } = useSWR("LIST_PROJECTS", () =>
-  //   projectservice.getProjects()
-  // );
-
-  // const projectOptions = Array.isArray(projectsdata)
-  //   ? projectsdata.map((project) => ({
-  //     value: project.ID,
-  //     label: project.Name,
-  //   }))
-  //   : [];
-
   const roleSelectStyles = {
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       width: "100%",
     }),
@@ -180,30 +186,34 @@ function EditUser() {
       //   value: eachclicntdata?.production || "",
       //   label: eachclicntdata?.production || "",
       // });
-      setIsCheckedStaffUser(eachclicntdata.IsStaffUser)
+      setIsCheckedStaffUser(eachclicntdata.IsStaffUser);
       const getdata = async () => {
-
-        if (eachclicntdata.Meta?.userCPReference && eachclicntdata.IsStaffUser) {
-          const list = await Promise.all(eachclicntdata.Meta?.userCPReference.map(async (meta, index) => {
-            const productionOptions = await ProductionOptions(meta.ClientID);
-            return {
-              client: `client_${index + 1}`,
-              production: `production_${index + 1}`,
-              client_id: meta.ClientID,
-              production_id: meta.ProjectID,
-              productionOptions,
-              disabledClient: true,
-            };
-          }));
+        if (
+          eachclicntdata.Meta?.userCPReference &&
+          eachclicntdata.IsStaffUser
+        ) {
+          const list = await Promise.all(
+            eachclicntdata.Meta?.userCPReference.map(async (meta, index) => {
+              const productionOptions = await ProductionOptions(meta.ClientID);
+              return {
+                client: `client_${index + 1}`,
+                production: `production_${index + 1}`,
+                client_id: meta.ClientID,
+                production_id: meta.ProjectID,
+                productionOptions,
+                disabledClient: true,
+              };
+            })
+          );
 
           if (list.length > 0) {
+            // const clientIds = list.map(ele => ele.client_id)
+            fetchInitialClients();
             setClientProductionsList([...list]);
           }
         }
-      }
-      getdata()
-
-
+      };
+      getdata();
 
       // Update the initialization of activeStatus directly in the useState
       setActiveStatus(eachclicntdata?.IsActive ? "active" : "inactive");
@@ -211,13 +221,13 @@ function EditUser() {
   }, [eachclicntdata, userLoading, reset]);
 
   const ProductionOptions = async (clientId) => {
-    const data = await usersService
-      .getProductionsByClient(clientId);
+    const data = await usersService.getProductionsByClient(clientId);
     const updatedData = data.map((ele) => ({
-      label: ele.name, value: ele.id
-    }))
-    return updatedData
-  }
+      label: ele.Name,
+      value: ele.ID,
+    }));
+    return updatedData;
+  };
 
   const getProductionOptions = (client, clientId) => {
     usersService
@@ -225,16 +235,17 @@ function EditUser() {
       .then((res) => {
         const productions = res.map((pr) => {
           return {
-            label: pr.name, value: pr.id
-          }
-        })
-        setClientProductionsList(prevList => {
+            label: pr.Name,
+            value: pr.ID,
+          };
+        });
+        setClientProductionsList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
               return {
                 ...item,
                 productionOptions: [...productions],
-                client_id: clientId
+                client_id: clientId,
               };
             }
             return item;
@@ -243,46 +254,42 @@ function EditUser() {
       })
       .catch((error) => {
         toast.error(error?.error);
-        setClientProductionsList(prevList => {
+        setClientProductionsList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
               return {
                 ...item,
                 productionOptions: [],
-                client_id: clientId
+                client_id: clientId,
               };
             }
             return item;
           });
         });
-      })
-
-  }
-
+      });
+  };
 
   const usersService = new UsersService();
 
   const onSubmit = (data) => {
     const userPayload = {
-      "first_name": data.firstname,
-      "last_name": data.lastname,
-      "middle_name": data.middlename,
-      "email": data.email,
-      "client_id": 2,
-      "roleID": selectedRole?.value,
+      first_name: data.firstname,
+      last_name: data.lastname,
+      middle_name: data.middlename,
+      email: data.email,
+      roleID: selectedRole?.value,
       // "IsStaffUser": isCheckedStaffUser,
-      "Meta": {
-        "userCPReference": []
+      Meta: {
+        userCPReference: [],
       },
-      "IsActive": activeStatus === "active" ? true : false,
-    }
-    const userPreferences = clientProductionsList.map(list => {
+      IsActive: activeStatus === "active" ? true : false,
+    };
+    const userPreferences = clientProductionsList.map((list) => {
       return {
-        "ClientID": list.client_id,
-        "ProjectIDs": [...list.production_id]
-      }
-
-    })
+        ClientID: list.client_id,
+        ProjectIDs: [...list.production_id],
+      };
+    });
     userPayload.Meta.userCPReference = userPreferences;
 
     usersService
@@ -314,7 +321,11 @@ function EditUser() {
     <div className="overflow-auto text-black mt-4 p-3">
       <div
         className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600", fontFamily: "Segoe UI Semibold" }}
+        style={{
+          fontSize: "16px",
+          fontWeight: "600",
+          fontFamily: "Segoe UI Semibold",
+        }}
       >
         User Management
       </div>
@@ -322,7 +333,11 @@ function EditUser() {
       <div className="d-flex justify-content-between">
         <div
           className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600", fontFamily: "Segoe UI Semibold" }}
+          style={{
+            fontSize: "32px",
+            fontWeight: "600",
+            fontFamily: "Segoe UI Semibold",
+          }}
         >
           Edit User
         </div>
@@ -346,7 +361,9 @@ function EditUser() {
           <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label>Last Name</Label>
+                <Label>
+                  Last Name <span className="text-danger">*</span>
+                </Label>
                 <Controller
                   name="lastname"
                   control={control}
@@ -373,7 +390,9 @@ function EditUser() {
 
             <Col xl="4">
               <div className="mb-1 mr-3">
-                <Label>First Name</Label>
+                <Label>
+                  First Name <span className="text-danger">*</span>
+                </Label>
                 <Controller
                   name="firstname"
                   control={control}
@@ -416,21 +435,17 @@ function EditUser() {
                         {...field}
                         disabled={!editMode}
                       />
-                      {errors.middlename && (
-                        <div className="text-danger">
-                          {String(errors.middlename.message)}
-                        </div>
-                      )}
                     </>
                   )}
-                  rules={{ required: "Middle Name is required" }}
                 />
               </div>
             </Col>
 
             <Col xl={4}>
               <div className="mb-1">
-                <Label>Email</Label>
+                <Label>
+                  Email <span className="text-danger">*</span>
+                </Label>
                 <Controller
                   name="email"
                   control={control}
@@ -462,20 +477,24 @@ function EditUser() {
             </Col>
           </Row>
 
-
           <Row>
             <Col xl="4">
               <div className="mt-1">
-                <Label>Select Role *</Label>
+                <Label>
+                  Select Role <span className="text-danger">*</span>
+                </Label>
                 <Controller
                   name="role"
                   control={control}
                   render={({ field }) => (
-                    <Select isDisabled={!editMode}
+                    <Select
+                      isDisabled={!editMode}
                       {...field}
                       options={roleOptions}
                       value={selectedRole}
-                      onChange={(selectedOption) => setSelectedRole(selectedOption)}
+                      onChange={(selectedOption) =>
+                        setSelectedRole(selectedOption)
+                      }
                       styles={roleSelectStyles}
                     />
                   )}
@@ -485,7 +504,8 @@ function EditUser() {
             {/* {userDetails?.IsStaffUser && ( */}
             <Col xl="4">
               <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
-                <input disabled
+                <input
+                  disabled
                   type="checkbox"
                   name="customSwitch"
                   id="exampleCustomSwitch"
@@ -500,132 +520,172 @@ function EditUser() {
               </div>
             </Col>
             {/* )} */}
-
           </Row>
           <Row className="mt-4 mb-2">
             <label> {"Assign Client(s) & Production(s)"}</label>
           </Row>
-          {initialClientOptions && clientProductionsList.map((CPlist, index) => (
-            <Row key={index}>
+          {initialClientOptions &&
+            clientProductionsList.map((CPlist, index) => (
+              <Row key={index}>
+                <Col xl="4">
+                  <div className="mt-1">
+                    <Label>Select Client</Label>
+                    <Controller
+                      disabled
+                      name="Client"
+                      control={control}
+                      render={({ field }) => (
+                        <AsyncSelect
+                          isDisabled={!editMode || CPlist.disabledClient}
+                          {...field}
+                          isClearable={true}
+                          className="react-select"
+                          classNamePrefix="select"
+                          // loadOptions={loadClientOptions}
+                          placeholder="Select Client"
+                          defaultOptions={initialClientOptions}
+                          defaultValue={() => {
+                            return initialClientOptions?.filter(
+                              (option) => option.value === CPlist.client_id
+                            );
+                          }}
+                          // defaultValue={initialClientOptionsfun(CPlist.client_id)}
+                          // defaultValue={() => { return initialClientOptionsfun(CPlist.ClientID) }}
+                          // defaultValue={() => { initialClientOptionsfun(CPlist.ClientID) }}
+                          onChange={(client) => {
+                            const updatedCLientOptions =
+                              initialClientOptions.filter(
+                                (ele) => ele.value !== client.value
+                              );
+                            setInitialClientOptions([...updatedCLientOptions]);
+                            const clientToUpdate = `client_${index + 1}`;
+                            getProductionOptions(clientToUpdate, client.value);
+                          }}
+                        />
+                      )}
+                    />
 
-              <Col xl="4">
-                <div className="mt-1">
-                  <Label>Select Client</Label>
-                  <Controller disabled
-                    name="Client"
-                    control={control}
-                    render={({ field }) => (
-                      <AsyncSelect isDisabled={!editMode || CPlist.disabledClient}
-                        {...field}
-                        isClearable={true}
-                        className="react-select"
-                        classNamePrefix="select"
-                        // loadOptions={loadClientOptions}
-                        placeholder="Select Client"
-                        defaultOptions={initialClientOptions}
-                        defaultValue={() => {
-                          return initialClientOptions?.filter((option) => option.value === CPlist.client_id);
-                        }}
-                        // defaultValue={initialClientOptionsfun(CPlist.client_id)}
-                        // defaultValue={() => { return initialClientOptionsfun(CPlist.ClientID) }}
-                        // defaultValue={() => { initialClientOptionsfun(CPlist.ClientID) }}
-                        onChange={(client) => {
-                          const clientToUpdate = `client_${index + 1}`
-                          getProductionOptions(clientToUpdate, client.value)
-                        }}
-                      />
+                    {errors.mailingAddressState && (
+                      <span className="text-danger">
+                        {errors.mailingAddressState.message as React.ReactNode}
+                      </span>
                     )}
-                  />
-
-                  {errors.mailingAddressState && (
-                    <span className="text-danger">
-                      {errors.mailingAddressState.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-
-              <Col xl="4">
-                <div className="mt-1">
-                  <Label>Select Productions</Label>
-                  {selectedClient ? (
-                    <>
-                      <Controller
-                        name="productions"
-                        control={control}
-                        render={({ field }) => (
-                          <Select isDisabled={!editMode}
-                            {...field}
-                            closeMenuOnSelect={false}
-                            isMulti
-                            options={CPlist.productionOptions}
-                            defaultValue={() => { return CPlist.productionOptions.filter(item => CPlist?.production_id.includes(item.value)); }}
-                            onChange={(e) => {
-                              const temp = e.map(ele => ele.value)
-                              const productionToUpdate = `production_${index + 1}`
-                              setClientProductionsList(prevList => {
-                                return prevList.map((item: any) => {
-                                  if (item.production == productionToUpdate) {
-                                    return {
-                                      ...item,
-                                      production_id: [...temp]
-                                    };
-                                  }
-                                  return item;
-                                });
-                              });
-                            }}
-                          />
-                        )}
-                      />
-
-
-                    </>
-                  ) : (
-                    <div>
-                      < Controller disabled={true}
-                        name={CPlist.client}
-                        control={control}
-                        render={() => (
-                          <Select isDisabled={true}
-                            closeMenuOnSelect={false}
-                          />
-                        )}
-                      />
-                    </div>
-                  )}
-
-
-                </div>
-              </Col>
-              {<Col xl="1">
-                {index !== 0 && (<div className="d-flex align-items-end h-100 py-2 cursor-pointer">
-                  <img src="/deletebin.svg" alt="" width={15} onClick={() => {
-                    const updatedData = clientProductionsList.filter((_, listIndex) => listIndex !== index)
-                    setClientProductionsList([...updatedData])
-                  }} />
-                </div>)}
-
-              </Col>}
-              {isCheckedStaffUser && editMode && (
-                <Col xl="3">
-                  {index === clientProductionsList.length - 1 && (
-                    <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
-                      <p className="my-2" ></p>
-                      <p className="mb-2" onClick={() => {
-                        const id = clientProductionsList.length + 1
-                        const tempObj = { client: `client_${id}`, production: `production_${id}`, client_id: 0, production_id: [], productionOptions: [], disabledClient: false }
-                        setClientProductionsList([...clientProductionsList, tempObj]);
-
-                      }}> <img src="/add-client-icon.svg" alt="" width={15} /> Add Cient</p>
-                    </div>
-                  )}
-
+                  </div>
                 </Col>
-              )
-              }
-            </Row>
-          ))}
+
+                <Col xl="4">
+                  <div className="mt-1">
+                    <Label>Select Productions</Label>
+                    {selectedClient ? (
+                      <>
+                        <Controller
+                          name="productions"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              isDisabled={!editMode}
+                              {...field}
+                              closeMenuOnSelect={false}
+                              isMulti
+                              options={CPlist.productionOptions}
+                              defaultValue={() => {
+                                return CPlist.productionOptions.filter((item) =>
+                                  CPlist?.production_id.includes(item.value)
+                                );
+                              }}
+                              onChange={(e) => {
+                                const temp = e.map((ele) => ele.value);
+                                const productionToUpdate = `production_${index + 1
+                                  }`;
+                                setClientProductionsList((prevList) => {
+                                  return prevList.map((item: any) => {
+                                    if (item.production == productionToUpdate) {
+                                      return {
+                                        ...item,
+                                        production_id: [...temp],
+                                      };
+                                    }
+                                    return item;
+                                  });
+                                });
+                              }}
+                            />
+                          )}
+                        />
+                      </>
+                    ) : (
+                      <div>
+                        <Controller
+                          disabled={true}
+                          name={CPlist.client}
+                          control={control}
+                          render={() => (
+                            <Select
+                              isDisabled={true}
+                              closeMenuOnSelect={false}
+                            />
+                          )}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </Col>
+                {
+                  <Col xl="1">
+                    {index !== 0 && !CPlist.disabledClient && (
+                      <div className="d-flex align-items-end h-100 py-2 cursor-pointer">
+                        <img
+                          src="/deletebin.svg"
+                          alt=""
+                          width={15}
+                          onClick={() => {
+                            const updatedData = clientProductionsList.filter(
+                              (_, listIndex) => listIndex !== index
+                            );
+                            setClientProductionsList([...updatedData]);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Col>
+                }
+                {isCheckedStaffUser && editMode && (
+                  <Col xl="3">
+                    {index === clientProductionsList.length - 1 && (
+                      <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
+                        <p className="my-2"></p>
+                        <p
+                          className="mb-2"
+                          onClick={() => {
+                            const id = clientProductionsList.length + 1;
+                            const tempObj = {
+                              client: `client_${id}`,
+                              production: `production_${id}`,
+                              client_id: 0,
+                              production_id: [],
+                              productionOptions: [],
+                              disabledClient: false,
+                            };
+                            setClientProductionsList([
+                              ...clientProductionsList,
+                              tempObj,
+                            ]);
+                          }}
+                        >
+                          {" "}
+                          <img
+                            src="/add-client-icon.svg"
+                            alt=""
+                            width={15}
+                          />{" "}
+                          Add Cient
+                        </p>
+                      </div>
+                    )}
+                  </Col>
+                )}
+              </Row>
+            ))}
 
           {/* <Col xl="4">
             <div className="mb-1">

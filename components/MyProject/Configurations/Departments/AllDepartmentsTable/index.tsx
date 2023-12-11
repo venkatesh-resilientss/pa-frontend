@@ -17,16 +17,14 @@ import { hasPermission } from "commonFunctions/functions";
 import { useRouter } from "next/router";
 import { DepartmentsService } from "services";
 import moment from "moment";
-import {
-  openBulkUploadDepartmentPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadDepartmentPopup } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import CustomBadge from "components/Generic/CustomBadge";
 
 import Image from "next/image";
 import NoDataPage from "components/NoDataPage";
 
-const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
+const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const recordsPerPage = 10;
@@ -39,13 +37,14 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
     "configuration_management",
     "edit_configuration"
   );
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"
   // );
 
   const departmentsService = new DepartmentsService();
-  
+
   // const { data: departmentsData, isLoading: departmentLoading } = useSWR(
   //   ["LIST_DEPARTMENTS", searchText],
   //   () => departmentsService.getDepartments()
@@ -55,11 +54,14 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
   const fetchData = async (pageNumber) => {
     const clientId = parseInt(sessionStorage.getItem("clientId")) || 0;
     try {
-      const response = await departmentsService.getDepartments({clientId : clientId},{
-        search: searchText,
-        pageLimit: recordsPerPage,
-        offset: pageNumber,
-      });
+      const response = await departmentsService.getDepartments(
+        { clientId: clientId },
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
       const data = response.result; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
@@ -170,7 +172,16 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -221,11 +232,7 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
           <CardBody>
             <div className="d-flex justify-content-between">
               <div>
-                <div
-                  className="m-2 title"
-                >
-                  All Departments
-                </div>
+                <div className="m-2 title">All Departments</div>
               </div>
 
               <div
@@ -244,26 +251,28 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() =>
-                    dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
-                  }
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadDepartmentPopup("bulkUpload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   onClick={() => router.push(`/configurations/add-department`)}
@@ -359,7 +368,5 @@ const AllDepartmentsTable = ({rerender,searchText,setSearchText}) => {
     </div>
   );
 };
-
-
 
 export default AllDepartmentsTable;

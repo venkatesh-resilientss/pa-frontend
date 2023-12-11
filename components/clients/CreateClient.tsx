@@ -16,7 +16,7 @@ const steps = [
 export default function CreateClient(props) {
   const { clientData, setClientData } = props;
   const router = useRouter();
-  const [step, setStep] = useState(5);
+  const [step, setStep] = useState(1);
 
   const back = () => {
     if (step > 1) setStep((prev) => Math.max(prev - 1, 1));
@@ -60,7 +60,7 @@ export default function CreateClient(props) {
       <Address {...tabProps} />
       <ContactInformation {...tabProps} />
       <Documents {...tabProps} />
-      <WorkSpaceDetails {...tabProps} {...{ router }} />
+      <WorkSpaceDetails {...tabProps} {...{ router }} hideUsers={true} />
     </div>
   );
 }

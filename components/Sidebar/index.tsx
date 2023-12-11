@@ -1,6 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import  { useRouter } from "next/router";
 import Link from "next/link";
+import { Modal, Button } from "react-bootstrap";
+
 import {
   sidebarRoutesMaster,
   sidebarRoutesNonStaff,
@@ -20,7 +22,13 @@ const Sidebar = ({ props }) => {
   const toggleSidebar = () => {
     if (!showSidebar && childRoute) handleDropDownChange(parentRoute);
     setSidebar(!showSidebar);
+    if (showSidebar) {
+      setProductionList(false);
+      setSelectedProduction();
+    }
   };
+  const [switcProduction, setSwitcProduction] = useState(false);
+
   // const [searchText, setSearchText] = useState("");
   const authService = new AuthService();
   const clientService = new ClientsService();
@@ -30,7 +38,10 @@ const Sidebar = ({ props }) => {
   const [productionList, setProductionList] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState() as any;
   const [clickedItemIndex, setClickedItemIndex] = useState(null);
-  const divRef: any = useRef();
+
+  const [temp1, setTemp1] = useState() as any;
+  const [temp2, setTemp2] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
@@ -70,23 +81,6 @@ const Sidebar = ({ props }) => {
     props.mutate();
     window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   };
-  useEffect(() => {
-    const handleOutsideClick = (event: any) => {
-      if (divRef.current && !divRef.current.contains(event.target)) {
-        // Clicked outside of the div
-        setClickedItemIndex(null);
-        // Handle other actions as needed
-      }
-    };
-
-    // Add event listener when the component mounts
-    document.addEventListener("click", handleOutsideClick);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, []);
 
   useEffect(() => {
     /**get route names */
@@ -100,6 +94,41 @@ const Sidebar = ({ props }) => {
       setChildRoute(null);
     }
   }, [router.pathname]);
+
+  const filteredProductionData = (productionData || []).filter(
+    (item) =>
+      item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+      (item.Client.Name &&
+        item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
+      item.Description.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const getPlaceholderImage = (name) => {
+    const firstLetter = name ? name.charAt(0).toUpperCase() : "";
+    const randomColor = getRandomColor(); // Function to generate a random color
+    const textColor = "#ffffff"; // Text color for the first letter
+
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${randomColor}" style="border-radius: 50%;"><circle cx="50%" cy="50%" r="50%" fill="${randomColor}"/><text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="10" font-weight="bold" font-family="font-Segoe-UI" fill="${textColor}">${firstLetter}</text></svg>`;
+
+    const encodedSVG = encodeURIComponent(svgString)
+      .replace(/%2F/g, "/")
+      .replace(/%22/g, "'")
+      .replace(/%3D/g, "=")
+      .replace(/%3A/g, ":")
+      .replace(/%20/g, " ");
+
+    return `data:image/svg+xml;utf8,${encodedSVG}`;
+  };
+
+  // Function to generate a random color
+  const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
 
   const IconLink = ({ title, children, placement }) => (
     <OverlayTrigger
@@ -218,8 +247,8 @@ const Sidebar = ({ props }) => {
         {/* Route children */}
 
         {route.children && activeDropDown === route.path ? (
-          <div className="sidebar-list">
-            <div className="ps-4">
+          <div className="sidebar-list mx-2">
+            <div className="ps-3">
               <ul>
                 {route.children.map((child, i) => {
                   const fullPath = `${route.path}${child.path}`;
@@ -261,9 +290,14 @@ const Sidebar = ({ props }) => {
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
           <div>
             {showSidebar ? (
-              <img src="/logo.svg" width={100} alt="" />
+              <img src="/logo.svg" width={100} height={38} alt="logo" />
             ) : (
-              <img src="/icons/logo-dark.svg" width={25} />
+              <img
+                src="/icons/logo-dark.svg"
+                width={25}
+                height={38}
+                alt="logo"
+              />
             )}
           </div>
           <div
@@ -287,77 +321,113 @@ const Sidebar = ({ props }) => {
         <hr className="mt-2 mb-2" />
         {/* Drop downs */}
 
-        <div
-          className={showSidebar ? "sidenavDropdown" : "d-none"}
-          onClick={() => {
-            setProductionList(true);
-          }}
-        >
-          {selectedProduction ? (
-            <div className="d-flex align-items-center cursor-pointer flex-row">
+        {!showSidebar ? (
+          <div className="px-2 sidebar-body">
+            <div className="d-flex gap-2 cursor-pointer justify-content-center">
               <Image
-                src="/home.svg"
-                alt="project"
-                width="30"
-                height="35"
-                className="ms-2 me-2 cursor-pointer"
-              />
-              <div className="d-flex flex-column cursor-pointer">
-                <div className="d-flex align-items-start">
-                  <p className="home mt-1 ellipsis">
-                    {selectedProduction.Name}
-                  </p>
-                </div>
-                <div className="d-flex mb-1 cursor-pointer align-items-start">
-                  <p className="ressl cursor-pointer">
-                    {selectedProduction.Client.Name
-                      ? selectedProduction.Client.Name
-                      : selectedProduction.Description}
-                  </p>
-                </div>
-              </div>
-              <Image
-                src="/chevron-down.svg"
+                src="/home-white.svg"
                 alt="project"
                 width="20"
-                height="24"
-                className="ms-auto me-2 cursor-pointer"
+                height="20"
+                className="cursor-pointer"
+                onClick={() => {
+                  toggleSidebar();
+                  handleDropDownChange(null);
+                  setProductionList(true);
+                }}
               />
             </div>
-          ) : (
-            <div className="d-flex align-items-center flex-row">
-              <Image
-                src="/home.svg"
-                alt="project"
-                width="30"
-                height="35"
-                className="ms-2 me-2"
-              />
-              <div className="d-flex flex-column cursor-pointer">
-                <div className="d-flex align-items-start">
-                  <p className="home mt-1 cursor-pointer">Home</p>
+          </div>
+        ) : (
+          <div
+            className="sidenavDropdown"
+            onClick={() => {
+              if (productionList) {
+                setProductionList(false);
+                setSelectedProduction();
+                setClickedItemIndex(null);
+              } else {
+                setProductionList(true);
+              }
+            }}
+          >
+            {selectedProduction ? (
+              <div className="d-flex align-items-center cursor-pointer flex-row">
+                <div className="d-flex align-items-center justify-content-center">
+                  <Image
+                    src="/home.svg"
+                    alt="project"
+                    width="30"
+                    height="35"
+                    className="ms-2 me-2 cursor-pointer"
+                  />
+                  <div className="text-container text-center">
+                    <div className="d-flex align-items-start">
+                      <p className="home mt-1 cursor-pointer ellipsis">
+                        {selectedProduction?.Name}
+                      </p>
+                    </div>
+                    <div className="d-flex mt-1 mb-1 align-items-start">
+                      <p className="ressl cursor-pointer">
+                        {selectedProduction?.Client?.Name
+                          ? selectedProduction?.Client?.Name
+                          : selectedProduction?.Description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex mb-1 align-items-start">
-                  <p className="ressl cursor-pointer">
-                    Resillient Software Solutions
-                  </p>
-                </div>
+                <Image
+                  src="/chevron-down.svg"
+                  alt="project"
+                  width="20"
+                  height="24"
+                  className="ms-auto me-2 cursor-pointer"
+                />
               </div>
-              <Image
-                src="/chevron-down.svg"
-                alt="project"
-                width="20"
-                height="24"
-                className="ms-auto cursor-pointer me-2"
-              />
-            </div>
-          )}
-        </div>
+            ) : (
+              showSidebar && (
+                <div className="d-flex align-items-center flex-row">
+                  <Image
+                    src="/home.svg"
+                    alt="project"
+                    width="30"
+                    height="35"
+                    className="ms-2 me-2"
+                  />
+                  <div className="d-flex flex-column cursor-pointer">
+                    <div className="d-flex align-items-start">
+                      <p className="home mt-1 cursor-pointer">Home</p>
+                    </div>
+                    <div className="d-flex mb-1 align-items-start">
+                      <p className="ressl cursor-pointer">
+                        Resilient Software Solutions
+                      </p>
+                    </div>
+                  </div>
+                  <Image
+                    src="/chevron-down.svg"
+                    alt="project"
+                    width="20"
+                    height="24"
+                    className="ms-auto cursor-pointer me-3"
+                  />
+                </div>
+              )
+            )}
+          </div>
+        )}
 
         {productionList ? (
           <>
             <div className="container cursor-pointer p-0">
-              <div className="d-flex align-items-center mt-2 flex-row">
+              <div
+                className="d-flex align-items-center mt-2 flex-row"
+                onClick={() => {
+                  setProductionList(false);
+                  setSelectedProduction();
+                  setClickedItemIndex(null);
+                }}
+              >
                 <Image
                   src="/home.svg"
                   alt="project"
@@ -367,62 +437,69 @@ const Sidebar = ({ props }) => {
                 />
                 <div className="d-flex align-items-start ms-2">
                   <p
+                    id="clicked"
                     className="home cursor-pointer"
                     onClick={() => {
                       setProductionList(false);
                       setSelectedProduction();
+                      setClickedItemIndex(null);
                     }}
                   >
-                    Home
+                    <div
+                    onClick={() => {
+                      // Redirect to the dashboard when clicking on "HOME"
+                      router.push('/dashboard');
+                    }}
+                  >
+                    HOME
+                  </div>
                   </p>
                 </div>
               </div>
               <Input
-                // onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => setSearchText(e.target.value)}
                 type="search"
-                className="searchProduction mt-2 cursor-pointer"
+                className="searchProduction1 mt-2 ms-1 cursor-pointer w-100 mx-0"
                 placeholder="Search Production"
-                style={{ width: "217px", height: "38px" }}
+                style={{ height: "38px" }}
               />
 
-              {(productionData || [])?.map((item: any, index: any) => {
+              {(filteredProductionData || [])?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
                 return (
                   <div
                     key={index}
-                    ref={divRef}
-                    className={`d-flex align-items-center cursor-pointer flex-row${
+                    className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
                       isClicked ? " clicked" : ""
                     }`}
                     onClick={() => {
-                      setClickedItemIndex(index);
-                      setSelectedProduction(item);
-                      setProductionList(false);
-
-                      sessionStorage.setItem("clientid", item.Client.ID);
-                      sessionStorage.setItem("projectid", item.ID);
+                      setTemp1(item);
+                      setTemp2(index);
+                      if (!isClicked) {
+                        setSwitcProduction(!switcProduction);
+                      }
                     }}
                   >
                     <img
-                      className="rounded-circle cursor-pointer me-2 ms-1"
-                      src={item.img || "/icons/dummy-client-logo.svg"}
-                      width="20"
-                      height="20"
+                      className="rounded-circle cursor-pointer me-1 ms-2"
+                      src={item.img || getPlaceholderImage(item.Name)}
+                      width="22"
+                      height="22"
                       alt="avatar"
                       key={index}
                     />
                     <div className="d-flex flex-column">
                       <div className="d-flex align-items-start">
                         <p
-                          className={`home cursor-pointer mt-1 ${
+                          className={`home cursor-pointer mt-1 ms-2 ${
                             item?.Name.length > 5 ? "ellipsis" : ""
                           }`}
                         >
                           {item.Name}
                         </p>
                       </div>
-                      <div className="d-flex mb-1 cursor-pointer align-items-start">
+                      <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
                         <p className="ressl">
                           {item.Client.Name
                             ? item.Client.Name
@@ -433,7 +510,7 @@ const Sidebar = ({ props }) => {
                     {isClicked && (
                       <img
                         key={index}
-                        className="ms-3 cursor-pointer"
+                        className="me-4 cursor-pointer"
                         src="/tick.svg"
                         alt="tickmark"
                         width="16"
@@ -450,6 +527,10 @@ const Sidebar = ({ props }) => {
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
                 if (!hasViewConfiguration && route?.name !== "Configurations") {
+                  return (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  );
+                } else {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );
@@ -495,13 +576,21 @@ const Sidebar = ({ props }) => {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                 );
+              } else {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
               }
             })}
           </div>
         ) : (
-          <div className="px-2 mt-2 sidebar-body">
+          <div className="px-3 mt-2 sidebar-body">
             {sidebarRoutesNonStaff.map((route: any, i) => {
               if (!hasViewConfiguration && route?.name !== "Configurations") {
+                return (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                );
+              } else {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                 );
@@ -515,76 +604,125 @@ const Sidebar = ({ props }) => {
       <div className="bottom-bar mb-2">
         <hr />
         {/* Help Button */}
-        <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
-          <div className="d-flex align-items-center">
-            <img src="/icons/help.svg" width={14} className="me-2" alt="" />
-            {showSidebar ? <p>Need Help ?</p> : ""}
-          </div>
-          {
-            <div className="cursor-pointer">
-              <img src="/icons/more_horiz.svg" alt="" />
-            </div>
-          }
+        <div className="d-flex py-2 align-items-center my-1 select-btn">
+          <img
+            src="/icons/help.svg"
+            width={14}
+            className={showSidebar ? "me-2" : "mx-auto"}
+            alt=""
+          />
+          <p className={showSidebar ? "" : "d-none"}>Need Help ? </p>
+          <img
+            src="/icons/more_horiz.svg"
+            alt="more"
+            className={showSidebar ? "ms-auto cursor-pointer" : "d-none"}
+          />
         </div>
         {/* Profile Button */}
-        <div className="d-flex py-2 align-items-center justify-content-between my-1 select-btn">
-          <div className="d-flex align-items-center">
-            <div>
-              {/* <img
-                src={
-                  props.profileImg
-                    ? props.profileImg
-                    : "/icons/sample-profile.png"
-                }
-                width={22}
-                className="me-2"
-                alt=""
-              /> */}
-              <img
-                className="rounded-circle me-3"
-                src={props.profileImg ? props.profileImg : "/newAvatar.svg"}
-                width="32"
-                height="32"
-              />
-            </div>
-            {showSidebar ? <p>{props.name ? props.name : "-"}</p> : ""}
-          </div>
-
-          <OverlayTrigger
-            placement={"right"}
-            trigger={"click"}
-            rootClose
-            overlay={
-              <Tooltip bsPrefix="custom-tooltip">
-                <Card>
-                  <div className="px-3 py-2 d-flex flex-column gap-1">
-                    <Link
-                      href="/my-profile"
-                      className="d-flex gap-2 align-item-center cursor-pointer"
-                    >
-                      <img src="/icons/profile.svg" width={14} alt="" />
-                      <p>My Profile</p>
-                    </Link>
-                    <div
-                      onClick={handleLogout}
-                      className="d-flex gap-2 align-item-center cursor-pointer"
-                    >
-                      <img src="/icons/logout.svg" width={14} alt="" />
-                      <p>Logout</p>
-                    </div>
+        <OverlayTrigger
+          placement={"right"}
+          trigger={"click"}
+          rootClose
+          overlay={
+            <Tooltip bsPrefix="custom-tooltip">
+              <Card>
+                <div className="px-3 py-2 d-flex flex-column gap-1">
+                  <Link
+                    href="/my-profile"
+                    className="d-flex gap-2 align-item-center cursor-pointer"
+                    onClick={() => document.body.click()}
+                  >
+                    <img src="/icons/profile.svg" width={14} alt="" />
+                    <p>My Profile</p>
+                  </Link>
+                  <div
+                    onClick={handleLogout}
+                    className="d-flex gap-2 align-item-center cursor-pointer"
+                  >
+                    <img src="/icons/logout.svg" width={14} alt="" />
+                    <p>Logout</p>
                   </div>
-                </Card>
-              </Tooltip>
-            }
-          >
+                </div>
+              </Card>
+            </Tooltip>
+          }
+        >
+          <div className="d-flex py-2 align-items-center my-1 select-btn cursor-pointer">
+            <img
+              className={
+                showSidebar ? "rounded-circle me-3" : "rounded-circle mx-auto"
+              }
+              src={userData?.data?.profile_image || "/default.svg"}
+              width="32"
+              height="32"
+            />
+            <p className={showSidebar ? "" : "d-none"}>
+              {userData?.data?.first_name || ""}&nbsp;
+              {userData?.data?.last_name || ""}
+            </p>
             <img
               src="/icons/more_horiz.svg"
-              className="cursor-pointer"
-              alt=""
+              alt="more"
+              className={showSidebar ? "ms-auto" : "d-none"}
             />
-          </OverlayTrigger>
-        </div>
+          </div>
+        </OverlayTrigger>
       </div>
+
+      <Modal
+        show={switcProduction}
+        onHide={() => {
+          setSwitcProduction(!switcProduction);
+        }}
+        // show={show}
+        // onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+        // dialogClassName="modal-40w"
+      >
+        <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 ps-4">
+          <Modal.Title className="mb-0">Confirm action!!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="mb-0 mt-0 d-flex justify-content-center align-items-center pt-0">
+          <div className="d-flex flex-column">
+            <p className="d-flex justify-content-center mt-3 mb-0 align-items-center">
+              Do you want to switch production!!
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 mt-2 mb-2 d-flex justify-content-center align-items-center">
+          <button
+            className="btn ms-3 bg-white"
+            onClick={() => {
+              setSwitcProduction(!switcProduction);
+              setTemp1("");
+              setTemp2("");
+            }}
+          >
+            Cancel
+          </button>
+
+          <Button
+            className="text-white"
+            onClick={() => {
+              setProductionList(false);
+              setClickedItemIndex(temp2);
+              setSelectedProduction(temp1);
+              sessionStorage.setItem(
+                "clientid",
+                selectedProduction?.Client?.ID
+              );
+              sessionStorage.setItem("projectid", selectedProduction?.ID);
+              router.push(`/production/${temp1.ID}/dashboard`);
+              setSwitcProduction(!switcProduction);
+            }}
+            style={{ width: 150 }}
+          >
+            Yes, Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -917,7 +917,7 @@ const EditPayroll = () => {
                               placeholder="Select Period"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -970,7 +970,7 @@ const EditPayroll = () => {
                                 placeholder="Select Client"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1001,7 +1001,7 @@ const EditPayroll = () => {
                                 placeholder="Select Production"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1032,7 +1032,7 @@ const EditPayroll = () => {
                                 placeholder="Select Bank"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1065,7 +1065,7 @@ const EditPayroll = () => {
                                 placeholder="Select Currency"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1096,7 +1096,7 @@ const EditPayroll = () => {
                                 placeholder="Select Department"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1127,7 +1127,7 @@ const EditPayroll = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",

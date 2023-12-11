@@ -4,13 +4,16 @@ import Select from "react-select";
 import useSWR from "swr";
 import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
-import { COAAccountsService } from "services";
+import { COAAccountsService,EntitiesService } from "services";
 import {
   formValidationRules,
   PaymentOptions,
   VendorsAddressTypes,
 } from "constants/common";
+import { useEffect } from "react";
+import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
+import AsyncSelect from "react-select/async";
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const {
     // control,
@@ -22,20 +25,103 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   const vendorsValidationRules = formValidationRules.vendors;
   const coaAccountsService = new COAAccountsService();
 
-  const { data: COAData } = useSWR("LIST_COA", () =>
-    coaAccountsService.getCoasAccounts()
-  );
-  const COASelectOptions = COAData?.result.map((account) => {
-    return {
-      value: account.ID,
-      label: `${account.Code}-${account.Name}`,
-    };
-  });
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
 
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  const [initialEntityOptions,setInitialEntityOptions] = useState([]);
+  const entityServices = new EntitiesService();
+  useEffect(()=>{
+    const fetchInitialEntityOptions = async () => {
+      try {
+        const res = await entityServices.getEntities(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialEntityOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialEntityOptions();
+  },[])
+
+  const loadEntityOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await entityServices.getEntities(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      setInitialEntityOptions(options);
+      callback(options);
+    } catch (error) {
+      console.error("Error fetching initial options:", error);
+    }
+  };
   const { data: statesData } = useSWR("LIST_STATES", () =>
     statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
-  const stateSelectOptions = statesData?.data.map((b) => {
+  const stateSelectOptions = statesData?.data.filter(item => item.IsActive).map((b) => {
     return {
       value: b.ID,
       label: b.Name,
@@ -43,10 +129,10 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   });
 
   const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
-  const countrySelectOptions = countryData?.data.map((b) => {
+  const countrySelectOptions = countryData?.data.filter(item => item.IsActive).map((item) => {
     return {
-      value: b.ID,
-      label: b.Name,
+      value: item.ID,
+      label: item.Name,
     };
   });
   return (
@@ -145,7 +231,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Legal Name <span className="required">*</span>
+              Vendor Legal Name 
             </Label>
             <Controller
               name="legalName"
@@ -207,11 +293,15 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               rules={vendorsValidationRules.entityType}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter entity"
-                  invalid={errors.entityType && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadEntityOptions}
+                  placeholder="Select Entity"
+                  defaultOptions={initialEntityOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -257,8 +347,8 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               Country <span className="required">*</span>
             </Label>
             <Controller
-              name="workState"
-              rules={vendorsValidationRules.workState}
+              name="vendorcountry"
+              rules={vendorsValidationRules.country}
               control={control}
               render={({ field }) => (
                 <Select
@@ -269,9 +359,9 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 />
               )}
             />
-            {errors.workState && (
+            {errors.country && (
               <span className="text-danger">
-                {errors.workState.message as React.ReactNode}
+                {errors.country.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -342,10 +432,14 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               rules={vendorsValidationRules.deafultAccount}
               control={control}
               render={({ field }) => (
-                <Select
+                <AsyncSelect
                   {...field}
-                  options={COASelectOptions}
-                  placeholder="Select an option"
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
                   styles={selectStyles}
                 />
               )}
@@ -414,7 +508,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Payee Name <span className="required">*</span>
+              Payee Name 
             </Label>
             <Controller
               name="payeeName"
@@ -530,7 +624,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder=" Enter Payee Name"
+                  placeholder="Enter Contact Number"
                   invalid={errors.contactNumber && true}
                   {...field}
                 />

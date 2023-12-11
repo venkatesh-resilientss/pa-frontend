@@ -17,7 +17,7 @@ function ClientTabs(props) {
 
   const toggle = (tab) => setStep(tab);
 
-  const tabProps = { ...props, step, hideBtns: true, disabled: true };
+  const tabProps = { ...props, step, setStep, hideBtns: true };
 
   return (
     <div className="f-14">
@@ -40,7 +40,7 @@ function ClientTabs(props) {
         ))}
       </Nav>
 
-      <TabContent className="py-50" activeTab={step}>
+      <TabContent className="py-3" activeTab={step}>
         <TabPane tabId={1}>
           <BasicInformation {...tabProps} />
         </TabPane>

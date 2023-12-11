@@ -11,6 +11,7 @@ export { default as TaxCodesService } from "./taxcodes.service";
 export { default as LocationsService } from "./locations.service";
 export { default as COAAccountsService } from "./coaaccounts.service";
 export { default as AuthService } from "./auth.service";
+export { default as EntitiesService} from './entities.services'
 
 export { default as ForgotPasswordService } from "./forgetpassword.service";
 export { default as ClientsService } from "./clients.service";

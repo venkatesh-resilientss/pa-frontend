@@ -180,7 +180,16 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -328,15 +337,14 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
           pageSize={recordLimit}
           noDataPage={() => (
             <NoDataPage
-                // buttonName={"Add State"}
-                buttonName={hasCreateConfiguration ? "Add State" : ""}
-                buttonLink={"/configurations/add-state"}
-              />
+              // buttonName={"Add State"}
+              buttonName={hasCreateConfiguration ? "Add State" : ""}
+              buttonLink={"/configurations/add-state"}
+            />
           )}
         />
       </div>
     </div>
-    
   );
 };
 

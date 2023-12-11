@@ -34,12 +34,13 @@ class DepartmentsService extends APIService {
       });
   }
 
-  uploaddepartmentlist(fileName: any) {
+  uploaddepartmentlist(fileName: any,clientId : any) {
     // Create a FormData object
     const formData = new FormData();
 
     // Append the file name to the FormData object with the specified field name
     formData.append("file", fileName);
+    formData.append("clientId",clientId)
 
     return this.post(UPLOAD_DEPARTMENT_LIST, formData, {
       "Content-Type": "multipart/form-data",

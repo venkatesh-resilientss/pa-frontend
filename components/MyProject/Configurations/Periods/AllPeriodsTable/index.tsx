@@ -8,29 +8,25 @@ import {
   Button,
   Input,
 } from "reactstrap";
-import GridTable from "components/grid-tables/gridTable";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { PeriodsService } from "services";
-import useSWR from "swr";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadPeriodsPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadPeriodsPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
-
-const AllPeriodsTable = () => {
+import { getSessionVariables } from "@/constants/function";
+const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
+  const recordsPerPage = 10;
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -40,6 +36,7 @@ const AllPeriodsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"
@@ -47,12 +44,27 @@ const AllPeriodsTable = () => {
 
   const periodsService = new PeriodsService();
 
-  const { data: periodData, isLoading: periodLoading } = useSWR(
-    ["LIST_USERS", searchText],
-    () => periodsService.getPeriods()
-  );
-
-  const dataSource = periodData?.data;
+  const fetchData = async (pageNumber) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const response = await periodsService.getPeriods(
+        {
+          clientID,
+          projectID,
+        },
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
+      const data = response.data; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -133,15 +145,6 @@ const AllPeriodsTable = () => {
   };
   const columnDefs = [
     {
-      headerName: "Period Name",
-      field: "Name",
-      sortable: true,
-      unSortIcon: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-    {
       headerName: "Start Date",
       field: "Start",
       cellRenderer: (params) => {
@@ -181,7 +184,16 @@ const AllPeriodsTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -235,11 +247,7 @@ const AllPeriodsTable = () => {
           <CardBody>
             <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="title mt-2"
-                >
-                  All Periods
-                </div>
+                <div className="title mt-2">All Periods</div>
               </div>
 
               <div
@@ -247,7 +255,7 @@ const AllPeriodsTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {periodData?.data.length} Periods
+                  Periods
                 </div>
 
                 <Input
@@ -258,24 +266,28 @@ const AllPeriodsTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadPeriodsPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: " 14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadPeriodsPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: " 14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -318,39 +330,22 @@ const AllPeriodsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {periodLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add Period"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Period" : "No button"
-                }
-                buttonLink={"/configurations/add-period"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={hasCreateConfiguration ? "Create COA" : ""}
+              buttonLink={"/configurations/add-chart-of-accounts"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

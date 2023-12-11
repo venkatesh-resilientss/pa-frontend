@@ -1,13 +1,16 @@
 import AllCountriesTable from "./AllCountriesTable";
 import CountriesBulkUploadPopup from "./CountriesBulkUploadPopup";
 import DeleteCountryPopup from "./DeleteCountryPopup";
+import { useState } from "react";
 
 function Countries() {
+  const [searchText, setSearchText] = useState("");
+  const [rerender, setRerender] = useState(false);
   return (
     <div>
-      <CountriesBulkUploadPopup />
+      <CountriesBulkUploadPopup {...{ setRerender, rerender }}/>
       <DeleteCountryPopup />
-      <AllCountriesTable />
+      <AllCountriesTable {...{ rerender, searchText, setSearchText }}/>
     </div>
   );
 }

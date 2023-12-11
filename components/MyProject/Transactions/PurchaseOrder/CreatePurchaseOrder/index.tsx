@@ -130,19 +130,19 @@ const CreatePurchaseOrder = () => {
     () => fetchVendorDetails(vendorId)
   );
 
-  const { data: vendorsData } = useSWR("LIST_VENDORS", () =>
-    vendorsService.getVendors()
-  );
-  const vendorSelectFormat = vendorsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
+  // const { data: vendorsData } = useSWR("LIST_VENDORS", () =>
+  //   vendorsService.getVendors()
+  // );
+  // const vendorSelectFormat = vendorsData?.result.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
 
-  const loadVendorOptions = (values, callBack) => {
-    callBack(vendorSelectFormat);
-  };
+  // const loadVendorOptions = (values, callBack) => {
+  //   callBack(vendorSelectFormat);
+  // };
 
   const statsService = new DashboardService();
 
@@ -163,7 +163,8 @@ const CreatePurchaseOrder = () => {
 
   const bankService = new BankService();
 
-  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks());
+
+  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks({ search: "", pageLimit: 25, offset: 0 }));
 
   const bankSelectFormat = bankData?.data.map((b) => {
     return {
@@ -203,22 +204,22 @@ const CreatePurchaseOrder = () => {
   //   callBack(departmentSelectFormat);
   // };
 
-  const periodsService = new PeriodsService();
+  // const periodsService = new PeriodsService();
 
-  const { data: periodData } = useSWR("LIST_USERS", () =>
-    periodsService.getPeriods()
-  );
+  // const { data: periodData } = useSWR("LIST_USERS", () =>
+  //   periodsService.getPeriods()
+  // );
 
-  const periodSelectFormat = periodData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
+  // const periodSelectFormat = periodData?.data.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
 
-  const loadPeriodOptions = (values, callBack) => {
-    callBack(periodSelectFormat);
-  };
+  // const loadPeriodOptions = (values, callBack) => {
+  //   callBack(periodSelectFormat);
+  // };
 
   const clientService = new ClientsService();
 
@@ -898,12 +899,12 @@ const CreatePurchaseOrder = () => {
                               isClearable={true}
                               className="react-select"
                               classNamePrefix="select"
-                              loadOptions={loadVendorOptions}
+                              // loadOptions={loadVendorOptions}
                               placeholder="Select Vendor"
-                              defaultOptions={vendorSelectFormat}
+                              // defaultOptions={vendorSelectFormat}
                               // onChange={handleVendorChange}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -1217,7 +1218,7 @@ const CreatePurchaseOrder = () => {
                                 placeholder="Select Client"
                                 defaultOptions={clientSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1248,7 +1249,7 @@ const CreatePurchaseOrder = () => {
                                 loadOptions={loadProductionOptions}
                                 defaultOptions={productionSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1279,7 +1280,7 @@ const CreatePurchaseOrder = () => {
                                 placeholder="Select Bank"
                                 defaultOptions={bankSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1311,7 +1312,7 @@ const CreatePurchaseOrder = () => {
                               //   placeholder="Select Currency"
                               //   defaultOptions={currenciesSelectFormat}
                               //   styles={{
-                              //     control: (provided) => ({
+                              //     control: (provided:any) => ({
                               //       ...provided,
                               //       height: "34px",
                               //       minHeight: "34px",
@@ -1355,7 +1356,7 @@ const CreatePurchaseOrder = () => {
                                 // defaultOptions={departmentSelectFormat}
                                 defaultOptions={[]}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1382,11 +1383,11 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                loadOptions={loadPeriodOptions}
+                                // loadOptions={loadPeriodOptions}
                                 placeholder="Select Period"
-                                defaultOptions={periodSelectFormat}
+                                // defaultOptions={periodSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1763,7 +1764,7 @@ import {
   DashboardService,
   // DepartmentsService,
   LocationsService,
-  PeriodsService,
+  // PeriodsService,
   PurchaseOrderService,
   SeriesService,
   SetsService,

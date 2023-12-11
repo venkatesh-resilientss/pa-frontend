@@ -1,418 +1,485 @@
-import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import { Button as RButton, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
-import { useState } from "react";
-import { ProjectService, UsersService } from "services";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { formValidationRules } from "@/constants/common";
+import Button from "react-bootstrap-button-loader";
+import { AuthService, ProjectService } from "services";
+
+const productionService = new ProjectService();
+const authService = new AuthService();
+
 function AddProductions() {
   const router = useRouter();
   const productionRules = formValidationRules.productions;
   const [purchaseOrderValue, setPurchaseOrderValue] = useState(false);
   const [accountPayableValue, setAccountPayableValue] = useState(false);
-  const [id, setID] = useState(1);
 
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
 
-  const [selectedPurchaseOrderValues, setSelectedPurchaseOrderValues] =
-    useState(["", ""]);
+  const [staffUser, setStaffUser] = useState<any>(false);
+  const [err, setErr] = useState<any>(false);
+  const [loading, setLoading] = useState<any>(false);
+  const [client, setClient] = useState<any>(null);
+  const [pAUser, setPAUser] = useState<any>(null);
+  const [tenantId, setTenantId] = useState<any>("");
+  const [poValues, setPoValues] = useState<any>([null, null]);
+  const [apValues, setApValues] = useState<any>([null, null]);
 
-  const [selectedAPValues, setSelectedAPValues] = useState(["", ""]);
+  const handleAddPurchaseOrderField = () => setPoValues([...poValues, null]);
+  const handleAddAccountPayableField = () => setApValues([...apValues, null]);
 
-  const handleCheckboxChange = () => {
-    setPurchaseOrderValue(!purchaseOrderValue);
-  };
-
-  const handleCheckboxAccountPayableChange = () => {
-    setAccountPayableValue(!accountPayableValue);
-  };
-
-  const handleAddPurchaseOrderField = () => {
-    setSelectedPurchaseOrderValues([...selectedPurchaseOrderValues, ""]);
-  };
-
-  const handleAddAccountPayableField = () => {
-    setSelectedAPValues([...selectedAPValues, ""]);
-  };
-
-  const productionService = new ProjectService();
-
-  const { data: poData } = useSWR("LIST_PO_APPROVERS", () =>
-    productionService.getPOApprovers(id)
+  const { data: clients } = useSWR("Clients", () =>
+    productionService.getClients("")
+  );
+  const { data: users, mutate } = useSWR("Users", () =>
+    productionService.getClientUsers(`?client_id=${client?.value || ""}`)
   );
 
-  const poSelectFormat = poData?.data?.map((b) => {
-    return {
-      value: b.ID,
-      label: b.username,
+  useEffect(() => {
+    const getTenant = async () => {
+      try {
+        const name = window.location.hostname.split(".")[0];
+        if (name === "app") {
+          setStaffUser(true);
+          return;
+        }
+        const tenant = await authService.checkTenant({ name });
+        if (Number(tenant?.ID)) setTenantId(Number(tenant?.ID));
+        if (Number(tenant?.clientId))
+          setClient({
+            name: tenant?.ClientName,
+            value: Number(tenant?.ClientID),
+          });
+        //  eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        //
+      }
     };
-  });
+    getTenant();
+  }, []);
 
-  const loadPOOptions = (values, callBack) => {
-    callBack(poSelectFormat);
+  useEffect(() => {
+    mutate();
+  }, [client]);
+
+  const getOptions = (lb) => {
+    const getName = (e) =>
+      lb === "users"
+        ? (e?.first_name || "") + " " + (e?.last_name || "")
+        : e?.Name || "";
+
+    if (lb === "users" && !client) return [];
+    const tempArr: any = lb === "clients" ? clients : users?.data || [];
+    return (tempArr || []).map((e) => {
+      return { label: getName(e), value: e.ID, field: e.tenant_id };
+    });
   };
 
-  const { data: apData } = useSWR("LIST_AP_APPROVERS", () =>
-    productionService.getAPApprovers(id)
-  );
-
-  const apSelectFormat = apData?.data?.map((b) => {
-    return {
-      value: b.ID,
-      label: b.username,
-    };
-  });
-
-  const loadAPOptions = (values, callBack) => {
-    callBack(apSelectFormat);
+  const onSubmit = async (data) => {
+    if (
+      !client ||
+      poValues.filter((e) => !e).length > 0 ||
+      apValues.filter((e) => !e).length > 0
+    ) {
+      setErr(true);
+      return;
+    }
+    try {
+      setLoading(true);
+      const payload = {
+        code: data.productionCode || "",
+        name: data.productionName || "",
+        ProjectAccountantID: pAUser?.value || 0,
+        clientID: client?.value,
+      };
+      const resp = await productionService.createProject(tenantId, payload);
+      for (const idx in poValues) {
+        const index = Number(idx);
+        const user_id = poValues[index]?.value;
+        const pyld = {
+          approverType: index + 1,
+          TransactionType: "PO",
+          UserID: user_id,
+          projectID: resp?.ID,
+        };
+        await productionService.createProjectApprover(tenantId, pyld);
+      }
+      for (const idx in apValues) {
+        const index = Number(idx);
+        const user_id = apValues[index]?.value;
+        const pyld = {
+          approverType: index + 1,
+          TransactionType: "AP",
+          UserID: user_id,
+          projectID: resp?.ID,
+        };
+        await productionService.createProjectApprover(tenantId, pyld);
+      }
+      router.replace(`/production/${resp?.ID}`);
+    } catch (e) {
+      setLoading(false);
+      toast.error(e?.error || e || "Error");
+    }
   };
 
-  const clientService = new UsersService();
+  const selectStyle = {
+    control: (base) => ({
+      ...base,
+      background: "#fff",
+      border: "1px solid #dee2e6",
+      borderRadius: "0.375rem",
+      minHeight: "32px",
+      boxShadow: null,
+      ":hover": {
+        borderColor: "#A2CFFE",
+      },
+      // borderColor:
+      //   err &&
+      //   state.selectProps.placeholder !== "Select Admin" && !state.hasValue
+      //     ? "#e50000 !important"
+      //     : "#dee2e6",
+    }),
 
-  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getUsers({ search: "", pageLimit: 25, offset: 0 })
-  );
+    valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
-  const userSelectFormat = clientData?.data?.map((b) => {
-    return {
-      value: b.id,
-      label: b.adminname,
-    };
-  });
+    input: (base) => ({ ...base, margin: "0" }),
 
-  const loadUserOptions = (values, callBack) => {
-    callBack(userSelectFormat);
+    placeholder: (base: any) => ({
+      ...base,
+      position: "center",
+      transform: "none",
+      color: "#c9c9c9 !important",
+    }),
+
+    menu: (base: any) => ({ ...base, margin: "0 !important" }),
+    menuList: (base: any) => ({ ...base, padding: "0 !important" }),
+
+    option: (base: any, state: any) => ({
+      ...base,
+      cursor: "pointer",
+      color: "#212529",
+      ":hover": {
+        backgroundColor: "#c9c9c97d",
+      },
+      backgroundColor: state.isSelected ? "#c9c9c97d !important" : "white",
+    }),
+
+    indicatorSeparator: () => ({ display: "none" }),
   };
-  const onSubmit = (data) => {
-    let backendFormat = {};
-
-    backendFormat = {
-      name: data.productionName,
-      code: data.productionCode,
-    };
-
-    productionService
-      .createProject(backendFormat)
-      .then((res) => {
-        productionService.createApprover({
-          ApprovalType: id,
-          ApproverType: id,
-          ProjectID: res.ID,
-          UserID: data?.user?.value,
+  const loadOptions: any = (value, lb) => {
+    if (lb === "clients") {
+      return productionService.getClients(`?search=${value}`).then((res) => {
+        return [...res].map((e) => {
+          return { label: e.Name, value: e.ID, field: e.tenant_id };
         });
-
-        toast.success("Production Added successfully");
-        reset();
-        router.back();
-      })
-      .catch((error) => {
-        toast.error(error?.error);
       });
+    } else if (lb === "users" && client) {
+      return productionService
+        .getClientUsers(`?client_id=${client?.value || ""}&search=${value}`)
+        .then((res) => {
+          return [...(res?.data || [])].map((e) => {
+            return { label: e.Name, value: e.ID };
+          });
+        });
+    } else {
+      toast.error("Select Client");
+      return new Promise((resolve) => setTimeout(() => resolve([]), 500));
+    }
   };
-
   return (
-    <Form
-      onSubmit={handleSubmit(onSubmit)}
-      className="my-3"
-      style={{ fontSize: "14px", fontWeight: "400" }}
-    >
-      <div className="d-flex justify-content-between">
-        <div>
-          <div style={{ fontSize: "16px", fontWeight: "600" }}>
-            All Productions
-          </div>
-
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      <div className="p-4">
+        <div className="d-flex justify-content-between">
           <div>
-            <div
-              style={{
-                fontFamily: "Segoe UI",
-                fontSize: "32px",
-                fontWeight: 600,
-                lineHeight: "50px",
-                textAlign: "left",
-              }}
+            <div className="text-black fw-600">All Productions</div>
+            <div className="f-32 fw-600">Create New Production</div>
+          </div>
+
+          <div className="my-auto">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="btn f-14"
             >
-              Create New Production
-            </div>
+              Dismiss
+            </button>
+            <Button
+              type="submit"
+              loading={loading}
+              disabled={loading}
+              className="px-4"
+              spinColor="#ffffff"
+            >
+              Save
+            </Button>
           </div>
         </div>
-        <div className="d-flex my-auto " style={{ gap: "5px" }}>
-          <Button
-            onClick={() => router.back()}
-            style={{
-              height: "30px",
-              color: "#2D2C2C",
-              backgroundColor: "transparent",
-              border: "none",
-            }}
-            size="sm"
-            outline
-          >
-            Dismiss
-          </Button>
-          <Button
-            type="submit"
-            style={{
-              height: "30px",
-              color: "#ffffff",
-              borderColor: "#00AEEF",
-              backgroundColor: "#00AEEF",
-              borderWidth: "1px",
-              borderStyle: "solid",
-            }}
-            size="sm"
-          >
-            Save
-          </Button>
-        </div>
-      </div>
+        <hr />
 
-      <hr style={{ height: "2px" }} />
-
-      <div>
-        <div style={{ fontSize: "16px", fontWeight: "600" }}>
-          Basic Information
-        </div>
-        <Row style={{ fontSize: "14px", fontWeight: "400", marginTop: "10px" }}>
-          <Col sm="4">
-            <Label style={{ color: "#030229" }}>Production Code</Label>
-            <Controller
-              name="productionCode"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  name="address"
-                  id="address"
-                  placeholder=""
-                  invalid={errors.productionCode && true}
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "400",
-                    height: "34px",
-                  }}
-                  disabled
-                />
+        <div>
+          <div className="fw-600">Basic Information</div>
+          <div className="row f-14 m-0 mt-2">
+            <div className="col-12 col-sm-4">
+              <label className="form-label">Production Code</label>
+              <Controller
+                name="productionCode"
+                rules={productionRules.code}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    name="code"
+                    id="code"
+                    placeholder="Enter Code"
+                    className={
+                      "form-control f-12 py-2" +
+                      (errors.productionCode && true ? " border-danger" : "")
+                    }
+                  />
+                )}
+              />
+              {errors.productionCode && (
+                <span className="text-danger f-12">
+                  {errors.productionCode.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.productionCode && (
-              <span className="text-danger">
-                {errors.productionCode.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col sm="4">
-            <Label style={{ color: "#030229" }}>Production Name</Label>
-            <Controller
-              name="productionName"
-              rules={productionRules.name}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  name="address"
-                  id="address"
-                  placeholder="Enter Production Name"
-                  invalid={errors.productionName && true}
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "400",
-                    height: "34px",
-                  }}
-                />
+            </div>
+            <div className="col-12 col-sm-4">
+              <label className="form-label">Production Name</label>
+              <Controller
+                name="productionName"
+                rules={productionRules.name}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    name="name"
+                    id="name"
+                    placeholder="Enter Production Name"
+                    className={
+                      "form-control f-12 py-2" +
+                      (errors.productionName && true ? " border-danger" : "")
+                    }
+                  />
+                )}
+              />
+              {errors.productionName && (
+                <span className="text-danger f-12">
+                  {errors.productionName.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.productionName && (
-              <span className="text-danger">
-                {errors.productionName.message as React.ReactNode}
-              </span>
+            </div>
+            {staffUser && (
+              <div className="col-12 col-sm-4">
+                <label className="form-label">Client</label>
+                <AsyncSelect
+                  instanceId={`react-select-client`}
+                  styles={selectStyle}
+                  placeholder={"Select Client"}
+                  defaultOptions={getOptions("clients")}
+                  loadOptions={(value) => loadOptions(value, "clients")}
+                  value={client}
+                  onChange={(e) => {
+                    setClient(e);
+                    setTenantId(e.field);
+                    setApValues([null, null]);
+                    setPoValues([null, null]);
+                  }}
+                  // isDisabled={disabled || false}
+                />
+                {err && !client && (
+                  <span className="text-danger f-12">Select Client</span>
+                )}
+              </div>
             )}
-          </Col>
-        </Row>
-        {/* <div className="d-flex flex-column mt-1">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Status{" "}
-          </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input type="radio" />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input type="radio" />
-              <div>In-Active</div>
-            </div>
           </div>
-        </div> */}
-      </div>
-
-      <hr style={{ height: "2px" }} />
-
-      <div>
-        <div style={{ fontSize: "16px", fontWeight: "600" }}>
-          Approval work flow for Transactions
         </div>
-        <div className="">
-          <div className="d-flex mt-2" style={{ gap: "5px" }}>
+
+        <hr />
+
+        <div>
+          <div className="fw-600">Approval work flow for Transactions</div>
+
+          <div className="d-flex align-items-center p-2">
             <input
               type="checkbox"
+              className="mt-1"
+              id={"Purchase Order"}
               checked={purchaseOrderValue}
-              onChange={handleCheckboxChange}
+              onChange={(e) => {
+                setPurchaseOrderValue(e.target.checked);
+                if (!e.target.checked) setPoValues([null, null]);
+              }}
             />
-            <div style={{ fontSize: "16px" }}>Purchase Order</div>
+            <label htmlFor={"Purchase Order"} className="ms-1">
+              {"Purchase Order"}
+            </label>
           </div>
 
           {purchaseOrderValue && (
-            <div>
-              <Row
-                className="mt-2"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "400",
-                }}
-              >
-                {/*  eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-                {selectedPurchaseOrderValues.map((value, index) => (
-                  <Col xl="3" key={index}>
-                    <Label>Level {index + 1} Approver</Label>
-                    <AsyncSelect
-                      isClearable={true}
-                      className="react-select"
-                      classNamePrefix="select"
-                      onChange={() => {
-                        setID(index + 1);
+            <div className="row f-14 mt-2 m-0 px-4">
+              {poValues.map((val, index) => (
+                <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
+                  <label className="form-label d-flex justify-content-between">
+                    Level {index + 1} Approver
+                    <span
+                      className="f-12 text-danger ms-auto cursor-pointer"
+                      onClick={() => {
+                        const tempArr = [...poValues];
+                        tempArr.splice(index, 1);
+                        setPoValues(tempArr);
                       }}
-                      loadOptions={loadPOOptions}
-                      placeholder="Select User"
-                      defaultOptions={poSelectFormat}
-                      styles={{
-                        control: (provided) => ({
-                          ...provided,
-                          height: "34px",
-                          minHeight: "34px",
-                        }),
-                      }}
-                    />
-                  </Col>
-                ))}
-                <Col className="my-auto">
-                  <Button
-                    style={{
-                      height: "34px",
-                      fontSize: "14px",
-                      fontWeight: "400",
+                    >{`( - )`}</span>
+                  </label>
+                  <AsyncSelect
+                    instanceId={`react-select-po-${index}`}
+                    styles={selectStyle}
+                    placeholder={"Select User"}
+                    defaultOptions={getOptions("users").filter(
+                      (e) =>
+                        ![...poValues]
+                          .filter((el) => el)
+                          .map((el) => el?.value)
+                          .includes(e.value)
+                    )}
+                    loadOptions={(value) =>
+                      loadOptions(value, "users").filter(
+                        (e) =>
+                          ![...poValues]
+                            .filter((el) => el)
+                            .map((el) => el?.value)
+                            .includes(e.value)
+                      )
+                    }
+                    value={val}
+                    onChange={(e) => {
+                      const tempArr = [...poValues];
+                      tempArr[index] = e;
+                      setPoValues(tempArr);
                     }}
-                    color="white"
-                    onClick={handleAddPurchaseOrderField}
-                  >
-                    + Approver
-                  </Button>
-                </Col>
-              </Row>
+                    // isDisabled={disabled || false}
+                  />
+                  {err && !val && (
+                    <span className="text-danger f-12">Select User</span>
+                  )}
+                </div>
+              ))}
+              <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
+                <RButton
+                  className="f-14 py-2"
+                  color="white"
+                  onClick={handleAddPurchaseOrderField}
+                >
+                  + Approver
+                </RButton>
+              </div>
             </div>
           )}
 
-          <div className="d-flex mt-4" style={{ gap: "5px" }}>
+          <div className="d-flex align-items-center p-2">
             <input
               type="checkbox"
+              className="mt-1"
+              id={"Account Payable"}
               checked={accountPayableValue}
-              onChange={handleCheckboxAccountPayableChange}
+              onChange={(e) => {
+                setAccountPayableValue(e.target.checked);
+                if (!e.target.checked) setApValues([null, null]);
+              }}
             />
-            <div style={{ fontSize: "16px" }}>Account Payable</div>
+            <label htmlFor={"Account Payable"} className="ms-1">
+              {"Account Payable"}
+            </label>
           </div>
-        </div>
 
-        {accountPayableValue && (
-          <Row className="mt-2">
-            {/*  eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-            {selectedAPValues.map((value, index) => (
-              <Col xl="3" key={index}>
-                <Label>Level {index + 1} Approver</Label>
-                <AsyncSelect
-                  isClearable={true}
-                  className="react-select"
-                  classNamePrefix="select"
-                  loadOptions={loadAPOptions}
-                  placeholder="Select User"
-                  defaultOptions={apSelectFormat}
-                  styles={{
-                    control: (provided) => ({
-                      ...provided,
-                      height: "34px",
-                      minHeight: "34px",
-                    }),
-                  }}
-                />
-              </Col>
-            ))}
-            <Col className="my-auto">
-              {" "}
-              <Button
-                style={{
-                  height: "34px",
-                  fontSize: "14px",
-                  fontWeight: "400",
-                }}
-                color="white"
-                onClick={handleAddAccountPayableField}
-              >
-                + Approver
-              </Button>
-            </Col>
-          </Row>
-        )}
-      </div>
+          {accountPayableValue && (
+            <div className="row f-14 mt-2 m-0 px-4">
+              {apValues.map((val, index) => (
+                <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
+                  <label className="form-label d-flex justify-content-between">
+                    Level {index + 1} Approver
+                    <span
+                      className="f-12 text-danger ms-auto cursor-pointer"
+                      onClick={() => {
+                        const tempArr = [...apValues];
+                        tempArr.splice(index, 1);
+                        setApValues(tempArr);
+                      }}
+                    >{`( - )`}</span>
+                  </label>
+                  <AsyncSelect
+                    instanceId={`react-select-ap-${index}`}
+                    styles={selectStyle}
+                    placeholder={"Select User"}
+                    defaultOptions={getOptions("users").filter(
+                      (e) =>
+                        ![...apValues]
+                          .filter((el) => el)
+                          .map((el) => el?.value)
+                          .includes(e.value)
+                    )}
+                    loadOptions={(value) =>
+                      loadOptions(value, "users").filter(
+                        (e) =>
+                          ![...apValues]
+                            .filter((el) => el)
+                            .map((el) => el?.value)
+                            .includes(e.value)
+                      )
+                    }
+                    value={val}
+                    onChange={(e) => {
+                      const tempArr = [...apValues];
+                      tempArr[index] = e;
+                      setApValues(tempArr);
+                    }}
+                    // isDisabled={disabled || false}
+                  />
+                  {err && !val && (
+                    <span className="text-danger f-12">Select User</span>
+                  )}
+                </div>
+              ))}
 
-      <hr style={{ height: "2px" }} />
-
-      <div className="d-flex flex-column" style={{ gap: "10px" }}>
-        <div style={{ fontSize: "16px", fontWeight: "600" }}>
-          Production Accountant{" "}
-        </div>
-
-        <Col sm="4">
-          <Label style={{ color: "#030229" }}>User</Label>
-          <Controller
-            name="user"
-            // rules={{ required: "User is required" }}
-            control={control}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadUserOptions}
-                placeholder="Select User"
-                defaultOptions={userSelectFormat}
-                styles={{
-                  control: (provided) => ({
-                    ...provided,
-                    height: "34px",
-                    minHeight: "34px",
-                  }),
-                }}
-              />
-            )}
-          />
-          {errors.user && (
-            <span className="text-danger">
-              {errors.user.message as React.ReactNode}
-            </span>
+              <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
+                <RButton
+                  className="f-14 py-2"
+                  color="white"
+                  onClick={handleAddAccountPayableField}
+                >
+                  + Approver
+                </RButton>
+              </div>
+            </div>
           )}
-        </Col>
+        </div>
+
+        <hr style={{ height: "2px" }} />
+
+        <div className="fw-600">Production Accountant</div>
+        <div className="col-12 col-md-4 px-4 pt">
+          <label className="form-label">User</label>
+          <AsyncSelect
+            instanceId={`react-select-user`}
+            styles={selectStyle}
+            placeholder={"Select User"}
+            defaultOptions={getOptions("users")}
+            loadOptions={(value) => loadOptions(value, "users")}
+            value={pAUser}
+            onChange={(e) => setPAUser(e)}
+            // isDisabled={disabled || false}
+          />
+        </div>
       </div>
     </Form>
   );

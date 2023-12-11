@@ -29,6 +29,7 @@
 
 
       uploadcouuntrieslist(fileName: any) {
+        console.log(fileName)
       // Create a FormData object
       const formData = new FormData();
 

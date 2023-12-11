@@ -3,6 +3,7 @@ import { Col, Form, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { LocationsService, SeriesService, SetsService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
 function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveStatus }) {
   const { handleSubmit } = useForm();
@@ -20,7 +21,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
   useEffect(() => {
     const fetchInitialOptions = async () => {
       try {
-        const res = await setsService.getSets({ search: "", pageLimit: 25, offset: 0 });
+        const { clientID, projectID } = getSessionVariables();
+        const data = { clientId: clientID, projectId: projectID }
+        const queryParams = { search: "", pageLimit: 25, offset: 0 }
+        const res = await setsService.getSets(queryParams, data);
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -36,7 +40,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
 
   const loadSetsOptions: any = async (inputValue, callback) => {
     try {
-      const res = await setsService.getSets({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const { clientID, projectID } = getSessionVariables();
+      const data = { clientId: clientID, projectId: projectID }
+      const queryParams = { search: inputValue.toString(), pageLimit: 25, offset: 0 }
+      const res = await setsService.getSets(queryParams, data);
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -51,7 +58,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
   useEffect(() => {
     const fetchInitialLocations = async () => {
       try {
-        const res = await locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 });
+        const { clientID, projectID } = getSessionVariables();
+        const data = { clientId: clientID, projectId: projectID }
+        const queryParams = { search: "", pageLimit: 25, offset: 0 }
+        const res = await locationsService.getLocations(queryParams, data);
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -67,7 +77,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
 
   const loadLocationOptions: any = async (inputValue, callback) => {
     try {
-      const res = await locationsService.getLocations({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const { clientID, projectID } = getSessionVariables();
+      const data = { clientId: clientID, projectId: projectID }
+      const queryParams = { search: inputValue.toString(), pageLimit: 25, offset: 0 }
+      const res = await locationsService.getLocations(queryParams, data);
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,
@@ -81,7 +94,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
   useEffect(() => {
     const fetchInitialSeries = async () => {
       try {
-        const res = await seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 });
+        const { clientID, projectID } = getSessionVariables();
+        const data = { clientId: clientID, projectId: projectID }
+        const queryParams = { search: "", pageLimit: 25, offset: 0 }
+        const res = await seriesService.getSeries(queryParams, data);
         const options = res?.data.map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -97,7 +113,10 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
 
   const loadSeriesOptions: any = async (inputValue, callback) => {
     try {
-      const res = await seriesService.getSeries({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const { clientID, projectID } = getSessionVariables();
+      const data = { clientId: clientID, projectId: projectID }
+      const queryParams = { search: inputValue.toString(), pageLimit: 25, offset: 0 }
+      const res = await seriesService.getSeries(queryParams, data);
       const options = res?.data.map((item) => ({
         value: item.ID,
         label: item.Name,

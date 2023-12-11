@@ -12,9 +12,20 @@ import {
   GET_STATES_BY_COUNTRY,
   GET_USERS_BY_ROLE,
   UPLOAD_FILE_S3,
+  GET_ALL_USERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
+  getUsers(queries: any): Promise<any> {
+    return this.get(`${GET_ALL_USERS}${queries}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
   getSoftwares(): Promise<any> {
     return this.get(`${GET_SOFTWARES}`)
       .then((res) => {
@@ -82,7 +93,9 @@ class ClientsService extends APIService {
   //     });
   // }
   getClients(params): Promise<any> {
-    return this.get(`${GET_CLIENTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+    return this.get(
+      `${GET_CLIENTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
+    )
       .then((res) => {
         return res?.data;
       })
@@ -120,8 +133,8 @@ class ClientsService extends APIService {
       });
   }
 
-  editClient(id: any) {
-    return this.put(EDIT_CLIENTS(id))
+  editClient(id: any, data: any) {
+    return this.put(EDIT_CLIENTS(id), data)
       .then((response) => {
         return response?.data;
       })

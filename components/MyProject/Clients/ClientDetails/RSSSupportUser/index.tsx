@@ -27,7 +27,7 @@ const RSSSupportUserTable = () => {
       member: "Harley",
       create_on: "2020-01-15",
       status: "In-Active",
-      role: "Rss Support User",
+      role: "RSSL Support User",
       modules: "All Modules",
       image:
         "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=1280",

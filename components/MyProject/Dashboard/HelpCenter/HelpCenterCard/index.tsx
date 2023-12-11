@@ -16,18 +16,18 @@ function HelpCenterCard({ image, title, description, link }) {
           >
             {title}
           </div>
-          <div style={{ fontSize: "14px", marginTop: "5px" }}>
+          <div style={{marginTop: "5px" }}>
             {description}
           </div>
           <div
             className="text-info"
             style={{ fontSize: "12px", marginTop: "5px" }}
           >
-            <span style={{ color: "#223A7A", fontWeight: "bold" }}>{link}</span>{" "}
+            <a href="#"><span style={{fontSize: "14px", color: "#223A7A", fontWeight: "bold" }}>{link}</span>{" "}
             <ArrowRight
               size={12}
               style={{ color: "#223A7A", fontWeight: "bold" }}
-            />
+            /></a>
           </div>
         </div>
       </CardBody>

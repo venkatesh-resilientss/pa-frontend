@@ -9,9 +9,9 @@ import { ClientsService } from "services";
 const clientService = new ClientsService();
 
 export default function FormFields(props: any) {
-  const { fields, clientData, setClientData, back, step, setStep } = props;
+  const { fields, clientData, setClientData, step, setStep, hideUsers } = props;
   const { data, pStates, iStates, sUsers, loadOptions, hideBtns } = props;
-  const { err, setErr, validate, disabled, cls, router } = props;
+  const { err, setErr, validate, disabled, cls, router, isEditing } = props;
 
   const [loading, setLoading] = useState(false);
 
@@ -70,9 +70,12 @@ export default function FormFields(props: any) {
         : lb === "RSSL Support User"
         ? sUsers
         : data) || [];
-
+    const getName = (e) =>
+      !e?.Name
+        ? (e?.first_name || "") + " " + (e?.last_name || "")
+        : e?.Name || "";
     return tempArr.map((e) => {
-      return { label: e.Name, value: e.ID };
+      return { label: getName(e), value: e.ID };
     });
   };
 
@@ -159,12 +162,21 @@ export default function FormFields(props: any) {
     }
   };
 
+  const back = () => {
+    if (step != 1 && step > 1) {
+      setStep(step - 1);
+    }
+  };
   return (
     <>
       <div className="row">
         {fields.map((el, idx) => (
           <div
-            className={"col-12 col-lg-4 py-1" + (cls ? " col-lg-6" : "")}
+            className={
+              "col-12 col-lg-4 py-1" +
+              (cls ? " col-lg-6" : "") +
+              (el.typ === "select" && hideUsers ? " d-none" : "")
+            }
             key={idx}
           >
             <label className="form-label text-black f-12">
@@ -173,7 +185,10 @@ export default function FormFields(props: any) {
             </label>
             {el.typ === "select" ? (
               <AsyncSelect
-                instanceId={`react-select-${el.lb.replaceAll(" ", "")}-${idx}`}
+                instanceId={`react-select-${(el?.lb || "")?.replaceAll(
+                  " ",
+                  ""
+                )}-${idx}`}
                 styles={selectStyle}
                 placeholder={el.ph}
                 defaultOptions={getOptions(el.lb, el.vl)}
@@ -202,7 +217,7 @@ export default function FormFields(props: any) {
                       : ""
                   }`}
                   type={el.typ}
-                  name={el.lb.replaceAll(" ", "") + idx}
+                  name={(el?.lb || "")?.replaceAll(" ", "") + idx}
                   accept="image/*"
                   onChange={async (e: any) => {
                     try {
@@ -236,12 +251,12 @@ export default function FormFields(props: any) {
                   }`}
                   placeholder={el.ph}
                   type={"text"}
-                  name={el.lb.replaceAll(" ", "") + idx}
+                  name={(el?.lb || "")?.replaceAll(" ", "") + idx}
                   value={getObjectValue(clientData, el.vl)}
                   onChange={(e) =>
                     updateValue(clientData, el.vl, e.target.value)
                   }
-                  disabled={disabled || false}
+                  disabled={disabled || isEditing || false}
                 />
                 <span className="input-group-text">
                   {process.env.NEXT_PUBLIC_REDIRECT}
@@ -258,7 +273,7 @@ export default function FormFields(props: any) {
                 }`}
                 placeholder={el.ph}
                 type={el.typ}
-                name={el.lb.replaceAll(" ", "") + idx}
+                name={(el?.lb || "")?.replaceAll(" ", "") + idx}
                 value={getObjectValue(clientData, el.vl)}
                 onChange={(e) => updateValue(clientData, el.vl, e.target.value)}
                 disabled={disabled || false}
@@ -300,7 +315,7 @@ export default function FormFields(props: any) {
           </button>
           {step == 5 ? (
             <Button loading={loading} disabled={loading} onClick={next}>
-              Continue
+              Submit
             </Button>
           ) : (
             <button className="btn btn-primary" onClick={next}>

@@ -15,6 +15,7 @@ import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { VendorsAddressTypes } from "@/constants/common";
 
 function VendorAccordion() {
   const { reset } = useForm();
@@ -53,26 +54,44 @@ function VendorAccordion() {
     data.Name && setValue("vendorName", data.Name);
     data.Code && setValue("vendorCode", data.Code);
 
-    const paymentType = paymentTypes.find(type=> type.value === data.PaymentType);
+    const paymentType = paymentTypes.find(type => type.value === data.PaymentType);
     data.PaymentType && setValue("paymentType", paymentType); //
 
     data.LegalName && setValue("legalName", data.LegalName);
     data.Email && setValue("vendorEmail", data.Email);
-    data.EntityID && setValue("entityType", data.EntityID);
-    data.DefaultAddress && setValue("defaultAddress", data.DefaultAddress);
+    // data.EntityID && setValue("entityType", data.EntityID);
+    const vendorEntity = {
+      value: data.EntityType.ID,
+      label: data.EntityType.Name
+    }
+    setValue("entityType", vendorEntity)
+    // data.DefaultAddress && setValue("defaultAddress", data.DefaultAddress);
+    const defaultAddress = VendorsAddressTypes.find(el => el.value === data.DefaultAddress);
+    setValue("defaultAddress", defaultAddress);
+    const basicInfoCountry = {
+      label: data.State?.Country?.Name,
+      value: data.State?.Country?.Id
+    }
+    setValue('vendorcountry', basicInfoCountry);
     // data.State && setValue("workState", data.State); //
     const basicInfoState = {
-      label : data.State?.Name,
-      value : data.State?.Id
+      label: data.State?.Name,
+      value: data.State?.Id
     }
-    setValue('workState',basicInfoState)
+    setValue('workState', basicInfoState)
     // console.log({state : data.State});
     data.TaxID && setValue("taxId", data.TaxID);
     data.DefaultAccount && setValue("defaultAccount", data.DefaultAccount);
-    data.AchRoutingNumber && setValue("routingNumber", data.AchRoutingNumber);
+    data.AchRoutingNumber && setValue("achRoutingNumber", data.AchRoutingNumber);
     data.AchBankAccountNUmber &&
       setValue("achAccountNumber", data.AchBankAccountNUmber);
     data.PayeeName && setValue("payeeName", data.PayeeName);
+    if (data.PrimaryContact) {
+      const primaryContactData = data.PrimaryContact;
+      setValue("contactName", primaryContactData.FullName);
+      setValue("contactNumber", primaryContactData.CellPhone);
+      setValue("vendorEmail", primaryContactData.EmailID);
+    }
   };
 
   useEffect(() => {
@@ -134,55 +153,60 @@ function VendorAccordion() {
     }
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
-      countryID: data.contactAddressState.countryId,
+      countryID: data.contactAddressCountry?.value,
       line1: data.contactAddress1,
       line2: data.contactAddress2,
-      stateID: data.contactAddressState.value,
+      stateID: data.contactAddressState?.value,
       zipcode: parseInt(data.contactAddressPostalCode),
     };
     const mailingAddressPaylaod = {
-      cityName: data.mailingAddressCity,
-      countryID: data.mailingAddressState.countryId,
-      line1: data.mailingAddress1,
-      line2: data.mailingAddress2,
-      stateID: data.mailingAddress2.value,
-      zipcode: parseInt(data.mailingAddressPostalCode),
+      "cityName": data.mailingAddressCity,
+      "countryID": data.mailingAddressCountry?.value,
+      "line1": data.mailingAddress1,
+      "line2": data.mailingAddress2,
+      "stateID": data.mailingAddressState?.value,
+      "zipcode": parseInt(data.mailingAddressPostalCode)
     };
     const billingAddressPaylaod = {
-      cityName: data.billingAddressCity,
-      countryID: data.billingAddressState.countryId,
-      line1: data.billingAddress1,
-      line2: data.billingAddress2,
-      stateID: data.billingAddressState.value,
-      zipcode: parseInt(data.billingAddressPostalCode),
-    };
+      "cityName": data.billingAddressCity,
+      "countryID": data.billingAddressCountry?.value,
+      "line1": data.billingAddress1,
+      "line2": data.billingAddress2,
+      "stateID": data.billingAddressState?.value,
+      "zipcode": parseInt(data.billingAddressPostalCode)
+    }
 
     const vendorsPayload = {
       Name: data.vendorName,
-      Code : data.vendorCode,
-      PaymentType: data.paymentType,
-      LegalName : data.legalName,
-      Email : data.vendorEmail,
-      EntityID : data.entityType,
+      Code: data.vendorCode,
+      PaymentType: data.paymentType.value,
+      LegalName: data.legalName,
+      Email: data.vendorEmail,
+      EntityTypeID: parseInt(data.entityType.value),
       TaxID: data.taxId,
       PayeeName: data.payeeName,
-      StateID : data.workState.value,
-      PettyCashPCardEnabled : data.isPettyCashEnabled,
-      PettyCashAccountID : data.pettyCashAccount,
-      DefaultAccount : data.defaultAccount,
-      DefaultAddress : data.defaultAddress,
-      AchBankAccountNUmber : parseInt(data.achAccountNumber),
-      AchRoutingNumber : parseInt(data.achRoutingNumber),
-      PrimaryAddress : contactAddressPaylaod,
-      MailingAddress  : mailingAddressPaylaod,
-      BillingAddress : billingAddressPaylaod
+      StateID: data.workState.value,
+      PettyCashPCardEnabled: data.isPettyCashEnabled,
+      PettyCashAccountID: data.pettyCashAccount,
+      DefaultAccount: data.defaultAccount,
+      DefaultAddress: data.defaultAddress.value,
+      AchBankAccountNUmber: parseInt(data.achAccountNumber),
+      AchRoutingNumber: parseInt(data.achRoutingNumber),
+      PrimaryAddress: contactAddressPaylaod,
+      MailingAddress: mailingAddressPaylaod,
+      BillingAddress: billingAddressPaylaod,
+      PrimaryContact: {
+        FullName: data.contactName,
+        CellPhone: data.contactNumber,
+        EmailID: data.vendorEmail
+      }
     }
-    vendorService.editVendor(id,vendorsPayload).then(()=>{
+    vendorService.editVendor(id, vendorsPayload).then(() => {
       toast.success("Vendor Edited successfully");
-        reset();
-        router.back();
-    }).catch(error=>{
-      toast.error(error.Message);
+      reset();
+      router.back();
+    }).catch(error => {
+      toast.error(error.Message || error.error || 'Unable to edit vendor');
     });
   };
 

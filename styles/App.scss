@@ -14,10 +14,11 @@
 @import "./scss/components.scss";
 @import "./scss/fonts.scss";
 @import "./scss/images.scss";
-@import "./scss/override.scss";
 @import "./scss/themes.scss";
 @import "./scss/component";
 @import "./scss/masterData";
+@import "./scss/override.scss";
+
 
 // AG Grid
 @import "ag-grid-community/styles/ag-grid.css";
@@ -31,7 +32,7 @@
 }
 @font-face {
   font-family: "Almarai";
-  src: url("/fonts/Almarai.ttf") format("truetype");
+  src: url("/fonts/Almarai.ttf") format('truetype');
 }
 
 @font-face {
@@ -79,8 +80,55 @@ input.searchProduction {
   padding: 9px 4px 9px 40px;
   background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
   background-size: 20px;
-  border: none;
+border: none;
   margin-right: 10px;
+}
+input.searchProduction1 {
+  width: 215px !important;
+  height: 35px !important;
+  display: block;
+  padding: 9px 4px 9px 40px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+border: none;
+  margin-right: 10px;
+}
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #26afb8;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #00aeef;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
 }
 
 .form-check-input:checked {
@@ -148,101 +196,104 @@ input::placeholder {
 .custom-datepicker {
   height: 30px;
 }
-.reseTpassword {
+.reseTpassword{
   max-width: 100%;
   height: auto;
 }
-.resetPassword1 {
+.resetPassword1{
   height: 54px;
-  color: #626873;
+   color: #626873
 }
-.reseTpassword3 {
+.reseTpassword3{
   width: 380px;
-  height: 54px;
-  background: #283891;
-  border: #00aeef;
-  border-radius: 12px;
-  font-size: 16px;
+                    height: 54px;
+                    background: #283891;
+                    border: #00AEEF;
+                    border-radius: 12px;
+                    font-size: 16px,
 }
-.reseTpassword4 {
+ .reseTpassword4{
   margin-top: "50px";
+                    font-size: 12px;
+                    color: #656472;
+ }
+ .reseTpassword5{
+font-size: 12px;
+color: #030229;
+text-decoration: underline;
+cursor: pointer;
+  margin-left:90px 
+ }
+ .reseTpassword6{
   font-size: 12px;
-  color: #656472;
-}
-.reseTpassword5 {
-  font-size: 12px;
+  color: #030229
+ }
+ .resetPassword7{
+ font-size: 12px;
   color: #030229;
   text-decoration: underline;
   cursor: pointer;
-  margin-left: 90px;
-}
-.reseTpassword6 {
-  font-size: 12px;
-  color: #030229;
-}
-.resetPassword7 {
-  font-size: 12px;
-  color: #030229;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-right: 100px;
-}
-.forgotScreen {
+    margin-right:100px ;
+ }
+ .forgotScreen{
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #ffffff;
-  margin-left: -400px;
-  margin-top: 300px;
+   top: 20%;
+    left: 50%;
+     transform: translate(-50%, -50%);
+      text-align: center;
+      color: #ffffff;
+      margin-left:-400px;
+      margin-top:300px
 }
-.forgotScreen1 {
-  max-width: 100%;
-  height: auto;
+.forgotScreen1{
+ max-width: 100%;
+ height:auto
 }
-.forgotScreen2 {
-  width: 380px;
-  height: 54px;
+.forgotScreen2{
+ width: 380px;
+ height: 54px
+
 }
-.forgotScreen2 {
-  width: 380px;
-  height: 55px;
-  background: #283891;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  font-size: 16px;
+.forgotScreen2{
+ width: 380px;
+ height: 55px;
+ background: #283891;
+ border:1px solid #dee2e6;
+ border-radius:12px;
+ font-size: 16px;
+ 
 }
-.forgotScreen3 {
-  text-decoration: none;
-  color: #030229;
-  font-size: 16px;
+.forgotScreen3{
+ text-decoration: none;
+ color: #030229;
+ font-size: 16px;
 }
-.sidenavDropdown {
-  border: 1.27px solid #828b94;
+.sidenavDropdown{
+  border: 1.27px solid #828B94;
   border-radius: 5px;
 }
-.home {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  text-align: center;
-  color: #030229;
-  white-space: nowrap;
+.home{
+font-size: 16px;
+font-weight: 600;
+letter-spacing: 0.01em;
+text-align: center;
+color: #030229;
+white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ressl {
+.ressl{
   color: #777777;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.01em;
   text-align: center;
+  
 }
 
 .clicked {
-  background-color: #d0f2ff;
+  background-color: #D0F2FF;
   padding-right: 16px; /* Adjust this value based on the width of your tickmark image */
 }
 .ellipsis {
@@ -250,6 +301,7 @@ input::placeholder {
   width: 150px;
   white-space: nowrap;
   text-overflow: ellipsis !important;
+  text-align: left !important;
 }
 .container {
   max-height: 300px; /* Set a max height for the container, adjust as needed */
@@ -258,19 +310,21 @@ input::placeholder {
   box-shadow: 1px 1px 19px 1px rgba(151, 151, 151, 0.25) !important;
 
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a box shadow */
-  /* Style scrollbar */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #c1c1c1 transparent; /* For Firefox */
-
-  /* For WebKit browsers (Chrome, Safari) */
-  &::-webkit-scrollbar {
-    width: 4px; /* Set the width of the scrollbar */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1; /* Set the color of the scrollbar thumb */
-  }
+   /* Style scrollbar */
+   scrollbar-width: thin; /* For Firefox */
+   scrollbar-color: #C1C1C1 transparent; /* For Firefox */
+ 
+   /* For WebKit browsers (Chrome, Safari) */
+   &::-webkit-scrollbar {
+     width: 4px; /* Set the width of the scrollbar */
+   }
+ 
+   &::-webkit-scrollbar-thumb {
+     background-color: #C1C1C1; /* Set the color of the scrollbar thumb */
+   }
 }
+
+
 
 input.searchProduction {
   width: 260px;
@@ -279,8 +333,46 @@ input.searchProduction {
   padding: 9px 4px 9px 40px;
   background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
   background-size: 20px;
-  border: none;
+border: none;
   margin-right: 10px;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #26afb8;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #00aeef;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
 }
 
 .form-check-input:checked {
@@ -348,101 +440,104 @@ input::placeholder {
 .custom-datepicker {
   height: 30px;
 }
-.reseTpassword {
+.reseTpassword{
   max-width: 100%;
   height: auto;
 }
-.resetPassword1 {
+.resetPassword1{
   height: 54px;
-  color: #626873;
+   color: #626873
 }
-.reseTpassword3 {
+.reseTpassword3{
   width: 380px;
-  height: 54px;
-  background: #283891;
-  border: #00aeef;
-  border-radius: 12px;
-  font-size: 16px;
+                    height: 54px;
+                    background: #283891;
+                    border: #00AEEF;
+                    border-radius: 12px;
+                    font-size: 16px,
 }
-.reseTpassword4 {
+ .reseTpassword4{
   margin-top: "50px";
+                    font-size: 12px;
+                    color: #656472;
+ }
+ .reseTpassword5{
+font-size: 12px;
+color: #030229;
+text-decoration: underline;
+cursor: pointer;
+  margin-left:90px 
+ }
+ .reseTpassword6{
   font-size: 12px;
-  color: #656472;
-}
-.reseTpassword5 {
-  font-size: 12px;
+  color: #030229
+ }
+ .resetPassword7{
+ font-size: 12px;
   color: #030229;
   text-decoration: underline;
   cursor: pointer;
-  margin-left: 90px;
-}
-.reseTpassword6 {
-  font-size: 12px;
-  color: #030229;
-}
-.resetPassword7 {
-  font-size: 12px;
-  color: #030229;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-right: 100px;
-}
-.forgotScreen {
+    margin-right:100px ;
+ }
+ .forgotScreen{
   position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: #ffffff;
-  margin-left: -400px;
-  margin-top: 300px;
+   top: 20%;
+    left: 50%;
+     transform: translate(-50%, -50%);
+      text-align: center;
+      color: #ffffff;
+      margin-left:-400px;
+      margin-top:300px
 }
-.forgotScreen1 {
-  max-width: 100%;
-  height: auto;
+.forgotScreen1{
+ max-width: 100%;
+ height:auto
 }
-.forgotScreen2 {
-  width: 380px;
-  height: 54px;
+.forgotScreen2{
+ width: 380px;
+ height: 54px
+
 }
-.forgotScreen2 {
-  width: 380px;
-  height: 55px;
-  background: #283891;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  font-size: 16px;
+.forgotScreen2{
+ width: 380px;
+ height: 55px;
+ background: #283891;
+ border:1px solid #dee2e6;
+ border-radius:12px;
+ font-size: 16px;
+ 
 }
-.forgotScreen3 {
-  text-decoration: none;
-  color: #030229;
-  font-size: 16px;
+.forgotScreen3{
+ text-decoration: none;
+ color: #030229;
+ font-size: 16px;
 }
-.sidenavDropdown {
-  border: 1.27px solid #828b94;
+.sidenavDropdown{
+  border: 1.27px solid #828B94;
   border-radius: 5px;
 }
-.home {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  text-align: center;
-  color: #030229;
-  white-space: nowrap;
+.home{
+font-size: 16px;
+font-weight: 600;
+letter-spacing: 0.01em;
+text-align: center;
+color: #030229;
+white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.ressl {
+.ressl{
   color: #777777;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.01em;
   text-align: center;
+  
 }
 
 .clicked {
-  background-color: #d0f2ff;
+  background-color: #D0F2FF;
   padding-right: 16px; /* Adjust this value based on the width of your tickmark image */
 }
 .ellipsis {
@@ -456,20 +551,60 @@ input::placeholder {
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden;
   box-shadow: 1px 1px 19px 1px rgba(151, 151, 151, 0.25) !important;
-
+  margin-bottom: 2px;
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a box shadow */
-  /* Style scrollbar */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #c1c1c1 transparent; /* For Firefox */
+   /* Style scrollbar */
+   scrollbar-width: thin; /* For Firefox */
+   scrollbar-color: #C1C1C1 transparent; /* For Firefox */
+ 
+   /* For WebKit browsers (Chrome, Safari) */
+   &::-webkit-scrollbar {
+     width: 4px; /* Set the width of the scrollbar */
+   }
+ 
+   &::-webkit-scrollbar-thumb {
+     background-color: #C1C1C1; /* Set the color of the scrollbar thumb */
+   }
+}
 
-  /* For WebKit browsers (Chrome, Safari) */
-  &::-webkit-scrollbar {
-    width: 4px; /* Set the width of the scrollbar */
-  }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1; /* Set the color of the scrollbar thumb */
-  }
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #26afb8;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open>.dropdown-toggle.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #00aeef;
+  --bs-btn-border-color: #00aeef;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #00aeef;
+  --bs-btn-hover-border-color: #00aeef;
+  --bs-btn-focus-shadow-rgb: 0, 137, 145;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #00aeef;
+  --bs-btn-active-border-color: #00aeef;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #00aeef;
+  --bs-btn-disabled-border-color: #00aeef;
 }
 
 .form-check-input:checked {
@@ -513,11 +648,11 @@ footer {
 
 // Card match height
 .match-height {
-  > [class*="col"] {
+  >[class*="col"] {
     display: flex;
     flex-flow: column;
 
-    > .card {
+    >.card {
       flex: 1 1 auto;
     }
   }
@@ -572,16 +707,16 @@ input::placeholder {
 
 .resetPassword1 {
   height: 54px;
-  color: #626873;
+  color: #626873
 }
 
 .reseTpassword3 {
   width: 380px;
   height: 54px;
   background: #283891;
-  border: #00aeef;
+  border: #00AEEF;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 16px,
 }
 
 .reseTpassword4 {
@@ -595,12 +730,12 @@ input::placeholder {
   color: #030229;
   text-decoration: underline;
   cursor: pointer;
-  margin-left: 90px;
+  margin-left: 90px
 }
 
 .reseTpassword6 {
   font-size: 12px;
-  color: #030229;
+  color: #030229
 }
 
 .resetPassword7 {
@@ -619,17 +754,17 @@ input::placeholder {
   text-align: center;
   color: #ffffff;
   margin-left: -400px;
-  margin-top: 300px;
+  margin-top: 300px
 }
 
 .forgotScreen1 {
   max-width: 100%;
-  height: auto;
+  height: auto
 }
 
 .forgotScreen2 {
   width: 380px;
-  height: 54px;
+  height: 54px
 }
 
 .forgotScreen2 {
@@ -639,6 +774,7 @@ input::placeholder {
   border: 1px solid #dee2e6;
   border-radius: 12px;
   font-size: 16px;
+
 }
 
 .forgotScreen3 {
@@ -646,6 +782,37 @@ input::placeholder {
   color: #030229;
   font-size: 16px;
 }
+.nodataAvailable p{
+  font-size: 32px;
+  font-weight: 600;
+  color: #B0B0B0;
+}
+.nodataAvailable h6{
+  font-size: 12x;
+  color: #B0B0B0;
+}
+.productionCards{
+  border-radius: 10px;
+  border: 1px solid #C1C1C1;
+  background: #116B8D;
+  height: 100%;
+}
+.productionCards p{
+font-size: 14px;
+}
+.productionCards h6{
+font-size: 12px;
+}
+.productionCards h4{
+font-size: 32px;
+font-weight: 600;
+}
+.productionBorder{
+  border-radius: 2.505px;
+  background: #B5DEF0;
+  padding: 5px;
+}
+
 .errorBorder {
   border: 1px solid #dc3545;
   border-radius: 5px;

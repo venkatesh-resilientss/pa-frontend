@@ -16,7 +16,7 @@ function AddressForm({ control, errors }) {
               {formData.map((formField) => (
                 <Col xl="4" key={formField.name}>
                   <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
             </Label>
                   <Controller
                       name={formField.name}

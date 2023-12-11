@@ -128,7 +128,7 @@ function AddBudget() {
   } = useForm();
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       Code: data?.code,
       Name: data?.name,
@@ -427,28 +427,28 @@ function AddBudget() {
           )}
         </Col>
         <Row className="mt-2">
-        <Col xl="3">
-          <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
-          <Controller
-            name="budgetfile"
-            control={control}
-            rules={budgetValidationRules.budgetfile}
-            render={({ field }) => (
-              <Input
-                type="file"
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                invalid={errors.budgetfile && true}
-                {...field}
-                accept=".txt"
-              />
+          <Col xl="3">
+            <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
+            <Controller
+              name="budgetfile"
+              control={control}
+              rules={budgetValidationRules.budgetfile}
+              render={({ field }) => (
+                <Input
+                  type="file"
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  invalid={errors.budgetfile && true}
+                  {...field}
+                  accept=".txt"
+                />
+              )}
+            />
+            {errors.budgetfile && (
+              <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
+                {errors.budgetfile.message as React.ReactNode}
+              </span>
             )}
-          />
-          {errors.budgetfile && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {errors.budgetfile.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
+          </Col>
         </Row>
       </Row>
     </div>

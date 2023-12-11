@@ -24,7 +24,7 @@ import NoDataPage from "components/NoDataPage";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
 
 const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const router = useRouter();
   const recordLimit = 10;
 
@@ -37,7 +37,7 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
 
-  const hasBulkUploadConfiguration = hasPermission("","bulk_upload")
+  const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
 
   const taxcodesService = new TaxCodesService();
 
@@ -163,7 +163,16 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -242,7 +251,7 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
                 />
-                
+
                 {hasBulkUploadConfiguration && (
                   <Button
                     onClick={() =>

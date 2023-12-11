@@ -24,7 +24,7 @@ const StatsHorizontal = ({
                 <Image
                   src={icon}
                   alt=""
-                  style={{ width: "15px", height: "15px" }}
+                  style={{ width: "20px", height: "20px" }}
                 />
               </div>
 
@@ -32,10 +32,8 @@ const StatsHorizontal = ({
                 className="card-text m-auto"
                 style={{
                   color: "#4C4C61",
-                  fontSize: "12px",
+                  fontSize: "14px",
                   fontWeight: 600,
-                  // lineHeight: '42.655px',
-                  // letterSpacing: '0.305px'
                 }}
               >
                 {statTitle}
@@ -63,14 +61,8 @@ const StatsHorizontal = ({
               overlay={
                 <Tooltip bsPrefix="custom-tooltip">
                   <Card>
-                    <div className="p-2 mt-1 gap-1 d-flex">
-                      <p
-                        style={{
-                          fontSize: "10px",
-                          fontWeight: "400",
-                          color: "#4C4C61",
-                        }}
-                      >
+                    <div className="p-2 mt-1 gap-1 d-flex custom-tooltip-card">
+                      <p>
                         {statTooltip}
                       </p>
                     </div>
