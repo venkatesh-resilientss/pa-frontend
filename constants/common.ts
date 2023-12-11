@@ -251,6 +251,10 @@ export const sidebarRoutesMaster = [
         name: "Tax Codes",
         path: "/taxcodes",
       },
+      {
+        name: "WC Codes",
+        path: "/Wccodes",
+      },
     ],
   },
   {
@@ -386,6 +390,10 @@ export const sidebarRoutesProduction = [
       {
         name: "Project Types",
         path: "/project-type",
+      },
+      {
+        name: "WC Codes",
+        path: "/Wccodes",
       },
     ],
   },
