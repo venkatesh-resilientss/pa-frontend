@@ -46,8 +46,8 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   const budgetService = new BudgetService();
 
   const fetchData = async (pageNumber) => {
-    const { clientID, projectID } = getSessionVariables();
     try {
+      const { clientID, projectID } = getSessionVariables();
       const response = await budgetService.getBudgets(
         {
           clientID,
@@ -59,8 +59,8 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           offset: pageNumber,
         }
       );
-      const data = response.data; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      const data = response.data.filter(item=>item.IsActive == false); // Adjust based on the actual structure of the response
+      const totalRecords = response.totalCount; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
       return { data: null, totalRecords: 0 };
