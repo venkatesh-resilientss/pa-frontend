@@ -34,7 +34,6 @@ function AddProjectType() {
       })
       .catch((error) => {
         setIsSaving(false)
-        console.log('error', error)
         toast.error(error?.error);
       });
   };

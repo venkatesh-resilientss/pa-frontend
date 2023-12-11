@@ -21,8 +21,7 @@ const AllProjectTypeTable = () => {
     ["LIST_PROJECTTYPES", searchText],
     () => projectTypesService.getProjecttypes()
   );
-
-  console.log('rowData', rowData)
+  
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
