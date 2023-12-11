@@ -345,7 +345,10 @@ export const sidebarRoutesProduction = [
         name: "Agents",
         path: "/agent",
       },
-
+      {
+        name: "Banks",
+        path: "/banks",
+      },
       {
         name: "Budget",
         path: "/budgets",
