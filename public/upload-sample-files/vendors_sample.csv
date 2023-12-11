@@ -1,4 +1,0 @@
-Name,PettyCashCustodianAccountID,PettyCashPCardAccountID,PaymentType,PettyCashPCardEnabled,PettyCashAccountID,AliasName,PettyCashCustodian,LegalName,Description,PayeeName,TaxID,WorkStateID,EntityID,TaxCodeID,BankAchID,PrimaryAddressID,MailingAddressID,BillingAddressID,PrimaryContactID,SecondaryContactID,ParentID,TenantID
-John Doe,101,201,Credit Card,true,301,Doe Corp,TRUE,Doe Legal,Description 1,John Payee,TAX123,401,501,601,701,801,901,1001,1101,1201,1301,1
-Jane Smith,102,202,ACH,false,302,Smith Corp,FALSE,Smith Legal,Description 2,Jane Payee,TAX456,402,502,602,702,802,902,1002,1102,1202,1302,1
-Bob Johnson,103,203,Check,true,303,Johnson Corp,TRUE,Johnson Legal,Description 3,Bob Payee,TAX789,403,503,603,703,803,903,1003,1103,1203,1303,1

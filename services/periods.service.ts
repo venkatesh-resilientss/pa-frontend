@@ -1,5 +1,5 @@
   import APIService from './api.service';
-  import {DELETE_PERIODS, EDIT_PERIODS, GET_CLIENTS, GET_PERIODS, PERIODS_DETAIL_ENDPOINT,UPLOAD_PERIODS_LIST} from '../lib/endpoints';
+  import {CREATE_PERIOD, DELETE_PERIODS, EDIT_PERIODS, GET_CLIENTS, GET_PERIODS, PERIODS_DETAIL_ENDPOINT,UPLOAD_PERIODS_LIST} from '../lib/endpoints';
 
   class PeriodsService extends APIService {
     getPeriods(data,params?): Promise<any> {
@@ -19,7 +19,7 @@
 
     createPeriod(data:any) {
       return this
-        .post(GET_PERIODS, data)
+        .post(CREATE_PERIOD, data)
         .then((response) => {
           return response.data;
         })

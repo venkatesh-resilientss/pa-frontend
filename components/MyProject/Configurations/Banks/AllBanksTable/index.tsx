@@ -36,7 +36,7 @@ const AllBanksTable = () => {
   // const [bankLoading, setBankLoading] = useState(false);
   // const [totalRecords, setTotalRecords] = useState(0);
   const [rerender] = useState(false);
-  const perPage = 3;
+  const perPage = 10;
 
   const bankService = new BankService();
   const hasCreateConfiguration = hasPermission(
@@ -84,7 +84,7 @@ const AllBanksTable = () => {
     return (
       <CustomBadge
         bg={sateDir[props.value]}
-        value={props.value ? "active" : "In-active"}
+        value={props.value ? "Active" : "In-active"}
       />
     );
   };
