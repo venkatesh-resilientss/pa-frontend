@@ -113,7 +113,7 @@ function W4Form({ control, errors }) {
           {formData.map((formField) => (
             <Col xl="4" key={formField.name}>
               {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                {formField.label}{formField.required && '*'}
+                {formField.label}{formField.required && <span className='text-danger'>*</span>}
               </Label>}
               {formField.type === 'select' ? (
                 <Controller
@@ -185,9 +185,9 @@ function W4Form({ control, errors }) {
         </Row>
       </Form>
       <div className="form-lable-font text-black mb-4 mt-2">Federal W4&apos;`s</div>
-      <GridTable rowData={federal} columnDefs={federalColumns} pageSize={4} searchText={undefined} />
+      <GridTable rowData={{data: federal}} columnDefs={federalColumns} pageSize={4} searchText={undefined} />
       <div className="form-lable-font text-black mb-4">Resident W4&apos;`s</div>
-      <GridTable rowData={state} columnDefs={stateColumns} pageSize={4} searchText={undefined} />
+      <GridTable rowData={{data: state}} columnDefs={stateColumns} pageSize={4} searchText={undefined} />
     </div>
   );
 }

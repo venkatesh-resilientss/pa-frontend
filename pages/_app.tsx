@@ -45,7 +45,7 @@ function MyApp({ Component, pageProps, err }) {
     const getUser = async () => {
       try {
         const resp = await authService.checkTenant({ email: user?.email });
-        const tenant = resp?.Slug.toLowerCase();
+        const tenant = user?.isStaffUser ? "app" : resp?.Slug.toLowerCase();
         const prefix = window.location.hostname.split(".")[0];
         const accessToken = await authService.getAccessToken();
 

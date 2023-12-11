@@ -16,6 +16,7 @@ import PhysicalAddressForm from "./PhysicalAddress";
 import DefaultAccountForm from "./DefaultAccount";
 import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
+import { getSessionVariables } from "@/constants/function";
 
 function BankAccordion() {
   const { reset } = useForm();
@@ -36,6 +37,7 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
+    const { clientID, projectID } = getSessionVariables();
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -44,8 +46,15 @@ function BankAccordion() {
       Description: data.description,
       Fax: data.mailingFax,
       BranchNumber: parseInt(data.branchNumber),
-      ClientId: 14,
-      projectId: 1,
+      ClientId: clientID,
+      projectId: projectID,
+      AccountFraction: data.accountFraction,
+      PrimaryContact: {
+        // "FullName": "john philips",
+        PhoneCode: parseInt(data.basicInfoCountryCode),
+        CellPhone: data.basicInfoContactNumber,
+        EmailID: data.emailIDBasicInfo
+      },
       PhysicalAddress: {
         Line1: data.physicalAddress1,
         Line2: data.physicalAddress2,
@@ -62,7 +71,7 @@ function BankAccordion() {
         CountryId: parseInt(data.mailingAddressState.country.ID),
         Zipcode: parseInt(data.mailingAddressPostalCode),
         ContactPhone: data.mailingPhoneNumber,
-        ContactPhoneCode: "+1",
+        ContactPhoneCode: data.mailingCountryCode,
         ContactEmailID: data.mailingEmail,
       },
       Meta: {

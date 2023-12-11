@@ -29,6 +29,16 @@
   font-size: 8px !important;
 }
 
+.fw-600 {
+  font-weight: 600 !important;
+}
+
+.f-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .f-almarai {
   font-family: "Almarai", Tahoma, Geneva, Verdana, sans-serif;
 }

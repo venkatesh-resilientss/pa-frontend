@@ -11,11 +11,9 @@ import {
 
 import { useRouter } from "next/router";
 import { StatesService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { openBulkUploadStatesPopup } from "redux/slices/mySlices/configurations";
-import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
@@ -23,14 +21,13 @@ import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-
-import { useState } from "react";
 import NoDataPage from "components/NoDataPage";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
-const AllStatesTable = () => {
+const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordLimit = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -40,19 +37,27 @@ const AllStatesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  // const hasDeactivateConfiguration = hasPermission(
-  //   "configuration_management",
-  //   "deactivate_configuration"
-  // );
+  const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
 
   const statesService = new StatesService();
 
-  const { data: statesData, isLoading: stateLoading } = useSWR(
-    ["LIST_STATES", searchText],
-    () => statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
-  );
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await statesService.getStates({
+        search: searchText,
+        pageLimit: recordLimit,
+        offset: pageNumber,
+      });
+      const data = response.data; // Adjust based on the actual structure of the response
 
-  const dataSource = statesData?.data;
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -175,7 +180,16 @@ const AllStatesTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       unSortIcon: true,
       resizable: true,
@@ -239,7 +253,7 @@ const AllStatesTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {statesData?.data.length} States
+                  States
                 </div>
 
                 <Input
@@ -250,24 +264,28 @@ const AllStatesTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadStatesPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasBulkUploadConfiguration && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadStatesPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -310,37 +328,22 @@ const AllStatesTable = () => {
           </CardBody>
         </Card>
       </div>
-      {stateLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add State"}
-                buttonName={hasCreateConfiguration ? "Add State" : ""}
-                buttonLink={"/configurations/add-state"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordLimit}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Add State"}
+              buttonName={hasCreateConfiguration ? "Add State" : ""}
+              buttonLink={"/configurations/add-state"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

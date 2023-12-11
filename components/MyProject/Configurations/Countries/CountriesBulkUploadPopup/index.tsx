@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody, Spinner } from "reactstrap";
 
 import { closeBulkUploadCountriesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CountryService } from "services";
 
-const CountriesBulkUploadPopup = () => {
+const CountriesBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const countryService = new CountryService();
@@ -33,12 +33,13 @@ const CountriesBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
-
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
+    setLoader(true);
 
     const fileName = uploadedFiles[0];
 
@@ -48,14 +49,12 @@ const CountriesBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeBulkUploadCountriesPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        toast.error(error.Message || error.error || "Failed to insert data.");
+        setLoader(false);
       });
   };
 
@@ -190,8 +189,13 @@ const CountriesBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

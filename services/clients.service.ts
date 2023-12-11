@@ -7,9 +7,25 @@ import {
   GET_CLIENTS,
   GET_SOFTWARES,
   GET_PRODUCTIONS,
+  GET_CLIENT_TYPES,
+  GET_CLIENT_COUNTRIES,
+  GET_STATES_BY_COUNTRY,
+  GET_USERS_BY_ROLE,
+  UPLOAD_FILE_S3,
+  GET_ALL_USERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
+  getUsers(queries: any): Promise<any> {
+    return this.get(`${GET_ALL_USERS}${queries}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
   getSoftwares(): Promise<any> {
     return this.get(`${GET_SOFTWARES}`)
       .then((res) => {
@@ -20,8 +36,66 @@ class ClientsService extends APIService {
       });
   }
 
-  getClients(): Promise<any> {
-    return this.get(`${GET_CLIENTS}`)
+  getClientTypes(): Promise<any> {
+    return this.get(`${GET_CLIENT_TYPES}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getCountries(): Promise<any> {
+    return this.get(`${GET_CLIENT_COUNTRIES}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getStates(id: any): Promise<any> {
+    return this.get(`${GET_STATES_BY_COUNTRY(id)}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getUsersByRole(id: any): Promise<any> {
+    return this.get(`${GET_USERS_BY_ROLE(id)}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+  s3upload(data: any): Promise<any> {
+    return this.postWithMultiPartHeaders(`${UPLOAD_FILE_S3}`, data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error: any) => {
+        throw error.response.data?.msg || error.response.data;
+      });
+  }
+
+  // getClients(): Promise<any> {
+  //   return this.get(`${GET_CLIENTS}`)
+  //     .then((res) => {
+  //       return res?.data;
+  //     })
+  //     .catch((error: any) => {
+  //       throw error?.response?.data;
+  //     });
+  // }
+  getClients(params): Promise<any> {
+    return this.get(
+      `${GET_CLIENTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
+    )
       .then((res) => {
         return res?.data;
       })
@@ -59,8 +133,8 @@ class ClientsService extends APIService {
       });
   }
 
-  editClient(id: any) {
-    return this.put(EDIT_CLIENTS(id))
+  editClient(id: any, data: any) {
+    return this.put(EDIT_CLIENTS(id), data)
       .then((response) => {
         return response?.data;
       })

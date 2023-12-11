@@ -201,9 +201,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -223,7 +220,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
 
           <Col xl="4" className="my-2"></Col>
 
-          <Col xl="4" className="my-2">
+          {/* <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -250,6 +247,60 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                 {errors.mailingPhoneNumber.message as React.ReactNode}
               </span>
             )}
+          </Col> */}
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Phone
+            </Label>
+            <div className="d-flex gap-2">
+              <div style={{ width: "20%" }}>
+                <Controller
+                  name="mailingCountryCode"
+                  rules={{
+                    required: "Country Code is Required",
+                  }}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="00"
+                      invalid={errors.mailingCountryCode && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              <div style={{ width: "80%" }}>
+                <Controller
+                  name="mailingPhoneNumber"
+                  rules={{
+                    required: "Email ID is Required",
+                  }}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Enter Phone Number"
+                      invalid={errors.mailingPhoneNumber && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {errors.mailingCountryCode ? (
+              <span className="text-danger">
+                {errors.mailingCountryCode.message as React.ReactNode}
+              </span>
+            ) : errors.mailingPhoneNumber ? (
+              <span className="text-danger">
+                {errors.mailingPhoneNumber.message as React.ReactNode}
+              </span>
+            ) : null}
           </Col>
 
           <Col xl="4" className="my-2">

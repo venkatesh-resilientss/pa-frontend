@@ -1,11 +1,12 @@
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { PeriodsService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
+import { getSessionVariables } from "@/constants/function";
 
 import moment from "moment";
 
@@ -59,9 +60,7 @@ function EditPeriod() {
     setActiveStatus(periodData.IsActive);
   }, [periodData]);
 
-  const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodsService.getPeriods()
-  );
+ 
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
 
@@ -70,20 +69,21 @@ function EditPeriod() {
       toast.warning('End Date must be greater than Start Date');
       return 
     }
-
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.periodname,
       description: data.description,
       isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
+      clientID,
+      projectID
     };
 
     periodsService
       .editPeriod(id, backendFormat)
       .then(() => {
         toast.success("Period Edited successfully");
-        mutate(bankMutate());
         router.back();
 
         reset();

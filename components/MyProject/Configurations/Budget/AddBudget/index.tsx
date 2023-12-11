@@ -13,6 +13,7 @@ import {
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
 import { formValidationRules } from "constants/common";
+import { getSessionVariables } from "@/constants/function";
 function AddBudget() {
   const router = useRouter();
   const budgetValidationRules = formValidationRules.budgets;
@@ -127,6 +128,7 @@ function AddBudget() {
   } = useForm();
 
   const onSubmit = (data) => {
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       Code: data?.code,
       Name: data?.name,
@@ -140,6 +142,8 @@ function AddBudget() {
       BankID: 0,
       Amount: 0.0,
       budgetFile: "",
+      clientID,
+      projectID
     };
 
     budgetService
@@ -424,9 +428,7 @@ function AddBudget() {
         </Col>
         <Row className="mt-2">
           <Col xl="3">
-            <Label className="form-lable-font">
-              Upload Budget File <span className="required">*</span>
-            </Label>
+            <Label className="form-lable-font">Upload Budget File <span className="required">*</span></Label>
             <Controller
               name="budgetfile"
               control={control}
@@ -442,7 +444,7 @@ function AddBudget() {
               )}
             />
             {errors.budgetfile && (
-              <span style={{ color: "red" }}>
+              <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
                 {errors.budgetfile.message as React.ReactNode}
               </span>
             )}

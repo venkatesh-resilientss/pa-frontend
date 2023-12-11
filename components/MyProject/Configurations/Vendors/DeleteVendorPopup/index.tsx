@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { VendorsService } from "services";
 import { closeDeleteVendorPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
@@ -12,9 +11,7 @@ const DeleteVendorPopup = () => {
 
   const vendorService = new VendorsService();
 
-  const { mutate: coaMutate } = useSWR("LIST_VENDORS", () =>
-    vendorService.getVendors()
-  );
+  
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.vendors.deleteVendorPopup.status
@@ -29,7 +26,6 @@ const DeleteVendorPopup = () => {
       await vendorService.deleteVendor(helperData);
       toast.success("Vendor Deleted Successfully");
       dispatch(closeDeleteVendorPopup("close"));
-      mutate(coaMutate());
     } catch (error) {
       console.error("Error deleting Vendor:", error);
     }

@@ -17,6 +17,8 @@
 @import "./scss/themes.scss";
 @import "./scss/component";
 @import "./scss/masterData";
+@import "./scss/override.scss";
+
 
 // AG Grid
 @import "ag-grid-community/styles/ag-grid.css";
@@ -81,7 +83,16 @@ input.searchProduction {
 border: none;
   margin-right: 10px;
 }
-
+input.searchProduction1 {
+  width: 215px !important;
+  height: 35px !important;
+  display: block;
+  padding: 9px 4px 9px 40px;
+  background: #fff url("../assets/myIcons/search.svg") no-repeat 11px;
+  background-size: 20px;
+border: none;
+  margin-right: 10px;
+}
 .btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: #00aeef;
@@ -290,6 +301,7 @@ white-space: nowrap;
   width: 150px;
   white-space: nowrap;
   text-overflow: ellipsis !important;
+  text-align: left !important;
 }
 .container {
   max-height: 300px; /* Set a max height for the container, adjust as needed */
@@ -539,7 +551,7 @@ white-space: nowrap;
   overflow-y: auto; /* Enable vertical scrolling */
   overflow-x: hidden;
   box-shadow: 1px 1px 19px 1px rgba(151, 151, 151, 0.25) !important;
-
+  margin-bottom: 2px;
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a box shadow */
    /* Style scrollbar */
    scrollbar-width: thin; /* For Firefox */
@@ -791,7 +803,54 @@ input::placeholder {
   color: white;
   border: 1px solid #dee2e6;
   }
+  .nodataAvailable p{
+    font-size: 32px;
+    font-weight: 600;
+    color: #B0B0B0;
+  }
+  .nodataAvailable h6{
+    font-size: 12x;
+    color: #B0B0B0;
+  }
+  .productionCards{
+    border-radius: 10px;
+    border: 1px solid #C1C1C1;
+    background: #116B8D;
+    height: 100%;
+  }
+  .productionCards p{
+  font-size: 14px;
+  }
+  .productionCards h6{
+  font-size: 12px;
+  }
+  .productionCards h4{
+  font-size: 32px;
+  font-weight: 600;
+  }
+  .productionBorder{
+    border-radius: 2.505px;
+    background: #B5DEF0;
+    padding: 5px;
+  }
 .errorBorder {
   border: 1px solid #dc3545;
   border-radius: 5px;
+}
+.menu-item-text {
+  letter-spacing: 0.1px;
+  color: #4c4c61;
+  font-size: 14px;
+}
+.menu-item-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.menu-item {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: left;
+  text-align: center;
 }

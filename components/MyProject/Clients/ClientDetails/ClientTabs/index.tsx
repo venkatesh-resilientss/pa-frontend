@@ -24,7 +24,7 @@ function ClientTabs(props) {
   }));
 
   const selectStyle = {
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       border: "1px solid #dee2e6",
     }),

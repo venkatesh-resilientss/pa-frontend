@@ -14,7 +14,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 
-const VendorsBulkUploadPopup = () => {
+const VendorsBulkUploadPopup = (rerender, setRerender) => {
   const dispatch = useDispatch();
 
   const vendorsService = new VendorsService();
@@ -51,7 +51,7 @@ const VendorsBulkUploadPopup = () => {
       .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeDeleteVendorPopup("close"));
       })
       .catch(() => {

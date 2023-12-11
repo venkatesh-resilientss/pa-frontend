@@ -9,10 +9,10 @@ function BasicDetailsForm({ control, errors }) {
     { name: 'name', label: 'Client Name', required: true, placeholder: 'Client Name' },
     { name: 'code', label: 'Client Code', required: true, placeholder: 'Enter Client Code ex:102910381' },
     { name: 'legal', label: 'Client Legal Name (If different)', placeholder: 'Enter Legal Name' },
-    { name: 'fein', label: 'FEIN', placeholder: 'Enter FEIN' },
-    { name: 'routing', label: 'Routing Number', placeholder: 'Enter Routing Number' },
-    { name: 'bank_name', label: 'Bank Name', placeholder: 'Enter Bank Name', type: 'select' },
-    { name: 'account_number', label: 'Account Number', placeholder: 'Enter Account Number' }
+    { name: 'fein', label: 'FEIN', required: true, placeholder: 'Enter FEIN' },
+    { name: 'routing', label: 'Routing Number', required: true, placeholder: 'Enter Routing Number' },
+    { name: 'bank_name', label: 'Bank Name', required: true, placeholder: 'Enter Bank Name' },
+    { name: 'account_number', type: 'input', label: 'Account Number', required: true, placeholder: 'Enter Account Number' }
   ];
 
   return (
@@ -24,7 +24,7 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {childFields.map((formField) => (
             <Col xl="4" key={formField.name}>
-              <Label className="text-black form-label">{formField.label}{formField.required && '*'}</Label>
+              <Label className="text-black form-label">{formField.label}{formField.required && <span className='text-danger'>*</span>}</Label>
               {formField.type === 'select' ? (
                 <Controller
                   name={formField.name}

@@ -1,2 +1,2 @@
-code,description,TenantID
-TD23,lorem ipsum de amet,1
+Code,Name,Description,CountryID,TaxYear
+123,Test Tax,Test Tax Code,US,2022

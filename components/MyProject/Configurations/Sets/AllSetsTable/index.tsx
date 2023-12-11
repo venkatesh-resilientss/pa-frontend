@@ -12,15 +12,11 @@ import {
 // import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import { SetsService } from "services";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSetsPopup,
-  openDeleteSetPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -28,12 +24,13 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 const setsService = new SetsService();
 
 const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   // const setsService = new SetsService();
   const router = useRouter();
-  const perPage = 3;
+  const perPage = 10;
   // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
@@ -44,11 +41,6 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
-
   const dispatch = useDispatch();
 
   // const { data: setsData, isLoading: setsLoading } = useSWR(
@@ -58,22 +50,20 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   // const dataSource = setsData?.result;
 
   const fetchData1 = async (pageNumber) => {
-    // setBankLoading(true)
     try {
-      const response = await setsService.getSets({
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
         search: searchText,
         pageLimit: perPage,
         offset: pageNumber,
-      });
+      };
+      const payload = { clientId: clientID, projectId: projectID };
+      const response = await setsService.getSets(queryParams, payload);
       const data = response.result; // Adjust based on the actual structure of the response
-      // setBankData(data)
-      // setTotalRecords(response.total_records)
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
       return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
     }
   };
 
@@ -132,15 +122,6 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -174,7 +155,16 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -342,6 +332,7 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
           )}
         </>
       )} */}
+      <div className="mt-3">
       <AGGridTable
         rerender={rerender}
         columnDefs={columnDefs}
@@ -350,11 +341,12 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
         pageSize={perPage}
         noDataPage={() => (
           <NoDataPage
-            buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
-            buttonLink={"/configurations/add-bank"}
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
           />
         )}
       />
+      </div>
     </div>
   );
 };

@@ -3,24 +3,67 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { COAAccountsService } from "services";
 import { COAAccountyTypeOptions } from "@/constants/common";
 import { formValidationRules } from "@/constants/common";
 import { selectStyles } from "constants/common";
 import Select from "react-select";
+import { getSessionVariables } from "@/constants/function";
+import AsyncSelect from "react-select/async";
 
 function EditChartOfAccounts() {
   const router = useRouter();
   const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
-  const {data : COAData} = useSWR("LIST_COA",()=>coaAccountsService.getCoasAccounts());
-  const COASelectOptions = COAData?.result.map((account)=>{
-    return {
-      value : account.ID,
-      label : `${account.Code}-${account.Name}`
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
     }
-  })
+  };
   const { id } = router.query;
   const [postableActiveStatus,setPostableActiveStatus] = useState(false);
 
@@ -54,26 +97,26 @@ function EditChartOfAccounts() {
 
   const cOAAccountsService = new COAAccountsService();
 
-  const { mutate: currencyMutate } = useSWR("LIST_COA", () =>
-    cOAAccountsService.getCoasAccounts()
-  );
+  
 
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       name: data.COAName,
       description: data.Description,
       IsActive: activeStatus,
       code: data.COACode,
       parentID: parseInt(data.COAParent),
-      accountType: data.AccountType,
+      accountType: data.AccountType.value,
       postable: coaData?.IsActive,
+      clientID,
+      projectID
     };
 
     cOAAccountsService
       .editCOA(id, backendFormat)
       .then(() => {
         toast.success("COA Edited successfully");
-        mutate(currencyMutate());
         router.back();
 
         reset();
@@ -188,11 +231,16 @@ function EditChartOfAccounts() {
                 control={control}
                 rules={coaValidationRules.parent}
                 render={({ field }) => (
-                  <Select
+                  <AsyncSelect
                   {...field}
-                  options={COASelectOptions}
-                  placeholder="Select an option"
-                  styles={selectStyles}/>
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
+                />
                 )}
               />
               {errors.COAParent && (

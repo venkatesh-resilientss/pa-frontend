@@ -887,7 +887,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Client"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -918,7 +918,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Production"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -949,7 +949,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Bank"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -982,7 +982,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Currency"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1013,7 +1013,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Department"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1044,7 +1044,7 @@ const EditJournalEntry = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",

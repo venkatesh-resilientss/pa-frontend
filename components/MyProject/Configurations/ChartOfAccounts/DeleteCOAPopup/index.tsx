@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { COAAccountsService } from "services";
 import { closeDeleteCOAPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
@@ -12,9 +11,7 @@ const DeleteCOAPopup = () => {
 
   const coaService = new COAAccountsService();
 
-  const { mutate: coaMutate } = useSWR("LIST_COAS", () =>
-    coaService.getCoasAccounts()
-  );
+  
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.coa.deleteCOAPopup.status
@@ -29,7 +26,6 @@ const DeleteCOAPopup = () => {
       await coaService.deleteCOA(helperData);
       toast.success("COA Deleted Successfully");
       dispatch(closeDeleteCOAPopup("close"));
-      mutate(coaMutate());
     } catch (error) {
       console.error("Error deleting COA:", error);
     }

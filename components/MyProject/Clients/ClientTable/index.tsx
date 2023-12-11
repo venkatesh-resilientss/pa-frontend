@@ -2,7 +2,6 @@ import { FcFilmReel } from "react-icons/fc";
 
 import { hasPermission } from "commonFunctions/functions";
 
-
 import {
   Card,
   Button,
@@ -13,13 +12,7 @@ import {
   DropdownMenu,
 } from "reactstrap";
 import { useRouter } from "next/router";
-import {
-  Edit,
-  File,
-  MoreVertical,
-  Trash,
-  Users,
-} from "react-feather";
+import { Edit, File, MoreVertical, Trash, Users } from "react-feather";
 import DataTableWithButtons from "../../Table/index";
 import { ClientsService } from "services";
 import useSWR from "swr";
@@ -27,7 +20,6 @@ import moment from "moment";
 import { toast } from "react-toastify";
 
 const ClientsListTable = () => {
-
   const router = useRouter();
   const hasClientEditPermission = hasPermission(
     "client_management",
@@ -41,7 +33,7 @@ const ClientsListTable = () => {
   const clientService = new ClientsService();
 
   const { data: clientData, mutate } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients()
+    clientService.getClients({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const columns = [
@@ -90,7 +82,7 @@ const ClientsListTable = () => {
     },
 
     {
-      name: <div>Rss Support User</div>,
+      name: <div>RSSL Support User</div>,
       width: "150px",
       sortable: true,
       sortField: "production_name",

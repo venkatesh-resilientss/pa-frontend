@@ -6,13 +6,13 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 function ProjectDetailsForm({ control, errors }) {
 
   const formData = [
-    [{ name: 'departments', label: 'Departments', placeholder: 'Enter Departments' },
-    { name: ' payFrequency', label: ' Pay Frequency', placeholder: 'Enter  Pay Frequency' },
-    { name: 'periodEndingDay', label: 'Period Ending Day', type: 'date', placeholder: 'Enter Period Ending Day' }],
-    [{ name: 'precalc', label: 'Pre-calc', type: 'select', placeholder: 'Select Pre-calc' }],
-    [{ name: 'calculate1', label: 'Calculate Approval One', type: 'select', placeholder: 'Select Calculate Approval One' },
-    { name: 'calculate2', label: 'Calculate Approval Two', type: 'select', placeholder: 'Select Calculate Approval Two' },
-    { name: 'calculateFinal', label: 'Calculate Approval Final', required: false, type: 'select', placeholder: 'Select Calculate Approval Final' }]
+    [{ name: 'departments', label: 'Departments', type: 'select', placeholder: 'Enter Departments' },
+    { name: ' payFrequency', label: ' Pay Frequency', type: 'select', required: true, options: [{ value: "Daily", label: "Daily" },{ value: "Weekly", label: "Weekly" }, { value: "Bi-Weekly", label: "Bi-Weekly" }, { value: "Semi-Monthly", label: "Semi-Monthly" }, { value: "Monthly", label: "Monthly" }, { value: "Quarterly", label: "Quarterly" }], placeholder: 'Enter  Pay Frequency' },
+    { name: 'periodEndingDay', label: 'Period Ending Day', type: 'select', required: true, options: [{ value: "Monday", label: "Monday" },{ value: "Tuesday", label: "Tuesday" }, { value: "Wednesday", label: "Wednesday" }, { value: "Thursday", label: "Thursday" }, { value: "Friday", label: "Friday" }, { value: "Saturday", label: "Saturday" }, { value: "Sunday", label: "Sunday" }], placeholder: 'Enter Period Ending Day' }],
+    [{ name: 'precalc', label: 'Pre-calc', type: 'select', required: true, options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], placeholder: 'Select Pre-calc' }],
+    [{ name: 'calculate1', label: 'Calculate Approval One', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval One' },
+    { name: 'calculate2', label: 'Calculate Approval Two', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval Two' },
+    { name: 'calculateFinal', label: 'Calculate Approval Final', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval Final' }]
   ]
 
   return (
@@ -26,7 +26,7 @@ function ProjectDetailsForm({ control, errors }) {
             {form.map((formField) => (
               <Col xl="4" key={formField.name}>
                 {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
                 </Label>}
                 {formField.type === 'select' ? (
                   <Controller
@@ -34,7 +34,10 @@ function ProjectDetailsForm({ control, errors }) {
                     control={control}
                     rules={{ required: formField.required && `${formField.label} is required` }}
                     render={({ field }) => (
-                      <ReactSelect {...field} isClearable />
+                      <ReactSelect 
+                      value={field.value}
+                      onChange={(selectedOption) => field.onChange(selectedOption)}
+                      className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
                     )}
                   />
                 ) : formField.type === 'date' ? (

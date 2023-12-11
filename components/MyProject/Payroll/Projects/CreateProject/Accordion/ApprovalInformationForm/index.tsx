@@ -6,10 +6,10 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 function ApprovalInformationForm({ control, errors }) {
 
   const formData = [
-    [{ name: 'precalc', label: 'Pre-calc', type: 'select', placeholder: 'Select Pre-calc' }],
-    [{ name: 'calculate1', label: 'Calculate Approval One', type: 'select', placeholder: 'Select Calculate Approval One' },
-    { name: 'calculate2', label: 'Calculate Approval Two', type: 'select', placeholder: 'Select Calculate Approval Two' },
-    { name: 'calculateFinal', label: 'Calculate Approval Final', required: false, type: 'select', placeholder: 'Select Calculate Approval Final' }]
+    [{ name: 'precalc', label: 'Pre-calc', type: 'select', required: true, options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], placeholder: 'Select Pre-calc' }],
+    [{ name: 'calculate1', label: 'Calculate Approval One', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval One' },
+    { name: 'calculate2', label: 'Calculate Approval Two', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval Two' },
+    { name: 'calculateFinal', label: 'Calculate Approval Final', type: 'select', options: [{ value: "Asst. Prod. Acct (Payroll Acct)", label: "Asst. Prod. Acct (Payroll Acct)" },{ value: "Dept Head", label: "Dept Head" }, { value: "Prod Acct", label: "Prod Acct" }, { value: "UPM", label: "UPM" }], required: true, placeholder: 'Select Calculate Approval Final' }]
   ]
 
   return (
@@ -24,7 +24,7 @@ function ApprovalInformationForm({ control, errors }) {
            <Col key={formindex} xl="4">
                {formField.type !== 'check' && <Label className="form-lable-font text-black form-label"
                 >
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
                 </Label>}
 
                {formField.type === 'select' ? (
@@ -33,7 +33,10 @@ function ApprovalInformationForm({ control, errors }) {
             control={control}
             rules={{ required: formField.required && `${formField.label} is required` }}
             render={({ field }) => (
-              <ReactSelect {...field} isClearable />
+              <ReactSelect 
+              value={field.value}
+              onChange={(selectedOption) => field.onChange(selectedOption)}
+              className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
             )}
             />
          ) : formField.type === 'check'? (
@@ -75,8 +78,8 @@ function ApprovalInformationForm({ control, errors }) {
          />
          )}
 
-                {errors[`${index+'_'+formField.name}`] && formField.required && (
-                  <InvalidFeedBack message={errors[`${index+'_'+formField.name}`].message} />
+                {errors[`${formField.name}`] && formField.required && (
+                  <InvalidFeedBack message={errors[`${formField.name}`].message} />
                 )}
               </Col>
                ))}

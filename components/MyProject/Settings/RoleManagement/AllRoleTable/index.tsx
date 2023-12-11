@@ -8,53 +8,53 @@ import {
   Form,
 } from "reactstrap";
 import { RoleService } from "services";
-import CustomBadge from "components/Generic/CustomBadge";
-import { toast } from "react-toastify";
 import Link from "next/link";
-import useSWR from "swr";
-import { Edit, File, MoreVertical, Plus, Trash } from "react-feather";
+import { MoreVertical, Plus } from "react-feather";
 import { useRouter } from "next/router";
-import GridTable from "components/grid-tables/gridTable";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 // import { checkTenant } from "constants/function";
 import moment from "moment";
+import { Image } from "react-bootstrap";
+import { useState } from "react";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
 const AllRoleTable = () => {
   const router = useRouter();
   //
+  const [searchText, setSearchText] = useState("");
+  const [rerender, setRerender] = useState(false);
+  const perPage = 10;
 
   const roleservice = new RoleService();
   const hasCreateRolePermission = hasPermission(
     "user_and_role_management",
     "create_role"
   );
-  const hasEditrolePermission = hasPermission(
-    "user_and_role_management",
-    "edit_role"
-  );
-  const hasDeactivateRolePermission = hasPermission(
-    "user_and_role_management",
-    "deactivate_role"
-  );
 
-  const {
-    data: rolesdata,
-    isLoading: rolesLoading,
-    mutate: mutateRoles,
-  } = useSWR("LIST_ROLES", () => roleservice.getRoles());
+  // const hasDeactivateRolePermission = hasPermission(
+  //   "user_and_role_management",
+  //   "deactivate_role"
+  // );
 
-  const StateBadge = (props) => {
-    const sateDir = {
-      true: "success",
-      false: "danger",
-    };
-    return (
-      <CustomBadge
-        bg={sateDir[props.value]}
-        value={props.value === true ? "active" : "In-active"}
-      />
-    );
+  const fetchData1 = async (pageNumber) => {
+    // setBankLoading(true)
+    try {
+      const response = await roleservice.getRoles({
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      });
+      const data = response.result; // Adjust based on the actual structure of the response
+
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      setRerender(!rerender);
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
   };
 
   const columns = [
@@ -64,7 +64,11 @@ const AllRoleTable = () => {
       // selector: (row) => row?.RollName,
       cell: (row) => row.RoleName,
     },
-
+    {
+      sortable: true,
+      field: "Code",
+      selector: (row) => row.Code,
+    },
     {
       sortable: true,
       field: "AccessType",
@@ -83,16 +87,6 @@ const AllRoleTable = () => {
     },
 
     {
-      name: <div>Status</div>,
-      field: "IsActive",
-      cellRenderer: StateBadge,
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      // cellRenderer: (row) => (row.IsActive ? "Active" : "In-active"),
-    },
-    {
       field: "Options",
       cellRenderer: (row) => {
         return (
@@ -101,56 +95,28 @@ const AllRoleTable = () => {
               <MoreVertical size={17} className="cursor-pointer" />
             </DropdownToggle>
             <DropdownMenu end container="body">
+              <>{row.ID}</>
               <Link
-                href={`/settings/roles?q=view_role&role_id=${row.data.ID}`}
-                style={{
-                  textDecoration: "none",
-                  color: "#030229",
-                  fontSize: "16px",
-                }}
+                href={`/settings/roles?q=view_role&role_id=${row?.data?.ID}`}
               >
-                <DropdownItem className="w-100">
-                  <File size={14} className="me-50" />
-                  <span className="align-middle">View Details</span>
+                <DropdownItem
+                  onClick={() => {
+                    document.body.click();
+                  }}
+                  className="menu-item"
+                >
+                  <div className="d-flex flex-row">
+                    <Image src="/edit_square.svg" className="menu-item-icon" />
+                    <p className="menu-item-text mb-0">View/Edit Role</p>
+                  </div>
                 </DropdownItem>
               </Link>
-              {hasEditrolePermission && (
-                <Link
-                  href={`/settings/roles?q=edit_role&role_id=${row.data.ID}`}
-                  style={{
-                    textDecoration: "none",
-                    color: "#030229",
-                    fontSize: "16px",
-                  }}
-                >
-                  <DropdownItem className="w-100">
-                    <Edit size={14} className="me-50" />
-                    <span className="align-middle">Edit Role</span>
-                  </DropdownItem>
-                </Link>
-              )}
-              {hasDeactivateRolePermission && (
-                <DropdownItem
-                  className="w-100"
-                  onClick={() => deleteRole(row.data.ID)}
-                >
-                  <Trash size={14} className="me-50" />
-                  <span className="align-middle">Delete</span>
-                </DropdownItem>
-              )}
             </DropdownMenu>
           </UncontrolledDropdown>
         );
       },
     },
   ];
-
-  const deleteRole = (role_id) => {
-    roleservice.delete_role(role_id).then(() => {
-      mutateRoles();
-      toast.success("Role delelted successfully");
-    });
-  };
 
   return (
     <>
@@ -168,10 +134,11 @@ const AllRoleTable = () => {
                 All Roles
               </p>
             </div>
-            <div className="d-flex align-items-center">
-              <Form onSubmit={(e) => e.preventDefault()}>
+            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+              <Form>
                 <input
                   className="search mr-2"
+                  onChange={(e) => setSearchText(e.target.value)}
                   type="search"
                   placeholder="Search..."
                 />
@@ -188,38 +155,22 @@ const AllRoleTable = () => {
           </div>
         </CardBody>
       </Card>
-      {rolesLoading ? (
-        <div className="mt-2">
-          <GridTable
-            rowData={rolesdata}
-            columnDefs={columns}
-            pageSize={10}
-            searchText={undefined}
-          />
-        </div>
-      ) : (
-        <>
-          {rolesdata?.length > 0 ? (
-            <div className="mt-2">
-              <GridTable
-                rowData={rolesdata}
-                columnDefs={columns}
-                pageSize={10}
-                searchText={undefined}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                buttonName={
-                  hasCreateRolePermission ? "Create Role" : "No button"
-                }
-                buttonLink={"/settings/add-role"}
-              />
-            </div>
+
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columns}
+          searchText={searchText}
+          fetchData={fetchData1}
+          pageSize={perPage}
+          noDataPage={() => (
+            <NoDataPage
+              buttonName={hasCreateRolePermission ? "Create Role" : "No button"}
+              buttonLink={"/settings/add-role"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </>
   );
 };

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
+import { getSessionVariables } from "@/constants/function";
 import {
   BudgetService,
   CurrencyService,
@@ -146,6 +147,7 @@ function EditBudget() {
     setActiveStatus(budgetData1?.IsActive);
   }, [budgetData, budgetData1]);
   const onSubmit = (data) => {
+    const {clientID,projectID} = getSessionVariables();
     const backendFormat = {
       Code: data?.code,
       Name: data?.name,
@@ -160,6 +162,8 @@ function EditBudget() {
       Amount: 0.0,
       budgetFile: "",
       IsActive: activeStatus,
+      clientID,
+      projectID
     };
 
     budgetService

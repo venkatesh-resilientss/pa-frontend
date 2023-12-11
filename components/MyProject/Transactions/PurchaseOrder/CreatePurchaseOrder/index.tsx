@@ -1,505 +1,744 @@
 "use client";
-import React, { useState } from "react";
-import { Row, Col, CardBody, Card } from "reactstrap";
-import { Button, Form, Label, Input, Popover } from "reactstrap";
-import DataTable from "react-data-table-component";
+import React, { useEffect, useState } from "react";
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  DropdownItem,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+} from "reactstrap";
+import { Button, Form, Label, Input } from "reactstrap";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import ImportExcelIcon from "assets/myIcons/importExel.svg";
-
 import Image from "next/image";
 import attchFileIcon from "assets/myIcons/attchfile.svg";
-import ThreedotsIcon from "assets/myIcons/Threedotsicon.svg";
-import controlPointIcon from "assets/myIcons/controlPointIcon.svg";
-import deleteIcon from "assets/myIcons/deleteicon.svg";
+import controlPointIcon from "assets/myIcons/splitIcon.svg";
 import CopyIcon from "assets/myIcons/Copy.svg";
 import SplitIcon from "assets/myIcons/Split.svg";
-import PasteIcon from "assets/myIcons/paste.svg";
 import { useRouter } from "next/router";
+import deleteIcon from "assets/myIcons/IconDelete.svg";
 import AddVendorPopup from "../../AddVendorPopup";
+import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
+import PasteIcon from "assets/myIcons/paste.svg";
 import {
   openAddMoreLinesPopup,
   openAddVendorPopup,
   openImportFromExcelPurchaseOrderPopup,
+  openSplitAmountPopup,
 } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
-
+import "react-datepicker/dist/react-datepicker.css";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 
 const CreatePurchaseOrder = () => {
-  const [popoverOpen, setPopoverOpen] = useState(false);
+  const ActionsButton = (props) => {
+    const id = `action-popover-${props.value}`;
+
+    const Action = ({ icon, name, action }) => {
+      return (
+        <div onClick={action} className="d-flex align-items-center gap-2">
+          <Image src={icon} alt={name} />
+
+          <p>{name}</p>
+        </div>
+      );
+    };
+
+    return (
+      <div className="d-flex align-items-center" style={{ gap: "2px" }}>
+        <UncontrolledDropdown>
+          <DropdownToggle tag="span">
+            <Image src={actionIcon} alt="" width={14} id={id} />
+          </DropdownToggle>
+          <DropdownMenu end container="body">
+            <DropdownItem className="w-100" onClick={handleAdd}>
+              <Action icon={plusIcon} name={"Add More Lines"} action={""} />
+            </DropdownItem>
+            <DropdownItem
+              className="w-100"
+              onClick={() => handleCopy(props.rowIndex)}
+            >
+              <Action icon={CopyIcon} name={"Copy"} action={""} />
+            </DropdownItem>
+
+            <DropdownItem
+              className="w-100"
+              onClick={() => handlePaste(props.rowIndex)}
+            >
+              <Action icon={PasteIcon} name={"Paste"} action={""} />
+            </DropdownItem>
+            <DropdownItem
+              className="w-100 cursor-pointer"
+              onClick={() => dispatch(openSplitAmountPopup(props.rowIndex))}
+            >
+              <Action icon={SplitIcon} name={"Split"} action={""} />
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+        <div>
+          <Image
+            onClick={() => handleDuplicate(props.rowIndex)}
+            src={controlPointIcon}
+            alt=""
+            style={{ width: "14px", height: "14px" }}
+          />
+        </div>
+        <div>
+          <Image
+            onClick={() => handleDelete(props.data.id)}
+            src={deleteIcon}
+            alt=""
+            style={{ width: "14px", height: "14px" }}
+            className="cursor-pointer"
+          />
+        </div>
+      </div>
+    );
+  };
 
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = () => {
-    // console.log("DATA", data);
+  const vendorsService = new VendorsService();
+
+  const selectedVendor = watch("vendor");
+  const selectedBank = watch("bank");
+
+  const vendorId = selectedVendor?.value;
+
+  const bankId = selectedBank?.value;
+
+  const { data: bankDetailsForCurrencyData } = useSWR(
+    bankId ? ["BANK_DETAILS", bankId] : null,
+    () => fetchBankDetails(bankId)
+  );
+
+  const fetchVendorDetails = (vendorId) =>
+    vendorsService.getVendorDetails(vendorId);
+
+  const { data: vendorDetailsData } = useSWR(
+    vendorId ? ["VENDOR_DETAILS", vendorId] : null,
+    () => fetchVendorDetails(vendorId)
+  );
+
+  // const { data: vendorsData } = useSWR("LIST_VENDORS", () =>
+  //   vendorsService.getVendors()
+  // );
+  // const vendorSelectFormat = vendorsData?.result.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
+
+  // const loadVendorOptions = (values, callBack) => {
+  //   callBack(vendorSelectFormat);
+  // };
+
+  const statsService = new DashboardService();
+
+  const { data: statsData } = useSWR("GET_RECENET", () =>
+    statsService.getRecentProductions()
+  );
+
+  const productionSelectFormat = statsData?.data?.map((b) => {
+    return {
+      value: b.ID,
+      label: b.project_name,
+    };
+  });
+
+  const loadProductionOptions = (values, callBack) => {
+    callBack(productionSelectFormat);
+  };
+
+  const bankService = new BankService();
+
+
+  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks({ search: "", pageLimit: 25, offset: 0 }));
+
+  const bankSelectFormat = bankData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const accountNumberSelectFormat = bankData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.AccountNumber,
+    };
+  });
+
+  const loadBankOptions = (values, callBack) => {
+    callBack(bankSelectFormat);
+  };
+
+  /**
+   * TO DO - adjust get departments function - refer 'departments.services.ts'
+   */
+  // const departmentsService = new DepartmentsService();
+
+  // const { data: departmentsData } = useSWR("LIST_DEPARTMENTS", () =>
+  //   departmentsService.getDepartments()
+  // );
+
+  // const departmentSelectFormat = departmentsData?.result?.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
+
+  // const loadDepartmentOptions = (values, callBack) => {
+  //   callBack(departmentSelectFormat);
+  // };
+
+  // const periodsService = new PeriodsService();
+
+  // const { data: periodData } = useSWR("LIST_USERS", () =>
+  //   periodsService.getPeriods()
+  // );
+
+  // const periodSelectFormat = periodData?.data.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //   };
+  // });
+
+  // const loadPeriodOptions = (values, callBack) => {
+  //   callBack(periodSelectFormat);
+  // };
+
+  const clientService = new ClientsService();
+
+  const { data: clientData } = useSWR("LIST_CLIENTS", () =>
+    clientService.getClients({ search: "", pageLimit: 25, offset: 0 })
+  );
+
+  const clientSelectFormat = clientData?.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const loadClientOptions = (values, callBack) => {
+    callBack(clientSelectFormat);
+  };
+
+  const [status, setStatus] = useState("");
+
+  const purchaseOrderService = new PurchaseOrderService();
+
+  const handleonSave = () => {
+    handleSubmit(onSubmit)();
+    setStatus("SAVE");
+  };
+
+  const handleonAudit = () => {
+    handleSubmit(onSubmit)();
+    setStatus("AUDIT");
+  };
+
+  const [todayDate, setTodayDate] = useState("");
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const mm = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const dd = String(currentDate.getDate()).padStart(2, "0");
+    const yyyy = String(currentDate.getFullYear());
+
+    // Set the value of the input to the current date in "MM/DD/YY" format
+    setTodayDate(`${mm}/${dd}/${yyyy}`);
+  }, []);
+
+  const handleonPost = () => {
+    handleSubmit(onSubmit)();
+    setStatus("POSTED");
+  };
+
+  const onSubmit = (data) => {
+    const backendFormat = {
+      vendorID: data.vendor.value,
+      status: status,
+      number: parseFloat(data.poNumber),
+      description: data.poDescription,
+      bankID: data.bank.value,
+      currencyID: data.currency.value,
+      periodID: data.period.value,
+      projectID: data.production.value,
+      companyID: data.client.value,
+      effectiveDate: moment(data.poEffectiveDate).format(
+        "YYYY-MM-DDTHH:mm:ss[Z]"
+      ),
+      date: moment(data.poDate).format("YYYY-MM-DDTHH:mm:ss[Z]"),
+      amount: data.poAmount,
+      debitsAmount: totalPositiveAmount,
+      creditsAmount: totalNegativeAmount,
+    };
+
+    purchaseOrderService
+      .createPurchaseOrder(backendFormat)
+      .then(() => {
+        toast.success("Purchase Order Created successfully");
+        // router.back();
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
+
+    const backendFormatForTransactionLines = array
+      .filter(
+        (obj) => obj.Amount !== undefined && obj.Description !== undefined
+      )
+      .map((obj) => ({
+        amount: obj.Amount,
+        setID: obj.SetValue || undefined,
+        taxCodeID: obj.TaxcodeValue || undefined,
+        locationID: obj.LocationValue || undefined,
+        description: obj.Description,
+        seriesID: obj.SeriesValue || undefined,
+        accountId: obj.AccountNumberValue,
+      }));
+
+    purchaseOrderService
+      .createTransactionLines(backendFormatForTransactionLines)
+      .then(() => {
+        toast.success("Purchase Order Lines successfully");
+        router.back();
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+      });
   };
 
   const dispatch = useDispatch();
 
   const router = useRouter();
 
-  const columns: any = [
-    {
-      name: "S.No",
-      selector: "S.No",
-      sortable: true,
-      cell: (row) => (
-        <input
-          style={{
-            width: "30px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          type="text"
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Account Number",
-      selector: "AccountNumber",
-      sortable: true,
-      cell: (row) => (
-        <input
-          type="text"
-          style={{
-            width: "90px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Account Name",
-      selector: "AccountName",
-      sortable: true,
-      cell: (row) => (
-        <input
-          type="text"
-          style={{
-            width: "90px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Description",
-      selector: "Description",
-      sortable: true,
-      cell: (row) => (
-        <input
-          type="text"
-          style={{
-            width: "100px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Amount",
-      sortable: true,
-      selector: "Amount",
-      cell: (row) => (
-        <input
-          type="text"
-          style={{
-            width: "90px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Set",
-      selector: "Set",
-      cell: (row) => (
-        <select
-          style={{
-            width: "70px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Series",
-      selector: "Series",
-      cell: (row) => (
-        <select
-          style={{
-            width: "80px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Location",
-      selector: "Location",
-      cell: (row) => (
-        <select
-          style={{
-            width: "80px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Tax Code",
-      selector: "TaxCode",
-      cell: (row) => (
-        <select
-          style={{
-            width: "80px",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-          value={row.inputValue}
-        />
-      ),
-    },
-    {
-      name: "Options",
-      selector: "Options",
-      cell: () => (
-        <>
-          <div className="d-flex">
-            <Button
-              id="Popover1"
-              type="button"
-              style={{
-                backgroundColor: "transparent",
-                border: "1px solid #fff",
-                padding: "8px 16px",
-                borderRadius: "4px",
-                color: "#000",
-                cursor: "pointer",
-              }}
-            >
-              <Image src={ThreedotsIcon} alt="" style={{ cursor: "pointer" }} />
-            </Button>
+  const [accountId, setAccountId] = useState();
 
-            <Image
-              src={controlPointIcon}
-              alt=""
-              style={{
-                cursor: "pointer",
-                marginTop: "14px",
-                marginLeft: "-10px",
-              }}
-            />
-            <Image
-              src={deleteIcon}
-              alt=""
-              style={{
-                height: "20px",
-                width: "30px",
-                cursor: "pointer",
-                marginTop: "14px",
-                marginLeft: "-2px",
-              }}
-            />
-          </div>
-        </>
-      ),
-    },
-  ];
+  const fetchBankDetails = (accountId) => bankService.bankDetails(accountId);
 
-  const data = [
-    { id: 1, name: "John Doe", age: 28 },
-    { id: 2, name: "Jane Doe", age: 35 },
-    { id: 3, name: "John Doe", age: 28 },
-    { id: 4, name: "Jane Doe", age: 35 },
-    { id: 5, name: "John Doe", age: 28 },
-    { id: 6, name: "Jane Doe", age: 35 },
-    { id: 7, name: "John Doe", age: 28 },
-    { id: 8, name: "Jane Doe", age: 35 },
-    { id: 9, name: "John Doe", age: 28 },
-    { id: 0, name: "Jane Doe", age: 35 },
-  ];
-  const customStyles = {
-    headCells: {
-      style: {
-        fontSize: "14px",
-        fontWeight: 400,
-        color: "#030229",
-      },
-    },
-    headRow: {
-      style: {
-        background: "#D9D9D9",
-      },
-    },
-    rows: {
-      style: {
-        background: "#F9FAFB",
-      },
-    },
-  };
+  const { data: bankDetailsData } = useSWR(
+    accountId ? ["BANK_DETAILS", accountId] : null,
+    () => fetchBankDetails(accountId)
+  );
 
-  const customTitle = () => {
+  const ReactSelectEditor = ({
+    value,
+    onValueChange,
+    options,
+    rowIndex,
+    columnField,
+  }) => {
+    const handleChange = (selectedOption) => {
+      const newValue = selectedOption ? selectedOption.value : null;
+      const label = selectedOption ? selectedOption.label : null;
+
+      onValueChange(rowIndex, columnField, newValue, label);
+    };
+
     return (
-      <>
-        <div
-          className="d-flex flex-column justify-content-center "
-          style={{ height: "46px" }}
-        >
-          <Row>
-            <Col xl="6">
-              <div
-                className="d-flex align-items-center "
-                style={{ gap: "10px" }}
-              >
-                <div style={{ fontSize: "24px", fontWeight: "600" }}>
-                  Total Amount{" "}
-                </div>
-                <input
-                  defaultValue={"$100"}
-                  style={{
-                    width: "100px",
-                    height: "25px",
-                    fontSize: "21px",
-                    fontWeight: "600",
-                    borderColor: "#CCCCCC",
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    color: "#000000",
-                  }}
-                />
-
-                <div className=" flex flex-column" style={{ gap: "4px" }}>
-                  <p
-                    style={{
-                      fontSize: "12px",
-                      color: "#030229",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Status
-                  </p>
-                  <p
-                    style={{
-                      backgroundColor: "#B5DEF0",
-                      fontSize: "12px",
-                      fontWeight: "400",
-                      width: "43px",
-                      height: "24px",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    Draft
-                  </p>
-                </div>
-                <div className=" flex flex-column" style={{ gap: "4px" }}>
-                  <p
-                    style={{
-                      fontSize: "12px",
-                      color: "#030229",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Distributed
-                  </p>
-                  <p
-                    style={{
-                      backgroundColor: "#EBEBEB",
-                      fontSize: "12px",
-                      fontWeight: "400",
-                      width: "77px",
-                      height: "25px",
-                      padding: "4px 8px",
-                      borderRadius: "4px",
-                      gap: "10px",
-                    }}
-                  >
-                    $00.00
-                  </p>
-                </div>
-              </div>
-            </Col>
-            <Col
-              xl="6"
-              className="d-flex justify-content-end align-items-center"
-              style={{ gap: "6px" }}
-            >
-              <Button
-                className=""
-                onClick={() => dispatch(openAddMoreLinesPopup("id"))}
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  color: "#000",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "400",
-                }}
-              >
-                <Image
-                  src={plusIcon}
-                  alt=""
-                  style={{ width: "14px", height: "14px" }}
-                />{" "}
-                Add more lines{" "}
-              </Button>
-
-              <Button
-                style={{
-                  color: "#4C4C61",
-                  fontSize: "14px",
-                  backgroundColor: "#ffff",
-                  fontWeight: 400,
-                  height: "34px",
-                  border: "none",
-                }}
-              >
-                <Image
-                  src={CopyIcon}
-                  alt=""
-                  style={{ width: "14px", height: "14px" }}
-                />{" "}
-                Paste Values
-              </Button>
-
-              <Button
-                onClick={() =>
-                  dispatch(openImportFromExcelPurchaseOrderPopup("id"))
-                }
-                style={{
-                  color: "#4C4C61",
-                  fontSize: "14px",
-                  backgroundColor: "#ffff",
-                  fontWeight: 400,
-                  height: "34px",
-                }}
-              >
-                <Image
-                  src={ImportExcelIcon}
-                  alt=""
-                  style={{ width: "14px", height: "14px" }}
-                />{" "}
-                Import Excel
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </>
+      <div style={{ width: "100%" }}>
+        <Select value={value} onChange={handleChange} options={options} />
+      </div>
     );
   };
 
-  const TheeDotsClickItems = () => {
-    return (
-      <>
-        <div
-          className="flex-column"
-          style={{
-            height: "150px",
-            width: "150px",
-            backgroundColor: "#FFFFFF",
-            borderRadius: "10%",
-            borderColor: "#CCCCCC",
-            borderWidth: "1px",
-            borderStyle: "solid",
-          }}
-        >
-          <Button
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #fff",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              color: "#000",
-              cursor: "pointer",
-            }}
-          >
-            <Image src={plusIcon} alt="" />
-
-            <span style={{ fontSize: "12px" }}> Add more lines</span>
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #fff",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              color: "#000",
-              cursor: "pointer",
-              marginTop: "-10px",
-            }}
-          >
-            <Image src={CopyIcon} alt="" />
-            <span style={{ fontSize: "12px" }}>Copy</span>
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #fff",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              color: "#000",
-              cursor: "pointer",
-              marginTop: "-10px",
-            }}
-          >
-            <Image src={PasteIcon} alt="" />
-            <span style={{ fontSize: "12px" }}>Paste</span>
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "transparent",
-              border: "1px solid #fff",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              color: "#000",
-              cursor: "pointer",
-              marginTop: "-10px",
-            }}
-          >
-            <Image src={SplitIcon} alt="" />
-            <span style={{ fontSize: "12px" }}> Split</span>
-          </Button>
-        </div>
-      </>
-    );
+  const handleValueChange = (rowIndex, columnField, newValue, label) => {
+    const updatedArray = array.map((row, index) => {
+      if (index === rowIndex) {
+        return {
+          ...row,
+          [columnField]: label,
+          [`${columnField}Value`]: newValue,
+          AccountName: getAccountNameByAccountNumber(),
+        };
+      }
+      return row;
+    });
+    setArray(updatedArray);
+    {
+      columnField === "AccountNumber" ? setAccountId(newValue) : null;
+    }
   };
+
+  const getAccountNameByAccountNumber = () => {
+    const accountName = bankDetailsData?.Name;
+
+    return accountName || null;
+  };
+
+  const locationsService = new LocationsService();
+
+  const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
+    locationsService.getLocations()
+  );
+
+  const locationsSelectFormat = locationsData?.result.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const setsService = new SetsService();
+
+  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+
+  const setsSelectFormat = setsData?.result.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const seriesService = new SeriesService();
+
+  const { data: seriesData } = useSWR("LIST_SERIES", () =>
+    seriesService.getSeries()
+  );
+
+  const seriesSelectFormat = seriesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Name,
+    };
+  });
+
+  const taxcodesService = new TaxCodesService();
+
+  const { data: taxcodesData } = useSWR("LIST_TAXCODES", () =>
+    taxcodesService.getTaxCodes()
+  );
+
+  const taxcodeSelectFormat = taxcodesData?.data.map((b) => {
+    return {
+      value: b.ID,
+      label: b.Code,
+    };
+  });
+
+  const columnDefs = [
+    {
+      headerName: "S.no",
+      maxWidth: 70,
+      minWidth: 70,
+      editable: false,
+      field: "index",
+      valueGetter: "node.rowIndex + 1",
+      sortable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "37px",
+        maxWidth: "37px",
+        height: "34px",
+        borderRadius: "4px",
+        display: "flex",
+        justifyContent: "center",
+        text: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: "agTextCellEditor",
+    },
+
+    {
+      headerName: "Account Number",
+      field: "AccountNumber",
+      minWidth: 140,
+      sortable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "122px",
+        maxWidth: "122px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: ReactSelectEditor,
+      cellEditorParams: {
+        options: accountNumberSelectFormat,
+        onValueChange: handleValueChange,
+        columnField: "AccountNumber",
+      },
+    },
+
+    {
+      headerName: "Account Name",
+      field: "AccountName",
+      minWidth: 140,
+      sortable: true,
+      editable: false,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "122px",
+        maxWidth: "122px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: "agTextCellEditor",
+    },
+
+    {
+      headerName: "Description",
+      minWidth: 140,
+      field: "Description",
+      sortable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "122px",
+        maxWidth: "122px",
+        height: "34px",
+        borderRadius: "4px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: "agTextCellEditor",
+    },
+
+    {
+      headerName: "Amount",
+      field: "Amount",
+      minWidth: 140,
+      sortable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "122px",
+        maxWidth: "122px",
+        height: "34px",
+        borderRadius: "4px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+
+      headerClass: "custom-header-class",
+      cellEditor: "agNumberCellEditor",
+    },
+
+    {
+      headerName: "Set",
+      field: "Set",
+      maxWidth: 100,
+      minWidth: 100,
+
+      sortable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "82px",
+        maxWidth: "82px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: ReactSelectEditor,
+      cellEditorParams: {
+        options: setsSelectFormat,
+        onValueChange: handleValueChange,
+        columnField: "Set",
+      },
+    },
+
+    {
+      headerName: "Series",
+      field: "Series",
+      minWidth: 130,
+      sortable: true,
+      editable: true,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "115px",
+        maxWidth: "115px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: ReactSelectEditor,
+      cellEditorParams: {
+        options: seriesSelectFormat,
+        onValueChange: handleValueChange,
+        columnField: "Series",
+      },
+    },
+
+    {
+      headerName: "Location",
+      field: "Location",
+      sortable: true,
+      minWidth: 100,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "87px",
+        maxWidth: "87px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: ReactSelectEditor,
+      cellEditorParams: {
+        options: locationsSelectFormat,
+        onValueChange: handleValueChange,
+        columnField: "Location",
+      },
+    },
+
+    {
+      headerName: "Tax Code",
+      field: "Taxcode",
+      sortable: true,
+      minWidth: 110,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+        border: "1px solid #CCCCCC",
+        margin: "10px",
+        width: "97px",
+        maxWidth: "97px",
+        height: "34px",
+        borderRadius: "4px",
+        overflow: "visible",
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      headerClass: "custom-header-class",
+      cellEditor: ReactSelectEditor,
+      cellEditorParams: {
+        options: taxcodeSelectFormat,
+        onValueChange: handleValueChange,
+        columnField: "Taxcode",
+      },
+    },
+
+    {
+      headerName: "Options",
+      field: "id",
+      minWidth: 100,
+      editable: false,
+      cellRenderer: ActionsButton,
+      cellStyle: {
+        fontSize: "12px",
+        fontWeight: "400",
+      },
+      headerClass: "custom-header-class",
+    },
+  ];
+
+  const defaultLength = 10;
+  const [array, setArray] = useState(new Array(defaultLength).fill(""));
+  const [copiedObject, setCopiedObject] = useState(null);
+
+  const totalAmount = array
+    .filter((obj) => obj && typeof obj.Amount === "number")
+    .reduce((sum, obj) => sum + obj.Amount, 0);
+
+  const totalNegativeAmount = array
+    .filter((obj) => obj && typeof obj.Amount === "number" && obj.Amount < 0)
+    .reduce((sum, obj) => sum + Math.abs(obj.Amount), 0);
+
+  const totalPositiveAmount = array
+    .filter((obj) => obj && typeof obj.Amount === "number" && obj.Amount >= 0)
+    .reduce((sum, obj) => sum + obj.Amount, 0);
+
+  const handleCopy = (index) => {
+    const copiedObj = { ...array[index] };
+    setCopiedObject(copiedObj);
+  };
+
+  const handlePaste = (index) => {
+    if (copiedObject) {
+      const newArray = [...array];
+      newArray[index] = { ...copiedObject };
+      setArray(newArray);
+    }
+  };
+
+  const handleAdd = () => {
+    setArray([...array, ""]);
+  };
+
+  const handleDelete = (index) => {
+    const newArray = [...array];
+    newArray.splice(index, 1);
+    setArray(newArray);
+  };
+
+  const handleDuplicate = (index) => {
+    const newArray = [...array];
+
+    newArray.splice(index + 1, 0, { ...array[index] });
+
+    setArray(newArray);
+  };
+
   return (
     <div className="my-3">
       <AddVendorPopup />
-      <AddMoreLinesPopup />
-      <ImportExcelPopup />
+      <AddMoreLinesPopup array={array} setArray={setArray} />
+      <ImportExcelPopup array={array} setArray={setArray} />
+      <SplitAmountPopup array={array} setArray={setArray} />
+
       <div>
         <div className="d-flex justify-content-between">
           <div>
@@ -545,25 +784,45 @@ const CreatePurchaseOrder = () => {
                 borderStyle: "solid",
               }}
               size="sm"
+              onClick={handleonSave}
             >
               Save
             </Button>
 
+            {status === "SAVE" ? (
+              <Button
+                style={{
+                  height: "30px",
+                  color: "#2D2C2C",
+                  borderColor: "#00AEEF",
+                  backgroundColor: "#ffffff",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                }}
+                size="sm"
+                onClick={handleonAudit}
+              >
+                Audit
+              </Button>
+            ) : (
+              <Button
+                style={{
+                  height: "30px",
+                  color: "#C9C9C9",
+                  borderColor: "#C9C9C9",
+
+                  borderWidth: "1px",
+                  backgroundColor: "#ffffff",
+                  borderStyle: "solid",
+                }}
+                size="sm"
+              >
+                Audit
+              </Button>
+            )}
+
             <Button
-              style={{
-                height: "30px",
-                color: "#2D2C2C",
-                borderColor: "#00AEEF",
-                backgroundColor: "#ffffff",
-                borderWidth: "1px",
-                borderStyle: "solid",
-              }}
-              size="sm"
-            >
-              Audit
-            </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleonPost}
               style={{
                 height: "30px",
                 backgroundColor: "#00AEEF",
@@ -610,7 +869,7 @@ const CreatePurchaseOrder = () => {
                       <Col sm="4">
                         <div className="d-flex justify-content-between">
                           <Label style={{ color: "#030229", height: "17px" }}>
-                            Select vendor
+                            Select Vendor
                           </Label>
                           <Button
                             onClick={() => dispatch(openAddVendorPopup("open"))}
@@ -640,11 +899,12 @@ const CreatePurchaseOrder = () => {
                               isClearable={true}
                               className="react-select"
                               classNamePrefix="select"
-                              // loadOptions={loadSeriesOptions}
+                              // loadOptions={loadVendorOptions}
                               placeholder="Select Vendor"
-                              // defaultOptions={seriesSelectFormat}
+                              // defaultOptions={vendorSelectFormat}
+                              // onChange={handleVendorChange}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -654,7 +914,7 @@ const CreatePurchaseOrder = () => {
                           )}
                         />
                         {errors.vendor && (
-                          <span className="text-danger">
+                          <span style={{ color: "red" }}>
                             {errors.vendor.message as React.ReactNode}
                           </span>
                         )}
@@ -662,19 +922,20 @@ const CreatePurchaseOrder = () => {
 
                       <Col sm="4">
                         <Label style={{ color: "#030229" }}>
-                          Vendor address
+                          Vendor Address
                         </Label>
                         <Controller
                           name="VendorAddress"
-                          rules={{ required: "Vendor Address is required" }}
                           control={control}
-                          render={() => (
+                          render={({ field }) => (
                             <Input
+                              {...field}
                               type="text"
+                              disabled={true}
+                              defaultValue={vendorDetailsData?.defaultAddress}
                               name="address"
                               id="address"
-                              placeholder="Enter Vendor address"
-                              invalid={errors.VendorAddress && true}
+                              placeholder="Vendor Address"
                               style={{
                                 fontSize: "12px",
                                 fontWeight: "400",
@@ -683,18 +944,12 @@ const CreatePurchaseOrder = () => {
                             />
                           )}
                         />
-                        {errors.VendorAddress && (
-                          <span className="text-danger">
-                            {errors.VendorAddress.message as React.ReactNode}
-                          </span>
-                        )}
                       </Col>
 
                       <Col sm="4">
-                        <Label style={{ color: "#030229" }}>Vendor type</Label>
+                        <Label style={{ color: "#030229" }}>Vendor Type</Label>
                         <Controller
                           name="vendorType"
-                          rules={{ required: "Vendor type is required" }}
                           control={control}
                           render={({ field }) => (
                             <Input
@@ -702,8 +957,8 @@ const CreatePurchaseOrder = () => {
                               type="text"
                               name="type"
                               id="type"
-                              placeholder="Enter Vendor type"
-                              invalid={errors.vendorType && true}
+                              placeholder="Vendor Type"
+                              disabled={true}
                               style={{
                                 fontSize: "12px",
                                 fontWeight: "400",
@@ -712,11 +967,6 @@ const CreatePurchaseOrder = () => {
                             />
                           )}
                         />
-                        {errors.vendorType && (
-                          <span className="text-danger">
-                            {errors.vendorType.message as React.ReactNode}
-                          </span>
-                        )}
                       </Col>
                     </Row>
                   </div>
@@ -754,10 +1004,11 @@ const CreatePurchaseOrder = () => {
                               control={control}
                               render={({ field }) => (
                                 <Input
-                                  type="text"
+                                  type="number"
                                   invalid={errors.poNumber && true}
                                   {...field}
                                   placeholder="Enter PO Number"
+                                  min={1}
                                   style={{
                                     fontSize: "12px",
                                     fontWeight: "400",
@@ -767,7 +1018,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poNumber && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {errors.poNumber.message as React.ReactNode}
                               </span>
                             )}
@@ -797,7 +1048,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poDescription && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {
                                   errors.poDescription
                                     .message as React.ReactNode
@@ -817,10 +1068,11 @@ const CreatePurchaseOrder = () => {
                               control={control}
                               render={({ field }) => (
                                 <Input
-                                  type="text"
+                                  type="number"
                                   invalid={errors.poAmount && true}
                                   {...field}
                                   placeholder="Enter PO Amount"
+                                  min={1}
                                   style={{
                                     fontSize: "12px",
                                     fontWeight: "400",
@@ -830,7 +1082,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poAmount && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {errors.poAmount.message as React.ReactNode}
                               </span>
                             )}
@@ -848,6 +1100,7 @@ const CreatePurchaseOrder = () => {
                               render={({ field }) => (
                                 <Input
                                   type="date"
+                                  defaultValue={todayDate}
                                   invalid={errors.poDate && true}
                                   {...field}
                                   style={{
@@ -859,7 +1112,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poDate && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {errors.poDate.message as React.ReactNode}
                               </span>
                             )}
@@ -888,7 +1141,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poEffectiveDate && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {
                                   errors.poEffectiveDate
                                     .message as React.ReactNode
@@ -920,7 +1173,7 @@ const CreatePurchaseOrder = () => {
                               )}
                             />
                             {errors.poExpiryDate && (
-                              <span className="text-danger">
+                              <span style={{ color: "red" }}>
                                 {errors.poExpiryDate.message as React.ReactNode}
                               </span>
                             )}{" "}
@@ -961,11 +1214,11 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
+                                loadOptions={loadClientOptions}
                                 placeholder="Select Client"
-                                // defaultOptions={seriesSelectFormat}
+                                defaultOptions={clientSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -975,7 +1228,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.client && (
-                            <span className="text-danger">
+                            <span style={{ color: "red" }}>
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -992,11 +1245,11 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
                                 placeholder="Select Production"
-                                // defaultOptions={seriesSelectFormat}
+                                loadOptions={loadProductionOptions}
+                                defaultOptions={productionSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1006,7 +1259,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.production && (
-                            <span className="text-danger">
+                            <span style={{ color: "red" }}>
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1023,11 +1276,11 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
+                                loadOptions={loadBankOptions}
                                 placeholder="Select Bank"
-                                // defaultOptions={seriesSelectFormat}
+                                defaultOptions={bankSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1037,7 +1290,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span className="text-danger">
+                            <span style={{ color: "red" }}>
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1048,32 +1301,43 @@ const CreatePurchaseOrder = () => {
                           <Label style={{ color: "#030229" }}>Currency</Label>
                           <Controller
                             name="currency"
-                            rules={{ required: "Currency is required" }}
                             control={control}
                             render={({ field }) => (
-                              <AsyncSelect
+                              // <AsyncSelect
+                              //   {...field}
+                              //   isClearable={true}
+                              //   className="react-select"
+                              //   classNamePrefix="select"
+                              //   loadOptions={loadCurrencyOptions}
+                              //   placeholder="Select Currency"
+                              //   defaultOptions={currenciesSelectFormat}
+                              //   styles={{
+                              //     control: (provided:any) => ({
+                              //       ...provided,
+                              //       height: "34px",
+                              //       minHeight: "34px",
+                              //     }),
+                              //   }}
+                              // />
+
+                              <Input
                                 {...field}
-                                isClearable={true}
-                                className="react-select"
-                                classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
-                                placeholder="Select Currency"
-                                // defaultOptions={seriesSelectFormat}
-                                styles={{
-                                  control: (provided) => ({
-                                    ...provided,
-                                    height: "34px",
-                                    minHeight: "34px",
-                                  }),
+                                type="text"
+                                disabled={true}
+                                value={
+                                  bankDetailsForCurrencyData?.Currency.Name
+                                }
+                                name="address"
+                                id="address"
+                                placeholder="Currency"
+                                style={{
+                                  fontSize: "12px",
+                                  fontWeight: "400",
+                                  height: "34px",
                                 }}
                               />
                             )}
                           />
-                          {errors.currency && (
-                            <span className="text-danger">
-                              {errors.currency.message as React.ReactNode}
-                            </span>
-                          )}
                         </Col>
                         <Col sm="4">
                           <Label style={{ color: "#030229" }}>Department</Label>
@@ -1087,11 +1351,12 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
+                                // loadOptions={loadDepartmentOptions}
                                 placeholder="Select Department"
-                                // defaultOptions={seriesSelectFormat}
+                                // defaultOptions={departmentSelectFormat}
+                                defaultOptions={[]}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1101,7 +1366,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.department && (
-                            <span className="text-danger">
+                            <span style={{ color: "red" }}>
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1118,11 +1383,11 @@ const CreatePurchaseOrder = () => {
                                 isClearable={true}
                                 className="react-select"
                                 classNamePrefix="select"
-                                // loadOptions={loadSeriesOptions}
+                                // loadOptions={loadPeriodOptions}
                                 placeholder="Select Period"
-                                // defaultOptions={seriesSelectFormat}
+                                // defaultOptions={periodSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1132,7 +1397,7 @@ const CreatePurchaseOrder = () => {
                             )}
                           />
                           {errors.period && (
-                            <span className="text-danger">
+                            <span style={{ color: "red" }}>
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}
@@ -1148,30 +1413,203 @@ const CreatePurchaseOrder = () => {
         <hr />
         <div>
           <div>
-            <Popover
-              placement="left-start"
-              isOpen={popoverOpen}
-              target="Popover1"
-              toggle={() => setPopoverOpen(!popoverOpen)}
-              popperModifiers={{
-                offset: {
-                  enabled: true,
-                  offset: "-150px, 0",
-                },
-              }}
-            >
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                {TheeDotsClickItems()}
-              </div>
-            </Popover>
+            <div className="mt-3 d-flex flex-column" style={{ gap: "10px" }}>
+              <>
+                <div
+                  className="d-flex flex-column justify-content-center "
+                  style={{ height: "46px" }}
+                >
+                  <Row>
+                    <Col xl="6">
+                      <div
+                        className="d-flex align-items-center "
+                        style={{ gap: "10px" }}
+                      >
+                        <div style={{ fontSize: "24px", fontWeight: "600" }}>
+                          Total Amount{" "}
+                        </div>
+                        <div
+                          style={{
+                            width: "200px",
+                            height: "34px",
+                            fontSize: "21px",
+                            fontWeight: "600",
+                            borderColor: "#CCCCCC",
+                            borderWidth: "1px",
+                            color: "#000000",
+                            borderRadius: "4px",
+                          }}
+                          className="border d-flex justify-content-between"
+                        >
+                          $
+                          <span className=" text-end">
+                            {totalAmount.toFixed(2)}
+                          </span>
+                        </div>
 
-            <DataTable
-              title={customTitle()}
-              columns={columns}
-              data={data}
-              //   pagination
-              customStyles={customStyles}
-            />
+                        <div
+                          className=" flex flex-column mb-2"
+                          style={{ gap: "4px" }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "12px",
+                              color: "#030229",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Status
+                          </p>
+                          <p
+                            style={{
+                              backgroundColor: "#B5DEF0",
+                              fontSize: "12px",
+                              fontWeight: "400",
+                              width: "43px",
+                              height: "24px",
+                              padding: "4px 8px",
+                              borderRadius: "4px",
+                            }}
+                          >
+                            Draft
+                          </p>
+                        </div>
+
+                        <div
+                          className=" flex flex-column mb-2"
+                          style={{ gap: "4px" }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "12px",
+                              color: "#030229",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Credits
+                          </p>
+                          <p
+                            style={{
+                              backgroundColor: "#EBEBEB",
+                              fontSize: "12px",
+                              fontWeight: "400",
+                              width: "77px",
+                              height: "25px",
+                              padding: "4px 8px",
+                              borderRadius: "4px",
+                              gap: "10px",
+                            }}
+                          >
+                            ${totalNegativeAmount}
+                          </p>
+                        </div>
+
+                        <div
+                          className=" flex flex-column mb-2"
+                          style={{ gap: "4px" }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "12px",
+                              color: "#030229",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Debits
+                          </p>
+                          <p
+                            style={{
+                              backgroundColor: "#EBEBEB",
+                              fontSize: "12px",
+                              fontWeight: "400",
+                              width: "77px",
+                              height: "25px",
+                              padding: "4px 8px",
+                              borderRadius: "4px",
+                              gap: "10px",
+                            }}
+                          >
+                            ${totalPositiveAmount}
+                          </p>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col
+                      xl="6"
+                      className="d-flex justify-content-end align-items-center"
+                      style={{ gap: "6px" }}
+                    >
+                      <Button
+                        className=""
+                        onClick={() => dispatch(openAddMoreLinesPopup("id"))}
+                        style={{
+                          backgroundColor: "transparent",
+                          border: "none",
+                          padding: "8px 16px",
+                          borderRadius: "4px",
+                          color: "#000",
+                          cursor: "pointer",
+                          fontSize: "14px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        <Image
+                          src={plusIcon}
+                          alt=""
+                          style={{ width: "14px", height: "14px" }}
+                        />{" "}
+                        Add more lines{" "}
+                      </Button>
+
+                      <Button
+                        style={{
+                          color: "#4C4C61",
+                          fontSize: "14px",
+                          backgroundColor: "transparent",
+                          fontWeight: 400,
+                          height: "34px",
+                          border: "none",
+                        }}
+                      >
+                        <Image
+                          src={CopyIcon}
+                          alt=""
+                          style={{ width: "14px", height: "14px" }}
+                        />{" "}
+                        Paste Values
+                      </Button>
+
+                      <Button
+                        onClick={() =>
+                          dispatch(openImportFromExcelPurchaseOrderPopup("id"))
+                        }
+                        style={{
+                          color: "#4C4C61",
+                          fontSize: "14px",
+                          backgroundColor: "#ffff",
+                          fontWeight: 400,
+                          height: "34px",
+                        }}
+                      >
+                        <Image
+                          src={ImportExcelIcon}
+                          alt=""
+                          style={{ width: "14px", height: "14px" }}
+                        />{" "}
+                        Import Excel
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              </>
+              <GridTableRowEdit
+                rowData={array}
+                columnDefs={columnDefs}
+                pageSize={10}
+                searchText={undefined}
+                setArray={setArray}
+              />
+            </div>
           </div>
         </div>
         <div
@@ -1317,6 +1755,24 @@ export default CreatePurchaseOrder;
 import { useRef } from "react";
 import AddMoreLinesPopup from "../AddMoreLinesPopup";
 import ImportExcelPopup from "./ImportExcelPopup";
+import GridTableRowEdit from "components/grid-table-row-edit/gridTable";
+import SplitAmountPopup from "../SplitAmountPopup";
+import useSWR from "swr";
+import {
+  BankService,
+  ClientsService,
+  DashboardService,
+  // DepartmentsService,
+  LocationsService,
+  // PeriodsService,
+  PurchaseOrderService,
+  SeriesService,
+  SetsService,
+  TaxCodesService,
+  VendorsService,
+} from "services";
+import { toast } from "react-toastify";
+import moment from "moment";
 
 const FileUpload = () => {
   const fileInputRef = useRef(null);
@@ -1359,7 +1815,7 @@ const FileUpload = () => {
           borderColor: "#CCCCCC",
         }}
       >
-        {!selectedFileName && <p>Click To Upload</p>}
+        {!selectedFileName && <p>Attach files</p>}
         {selectedFileName && <p> {selectedFileName}</p>}
         <div
           style={{

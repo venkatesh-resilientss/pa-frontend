@@ -31,7 +31,7 @@ const DeleteCountryPopup = () => {
       dispatch(closeDeleteCountryPopup("close"));
       mutate(countryMutate());
     } catch (error) {
-      console.error("Error deleting Bank:", error);
+      toast.error(error.Message || 'Unable to delete country' )
     }
   };
 

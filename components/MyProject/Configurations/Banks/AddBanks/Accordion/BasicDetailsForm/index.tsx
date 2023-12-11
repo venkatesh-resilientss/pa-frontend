@@ -63,7 +63,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Name
+              Bank Name <span className="required">*</span>
             </Label>
             <Controller
               name="bankName"
@@ -91,7 +91,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Code
+              Bank Code <span className="required">*</span>
             </Label>
             <Controller
               name="bankCode"
@@ -119,7 +119,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Number
+              Account Number <span className="required">*</span>
             </Label>
             <Controller
               name="accountNumber"
@@ -163,7 +163,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                // type="textarea"
+                  // type="textarea"
                 />
               )}
             />
@@ -179,7 +179,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Routing Number
+              Routing Number <span className="required">*</span>
             </Label>
             <Controller
               name="routingNumber"
@@ -208,7 +208,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Fraction
+              Account Fraction <span className="required">*</span>
             </Label>
             <Controller
               name="accountFraction"
@@ -237,7 +237,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="form-lable-font"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Currency
+              Currency <span className="required">*</span>
             </Label>
             <Controller
               name={"currency"}
@@ -250,7 +250,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   className="react-select"
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
-                  placeholder="Select Series"
+                  placeholder="Select Currency"
                   defaultOptions={initialCurrencyOptions}
                   styles={selectStyles}
                 />
@@ -304,9 +304,6 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="branchNumber"
-              rules={{
-                required: " Branch Number is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -317,11 +314,85 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 />
               )}
             />
-            {errors.branchNumber && (
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Email ID <span className="required">*</span>
+            </Label>
+            <Controller
+              name="emailIDBasicInfo"
+              rules={{
+                required: "Email ID is Required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Email ID"
+                  invalid={errors.emailIDBasicInfo && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.emailIDBasicInfo && (
               <span className="text-danger">
-                {errors.branchNumber.message as React.ReactNode}
+                {errors.emailIDBasicInfo.message as React.ReactNode}
               </span>
             )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Contact Number
+            </Label>
+            <div className="d-flex gap-2">
+              <div style={{ width: "20%" }}>
+                <Controller
+                  name="basicInfoCountryCode"
+                  rules={{
+                    required: "Country Code is Required",
+                  }}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="00"
+                      invalid={errors.emailIDBasicInfo && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              <div style={{ width: "80%" }}>
+                <Controller
+                  name="basicInfoContactNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder=" Enter Contact Number"
+                      invalid={errors.emailIDBasicInfo && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {errors.basicInfoCountryCode ? (
+              <span className="text-danger">
+                {errors.basicInfoCountryCode.message as React.ReactNode}
+              </span>
+            ) : errors.basicInfoContactNumber ? (
+              <span className="text-danger">
+                {errors.basicInfoContactNumber.message as React.ReactNode}
+              </span>
+            ) : null}
           </Col>
         </Row>
       </Form>

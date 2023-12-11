@@ -2,8 +2,12 @@
   import {COUNTRIES_DETAIL_ENDPOINT, CREATE_COUNTRIES, DELETE_COUNTRIES, EDIT_COUNTRIES, GET_COUNTRIES,UPLOAD_COUNTRIES_LIST} from '../lib/endpoints';
 
   class CountryService extends APIService {
-    getCountries(): Promise<any> {
-      return this.get(`${GET_COUNTRIES}`)
+    getCountries(params?): Promise<any> {
+      return this.get(
+        params ?
+        `${GET_COUNTRIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+        `${GET_COUNTRIES}`
+      )
         .then((res) => {
           return res?.data;
         })
@@ -25,6 +29,7 @@
 
 
       uploadcouuntrieslist(fileName: any) {
+        console.log(fileName)
       // Create a FormData object
       const formData = new FormData();
 

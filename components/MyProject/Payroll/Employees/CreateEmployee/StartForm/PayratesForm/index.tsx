@@ -6,30 +6,40 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 function PayratesForm({ control, errors }) {
     const formData = [{
       label: "Studio", fields: [
-        { name: 'studio_schedule', label: 'Schedule', type: 'select', placeholder: 'Schedule' },
-        { name: 'studio_hourly_rate', label: 'Hourly Rate', required: true, placeholder: 'Hourly Rate' },
-        { name: 'studio_hours', label: 'Hours', placeholder: 'Hours' },
-        { name: 'studio_daily_rate', label: 'Daily Rate', required: true, placeholder: 'Daily Rate' },
+        { name: 'studio_daily', label: 'DAILY', type: 'check', placeholder: 'Schedule' },
+        { name: 'studio_hourly_rate', label: 'Hourly Rate', placeholder: 'Hourly Rate' },
+        { name: 'studio_daily_rate', label: 'Daily Rate', placeholder: 'Daily Rate' },
         { name: 'studio_average_daily_hours', label: 'Average Daily Hours', placeholder: 'Average Daily Hours' },
-        { name: 'studio_weekly_rate', label: 'Weekly Rate', required: true, placeholder: 'Weekly Rate' },
-        { name: 'studio_week_hours', label: 'Hours', placeholder: 'Hours' },
-        { name: 'studio_6th_day', label: '6th Day', required: true, placeholder: '6th Day' },
-        { name: 'studio_7th_day', label: '7th Day', required: true, placeholder: '7th Day' },
+        { name: 'studio_weekly', label: 'WEEKLY', type: 'check', placeholder: 'Schedule' },
+        { name: 'studio_weekly_hourly_rate', label: 'Hourly Rate', placeholder: 'Hourly Rate' },
+        { name: 'studio_weekly_daily_rate', label: 'Weekly Rate', placeholder: 'Daily Rate' },
+        { name: 'studio_weekly_hours', label: 'Hours', placeholder: 'Average Daily Hours' },
+        { name: 'studio_oncall', label: 'On-Call or Exempt', type: 'check', placeholder: 'Schedule' },
+        { name: 'studio_oncall_daily_rate', label: 'Daily Rate', placeholder: 'Daily Rate' },
+        { name: 'studio_oncall_weekly_rate', label: 'Weekly Rate', placeholder: 'Hourly Rate' },
+        { name: 'studio_oncall_hours', label: 'Hours', placeholder: 'Average Daily Hours' },
+        { name: 'studio_6th_day', label: '6th Day', placeholder: '6th Day' },
+        { name: 'studio_7th_day', label: '7th Day', required: false, placeholder: '7th Day' },
         { name: 'studio_dga_production_fee', label: 'DGA Production Fee', placeholder: 'DGA Production Fee' },
         { name: 'studio_overscale', label: 'Overscale %', placeholder: 'Overscale %' }
       ]
     },
     {
       label: "Distant", fields: [
-        { name: 'distant_schedule', label: 'Schedule', type: 'select', placeholder: 'Schedule' },
-        { name: 'distant_hourly_rate', label: 'Hourly Rate', required: true, placeholder: 'Hourly Rate' },
-        { name: 'distant_daily_hours', label: 'Hours', placeholder: 'Hours' },
-        { name: 'distant_daily_rate', label: 'Daily Rate', required: true, placeholder: 'Daily Rate' },
+        { name: 'distant_daily', label: 'DAILY', type: 'check', placeholder: 'Schedule' },
+        { name: 'distant_hourly_rate', label: 'Hourly Rate', placeholder: 'Hourly Rate' },
+        { name: 'distant_daily_rate', label: 'Daily Rate', placeholder: 'Daily Rate' },
         { name: 'distant_average_daily_hours', label: 'Average Daily Hours', placeholder: 'Average Daily Hours' },
-        { name: 'distant_weekly_rate', label: 'Weekly Rate', required: true, placeholder: 'Weekly Rate' },
-        { name: 'distant_weekly_hours', label: 'Hours', placeholder: 'Hours' },
-        { name: 'distant_6th_day', label: '6th Day', required: true, placeholder: '6th Day' },
-        { name: 'distant_7th_day', label: '7th Day', required: true, placeholder: '7th Day' },
+        { name: 'distant_weekly', label: 'WEEKLY', type: 'check', placeholder: 'Schedule' },
+        { name: 'distant_weekly_hourly_rate', label: 'Hourly Rate', placeholder: 'Hourly Rate' },
+        { name: 'distant_weekly_daily_rate', label: 'Weekly Rate', placeholder: 'Daily Rate' },
+        { name: 'distant_weekly_hours', label: 'Hours', placeholder: 'Average Daily Hours' },
+        { name: 'distant_oncall', label: 'On-Call or Exempt', type: 'check', placeholder: 'Schedule' },
+        { name: 'distant_oncall_daily_rate', label: 'Daily Rate', placeholder: 'Daily Rate' },
+        { name: 'distant_oncall_weekly_rate', label: 'Weekly Rate', placeholder: 'Hourly Rate' },
+        { name: 'distant_oncall_hours', label: 'Hours', placeholder: 'Average Daily Hours' },
+        { name: 'distant_6th_day', label: '6th Day', placeholder: '6th Day' },
+        { name: 'distant_7th_day', label: '7th Day', required: false, placeholder: '7th Day' },
         { name: 'distant_dga_production_fee', label: 'DGA Production Fee', placeholder: 'DGA Production Fee' },
         { name: 'distant_overscale', label: 'Overscale %', placeholder: 'Overscale %' }
       ]
@@ -46,9 +56,9 @@ function PayratesForm({ control, errors }) {
               </div>
                <Row key={form.label}>
               {form.fields.map((formField) => (
-                <Col xl="4" key={formField.name}>
+                <Col xl="3" key={formField.name}>
                   {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
-                    {formField.label}{formField.required && '*'}
+                    {formField.label}{formField.required && <span className='text-danger'>*</span>}
             </Label>}
                   {formField.type === 'select' ? (
                     <Controller

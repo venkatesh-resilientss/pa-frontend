@@ -126,7 +126,7 @@ export default function Profile() {
         <div>
           <img
             alt="profile-img"
-            src="./default.svg"
+            src="/default.svg"
             style={{ width: "60px", height: "60px" }}
             className="rounded-circle"
           />

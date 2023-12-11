@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody } from "reactstrap";
+import { Button, Modal, ModalBody,Spinner } from "reactstrap";
 
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
@@ -10,8 +10,9 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { closeBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { LocationsService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
-const LocationsBulkUploadPopup = () => {
+const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
 
   const locationService = new LocationsService();
@@ -34,28 +35,28 @@ const LocationsBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
+    const {clientID,projectID} = getSessionVariables();
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
-
+    setLoader(true)
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
     locationService
-      .uploadlocationlist(fileName)
+      .uploadlocationlist(fileName,clientID,projectID)
       .then(() => {
         // Handle success
+        setRerender(!rerender)
         toast.success("Data inserted successfully.");
-
         dispatch(closeBulkUploadLocationsPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        setLoader(false)
+        toast.error(error.Message|| error.error || "Failed to insert data.");
       });
   };
   const handleDownload = () => {
@@ -188,8 +189,13 @@ const LocationsBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

@@ -7,7 +7,7 @@ import { formValidationRules } from "@/constants/common";
 import { CountryService } from "services";
 import { selectStyles } from "@/constants/common";
 import AsyncSelect from "react-select/async";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 function AddTaxCode() {
   const {
     control,
@@ -20,27 +20,32 @@ function AddTaxCode() {
   const taxCodeService = new TaxCodesService();
   const countryService = new CountryService();
 
-  const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries()
-  );
-
-  const countrySelectFormat = countryData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadCountryOptions = (values, callBack) => {
-    callBack(countrySelectFormat);
-  };
+  const [initialCountryOptions,setInitialCountryOptions] = useState([]);
+  useEffect(()=>{
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries();
+        const options = res?.data.map(item=>({
+          value : item.ID,
+          label : `${item.Code} - ${item.Name}`
+        }))
+        setInitialCountryOptions(options);
+      }catch(error){
+        toast.error(error?.Message || error?.error ||'Error while fetching countries')
+      }
+    }
+    fetchInitialCountryOptions();
+  },[]);
+  const loadCountryOptions = (callback=>{
+    callback(initialCountryOptions);
+  })
   const onSubmit = (data) => {
     const backendFormat = {
+      name : data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      
+      countryID : parseInt(data.country.value)
     };
-
     taxCodeService
       .createTaxCode(backendFormat)
       .then(() => {
@@ -162,9 +167,9 @@ function AddTaxCode() {
                     isClearable={true}
                     className="react-select"
                     classNamePrefix="select"
-                    loadOptions={loadCountryOptions}
                     placeholder="Select Country"
-                    defaultOptions={countrySelectFormat}
+                    loadOptions={loadCountryOptions}
+                    defaultOptions={initialCountryOptions}
                     styles={selectStyles}
                   />
                 )}
