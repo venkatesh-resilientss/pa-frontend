@@ -261,9 +261,6 @@ export const sidebarRoutesMaster = [
         name: "Occupation Codes",
         path: "/OccupationCodes",
       }
-
-
-
     ],
   },
   {
@@ -438,7 +435,6 @@ export const sidebarRoutesNonStaff = [
         name: "Occupation Codes",
         path: "/OccupationCodes",
       }
-
     ],
   },
   {
