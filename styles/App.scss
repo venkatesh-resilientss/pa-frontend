@@ -620,11 +620,13 @@ white-space: nowrap;
 .custom-radio-input {
   /* Set the color you want for the radio button */
   color: #000;
+  width: 18px;
 }
 
 .custom-radio-input:checked::before {
   /* Set the color of the dot when the radio button is checked */
   background-color: #000;
+  width: 18px;
 }
 
 footer {
@@ -780,37 +782,59 @@ input::placeholder {
   color: #030229;
   font-size: 16px;
 }
-.nodataAvailable p{
+.inputFeild{
+  height: 40px;
+  font-size: 12px;
+  font-weight: 400;
+}
+.buttonStyle {
+  font-size: 14px;
+  font-weight: 400;
+  height: 34px;
+  width: 13%;
+  background-color: dee2e6;
+  color: white;
+  border: 1px solid #dee2e6;
+}
+.buttonStyle1{
+  font-size: 14px;
+  font-weight: 400;
+  height: 34px;
+  width: 13%;
+  background-color: #00AEEF;
+  color: white;
+  border: 1px solid #dee2e6;
+  }
+  .nodataAvailable p{
+    font-size: 32px;
+    font-weight: 600;
+    color: #B0B0B0;
+  }
+  .nodataAvailable h6{
+    font-size: 12x;
+    color: #B0B0B0;
+  }
+  .productionCards{
+    border-radius: 10px;
+    border: 1px solid #C1C1C1;
+    background: #116B8D;
+    height: 100%;
+  }
+  .productionCards p{
+  font-size: 14px;
+  }
+  .productionCards h6{
+  font-size: 12px;
+  }
+  .productionCards h4{
   font-size: 32px;
   font-weight: 600;
-  color: #B0B0B0;
-}
-.nodataAvailable h6{
-  font-size: 12x;
-  color: #B0B0B0;
-}
-.productionCards{
-  border-radius: 10px;
-  border: 1px solid #C1C1C1;
-  background: #116B8D;
-  height: 100%;
-}
-.productionCards p{
-font-size: 14px;
-}
-.productionCards h6{
-font-size: 12px;
-}
-.productionCards h4{
-font-size: 32px;
-font-weight: 600;
-}
-.productionBorder{
-  border-radius: 2.505px;
-  background: #B5DEF0;
-  padding: 5px;
-}
-
+  }
+  .productionBorder{
+    border-radius: 2.505px;
+    background: #B5DEF0;
+    padding: 5px;
+  }
 .errorBorder {
   border: 1px solid #dc3545;
   border-radius: 5px;

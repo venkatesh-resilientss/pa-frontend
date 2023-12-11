@@ -244,6 +244,12 @@ export const sidebarRoutesMaster = [
         path: "/countries",
       },
       {
+        name: "Departments",
+        path: "/departments",
+      },
+
+
+      {
         name: "States",
         path: "/states",
       },
@@ -252,24 +258,13 @@ export const sidebarRoutesMaster = [
         path: "/taxcodes",
       },
       {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
+      {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      },
-    ],
-  },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
-      {
-        name: "Projects",
-        path: "/projects",
-      },
-      {
-        name: "Employees",
-        path: "/employees",
-      },
+      }
     ],
   },
   {
@@ -359,6 +354,15 @@ export const sidebarRoutesProduction = [
         name: "Chart of Accounts (COA)",
         path: "/coaaccounts",
       },
+
+      {
+        name: "Countries",
+        path: "/countries",
+      },
+      {
+        name: "Currencies",
+        path: "/currencies",
+      },
       {
         name: "Departments",
         path: "/departments",
@@ -383,6 +387,7 @@ export const sidebarRoutesProduction = [
         name: "Vendors",
         path: "/vendors",
       },
+
       {
         name: "Company",
         path: "/company",
@@ -391,28 +396,17 @@ export const sidebarRoutesProduction = [
         name: "Project Types",
         path: "/project-type",
       },
-      
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
       {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      },
-    ],
+      }
+    ]
   },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
-      {
-        name: "Projects",
-        path: "/projects",
-      },
-      {
-        name: "Employees",
-        path: "/employees",
-      },
-    ],
-  },
+
 ];
 
 export const sidebarRoutesNonStaff = [
@@ -452,22 +446,7 @@ export const sidebarRoutesNonStaff = [
       {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      },
-    ],
-  },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
-      {
-        name: "Projects",
-        path: "/projects",
-      },
-      {
-        name: "Employees",
-        path: "/employees",
-      },
+      }
     ],
   },
   {
@@ -479,8 +458,10 @@ export const sidebarRoutesNonStaff = [
         name: "User Management",
         path: "/usermanagement",
       },
+
     ],
   },
+
 ];
 
 /**Chart of accounts */

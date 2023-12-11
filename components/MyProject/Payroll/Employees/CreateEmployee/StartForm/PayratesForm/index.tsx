@@ -41,7 +41,8 @@ function PayratesForm({ control, errors }) {
         { name: 'distant_6th_day', label: '6th Day', placeholder: '6th Day' },
         { name: 'distant_7th_day', label: '7th Day', required: false, placeholder: '7th Day' },
         { name: 'distant_dga_production_fee', label: 'DGA Production Fee', placeholder: 'DGA Production Fee' },
-        { name: 'distant_overscale', label: 'Overscale %', placeholder: 'Overscale %' }
+        { name: 'distant_overscale', label: 'Overscale %', placeholder: 'Overscale %' },
+        { name: 'idle', label: 'Idle', placeholder: 'Idle' }
       ]
     }
       ];
