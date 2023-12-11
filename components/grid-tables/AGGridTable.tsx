@@ -11,6 +11,7 @@ function AGGridTable({
   pageSize,
   noDataPage,
   rerender,
+  rowData
 }) {
   const [gridApi, setGridApi] = useState(null);
   const gridRef = useRef(null);
@@ -82,6 +83,7 @@ function AGGridTable({
         <AgGridReact
           pagination={true}
           ref={gridRef}
+          rowData={rowData}
           rowModelType={"infinite"}
           paginationPageSize={pageSize}
           cacheBlockSize={pageSize}

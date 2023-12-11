@@ -1,44 +1,17 @@
 import {
   Card,
   CardBody,
-  Badge,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Form,
   Input,
   Button,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
-import CustomBadge from "components/Generic/CustomBadge";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
+import GridTable from "../../../../grid-tables/gridTable";
 import { useRouter } from "next/router";
-import { SeriesService } from "services";
-import moment from "moment";
-import useSWR from "swr";
-import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSeriesPopup,
-  openDeleteSeriesPopup,
-} from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
+import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import NoDataPage from "components/NoDataPage";
-import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
 import React from "react";
 
-const AllWCCodesTable = () => {
-  const dispatch = useDispatch();
+const AllMPIPHPTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   // const ActionsButton = (props) => {
@@ -104,16 +77,16 @@ const AllWCCodesTable = () => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-          <div
-           onClick={() =>router.push(`/configurations/edit-MPIPHP/${props.data?.ID}`)}
-            className="cursor-pointer"
-            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
-          >
-            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
-          </div>
+        <div
+          onClick={() => router.push(`/configurations/edit-MPIPHP/${props.data?.ID}`)}
+          className="cursor-pointer"
+          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+        >
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+        </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-          {/* <div
+        {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -130,7 +103,6 @@ const AllWCCodesTable = () => {
       field: "OCCCode",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -138,7 +110,6 @@ const AllWCCodesTable = () => {
       field: "Description",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -146,7 +117,6 @@ const AllWCCodesTable = () => {
       field: "WcClass",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
 
@@ -155,14 +125,12 @@ const AllWCCodesTable = () => {
       field: "EmployeeType",
       sortable: true,
       resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Action",
       field: "id",
       cellRenderer: ActionsButton,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
   ];
@@ -247,25 +215,6 @@ const AllWCCodesTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                {/* <Button
-                  onClick={() => dispatch(openBulkUploadSeriesPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button> */}
-
                 <Button
                   onClick={() => router.push(`/configurations/add-MPIPHP`)}
                   style={{
@@ -288,7 +237,7 @@ const AllWCCodesTable = () => {
                   "create_configuration"
                 ) && (
                   <Button
-                    onClick={() => router.push(`/configurations/add-Wccodes`)}
+                    onClick={() => router.push(`/configurations/add-MPIPHP`)}
                     style={{
                       height: "38px",
                       backgroundColor: "#00AEEF",
@@ -310,19 +259,18 @@ const AllWCCodesTable = () => {
           </CardBody>
         </Card>
       </div>
-      
-        <div className="mt-2">
-          <GridTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-     
-       
+      <div className="mt-2">
+        <GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />
+      </div>
+
+
     </div>
   );
 };
 
-export default AllWCCodesTable;
+export default AllMPIPHPTable;
