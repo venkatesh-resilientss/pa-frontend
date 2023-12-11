@@ -6,12 +6,11 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 function AccountingInformationForm({ control, errors }) {
 
   const form = [
-    { name: 'rsslCompany', label: 'RSSL Company', type: 'select', placeholder: 'Enter RSSL Company' },
-    { name: 'rsslInvoiceAddress', label: 'RSSL Invoice Address', type: 'select', placeholder: 'Enter RSSL Invoice Address' },
-    { name: 'rsslBank', label: 'RSSL Bank', required: false, type: 'select', placeholder: 'Enter RSSL Bank' },
+    { name: 'rsslCompany', label: 'RSSL Company', type: 'select', options: [{label: 'RSSL', value: 'RSSL'}], required: true, placeholder: 'Enter RSSL Company' },
+    { name: 'rsslInvoiceAddress', label: 'RSSL Invoice Address', required: true, type: 'select', options: [{label: 'GA address', value: 'GA address'}, {label: 'NY address', value: 'NY address'}], placeholder: 'Enter RSSL Invoice Address' },
+    { name: 'rsslBank', label: 'RSSL Bank', required: true, type: 'select', options: [{label: 'Payroll Bank', value: 'Payroll Bank'}], placeholder: 'Enter RSSL Bank' },
     { name: 'payment_method', label: 'Payment Method', type: 'select', required: true, options: [{label: 'ACH', value: 'ACH'}, {label: 'Company Check', value: 'Company Check'}, {label:'Bank Check', value: 'Bank Check'}, {label: 'Wire', value: 'Wire'}], placeholder: 'Payment Method' },
     { name: 'credit_terms', label: 'Credit Terms', required: true, options: [{label: '1', value: '1'}, {label: '2', value: '2'}, {label: '3', value: '3'}, {label: '4', value: '4'}, {label: '5', value: '5'}, {label: '6', value: '6'}, {label: '7', value: '7'}, {label: '8', value: '8'}, {label: '9', value: '9'}, {label: '10', value: '10'}], placeholder: 'Credit Terms' }
-    
   ]
 
   return (
