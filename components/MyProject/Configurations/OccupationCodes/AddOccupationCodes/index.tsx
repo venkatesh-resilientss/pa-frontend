@@ -2,13 +2,13 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ExtendedMultiSelect from "@/components/ExtendedMultiSelect";
 export type Option = {
   value: number | string;
   label: string;
 };
-function AddSeries() {
+function AddOccupationCodes() {
 
   const router = useRouter();
   const options = [
@@ -55,7 +55,7 @@ function AddSeries() {
             </div>
           </div>
 
-          <hr style={{ height: "2px" }} />
+          <hr className="occupation-hr" />
           <Form
             className=" mt-2 d-flex flex-column occupation-form"
             onClick={handleSubmit(onSubmit)}
@@ -196,10 +196,10 @@ function AddSeries() {
               </Col>
 
             </Row>
-           
+
             <Row className="occupation-button-header">
               <Col>
-                <div className="d-flex me-2 " style={{ gap: "20px" }}>
+                <div className="d-flex me-2 gap-20">
                   <Button
                     onClick={() => router.back()}
                     className="buttonStyle"
@@ -221,4 +221,4 @@ function AddSeries() {
   );
 }
 
-export default AddSeries;
+export default AddOccupationCodes;

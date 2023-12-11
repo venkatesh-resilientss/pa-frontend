@@ -20,10 +20,9 @@ const AllOccupationCodesTable = () => {
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
         <div
           onClick={() => router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)}
-          className="cursor-pointer"
-          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+          className="cursor-pointer occupation-edit"
         >
-          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} className="occpation-edit-img" />
         </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
@@ -157,8 +156,7 @@ const AllOccupationCodesTable = () => {
               </div>
 
               <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
+                className="d-flex align-items-center gap-10"
               >
                 <div className="occupation-subheader">
                   {5} Occupation codes
@@ -176,7 +174,7 @@ const AllOccupationCodesTable = () => {
                   className="occupation-add-button"
                 >
                   <Image
-                 className="occupation-plus-icon"
+                    className="occupation-plus-icon"
                     src={plusWhiteIcon}
                     alt="plus-icon"
                   />{" "}

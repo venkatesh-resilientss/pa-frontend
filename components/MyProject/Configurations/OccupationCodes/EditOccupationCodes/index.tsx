@@ -1,8 +1,13 @@
-import { Button, Col,Row, Form, Input, Label } from "reactstrap";
+import { Button, Col, Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
+import ExtendedMultiSelect from "@/components/ExtendedMultiSelect";
+import React, { useState } from "react";
+export type Option = {
+  value: number | string;
+  label: string;
+};
 function EditOccupationCodes() {
   const router = useRouter();
 
@@ -17,6 +22,16 @@ function EditOccupationCodes() {
       console.error(error);
     }
   };
+  const [optionSelected, setSelected] = useState<Option[] | null>();
+  const handleChange = (selected: Option[]) => {
+    setSelected(selected);
+  };
+  const options = [
+    { value: 0, label: "Goranboy" },
+    { value: 1, label: "Safikurd" },
+    { value: 2, label: "Baku" },
+    { value: 3, label: "Ganja" },
+  ];
   const {
     handleSubmit,
     formState: { errors },
@@ -37,26 +52,26 @@ function EditOccupationCodes() {
           >
             Edit Occupation Code
           </div>
-          
+
         </div>
 
-        <hr style={{ height: "2px" }} />
+        <hr className="occupation-hr" />
 
         <Form
-            className=" mt-2 d-flex flex-column occupation-form"
-            onClick={handleSubmit(onSubmit)}
-          >
-            <Row>
+          className=" mt-2 d-flex flex-column occupation-form"
+          onClick={handleSubmit(onSubmit)}
+        >
+          <Row>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">OCC Code <span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">OCC Code<span className="text-danger">*</span></Label>
                 <Controller
                   name="OCCCode"
                   rules={{ required: "OCC Code is required" }}
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="OCC Code"
                       invalid={errors.OCCCode && true}
                       {...field}
@@ -73,14 +88,14 @@ function EditOccupationCodes() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Description <span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Description<span className="text-danger">*</span></Label>
                 <Controller
                   name="Description"
                   rules={{ required: "Description is required" }}
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Description"
                       invalid={errors.Description && true}
                       {...field}
@@ -104,7 +119,7 @@ function EditOccupationCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Series Code"
                       invalid={errors.WCClass && true}
                       {...field}
@@ -118,8 +133,8 @@ function EditOccupationCodes() {
                 )}
               </div>
             </Col>
-            </Row>
-            <Row>
+          </Row>
+          <Row>
             <Col xl="4">
               <div className="mb-1">
                 <Label className="form-lable-font">Employee Type<span className="text-danger">*</span></Label>
@@ -127,79 +142,27 @@ function EditOccupationCodes() {
                   name="EmployeeType"
                   rules={{ required: "Employee Type is required" }}
                   control={control}
-                  render={({ field }) => (
-                    <Input
-                    className="inputFeild"
-                      placeholder="Employee Type"
-                      invalid={errors.EmployeeType && true}
-                      {...field}
+                  render={() => (
+                    <ExtendedMultiSelect
+                      key="example_id"
+                      options={options}
+                      onChange={handleChange}
+                      value={optionSelected}
+                      isSelectAll={true}
+                      menuPlacement={"top"}
                     />
                   )}
                 />
-                {errors.EmployeeType && (
-                  <span className="text-danger">
-                    {errors.EmployeeType.message as React.ReactNode}
-                  </span>
-                )}
               </div>
             </Col>
-
-            <Col xl="4">
-              <div className="mb-1">
-                <Label className="form-lable-font">OFF Production<span className="text-danger">*</span></Label>
-                <Controller
-                  name="OFFProduction"
-                  rules={{ required: "OFF Production is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      className="inputFeild"
-                      placeholder="OFF Production"
-                      invalid={errors.OFFProduction && true}
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.OFFProduction && (
-                  <span className="text-danger">
-                    {errors.OFFProduction.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="4">
-              <div className="mb-1">
-                <Label className="form-lable-font">Agreements<span className="text-danger">*</span></Label>
-                <Controller
-                  name="Agreements"
-                  rules={{ required: "Agreements is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                    className="inputFeild"
-                      placeholder="Agreements"
-                      invalid={errors.Agreements && true}
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.Agreements && (
-                  <span className="text-danger">
-                    {errors.Agreements.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            </Row>
-            <Row>
-              <Col><div className="d-flex flex-column mt-1">
+            <Col><div className="d-flex flex-column mt-1">
               <Label className="form-lable-font">Status </Label>
               <div className="d-flex gap-1">
                 <div className="d-flex gap-1">
                   <input
                     type="radio"
                     id="ex1-active"
+                    checked={true}
                     name="ex1"
                   />
                   <div>Active</div>
@@ -214,25 +177,45 @@ function EditOccupationCodes() {
                 </div>
               </div>
             </div>
-            </Col></Row>
-            <Row occupation-button-header>
-              <Col>
-                 <div className="d-flex me-2 " style={{ gap: "20px" }}>
-              <Button
-                onClick={() => router.back()}
-               className="buttonStyle"
-              >
-                Cancel 
-              </Button>
-              <Button
-                color="primary"
-                className="buttonStyle1"
-              >
-                Save
-              </Button>
-            </div></Col>
-            </Row>
-          </Form>
+            </Col>
+            <Col xl="4">
+              <div className="mb-1">
+                <Controller
+                  name="OFFProduction"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      className="p-2 occupation-checkboox"
+                      placeholder="OFF Production"
+                      {...field}
+                    />
+                  )}
+                />
+                <Label className="form-lable-font occupation-checkbox-text">OFF Production</Label>
+              </div>
+            </Col>
+
+          </Row>
+
+          <Row className="occupation-button-header">
+            <Col>
+              <div className="d-flex me-2 gap-20">
+                <Button
+                  onClick={() => router.back()}
+                  className="buttonStyle"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  className="buttonStyle1"
+                >
+                  Save
+                </Button>
+              </div></Col>
+          </Row>
+        </Form>
       </div>
     </>
   );
