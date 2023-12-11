@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import  { useRouter } from "next/router";
 import Link from "next/link";
 import { Modal, Button } from "react-bootstrap";
 
@@ -445,7 +445,14 @@ const Sidebar = ({ props }) => {
                       setClickedItemIndex(null);
                     }}
                   >
-                    Home
+                    <div
+                    onClick={() => {
+                      // Redirect to the dashboard when clicking on "HOME"
+                      router.push('/dashboard');
+                    }}
+                  >
+                    HOME
+                  </div>
                   </p>
                 </div>
               </div>
@@ -707,7 +714,7 @@ const Sidebar = ({ props }) => {
                 selectedProduction?.Client?.ID
               );
               sessionStorage.setItem("projectid", selectedProduction?.ID);
-              router.push("/dashboard");
+              router.push(`/production/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
             }}
             style={{ width: 150 }}
