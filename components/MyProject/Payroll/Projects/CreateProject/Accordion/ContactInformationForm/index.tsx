@@ -10,7 +10,7 @@ function ContactInformationForm({ control, errors }) {
   const contacts = [
     { name: 'accountantType', label: 'Production Accountant', required: true, type: 'select', options: [{label: 'Production Accountant', value: 'Production Accountant'}, {label: 'Asst. Production Accountant', value: 'Asst. Production Accountant'}, {label: 'Payroll Accountant', value: 'Payroll Accountant'}, {label: 'UPM', value: 'UPM'}, {label: 'For W/C', value: 'For W/C'}], placeholder: 'Enter Accountant' },
     { name: 'productionAccountantOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Accountant Office Phone' },
-    { name: 'productionAccountantCellPhone', label: 'Cell Phone', required: true, placeholder: 'Enter Accountant Cell Phone' },
+    { name: 'productionAccountantCellPhone', label: 'Cell Phone', required: false, placeholder: 'Enter Accountant Cell Phone' },
     { name: 'productionAccountantEmailPhone', label: 'Email', required: false, placeholder: 'Enter Email' }]
 
   const [formData, setFormData] = useState([contacts]);

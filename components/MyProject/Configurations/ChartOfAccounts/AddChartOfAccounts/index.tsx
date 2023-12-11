@@ -1,4 +1,4 @@
-import { Button, Col, Input, Label, Form } from "reactstrap";
+import { Button, Col, Input, Label, Form, Spinner } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -12,6 +12,7 @@ import { getSessionVariables } from "@/constants/function";
 import AsyncSelect from "react-select/async";
 function AddChartOfAccounts() {
   const router = useRouter();
+  const [isLoading,setLoader] = useState(false);
   const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
 
@@ -29,7 +30,7 @@ function AddChartOfAccounts() {
             offset: 0,
           }
         );
-        const options = res?.result.map((item) => ({
+        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -53,7 +54,7 @@ function AddChartOfAccounts() {
           offset: 0,
         }
       );
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -74,27 +75,28 @@ function AddChartOfAccounts() {
 
   const onSubmit = (data) => {
     const { clientID, projectID } = getSessionVariables();
+    setLoader(true)
     const backendFormat = {
       name: data.COAName,
       code: data.COACode,
-      parentID: parseInt(data.COAParent),
-      IsActive: false,
+      parentID: parseInt(data.COAParent?.value),
       description: data.Description,
-      type: data.AccountType.value,
+      accountType: data.AccountType.value,
       postable: postableActiveStatus,
       clientID,
       projectID,
     };
-
     coaAccountsService
       .createCOA(backendFormat)
       .then(() => {
         toast.success("COA Added successfully");
         router.back();
+        setLoader(false);
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error.error || error.Message || "Unable to insert COA");
+        setLoader(false)
       });
   };
 
@@ -137,8 +139,13 @@ function AddChartOfAccounts() {
                 fontWeight: "600",
                 height: "34px",
               }}
+              disabled={isLoading}
             >
-              Save
+              {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Save"
+            )}
             </Button>
           </div>
         </div>

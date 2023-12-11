@@ -10,9 +10,8 @@ function EditCurrency() {
   const router = useRouter();
   const currencyValidationRules = formValidationRules.currencies;
   const { id } = router.query;
-
   const currencyService = new CurrencyService();
-
+  const [isBaseCurrency,setIsBaseCurrency] = useState(false);
   const fetchCurrencyDetails = (id) => currencyService.currencyDetails(id);
 
   const { data: currencyData } = useSWR(
@@ -33,11 +32,13 @@ function EditCurrency() {
 
     currencyData?.Name && setValue("currencyname", currencyData?.Name);
     currencyData?.Code && setValue("currencycode", currencyData?.Code);
-
+    currencyData?.CurrencySymbol && setValue("currencysymbol", currencyData?.CurrencySymbol);
+    currencyData?.CurrentRate && setValue("currentRate",currencyData?.CurrentRate)
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
 
     setActiveStatus(currencyData?.IsActive);
+    setIsBaseCurrency(currencyData?.BaseCurrency);
   }, [currencyData]);
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
@@ -49,9 +50,11 @@ function EditCurrency() {
   const onSubmit = (data) => {
     const backendFormat = {
       name: data.currencyname,
-      description: data.description,
-      isActive: activeStatus,
       code: data.currencycode,
+      currencySymbol: data.currencysymbol,
+      currentRate: data.currentRate,
+      description: data.description,
+      BaseCurrency: data.BaseCurrency
     };
 
     currencyService
@@ -110,9 +113,11 @@ function EditCurrency() {
           onSubmit={handleSubmit(onSubmit)}
         >
           {" "}
-          <Col xl="4">
+          <Col xl="5">
             <div className="mb-1">
-              <Label>Currency Code</Label>
+              <Label className="form-lable-font">
+                Currency Code<span className="required">*</span>
+              </Label>
               <Controller
                 name="currencycode"
                 rules={currencyValidationRules.code}
@@ -133,9 +138,11 @@ function EditCurrency() {
               )}
             </div>
           </Col>
-          <Col xl="4">
+          <Col xl="5">
             <div className="mb-1 mt-2">
-              <Label>Currency Name</Label>
+              <Label className="form-lable-font">
+                Currency Name<span className="required">*</span>
+              </Label>
               <Controller
                 name="currencyname"
                 rules={currencyValidationRules.name}
@@ -152,6 +159,31 @@ function EditCurrency() {
               {errors.currencyname && (
                 <span className="text-danger">
                   {errors.currencyname.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
+          <Col xl="5">
+            <div className="mb-1 mt-2">
+              <Label className="form-lable-font">
+                Currency Symbol<span className="required">*</span>
+              </Label>
+              <Controller
+                name="currencysymbol"
+                rules={currencyValidationRules.symbol}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="Currency Symbol"
+                    invalid={errors.currencyname && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.currencysymbol && (
+                <span style={{ color: "red" }}>
+                  {errors.currencysymbol.message as React.ReactNode}
                 </span>
               )}
             </div>
@@ -188,9 +220,13 @@ function EditCurrency() {
                 render={({ field }) => (
                   <Input
                     placeholder="Enter Value"
-                    invalid={errors.currencyname && true}
+                    invalid={errors.currentRate && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    checked={isBaseCurrency}
+                    onChange={(e)=>{
+                      setIsBaseCurrency(e.target.checked)
+                    }}
                   />
                 )}
               />

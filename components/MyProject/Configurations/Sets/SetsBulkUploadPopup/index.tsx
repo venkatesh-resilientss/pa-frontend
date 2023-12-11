@@ -51,7 +51,7 @@ const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
         // Handle success
         toast.success("Data inserted successfully.");
         setRerender(!rerender)
-
+        setLoader(false);
         dispatch(closeBulkUploadSetsPopup("close"));
       })
       .catch((error) => {

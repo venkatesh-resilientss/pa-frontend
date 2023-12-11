@@ -5,43 +5,145 @@
 		font-size: 16px;
 		font-weight: 600;
 	}
-	.add-agents-subheader{
+
+	.add-agents-subheader {
 		font-size: 32px;
 		font-weight: 600;
 	}
-	.add-form{
+
+	.add-form {
 		font-size: 12px;
 		font-weight: 400;
 		gap: 10px;
 
 	}
-	.edit-buttons{
+
+	.edit-buttons {
 		width: 150px;
 		border-radius: 1px;
+	}
 }
-}
-.agents-list{
+
+.agents-list {
 	background-color: #E7EFFF;
 	box-shadow: 0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25);
-	.agents-header{
+
+	.agents-header {
 		font-size: 16px;
 		font-weight: 600;
 		color: #283891;
 	}
-	.agents-search{
+
+	.agents-search {
 		width: 217px;
 		height: 38px;
 	}
-	.agents-new-button{
+
+	.agents-new-button {
 		height: 38px;
 		background-color: #00AEEF;
 		font-size: 14px;
 		font-weight: 600;
 		border: none;
 	}
-	.agents-plus-image{
+
+	.agents-plus-image {
 		width: 14px;
 		height: 14px;
 	}
+}
 
+.occupation-codes {
+	.occupation-header {
+		font-size: 16px;
+		font-weight: 600;
+	}
+
+	.occupation-subheader {
+		font-size: 32px;
+		font-weight: 600;
+	}
+
+	.occupation-form {
+		font-size: 12px;
+		font-weight: 400;
+		gap: 10px
+	}
+
+	.occupation-button-header {
+		margin-top: 20px;
+	}
+
+
+}
+
+.occupation-list {
+	background-color: #E7EFFF;
+	box-shadow: 0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25);
+
+	.occupation-list-header {
+		font-size: 16px;
+		font-weight: 600;
+		color: #283891;
+	}
+
+	.occupation-subheader {
+		font-size: 16px;
+		font-weight: 400;
+	}
+
+	.occupation-search {
+		width: 217px;
+		height: 38px;
+	}
+
+	.occupation-add-button {
+		height: 38px;
+		background-color: #00AEEF;
+		font-size: 14px;
+		font-weight: 600;
+		border: none;
+	}
+
+	.occupation-plus-icon {
+		width: 14px;
+		height: 14px;
+	}
+}
+
+.occupation-checkboox {
+	margin-top: 15px;
+}
+
+.occupation-checkbox-text {
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.occupation-hr {
+	height: 2px;
+}
+
+.multiselect-style {
+	height: 400px;
+}
+
+.gap-20 {
+	gap: 20px;
+}
+
+.occupation-edit {
+	background-color: #AED8FF;
+	width: 30px;
+	height: 30px;
+	border-radius: 20px;
+}
+
+.occpation-edit-img {
+	margin-top: 3px;
+	margin-left: 8px;
+}
+
+.gap-10 {
+	gap: 10px;
 }

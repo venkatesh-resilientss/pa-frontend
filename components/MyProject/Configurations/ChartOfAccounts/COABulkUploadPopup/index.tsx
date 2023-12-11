@@ -52,6 +52,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
         toast.success("Data inserted successfully.");
         dispatch(closeBulkUploadCOAPopup("close"));
         setRerender(!rerender)
+        setLoader(false);
       })
       .catch((error) => {
         toast.error(error.error || error.Message || "Unable to insert data");
