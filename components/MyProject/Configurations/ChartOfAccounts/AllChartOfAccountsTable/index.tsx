@@ -154,7 +154,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
     // },
     {
       headerName: "COA Parent",
-      field: "ParentID",
+      field: "Parent.Name",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
