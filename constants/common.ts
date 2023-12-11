@@ -252,6 +252,10 @@ export const sidebarRoutesMaster = [
         name: "Tax Codes",
         path: "/taxcodes",
       },
+      {
+        name: "Project Types",
+        path: "/project-type",
+      },
     
    
       
@@ -437,6 +441,10 @@ export const sidebarRoutesNonStaff = [
       {
         name: "Departments",
         path: "/departments",
+      },
+      {
+        name: "Project Types",
+        path: "/project-type",
       },
     
     ],

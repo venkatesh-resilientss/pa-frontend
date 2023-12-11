@@ -158,7 +158,7 @@ function AddProjectType() {
                     render={({ field }) => (
                       <Input
                       type="checkbox"
-                        className="p-2 checkBocMargin"
+                        className="p-2 me-2"
                         placeholder="Crew"
                         {...field}
                       />
@@ -175,7 +175,7 @@ function AddProjectType() {
                     render={({ field }) => (
                       <Input
                       type="checkbox"
-                        className="p-2 checkBocMargin"
+                        className="p-2 me-2"
                         placeholder="DGA"
                         {...field}
                       />
@@ -193,7 +193,7 @@ function AddProjectType() {
                     render={({ field }) => (
                       <Input
                       type="checkbox"
-                        className="p-2 checkBocMargin"
+                        className="p-2 me-2"
                         placeholder="Video Tape"
                         {...field}
                       />
