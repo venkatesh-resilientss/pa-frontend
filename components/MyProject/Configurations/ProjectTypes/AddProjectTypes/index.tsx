@@ -2,25 +2,44 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select';
+import { ProjectTypesService } from "services";
 import { toast } from "react-toastify";
+import { useState } from "react";
+
 function AddProjectType() {
   const router = useRouter();
-  const onSubmit = async () => {
-    try {
-      // Your logic to save the form data
-      toast.success("Project Type added successfully");
-      router.push("/configurations/project-type");
-    } catch (error) {
-      toast.error("Error adding Project Type");
-      console.error(error);
-    }
-  };
+  const [isSaving, setIsSaving] = useState(false);
+
+  const projectTypesService = new ProjectTypesService();
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+
+  const onSubmit = (data) => {
+    if(isSaving) return
+    data.projectCategory = data.projectCategory.value
+    setIsSaving(true)
+
+    projectTypesService
+      .createProjecttype(data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Project Type added successfully");
+        router.push("/configurations/project-type");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        console.log('error', error)
+        toast.error(error?.error);
+      });
+  };
+
+
   return (
     <>
       <div className="section mt-4">
@@ -75,21 +94,44 @@ function AddProjectType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Project Type<span className="text-danger">*</span></Label>
                   <Controller
-                    name="ProjectType"
+                    name="name"
                     rules={{ required: "Project Type is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="p-2"
                         placeholder="Project Type"
-                        invalid={errors.ProjectType && true}
+                        invalid={errors.name && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.ProjectType && (
+                  {errors.name && (
                     <span className="text-danger">
-                      {errors.ProjectType.message as React.ReactNode}
+                      {errors.name.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
+              </Col>
+              <Col xl="4">
+                <div className="mb-1">
+                  <Label className="form-lable-font">Project Code<span className="text-danger">*</span></Label>
+                  <Controller
+                    name="code"
+                    rules={{ required: "Project Code is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        className="p-2"
+                        placeholder="Project Code"
+                        invalid={errors.code && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.code && (
+                    <span className="text-danger">
+                      {errors.code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -99,21 +141,21 @@ function AddProjectType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Project Description<span className="text-danger">*</span></Label>
                   <Controller
-                    name="ProjectDescription"
+                    name="description"
                     rules={{ required: "Project Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="p-2"
                         placeholder="Project Description"
-                        invalid={errors.ProjectDescription && true}
+                        invalid={errors.description && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.ProjectDescription && (
+                  {errors.description && (
                     <span className="text-danger">
-                      {errors.ProjectDescription.message as React.ReactNode}
+                      {errors.description.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -122,13 +164,13 @@ function AddProjectType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Project Category<span className="text-danger">*</span></Label>
                   <Controller
-                    name="ProjectCategory"
+                    name="projectCategory"
                     control={control}
                     rules={{ required: 'Project Category is required' }}
                     render={({ field }) => (
                       <>
                         <Select
-                          className={`selectField ${errors.ProjectCategory ? 'errorBorder' : ''}`}
+                          className={`selectField ${errors.projectCategory ? 'errorBorder' : ''}`}
                           value={field.value}
                           onChange={(selectedOption) => field.onChange(selectedOption)}
                           options={[
@@ -136,9 +178,9 @@ function AddProjectType() {
                             { value: 'COM', label: 'COM' },
                           ]}
                         />
-                        {errors.ProjectCategory && (
+                        {errors.projectCategory && (
                           <span className="text-danger">
-                            {errors.ProjectCategory.message as React.ReactNode}
+                            {errors.projectCategory.message as React.ReactNode}
                           </span>
                         )}
                       </>
@@ -153,7 +195,7 @@ function AddProjectType() {
             <Col xl="4">
                 <div className="mb-1">
                   <Controller
-                    name="Crew"
+                    name="crew"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -170,7 +212,7 @@ function AddProjectType() {
             <Col xl="4">
                 <div className="mb-1">
                   <Controller
-                    name="DGA"
+                    name="dga"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -188,7 +230,7 @@ function AddProjectType() {
               <Col xl="4">
                 <div className="mb-1">
                   <Controller
-                    name="Video Tape"
+                    name="videoTape"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -202,34 +244,6 @@ function AddProjectType() {
                   <Label className="form-lable-font">Video Tape</Label>
                 </div>
               </Col>
-             
-            </Row>
-            <Row>
-              <Col>
-            <div className="d-flex flex-column mt-1">
-          <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input
-                className="custom-radio-input"
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-              />
-              <div className="radio-text">Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                className="custom-radio-input"
-                name="ex1"
-                id="ex1-inactive"
-              />
-              <div className="radio-text">In-Active</div>
-            </div>
-          </div>
-        </div>
-            </Col>
             </Row>
             <Row style={{ marginTop: '20px' }}>
               <Col>
@@ -244,7 +258,7 @@ function AddProjectType() {
                     color="primary"
                     className="buttonStyle1 edit-buttons"
                   >
-                    Save
+                    {isSaving ? 'Saving...' : 'Save'}
                   </Button>
                 </div></Col>
             </Row>

@@ -3,25 +3,78 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Select from 'react-select';
+import { ProjectTypesService } from "services";
+import useSWR, { mutate }  from "swr";
+import { useEffect, useState } from "react";
 
 function EditProjectType() {
   const router = useRouter();
-  const onSubmit = async () => {
-    // Handle form submission logic here
-    try {
-      // Your logic to save the form data
-      toast.success("Project Type Updated successfully");
-      router.push("/configurations/project-type");
-    } catch (error) {
-      toast.error("Error adding Project Type");
-      console.error(error);
-    }
-  };
+  const { id } = router.query;
+  const fetchprojecttypeDetails = (id) => projectTypesService.projecttypeDetails(id);
+
+  const { data: projectType } = useSWR(
+    id ? ["PROJECTTYPE_DETAILS", id] : null,
+    () => fetchprojecttypeDetails(id)
+  );
+
   const {
     handleSubmit,
     formState: { errors },
+    setValue,
     control,
+    reset,
   } = useForm();
+
+  const [activeStatus, setActiveStatus] = useState(false);
+  const [activeCrew, setActiveCrew] = useState(false);
+  const [activeDGA, setActiveDGA] = useState(false);
+  const [activevideoTape, setActivevideoTape] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!projectType) return;
+    projectType?.Name && setValue("Name", projectType?.Name);
+    projectType?.Code && setValue("Code", projectType?.Code);
+    projectType?.Description && setValue("Description", projectType?.Description);
+    projectType?.ProjectCategory && setValue("ProjectCategory", {label: projectType?.ProjectCategory, value: projectType?.ProjectCategory});
+    projectType?.Crew && setValue("Crew", projectType?.Crew);
+    projectType?.DGA && setValue("DGA", projectType?.DGA);
+    projectType?.VideoTape && setValue("VideoTape", projectType?.VideoTape);
+    setActiveStatus(projectType?.IsActive);
+    setActiveCrew(projectType?.Crew);
+    setActiveDGA(projectType?.DGA);
+    setActivevideoTape(projectType?.VideoTape);
+  }, [projectType]);
+
+  const projectTypesService = new ProjectTypesService();
+
+  const { mutate: projectTypeMutate } = useSWR("LIST_PROJECTTYPES", () =>
+  projectTypesService.getProjecttypes()
+  );
+
+  const onSubmit = (data) => {
+    if (isSaving) return
+    data.ProjectCategory = data.ProjectCategory.value
+    data.Crew = activeCrew
+    data.DGA = activeDGA
+    data.VideoTape = activevideoTape
+    data.IsActive = activeStatus
+    setIsSaving(true)
+    projectTypesService
+      .editProjecttype(id, data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Project Type Edited successfully");
+        mutate(projectTypeMutate());
+        router.push("/configurations/project-type");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        toast.error(error?.error);
+      });
+  };
+ 
   return (
     <>
       <div className="section mt-4">
@@ -72,25 +125,49 @@ function EditProjectType() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Row>
+              
               <Col xl="4">
                 <div className="mb-1">
                   <Label className="form-lable-font">Project Type<span className="text-danger">*</span></Label>
                   <Controller
-                    name="ProjectType"
+                    name="Name"
                     rules={{ required: "Project Type is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="p-2"
                         placeholder="Project Type"
-                        invalid={errors.ProjectType && true}
+                        invalid={errors.Name && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.ProjectType && (
+                  {errors.Name && (
                     <span className="text-danger">
-                      {errors.ProjectType.message as React.ReactNode}
+                      {errors.Name.message as React.ReactNode}
+                    </span>
+                  )}
+                </div>
+              </Col>
+              <Col xl="4">
+                <div className="mb-1">
+                  <Label className="form-lable-font">Project Code<span className="text-danger">*</span></Label>
+                  <Controller
+                    name="Code"
+                    rules={{ required: "Project Type is required" }}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        className="p-2"
+                        placeholder="Project Type"
+                        invalid={errors.Code && true}
+                        {...field}
+                      />
+                    )}
+                  />
+                  {errors.Code && (
+                    <span className="text-danger">
+                      {errors.Code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -100,21 +177,21 @@ function EditProjectType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Project Description<span className="text-danger">*</span></Label>
                   <Controller
-                    name="ProjectDescription"
+                    name="Description"
                     rules={{ required: "Project Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="p-2"
                         placeholder="Project Description"
-                        invalid={errors.ProjectDescription && true}
+                        invalid={errors.Description && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.ProjectDescription && (
+                  {errors.Description && (
                     <span className="text-danger">
-                      {errors.ProjectDescription.message as React.ReactNode}
+                      {errors.Description.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -152,53 +229,50 @@ function EditProjectType() {
             <Row>
             <Col xl="4">
                 <div className="mb-1">
-                  <Controller
-                    name="Crew"
-                    control={control}
-                    render={({ field }) => (
                       <Input
                       type="checkbox"
                         className="p-2 checkBocMargin"
+                        checked={activeCrew}
+                        onChange={() => {
+                          setActiveCrew(!activeCrew);
+                        }}
                         placeholder="Crew"
-                        {...field}
                       />
-                    )}
-                  />
                   <Label className="form-lable-font">Crew</Label>
                 </div>
               </Col>
             <Col xl="4">
                 <div className="mb-1">
-                  <Controller
-                    name="DGA"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
+                <Input
                       type="checkbox"
+                      checked={activeDGA}
+                      onChange={() => {
+                        setActiveDGA(!activeDGA);
+                      }}
                         className="p-2 checkBocMargin"
                         placeholder="DGA"
-                        {...field}
                       />
-                    )}
-                    
-                  />
                   <Label className="form-lable-font">DGA</Label>
                 </div>
               </Col>
               <Col xl="4">
                 <div className="mb-1">
-                  <Controller
-                    name="Video Tape"
+                  {/* <Controller
+                    name="VideoTape"
                     control={control}
                     render={({ field }) => (
-                      <Input
+                      
+                    )}
+                  /> */}
+                  <Input
                       type="checkbox"
                         className="p-2 checkBocMargin"
+                        checked={activevideoTape}
+                        onChange={() => {
+                          setActivevideoTape(!activevideoTape);
+                        }}
                         placeholder="Video Tape"
-                        {...field}
                       />
-                    )}
-                  />
                   <Label className="form-lable-font">Video Tape</Label>
                 </div>
               </Col>
@@ -215,6 +289,10 @@ function EditProjectType() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
+                onChange={() => {
+                  setActiveStatus(true);
+                }}
               />
               <div className="radio-text">Active</div>
             </div>
@@ -224,6 +302,10 @@ function EditProjectType() {
                 className="custom-radio-input"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
+                onChange={() => {
+                  setActiveStatus(false);
+                }}
               />
               <div className="radio-text">In-Active</div>
             </div>
@@ -244,7 +326,7 @@ function EditProjectType() {
                     color="primary"
                     className="buttonStyle1 edit-buttons"
                   >
-                    Save
+                    {isSaving ? 'Saving...' : 'Save'}
                   </Button>
                 </div></Col>
             </Row>

@@ -170,6 +170,7 @@ export const UPLOAD_STATES_LIST = `${tenantIdEndpoint}/states/upload`;
 export const UPLOAD_SERIES_LIST = `${tenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
+export const UPLOAD_PROJECTTYPE_LIST = `${tenantIdEndpoint}/projecttypes/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
@@ -190,3 +191,11 @@ export const CREATE_EMPLOYEE = (tenant_id) => `${baseUrl}/api/${tenant_id}/emplo
 export const EDIT_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //EDIT employees
 export const EMPLOYEES_DETAIL_ENDPOINT = (tenant_id: any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //Employees Details
 export const DELETE_EMPLOYEE = (tenant_id:any,id:any) => `${baseUrl}/api/${tenant_id}/employees/${id}`; //DELETE employees
+
+//PROJECTTYPES ENDPOINTS
+
+export const GET_PROJECTTYPES = `${tenantIdEndpoint}/projecttypes/?limit=${recordLimit}&offset=0`; //Projecttypes
+export const CREATE_PROJECTTYPE = `${tenantIdEndpoint}/projecttypes/`; //Create Projecttypes
+export const DELETE_PROJECTTYPE = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`; //DELETE Projecttypes
+export const EDIT_PROJECTTYPE = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`; //EDIT Projecttypes
+export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/projecttypes/${id}`;
