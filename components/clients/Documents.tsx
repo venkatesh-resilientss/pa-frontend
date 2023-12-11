@@ -34,7 +34,10 @@ export default function Documents(props) {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => setStep((prev) => Math.min(prev + 1, 5))}
+              onClick={() => {
+                if (uploadedFile) setErr(true);
+                else setStep((prev) => Math.min(prev + 1, 5));
+              }}
             >
               Continue
             </button>
@@ -47,8 +50,9 @@ export default function Documents(props) {
       {!disabled && (
         <div className="d-inline-flex flex-column">
           <input
-            className={`form-control ${err && !name.trim() ? "border-danger" : ""
-              }`}
+            className={`form-control ${
+              err && !name.trim() ? "border-danger" : ""
+            }`}
             placeholder="Enter Document Name"
             type="text"
             name="Document Name"
@@ -69,7 +73,7 @@ export default function Documents(props) {
           />
         </div>
       )}
-      {!disabled && err && !uploadedFile && (
+      {!disabled && err && (
         <span className="f-12 text-danger">Upload File</span>
       )}
 
@@ -89,7 +93,8 @@ export default function Documents(props) {
             variant="outline-primary"
             loading={loading}
             disabled={loading}
-            className="f-12 px-4" spinColor="#00a1ab"
+            className="f-12 px-4"
+            spinColor="#00a1ab"
             onClick={async () => {
               try {
                 let tempErr = false;
@@ -112,6 +117,8 @@ export default function Documents(props) {
                     ],
                   },
                 });
+                setUploadedFile(null);
+                setName("");
                 setLoading(false);
               } catch (e) {
                 setLoading(false);

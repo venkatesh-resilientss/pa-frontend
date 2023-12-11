@@ -1,6 +1,5 @@
 import APIService from "./api.service";
 import {
-  CREATE_PROJECT,
   GET_PO_APPROVERS,
   GET_ALL_PROJECTS,
   GET_AP_APPROVERS,
@@ -8,10 +7,10 @@ import {
   EDIT_PROJECTS,
   PROJECT_DETAIL_ENDPOINT,
   CREATE_CLIENT,
-  GET_ALL_USERS,
   CREATE_PRODUCTION,
   CREATE_PRODUCTION_APPROVER,
   PROJECT_DETAILS,
+  GET_CLIENT_USERS,
 } from "../lib/endpoints";
 
 class ProjectService extends APIService {
@@ -24,8 +23,8 @@ class ProjectService extends APIService {
         throw error?.response?.data;
       });
   }
-  getClientUsers(queries: any): Promise<any> {
-    return this.get(`${GET_ALL_USERS}${queries}`)
+  getClientUsers(id: any, queries: any): Promise<any> {
+    return this.get(`${GET_CLIENT_USERS(id)}${queries}`)
       .then((res) => {
         return res?.data;
       })

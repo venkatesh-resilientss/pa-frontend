@@ -43,9 +43,9 @@ export default function WorkSpaceDetails(props) {
   ];
 
   const { data: users } = useSWR("Users", () =>
-    clientService.getUsers(
-      `?client_id=${clientData?.ID || ""}&limit=50&offset=0`
-    )
+    clientData
+      ? clientService.getClientUsers(clientData?.ID, `?limit=50&offset=0`)
+      : null
   );
   const { data: supportUsers } = useSWR("Support Users", () =>
     clientService.getUsers(`?limit=50&offset=0`)
@@ -54,22 +54,27 @@ export default function WorkSpaceDetails(props) {
   const data = [...(users?.data || [])]?.filter(
     (e) => e?.Role?.Code === "CLIENT_ADMIN"
   );
-  const sUsers = [...(supportUsers?.data || [])]?.filter((e) => e.IsStaffUser);
+  const sUsers = [...(supportUsers?.data || [])]
+    ?.filter((e) => e.IsStaffUser)
+    .map((e) => ({ Name: e.adminName, ID: e.id }));
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
-    return clientService
-      .getUsers(
-        `?${
-          vl === "rsslSupportUser" ? "" : `client_id=${clientData?.ID || ""}&`
-        }limit=50&offset=0`
-      )
-      .then((res) => {
-        const getName = (e) =>
-          (e?.first_name || "") + " " + (e?.last_name || "");
+    if (vl === "rsslSupportUser")
+      return clientService
+        .getClientUsers(clientData?.ID, `?limit=50&offset=0`)
+        .then((res) => {
+          const getName = (e) =>
+            (e?.first_name || "") + " " + (e?.last_name || "");
 
+          return [...(res?.data || [])].map((e) => {
+            return { label: getName(e), value: e.ID };
+          });
+        });
+    else
+      return clientService.getUsers(`?limit=50&offset=0`).then((res) => {
         return [...(res?.data || [])].map((e) => {
-          return { label: getName(e), value: e.ID };
+          return { label: e?.adminName, value: e.id };
         });
       });
     // return new Promise((resolve) => setTimeout(() => resolve([]), 500));

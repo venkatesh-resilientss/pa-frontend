@@ -6,12 +6,14 @@ import {
   EDIT_USERS,
   GET_USERS,
   USERS_DETAIL_ENDPOINT,
-  DELETE_USER,getProductionByClint
+  getProductionByClint,
 } from "../lib/endpoints";
 
 class UsersService extends APIService {
   getUsers(params): Promise<any> {
-    return this.get(`${GET_USERS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+    return this.get(
+      `${GET_USERS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
+    )
       .then((res) => {
         return res?.data;
       })
@@ -51,16 +53,6 @@ class UsersService extends APIService {
   }
   getProductionsByClient(clientId): Promise<any> {
     return this.get(`${getProductionByClint(clientId)}`)
-      .then((res) => {
-        return res?.data;
-      })
-      .catch((error: any) => {
-        throw error?.response?.data;
-      });
-  }
-
-  deleteUser(role_id): Promise<any> {
-    return this.delete(`${DELETE_USER(role_id)}`)
       .then((res) => {
         return res?.data;
       })

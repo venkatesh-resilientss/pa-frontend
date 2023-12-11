@@ -21,14 +21,17 @@ export default function FormFields(props: any) {
       background: "#fff",
       border: "1px solid #dee2e6",
       borderRadius: "0.375rem",
-      minHeight: "32px",
+      minHeight: "40px",
       boxShadow: null,
       ":hover": {
         borderColor: "#A2CFFE",
       },
       borderColor:
         err &&
-        state.selectProps.placeholder !== "Select Admin" &&
+        !(
+          state.selectProps.instanceId.includes("MailingAddress") ||
+          state.selectProps.placeholder === "Select Admin"
+        ) &&
         !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
@@ -125,6 +128,10 @@ export default function FormFields(props: any) {
       try {
         setLoading(true);
         const payload = { ...clientData };
+
+        payload["ClientSoftwares"] = clientData.Softwares.map((e) => ({
+          SoftwareID: e.ID,
+        }));
         if (clientData.clientType)
           payload["ClientTypeID"] = clientData.clientType.value;
         if (clientData.clientAdmin)
@@ -138,9 +145,9 @@ export default function FormFields(props: any) {
         if (clientData.MailingAddress.state)
           payload["MailingAddress"]["StateID"] =
             clientData.MailingAddress.state.value;
-        if (clientData.MailingAddress.Zipcode)
-          payload["MailingAddress"]["Zipcode"] =
-            Number(clientData.MailingAddress.Zipcode) || 0;
+
+        payload["MailingAddress"]["Zipcode"] =
+          Number(clientData.MailingAddress.Zipcode) || 0;
 
         if (clientData.PhysicalAddress.country)
           payload["PhysicalAddress"]["CountryID"] =
@@ -148,9 +155,9 @@ export default function FormFields(props: any) {
         if (clientData.PhysicalAddress.state)
           payload["PhysicalAddress"]["StateID"] =
             clientData.PhysicalAddress.state.value;
-        if (clientData.PhysicalAddress.Zipcode)
-          payload["PhysicalAddress"]["Zipcode"] =
-            Number(clientData.PhysicalAddress.Zipcode) || 0;
+
+        payload["PhysicalAddress"]["Zipcode"] =
+          Number(clientData.PhysicalAddress.Zipcode) || 0;
 
         const resp = await clientService.createClient(payload);
         router.push(`/clients/edit-client/${resp.ID}`);
@@ -167,6 +174,7 @@ export default function FormFields(props: any) {
       setStep(step - 1);
     }
   };
+
   return (
     <>
       <div className="row">
@@ -185,8 +193,8 @@ export default function FormFields(props: any) {
             </label>
             {el.typ === "select" ? (
               <AsyncSelect
-                instanceId={`react-select-${(el?.lb || "")?.replaceAll(
-                  " ",
+                instanceId={`react-select-${(el?.vl || "")?.replaceAll(
+                  ".",
                   ""
                 )}-${idx}`}
                 styles={selectStyle}
@@ -199,7 +207,7 @@ export default function FormFields(props: any) {
               />
             ) : el.typ === "phone" ? (
               <PhoneInput
-                inputClass="react-tel-input w-100"
+                inputClass="react-tel-input w-100 phone-input"
                 country={"us"}
                 placeholder="Enter Mobile Number"
                 value={getObjectValue(clientData, el.vl)}
@@ -207,7 +215,7 @@ export default function FormFields(props: any) {
                 disabled={disabled || false}
               />
             ) : el.typ === "file" ? (
-              <div className="input-group">
+              <div className="input-group file-div">
                 <input
                   className={`form-control ${
                     err &&

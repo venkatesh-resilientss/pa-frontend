@@ -46,21 +46,19 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
   const currencyService = new CurrencyService();
   const fetchData = async (pageNumber) => {
     try {
-      const response = await currencyService.getCurrencies(
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
-      const data = response.result; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      const response = await currencyService.getCurrencies({
+        search: searchText,
+        pageLimit: recordsPerPage,
+        offset: pageNumber,
+      });
+      const data = response.result || []; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records || 0; // Adjust based on the actual structure of the response
+
       return { data, totalRecords };
     } catch (error) {
       return { data: null, totalRecords: 0 };
     }
   };
-  
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -236,28 +234,28 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
                     style={{ width: "217px", height: "38px" }}
                   />
 
-                  {
-                    hasUploadConfigurationPermission && <Button
-                    onClick={() =>
-                      dispatch(openBulkUploadCurrenciesPopup("upload"))
-                    }
-                    style={{
-                      height: "38px",
-                      backgroundColor: "#E7EFFF",
-                      color: "#4C4C61",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      borderColor: "#4C4C61",
-                    }}
-                  >
-                    <Image
-                      style={{ width: "14px", height: "14px" }}
-                      src={plusIcon}
-                      alt="plus-icon"
-                    />{" "}
-                    Bulk Upload
-                  </Button>
-                  }
+                  {hasUploadConfigurationPermission && (
+                    <Button
+                      onClick={() =>
+                        dispatch(openBulkUploadCurrenciesPopup("upload"))
+                      }
+                      style={{
+                        height: "38px",
+                        backgroundColor: "#E7EFFF",
+                        color: "#4C4C61",
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        borderColor: "#4C4C61",
+                      }}
+                    >
+                      <Image
+                        style={{ width: "14px", height: "14px" }}
+                        src={plusIcon}
+                        alt="plus-icon"
+                      />{" "}
+                      Bulk Upload
+                    </Button>
+                  )}
 
                   {/* <Button
                     onClick={() => router.push(`/configurations/add-currency`)}
@@ -303,21 +301,21 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
           </Card>
         </div>
         <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create COA" : ""}
-              buttonLink={"/configurations/add-chart-of-accounts"}
-            />
-          )}
-        />
-      </div>
+          <AGGridTable
+            rerender={rerender}
+            columnDefs={columnDefs}
+            searchText={searchText}
+            fetchData={fetchData}
+            pageSize={recordsPerPage}
+            noDataPage={() => (
+              <NoDataPage
+                // buttonName={"Create COA"}
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
+                buttonLink={"/configurations/add-chart-of-accounts"}
+              />
+            )}
+          />
+        </div>
       </div>
     </>
   );
