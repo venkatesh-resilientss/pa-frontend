@@ -49,6 +49,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
         toast.success("Data inserted successfully.");
         dispatch(closeBulkUploadCurrenciesPopup("close"));
         setRerender(!rerender)
+        setLoader(false);
       })
       .catch((error) => {
         toast.error(error.Message || error.error || "Failed to insert data.");
