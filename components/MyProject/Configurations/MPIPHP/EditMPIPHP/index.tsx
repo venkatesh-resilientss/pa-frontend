@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Select from "react-select";
 
-function EditMPIPHPTable() {
+function EditMPIPHP() {
   const router = useRouter();
 
 
@@ -186,4 +186,4 @@ function EditMPIPHPTable() {
   );
 }
 
-export default EditMPIPHPTable;
+export default EditMPIPHP;
