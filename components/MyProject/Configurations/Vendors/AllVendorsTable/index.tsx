@@ -1,73 +1,67 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Input,
   Button,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
-import { FcFilmReel } from "react-icons/fc";
+
 import { useRouter } from "next/router";
 import { VendorsService } from "services";
-import useSWR from "swr";
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadVendorsPopup,
-  openDeleteVendorPopup,
-} from "redux/slices/mySlices/configurations";
-import { useDispatch } from "react-redux";
 import moment from "moment";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+import { getSessionVariables } from "@/constants/function";
 
-const AllVendorsTable = () => {
+const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
   const vendorsService = new VendorsService();
   const router = useRouter();
-  const dispatch = useDispatch();
-   
+  const recordsPerPage = 10;
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
   const hasEditConfigurationPermission = hasPermission(
-  "configuration_management",
-  "edit_configuration"
-);
-  const hasDeactivateConfiguration = hasPermission(
     "configuration_management",
-    "deactivate_configuration"
+    "edit_configuration"
   );
+  
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
-  const {
-    data: vendorsData,
-    isLoading: vendorsLoading,
-  } = useSWR("LIST_VENDORS", () => vendorsService.getVendors());
-
-  const dataSource = vendorsData?.result;
-
-  const AddVendors = (e) => {
-    e.preventDefault();
-    router.push({
-      pathname: `/configurations/add-vendor`,
-    });
+  const fetchData = async (pageNumber) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const response = await vendorsService.getVendors(
+        {
+          clientID,
+          projectID,
+        },
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
   };
+
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -83,14 +77,10 @@ const AllVendorsTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -110,27 +100,27 @@ const AllVendorsTable = () => {
           </DropdownToggle>
           <DropdownMenu end container="body">
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(`/configurations/edit-vendor/${props.data.ID}`);
-              }}
-            >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/configurations/edit-vendor/${props.data.ID}`);
+                }}
+              >
+                <Action icon={editIocn} name={"Edit"} />
+              </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() => dispatch(openDeleteVendorPopup(props.data?.ID))}
-            >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
-            </DropdownItem>
-            )}
+            {/* {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() => dispatch(openDeleteVendorPopup(props.data?.ID))}
+              >
+                <Action icon={deleteIcon} name={"Delete"} />
+              </DropdownItem>
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -141,6 +131,7 @@ const AllVendorsTable = () => {
       headerName: "Vendor Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -149,22 +140,34 @@ const AllVendorsTable = () => {
       headerName: "Vendor Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "State",
-      field: "State",
+      field: "State.Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -178,6 +181,7 @@ const AllVendorsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -187,6 +191,7 @@ const AllVendorsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -200,7 +205,6 @@ const AllVendorsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-
 
   return (
     <div>
@@ -228,7 +232,7 @@ const AllVendorsTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {vendorsData?.result.length} Vendors
+                  Vendors
                 </div>
 
                 <Input
@@ -236,9 +240,10 @@ const AllVendorsTable = () => {
                   className="searchConfig"
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
+                  onChange={(e)=>{setSearchText(e.target.value)}}
                 />
 
-                <Button
+                {/* <Button
                   onClick={() => dispatch(openBulkUploadVendorsPopup("upload"))}
                   style={{
                     height: "38px",
@@ -255,7 +260,7 @@ const AllVendorsTable = () => {
                     alt="plus-icon"
                   />{" "}
                   Bulk Upload
-                </Button>
+                </Button> */}
 
                 {/* <Button
                   onClick={() => router.push(`/configurations/add-vendor`)}
@@ -298,41 +303,22 @@ const AllVendorsTable = () => {
           </CardBody>
         </Card>
       </div>
-
-      {vendorsLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={undefined}
-          />
-        </div>
-      ) : (
-        <>
-          {" "}
-          {vendorsData && vendorsData?.result?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={undefined}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Vendor"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Vendor" : "No button"
-                }
-                buttonLink={"/configurations/add-vendor"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={hasCreateConfiguration ? "Create COA" : ""}
+              buttonLink={"/configurations/add-chart-of-accounts"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

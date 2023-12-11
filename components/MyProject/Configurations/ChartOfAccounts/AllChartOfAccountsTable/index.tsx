@@ -1,47 +1,38 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Button,
   Input,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
-import { FcFilmReel } from "react-icons/fc";
+
 import { useRouter } from "next/router";
 import moment from "moment";
-import useSWR from "swr";
 import { COAAccountsService } from "services";
-import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import { openDeleteAccountPayablePopup } from "redux/slices/mySlices/transactions";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
 import {
   openBulkUploadCOAPopup,
-  openDeleteCOAPopup,
 } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
 
-const AllChartOfAccountsTable = () => {
+
+const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
-  const CoasService = new COAAccountsService();
+  const coasService = new COAAccountsService();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -51,21 +42,30 @@ const AllChartOfAccountsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
 
-  const {
-    data: coasData,
-    isLoading: coasLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_COAS", searchText], () => CoasService.getCoasAccounts());
-  const dataSource = coasData?.result;
-
+  const hasUploadConfigurationPermission = hasPermission(
+    "",
+    "bulk_upload"
+  )
+  const fetchData = async (pageNumber) => {
+    const {clientID,projectID} = getSessionVariables()
+    try {
+      const response = await coasService.getCoasAccounts({
+        clientID,projectID
+      },{
+        search: searchText,
+        pageLimit: recordsPerPage,
+        offset: pageNumber,
+      });
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
+  
   const StateBadge = (props) => {
-
     const sateDir = {
       true: "success",
       false: "danger",
@@ -78,22 +78,12 @@ const AllChartOfAccountsTable = () => {
     );
   };
 
-  const CreateCOA = (e) => {
-    e.preventDefault();
-    router.push({
-      pathname: `/configurations/add-chart-of-accounts`,
-    });
-  };
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -116,7 +106,7 @@ const AllChartOfAccountsTable = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
@@ -128,16 +118,7 @@ const AllChartOfAccountsTable = () => {
                 }
                 className="w-100"
               >
-                <Action icon={editIocn} name={"Edit"} action={() => { }} />
-              </DropdownItem>
-            )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100"
-                onClick={(e) => dispatch(openDeleteCOAPopup(props.data.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+                <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
           </DropdownMenu>
@@ -181,7 +162,16 @@ const AllChartOfAccountsTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -218,68 +208,6 @@ const AllChartOfAccountsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      COACode: "1001",
-      COAName: "Assets",
-      Postable: true,
-      COAParent: null,
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      COACode: "2001",
-      COAName: "Liabilities",
-      Postable: true,
-      COAParent: null,
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inctive",
-    },
-    {
-      id: 3,
-      COACode: "3001",
-      COAName: "Revenue",
-      Postable: true,
-      COAParent: null,
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "Active",
-    },
-    {
-      id: 4,
-      COACode: "4001",
-      COAName: "Expenses",
-      Postable: true,
-      COAParent: null,
-      CreatedBy: "UserD",
-      UpdatedOn: "2023-04-10",
-      Status: "Active",
-    },
-    {
-      id: 5,
-      COACode: "1101",
-      COAName: "Cash",
-      Postable: true,
-      COAParent: "1001",
-      CreatedBy: "UserE",
-      UpdatedOn: "2023-05-15",
-      Status: "inctive",
-    },
-    {
-      id: 6,
-      COACode: "1201",
-      COAName: "Accounts Receivable",
-      Postable: true,
-      COAParent: "1001",
-      CreatedBy: "UserF",
-      UpdatedOn: "2023-06-20",
-      Status: "active",
-    },
-  ];
 
   return (
     <div>
@@ -307,7 +235,7 @@ const AllChartOfAccountsTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {coasData?.result.length} COAs
+                  COAs
                 </div>
 
                 <Input
@@ -318,24 +246,26 @@ const AllChartOfAccountsTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadCOAPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasUploadConfigurationPermission && (
+                  <Button
+                    onClick={() => dispatch(openBulkUploadCOAPopup("upload"))}
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   onClick={() =>
@@ -382,7 +312,7 @@ const AllChartOfAccountsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {coasLoading ? (
+      {/* {coasLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -412,7 +342,23 @@ const AllChartOfAccountsTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+      <div className="mt-3">
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData}
+        pageSize={recordsPerPage}
+        noDataPage={() => (
+          <NoDataPage
+                // buttonName={"Create COA"}
+                buttonName={hasCreateConfiguration ? "Create COA" : ""}
+                buttonLink={"/configurations/add-chart-of-accounts"}
+              />
+        )}
+      />
+      </div>
     </div>
   );
 };

@@ -1,23 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
+
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { closeDeleteSeriesPopup } from "redux/slices/mySlices/configurations";
 import { SeriesService } from "services";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteSeriesPopup = ({ id }) => {
+const DeleteSeriesPopup = () => {
   const dispatch = useDispatch();
-
 
   const seriesService = new SeriesService();
 
   const { mutate: seriesMutate } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(
@@ -29,7 +26,6 @@ const DeleteSeriesPopup = ({ id }) => {
   );
 
   const handleDeleteSeries = async () => {
-
     try {
       await seriesService.deleteSeries(helperData);
       toast.success("Series Deleted Successfully");
@@ -40,8 +36,6 @@ const DeleteSeriesPopup = ({ id }) => {
       console.error("Error deleting Series:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

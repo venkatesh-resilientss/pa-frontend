@@ -3,7 +3,7 @@ import DeleteClientPopup from "./DeleteClientPopup";
 function Clients() {
   return (
     <div style={{ fontFamily: "Segoe UI" }}>
-      <DeleteClientPopup id={undefined} />
+      <DeleteClientPopup />
       <ClientsListTable />
     </div>
   );

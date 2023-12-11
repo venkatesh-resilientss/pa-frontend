@@ -1,4 +1,3 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
@@ -6,27 +5,23 @@ import { useEffect, useState } from "react";
 import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import { toast } from "react-toastify";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function EditSet() {
   const router = useRouter();
-
+  const setsValidationRules = formValidationRules.sets;
   const setService = new SetsService();
   const { id } = router.query;
 
   const fetchSetDetails = (id) => setService.setsDetails(id);
 
-  const {
-    data: setData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["SETS_DETAILS", id] : null, () => fetchSetDetails(id));
+  const { data: setData } = useSWR(id ? ["SETS_DETAILS", id] : null, () =>
+    fetchSetDetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
@@ -35,32 +30,33 @@ function EditSet() {
   useEffect(() => {
     if (!setData) return;
 
-    setData?.Name && setValue("name", setData?.Name);
-    setData?.Code && setValue("code", setData?.Code);
+    setData?.Name && setValue("setname", setData?.Name);
+    setData?.Code && setValue("setcode", setData?.Code);
 
     setData?.Description && setValue("description", setData?.Description);
     setActiveStatus(setData?.IsActive);
   }, [setData]);
 
   const { mutate: countryMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets()
+    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
-      name: data.name,
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
+      name: data.setname,
       description: data.description,
       isActive: activeStatus === "active" ? true : false,
-      code: data.code,
+      code: data.setcode,
+      clientID,
+      projectID
     };
 
     setService
       .editSet(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Set Edited successfully");
         mutate(countryMutate());
         router.back();
@@ -68,7 +64,7 @@ function EditSet() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.Message);
       });
   };
 
@@ -126,22 +122,24 @@ function EditSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label>Set Name</Label>
+            <Label>
+              Set Name <span className="required">*</span>
+            </Label>
             <Controller
-              name="name"
-              rules={{ required: "Set Name is required" }}
+              name="setname"
+              rules={setsValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Set Name"
-                  invalid={errors.departmenname && true}
+                  invalid={errors.setname && true}
                   {...field}
                 />
               )}
             />
             {errors.setname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.setname.message as React.ReactNode}
               </span>
             )}
@@ -150,11 +148,11 @@ function EditSet() {
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-label" for="login-email">
-              Set Code
+              Set Code <span className="required">*</span>
             </Label>
             <Controller
-              name="code"
-              rules={{ required: "Set Code is required" }}
+              name="setcode"
+              rules={setsValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -166,7 +164,7 @@ function EditSet() {
               )}
             />
             {errors.setcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.setcode.message as React.ReactNode}
               </span>
             )}
@@ -179,7 +177,7 @@ function EditSet() {
             </Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
+              rules={setsValidationRules.description}
               control={control}
               render={({ field }) => (
                 <Input
@@ -196,7 +194,7 @@ function EditSet() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

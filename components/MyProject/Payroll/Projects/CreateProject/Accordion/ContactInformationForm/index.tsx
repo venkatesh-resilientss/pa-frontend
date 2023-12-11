@@ -3,28 +3,28 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useState } from "react";
 import { Plus, Minus } from "react-feather";
 import ReactSelect from "react-select";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function ContactInformationForm({ control, errors }) {
 
   const contacts = [
-    [{ name: 'accountantType', label: 'Production Accountant', type: 'select', placeholder: 'Enter Accountant' },
-    { name: 'productionAccountant', label: 'Production Accountant', required: true, placeholder: 'Enter Accountant' },
+    { name: 'accountantType', label: 'Production Accountant', required: true, type: 'select', options: [{label: 'Production Accountant', value: 'Production Accountant'}, {label: 'Asst. Production Accountant', value: 'Asst. Production Accountant'}, {label: 'Payroll Accountant', value: 'Payroll Accountant'}, {label: 'UPM', value: 'UPM'}, {label: 'For W/C', value: 'For W/C'}], placeholder: 'Enter Accountant' },
     { name: 'productionAccountantOfficePhone', label: 'Office Phone', required: true, placeholder: 'Enter Accountant Office Phone' },
     { name: 'productionAccountantCellPhone', label: 'Cell Phone', required: true, placeholder: 'Enter Accountant Cell Phone' },
-    { name: 'productionAccountantEmailPhone', label: 'Email', required: true, placeholder: 'Enter Email' }]
-  ]
+    { name: 'productionAccountantEmailPhone', label: 'Email', required: false, placeholder: 'Enter Email' }]
 
-  const [formData, setFormData] = useState(contacts);
+  const [formData, setFormData] = useState([contacts]);
 
   const addNewForm = () => {
+    const newform = contacts.map(obj => {return { ...obj, name: formData.length + "_" + obj.name };});
+
     setFormData((prevData) => [
       ...prevData,
-      contacts[0],
+      newform
     ]);
   };
 
   const removeForm = (form) => {
-    console.log('formData', formData)
     if (form === 0) {
       return
     }
@@ -42,10 +42,9 @@ function ContactInformationForm({ control, errors }) {
             {formField.map((formField, formindex) => (
               <Col key={formindex} xl="4">
                 <Label
-                  className="text-black"
-                  style={{ fontSize: "14px", fontWeight: "400" }}
+                  className="text-black form-label"
                 >
-                  {formField.label}{formField.required && '*'}
+                  {formField.label}{formField.required && <span className='text-danger'>*</span>}
                 </Label>
                 {formField.type === 'select' ? (
                   <Controller
@@ -53,7 +52,10 @@ function ContactInformationForm({ control, errors }) {
                     control={control}
                     rules={{ required: formField.required && `${formField.label} is required` }}
                     render={({ field }) => (
-                      <ReactSelect {...field} isClearable />
+                      <ReactSelect 
+                      value={field.value}
+                      onChange={(selectedOption) => field.onChange(selectedOption)}
+                      className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
                     )}
                   />
                 ) : (
@@ -72,10 +74,8 @@ function ContactInformationForm({ control, errors }) {
                     )}
                   />
                 )}
-                {errors[`${index + '_' + formField.name}`] && formField.required && (
-                  <span style={{ color: "red" }}>
-                    {errors[`${index + '_' + formField.name}`].message as React.ReactNode}
-                  </span>
+                {errors[`${formField.name}`] && formField.required && (
+                  <InvalidFeedBack message={errors[`${formField.name}`].message} />
                 )}
               </Col>
             ))}

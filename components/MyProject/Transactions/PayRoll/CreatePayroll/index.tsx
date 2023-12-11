@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Row, Col, CardBody, Card } from "reactstrap";
-import { Button, Form, FormGroup, Label, Input, Popover } from "reactstrap";
+import { Button, Form, Label, Input, Popover } from "reactstrap";
 import DataTable from "react-data-table-component";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
-import ImportExcelIcon from "assets/myIcons/importExel.svg";
 import Image from "next/image";
 import attchFileIcon from "assets/myIcons/attchfile.svg";
 import ThreedotsIcon from "assets/myIcons/Threedotsicon.svg";
@@ -26,10 +25,6 @@ const CreatePayroll = () => {
 
   const {
     control,
-    setError,
-    handleSubmit,
-    register,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -48,7 +43,6 @@ const CreatePayroll = () => {
           }}
           type="text"
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -66,7 +60,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -84,7 +77,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -102,7 +94,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -120,7 +111,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -136,7 +126,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -152,7 +141,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -168,7 +156,6 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -184,14 +171,13 @@ const CreatePayroll = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
     {
       name: "Options",
       selector: "Options",
-      cell: (row) => (
+      cell: () => (
         <>
           <div className="d-flex">
             <Button
@@ -652,7 +638,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.PayrollNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.PayrollNumber.message as React.ReactNode}
                           </span>
                         )}
@@ -681,7 +667,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Description && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Description.message as React.ReactNode}
                           </span>
                         )}
@@ -710,7 +696,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Amount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Amount.message as React.ReactNode}
                           </span>
                         )}
@@ -740,7 +726,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.WeekEnding && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.WeekEnding.message as React.ReactNode}
                           </span>
                         )}
@@ -770,7 +756,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.EffectiveDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EffectiveDate.message as React.ReactNode}
                           </span>
                         )}
@@ -801,7 +787,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.ConfirmationNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.ConfirmationNumber
                                 .message as React.ReactNode
@@ -837,7 +823,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.OriginalTRXNumber && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.OriginalTRXNumber
                                 .message as React.ReactNode
@@ -869,7 +855,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.SourceCode && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.SourceCode.message as React.ReactNode}
                           </span>
                         )}
@@ -891,7 +877,7 @@ const CreatePayroll = () => {
                               placeholder="Select Period"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -901,7 +887,7 @@ const CreatePayroll = () => {
                           )}
                         />
                         {errors.Period && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Period.message as React.ReactNode}
                           </span>
                         )}
@@ -944,7 +930,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Client"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -954,7 +940,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -975,7 +961,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Production"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -985,7 +971,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1006,7 +992,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Bank"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1016,7 +1002,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1039,7 +1025,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Currency"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1049,7 +1035,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1070,7 +1056,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Department"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1080,7 +1066,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1101,7 +1087,7 @@ const CreatePayroll = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1111,7 +1097,7 @@ const CreatePayroll = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

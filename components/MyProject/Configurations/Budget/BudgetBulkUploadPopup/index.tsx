@@ -1,30 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
+import { Button, Modal, ModalBody } from "reactstrap";
 import { closeBulkUploadBudgetsPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BudgetService } from "services";
-import { checkTenant } from "constants/function";
 
-const BudgetBulkUploadPopup = () => {
+const BudgetBulkUploadPopup = ({rerender,setRerender}) => {
   const dispatch = useDispatch();
   const budgetService = new BudgetService();
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.budgets.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.budgets.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -52,10 +43,10 @@ const BudgetBulkUploadPopup = () => {
     // Call the uploadbanklist function from your service with only the file name
     budgetService
       .uploadbudgetlist(fileName)
-      .then((result) => {
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender);
         dispatch(closeBulkUploadBudgetsPopup("close"));
       })
       .catch((error) => {

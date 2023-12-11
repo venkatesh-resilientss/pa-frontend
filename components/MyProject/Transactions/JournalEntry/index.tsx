@@ -1,6 +1,5 @@
 import { Button } from "reactstrap";
 import BasicTabs from "./Tabs";
-import Select from "react-select";
 import DeleteJournalEntryPopup from "./DeleteJournalEntryPopup";
 import { useRouter } from "next/router";
 import Image from "next/image";

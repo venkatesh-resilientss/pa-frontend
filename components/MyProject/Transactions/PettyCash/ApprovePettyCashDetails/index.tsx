@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Row, Col, CardBody, Card } from "reactstrap";
-import { Button, Form, FormGroup, Label, Input, Popover } from "reactstrap";
+import { Button, Form, Label, Input, Popover } from "reactstrap";
 import DataTable from "react-data-table-component";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
-import ImportExcelIcon from "assets/myIcons/importExel.svg";
 import Image from "next/image";
 import attchFileIcon from "assets/myIcons/attchfile.svg";
 import ThreedotsIcon from "assets/myIcons/Threedotsicon.svg";
@@ -31,10 +30,6 @@ const ApprovePettyCashDetails = () => {
 
   const {
     control,
-    setError,
-    handleSubmit,
-    register,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -56,7 +51,6 @@ const ApprovePettyCashDetails = () => {
           }}
           type="text"
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -74,7 +68,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -92,7 +85,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -110,7 +102,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -128,7 +119,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -144,7 +134,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -160,7 +149,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -176,7 +164,6 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -192,14 +179,13 @@ const ApprovePettyCashDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
     {
       name: "Options",
       selector: "Options",
-      cell: (row) => (
+      cell: () => (
         <>
           <div className="d-flex">
             <Button
@@ -664,7 +650,7 @@ const ApprovePettyCashDetails = () => {
                               placeholder="Select Vendor"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -674,7 +660,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.vendor && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendor.message as React.ReactNode}
                           </span>
                         )}
@@ -688,7 +674,7 @@ const ApprovePettyCashDetails = () => {
                           name="VendorAddress"
                           rules={{ required: "Vendor Address is required" }}
                           control={control}
-                          render={({ field }) => (
+                          render={() => (
                             <Input
                               type="text"
                               name="address"
@@ -704,7 +690,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.VendorAddress && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.VendorAddress.message as React.ReactNode}
                           </span>
                         )}
@@ -733,7 +719,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.vendorType && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.vendorType.message as React.ReactNode}
                           </span>
                         )}
@@ -782,7 +768,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.vendorTEnvelopeNumberype && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EnvelopeNumber.message as React.ReactNode}
                           </span>
                         )}
@@ -810,7 +796,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.Description && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Description.message as React.ReactNode}
                           </span>
                         )}
@@ -838,7 +824,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.Amount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Amount.message as React.ReactNode}
                           </span>
                         )}
@@ -869,7 +855,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.TransactionDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.TransactionDate.message as React.ReactNode}
                           </span>
                         )}
@@ -899,7 +885,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.PCEffectiveDate && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.PCEffectiveDate.message as React.ReactNode}
                           </span>
                         )}
@@ -920,7 +906,7 @@ const ApprovePettyCashDetails = () => {
                               placeholder="Select Period"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -930,7 +916,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.Period && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.Period.message as React.ReactNode}
                           </span>
                         )}
@@ -963,7 +949,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.EnvelopeAmount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.EnvelopeAmount.message as React.ReactNode}
                           </span>
                         )}
@@ -994,7 +980,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.AdvancedAmount && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {errors.AdvancedAmount.message as React.ReactNode}
                           </span>
                         )}
@@ -1028,7 +1014,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.BeginningPCBalance && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.BeginningPCBalance
                                 .message as React.ReactNode
@@ -1067,7 +1053,7 @@ const ApprovePettyCashDetails = () => {
                           )}
                         />
                         {errors.RemainingPCBalance && (
-                          <span style={{ color: "red" }}>
+                          <span className="text-danger">
                             {
                               errors.RemainingPCBalance
                                 .message as React.ReactNode
@@ -1113,7 +1099,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Client"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1123,7 +1109,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -1144,7 +1130,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Production"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1154,7 +1140,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -1175,7 +1161,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Bank"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1185,7 +1171,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -1208,7 +1194,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Currency"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1218,7 +1204,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -1239,7 +1225,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Department"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1249,7 +1235,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1270,7 +1256,7 @@ const ApprovePettyCashDetails = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1280,7 +1266,7 @@ const ApprovePettyCashDetails = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

@@ -1,47 +1,34 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Button,
   Input,
 } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { UserInfo } from "redux/slices/mySlices/roles";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
+import { useDispatch } from "react-redux";
+// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { hasPermission } from "commonFunctions/functions";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
-import { FcFilmReel } from "react-icons/fc";
 import { useRouter } from "next/router";
 import { LocationsService } from "services";
-import useSWR from "swr";
 import moment from "moment";
-import {
-  openBulkUploadLocationsPopup,
-  openDeleteLocationPopup,
-} from "redux/slices/mySlices/configurations";
-import { useState, useEffect } from "react";
+import { openBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+import { getSessionVariables } from "@/constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
-const AllLocationsTable = () => {
+const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const perPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -52,29 +39,38 @@ const AllLocationsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
   const locationsService = new LocationsService();
 
-  const {
-    data: locationsData,
-    isLoading: locationsLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_LOCATIONS", searchText], () =>
-    locationsService.getLocations()
-  );
-  const dataSource = locationsData?.result;
-
-  const AddLocation = (e) => {
-    e.preventDefault();
-    router.push({
-      pathname: `/configurations/add-location`,
-    });
+  const fetchData1 = async (pageNumber) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      };
+      const payload = { clientId: clientID, projectId: projectID };
+      const response = await locationsService.getLocations(
+        queryParams,
+        payload
+      );
+      const data = response.result; // Adjust based on the actual structure of the response
+      // setBankData(data)
+      // setTotalRecords(response.total_records)
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
   };
+
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -91,16 +87,9 @@ const AllLocationsTable = () => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
 
-
-
-    const [open, setOpen] = useState(false);
-
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -123,29 +112,29 @@ const AllLocationsTable = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
-                onClick={(e) =>
+                onClick={() =>
                   router.push(`/configurations/edit-location/${props.data.ID}`)
                 }
               >
-                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+                <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
-                onClick={(e) => dispatch(openDeleteLocationPopup(props.data.ID))}
+                onClick={() => dispatch(openDeleteLocationPopup(props.data.ID))}
               >
-                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+                <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -156,6 +145,7 @@ const AllLocationsTable = () => {
       headerName: "Location Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -164,6 +154,7 @@ const AllLocationsTable = () => {
       headerName: "Location Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -172,14 +163,25 @@ const AllLocationsTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -193,6 +195,7 @@ const AllLocationsTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -202,6 +205,7 @@ const AllLocationsTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -228,22 +232,17 @@ const AllLocationsTable = () => {
         >
           <CardBody>
             <div className="d-flex justify-content-between">
-              <div>
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All Locations
-                </div>
+              <div className="configuration-table">
+                <div className="m-2 title">All Locations</div>
               </div>
 
               <div
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {locationsData?.result.length} Locations
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -315,7 +314,7 @@ const AllLocationsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {locationsLoading ? (
+      {/* {locationsLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -347,7 +346,22 @@ const AllLocationsTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+      <div className="mt-3">
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
+          />
+        )}
+      />
+      </div>
     </div>
   );
 };

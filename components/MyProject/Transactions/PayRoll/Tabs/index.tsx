@@ -10,8 +10,7 @@ import {
 } from "reactstrap";
 import AllPayrollTable from "./AllPayrollTable";
 
-function Tabs(props) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+function Tabs() {
   const [active, setActive] = useState("1");
 
   const toggle = (tab) => {

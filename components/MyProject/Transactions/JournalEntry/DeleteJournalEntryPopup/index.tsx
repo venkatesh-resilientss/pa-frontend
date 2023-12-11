@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import Image from "next/image";
 import { closeDeleteJournalEntryPopup } from "redux/slices/mySlices/transactions";
@@ -13,13 +11,6 @@ const DeleteJournalEntryPopup = () => {
     (state: any) =>
       state.transactions.journalEntry.deleteJournalEntryPopup.status
   );
-
-  const helperData = useSelector(
-    (state: any) =>
-      state.transactions.journalEntry.deleteJournalEntryPopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

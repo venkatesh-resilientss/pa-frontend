@@ -1,31 +1,69 @@
 import { useForm, Controller } from "react-hook-form";
-import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
 import { StatesService } from "services";
-import useSWR, { mutate } from "swr";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
-  const { register, handleSubmit } = useForm();
-
+function PhysicalAddressForm({ onSubmit, control, errors }) {
+  const { handleSubmit } = useForm();
+  const [initialStateOptions, setInitialStateOptions] = useState([]);
 
   const stateService = new StatesService();
-  const {data:states, mutate: stateMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
-  );
+  // const { data: states } = useSWR("LIST_STATES", () =>
+  //   stateService.getStates()
+  // );
 
-  const statesDropdownoptions = states?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-      country : b.Country
+  // const statesDropdownoptions = states?.data.map((b) => {
+  //   return {
+  //     value: b.ID,
+  //     label: b.Name,
+  //     country: b.Country,
+  //   };
+  // });
+
+  useEffect(() => {
+    const fetchInitialStates = async () => {
+      try {
+        const res = await stateService.getStates({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+          country: item.Country,
+        }));
+        setInitialStateOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
 
-    const loadStateOptions = (values, callBack) => {
-    // setSeries(values);
-    // callBack(seriesSelectFormat);
+    fetchInitialStates();
+  }, []);
+
+  const loadStateOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await stateService.getStates({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+        country: item.Country,
+      }));
+
+      callback(options);
+    } catch (error) {
+      toast.error("Error loading options:", error);
+    }
   };
+
   return (
     <div className="text-black">
       <Form
@@ -33,7 +71,7 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -56,13 +94,13 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.physicalAddress1 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddress1.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -86,13 +124,13 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.physicalAddress2 && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddress2.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -115,13 +153,13 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.physicalAddressCity && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressCity.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -141,20 +179,20 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  // loadOptions={loadStateOptions}
+                  loadOptions={loadStateOptions}
                   placeholder="Select State"
-                  defaultOptions={statesDropdownoptions}
+                  defaultOptions={initialStateOptions}
                 />
               )}
             />
             {errors.physicalAddressState && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressState.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -177,7 +215,7 @@ function PhysicalAddressForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.physicalAddressPostalCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.physicalAddressPostalCode.message as React.ReactNode}
               </span>
             )}

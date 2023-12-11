@@ -1,6 +1,5 @@
 import { Button } from "reactstrap";
 import Tabs from "./Tabs";
-import Select from "react-select";
 import Plus from "assets/myIcons/plus.svg";
 import Image from "next/image";
 import DeletePettyCashPopup from "./DeletePettyCashPopup";

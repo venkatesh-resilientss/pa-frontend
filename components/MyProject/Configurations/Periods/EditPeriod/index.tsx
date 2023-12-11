@@ -1,20 +1,19 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { PeriodsService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { checkTenant } from "constants/function";
+import { getSessionVariables } from "@/constants/function";
+
 import moment from "moment";
 
 function EditPeriod() {
   const router = useRouter();
-  const [startDate, setStartDate] = useState(moment().toDate());
-  const [endDate, setEndDate] = useState(moment().toDate());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const handleStartDateChange = (date) => {
     setStartDate(moment(date).toDate());
@@ -30,23 +29,26 @@ function EditPeriod() {
 
   const fetchPeriodDetails = (id) => periodsService.periodDetails(id);
 
-  const {
-    data: periodData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["PERIOD_DETAILS", id] : null, () => fetchPeriodDetails(id));
+  const { data: periodData } = useSWR(id ? ["PERIOD_DETAILS", id] : null, () =>
+    fetchPeriodDetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
   } = useForm();
 
+  const compareDates = (startDate : string,endDate : string)=>{
+    const isAfter = moment(endDate).isAfter(startDate);
+    return isAfter;
+  }
+
   useEffect(() => {
+    
+
     if (!periodData) return;
 
     periodData?.Name && setValue("periodname", periodData?.Name);
@@ -58,28 +60,30 @@ function EditPeriod() {
     setActiveStatus(periodData.IsActive);
   }, [periodData]);
 
-  const { mutate: bankMutate } = useSWR("LIST_PERIODS", () =>
-    periodsService.getPeriods()
-  );
+ 
 
   const [activeStatus, setActiveStatus] = useState(periodData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    if(!compareDates(startDate,endDate)){
+      toast.warning('End Date must be greater than Start Date');
+      return 
+    }
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.periodname,
       description: data.description,
       isActive: activeStatus,
       start: data.startDate,
       endDate: data.endDate,
+      clientID,
+      projectID
     };
 
     periodsService
       .editPeriod(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Period Edited successfully");
-        mutate(bankMutate());
         router.back();
 
         reset();
@@ -154,64 +158,52 @@ function EditPeriod() {
               )}
             />
             {errors.periodname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.periodname.message as React.ReactNode}
               </span>
             )}
           </div>
         </Col>
 
-        <Col xl="4" className="d-flex gap-1">
-          <Col xl="6">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              Start Date
-            </Label>
-            <Controller
-              name="startDate"
-              control={control}
-              rules={{ required: "Start Date is required" }}
-              render={({ field }) => (
-                <DatePicker
-                  placeholderText="Select a date"
-                  selected={startDate}
-                  onChange={(date) => {
-                    handleStartDateChange(date);
-                    field.onChange(date);
-                  }}
-                  dateFormat="yyyy-MM-dd"
-                />
-              )}
-            />
-          </Col>
+        <Col xl="4" className="d-flex flex-column">
+              <Label className="form-lable-font">Start Date<span className="required" >*</span></Label>
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    id="startDatePicker" // Add the id here
+                    className="w-100 form-control"
+                    placeholderText="Select Start date"
+                    selected={startDate}
+                    onChange={handleStartDateChange}
+                    dateFormat="yyyy-MM-dd" // Set the desired date format
+                  />
+                )}
+              />
+            </Col>
 
-          <Col xl="6">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              End Date
-            </Label>
-            <Controller
-              name="endDate"
-              control={control}
-              rules={{ required: "End Date is required" }}
-              render={({ field }) => (
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => {
-                    handleEndDateChange(date);
-                    field.onChange(date);
-                  }}
-                  placeholderText="Select a date"
-                  dateFormat="yyyy-MM-dd"
-                />
-              )}
-            />
-          </Col>
-        </Col>
+            <Col xl="4" className="d-flex flex-column">
+              <Label className="form-lable-font">End Date<span className="required" >*</span></Label>
+              <Controller
+                name="endDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    id="endDatePicker" // Add the id here
+                    className="w-100 form-control "
+                    placeholderText="Select End date"
+                    selected={endDate}
+                    onChange={handleEndDateChange}
+                    dateFormat="yyyy-MM-dd"
+                  />
+                )}
+              />
+            </Col>
 
         <Col xl="4">
           <div className="mb-1">
@@ -219,9 +211,9 @@ function EditPeriod() {
             <Controller
               name="description"
               control={control}
-              rules={{ required: "Description  is required" }}
               render={({ field }) => (
                 <Input
+                  type="textarea"
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
@@ -234,7 +226,7 @@ function EditPeriod() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

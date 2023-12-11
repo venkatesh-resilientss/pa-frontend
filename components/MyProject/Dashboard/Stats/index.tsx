@@ -1,6 +1,5 @@
 import { Col, Row } from "reactstrap";
 import StatsHorizontal from "./StatsHorizontol/index";
-import { User, Users } from "react-feather";
 import activeProject from "assets/MyImages/activeProject.svg";
 import user from "assets/MyImages/user.svg";
 import svg1 from "assets/DashboardIcons/svg1.svg";
@@ -22,12 +21,9 @@ function Stats() {
   //   };
   //   getTenant();
   // }, []);
-  const {
-    data: statsData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR("GET_STATS", () => statsService.getStats());
+  const { data: statsData } = useSWR("GET_STATS", () =>
+    statsService.getStats()
+  );
   return (
     <div className="rounded mt-3 p-3" style={{ backgroundColor: "#EAEDFF" }}>
       <Row noGutters className="d-flex gap-2">

@@ -1,38 +1,31 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { CountryService } from "services";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-
+import { formValidationRules } from "@/constants/common";
 function AddCountry() {
   const router = useRouter();
-   
+  const countryValidations = formValidationRules.countries;
   const countryService = new CountryService();
 
   const {
     control,
-    setError,
     handleSubmit,
-    register,
     reset,
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, setActiveStatus] = useState(false);
-
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.countryname,
-      is_active: activeStatus,
+      description : data.description,
+      code : data.countrycode,
     };
 
     countryService
       .createCountry(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Country Added successfully");
         router.back();
         reset();
@@ -94,29 +87,78 @@ function AddCountry() {
           >
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Country name</Label>
+                <Label className="form-lable-font">Country Name <span className="required">*</span></Label>
                 <Controller
                   name="countryname"
                   control={control}
-                  rules={{ required: "Country Name  is required" }}
+                  rules={countryValidations.name}
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
-                      placeholder="Country name"
+                      placeholder="Country Name"
                       invalid={errors.countryname && true}
                       {...field}
                     />
                   )}
                 />
                 {errors.countryname && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.countryname.message as React.ReactNode}
                   </span>
                 )}
               </div>
             </Col>
-
-            
+            <Col xl="4">
+              <div className="mb-1">
+                <Label className="form-lable-font">Country Code <span className="required">*</span></Label>
+                <Controller
+                  name="countrycode"
+                  control={control}
+                  rules={countryValidations.code}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Country Code"
+                      invalid={errors.countrycode && true}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.countrycode && (
+                  <span style={{ color: "red" }}>
+                    {errors.countrycode.message as React.ReactNode}
+                  </span>
+                )}
+              </div>
+            </Col>
+            <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                rules={countryValidations.description}
+                render={({ field }) => (
+                  <Input
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      height: "81px",
+                    }}
+                    placeholder="Description"
+                    invalid={errors.description && true}
+                    {...field}
+                    type="textarea"
+                  />
+                )}
+              />
+              {errors.description && (
+                <span style={{ color: "red" }}>
+                  {errors.description.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
           </Form>
         </div>
       </div>

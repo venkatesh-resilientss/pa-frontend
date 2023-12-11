@@ -1,12 +1,11 @@
-import AllUserManagementTable from './AllUserManagementTable'
-import Image from 'next/image'
+import AllUserManagementTable from "./AllUserManagementTable";
 
 function UserManagement() {
   return (
     <div>
       <AllUserManagementTable />
     </div>
-  )
+  );
 }
 
-export default UserManagement
+export default UserManagement;

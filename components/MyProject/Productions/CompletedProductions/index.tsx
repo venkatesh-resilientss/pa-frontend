@@ -1,39 +1,24 @@
 import React from "react";
 import {
-  Card,
-  CardBody,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
   Row,
   Col,
-  Popover,
-  Button,
 } from "reactstrap";
 import Select from "react-select";
-import { Edit, MoreVertical, Table } from "react-feather";
 import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import detailsIocn from "assets/myIcons/list.svg";
-import DataTableWithButtons from "../../../Generic/Table/index";
 import { openAssignRSSLPopup } from "../../../../redux/slices/mySlices/productions";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { InputGroup } from "react-bootstrap";
-import DataTable from "react-data-table-component";
-import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
-import AssignRSSLPopup from "../PendingProductions/AssignRSSLPopup";
 
 const CompletedProductions = () => {
   const dispatch = useDispatch();
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const [editTable, setIsEditable] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -45,29 +30,26 @@ const CompletedProductions = () => {
       boxShadow: state.isFocused ? null : null,
     }),
 
-    valueContainer: (provided, state) => ({
+    valueContainer: (provided) => ({
       ...provided,
       height: "30px",
       padding: "0 6px",
     }),
 
-    input: (provided, state) => ({
+    input: (provided) => ({
       ...provided,
       margin: "0px",
     }),
-    indicatorSeparator: (state) => ({
+    indicatorSeparator: () => ({
       display: "none",
     }),
-    indicatorsContainer: (provided, state) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
       height: "30px",
     }),
   };
 
-  const handleEdit = (e) => {
-    setIsEditable(true);
-  };
-  const handleChange = (selectedOption) => {
+  const handleChange = () => {
     // setSelectedOption();
   };
   const options = [
@@ -78,10 +60,7 @@ const CompletedProductions = () => {
   ];
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const toggle = () => {
-      setOpen(!open);
-    };
+
     const Action = ({ icon, name, action }) => {
       return (
         <div onClick={action} className="d-flex align-items-center gap-2">
@@ -109,7 +88,13 @@ const CompletedProductions = () => {
               className="w-100"
               onClick={(e) => e.preventDefault()}
             >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              <Action
+                icon={editIocn}
+                name={"Edit"}
+                action={() => {
+                  //
+                }}
+              />
             </DropdownItem>
             <DropdownItem
               tag="a"
@@ -122,7 +107,9 @@ const CompletedProductions = () => {
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
-                action={(e) => handleEdit(e)}
+                action={() => {
+                  //
+                }}
               />
             </DropdownItem>
           </DropdownMenu>
@@ -293,21 +280,21 @@ const CompletedProductions = () => {
               }}
             >
               <Select
-                value={selectedOption}
+                value={null}
                 defaultInputValue="Client is All"
                 onChange={handleChange}
                 options={options}
                 styles={customStyles}
               />
               <Select
-                value={selectedOption}
+                value={null}
                 defaultInputValue="Date is All"
                 onChange={handleChange}
                 options={options}
                 styles={customStyles}
               />
               <Select
-                value={selectedOption}
+                value={null}
                 defaultInputValue="Production is All"
                 onChange={handleChange}
                 options={options}

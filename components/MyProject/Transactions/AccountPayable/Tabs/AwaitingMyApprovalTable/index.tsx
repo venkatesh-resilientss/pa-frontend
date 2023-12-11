@@ -1,23 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import GridTable from "components/grid-tables/gridTable";
-import Image from "next/image";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import approveIcon from "assets/myIcons/approveIcon.svg";
 
-import detailsIocn from "assets/myIcons/list.svg";
-import CustomBadge from "components/Generic/CustomBadge";
-import {
-  Popover,
-  PopoverBody,
-  PopoverHeader,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-} from "reactstrap";
+import { Badge } from "reactstrap";
 
 const AwaitingMyApprovalTable = () => {
   const StateBadge = (props) => {
@@ -66,13 +50,7 @@ const AwaitingMyApprovalTable = () => {
     );
   };
 
-  const ActionsButton = (props) => {
-    const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const toggle = () => {
-      setOpen(!open);
-    };
-
+  const ActionsButton = () => {
     return (
       <div>
         <Badge
@@ -303,7 +281,12 @@ const AwaitingMyApprovalTable = () => {
 
   return (
     <div className="my-5 m-auto" style={{ width: "100%" }}>
-      <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined} />
+      <GridTable
+        rowData={rowData}
+        columnDefs={columnDefs}
+        pageSize={4}
+        searchText={undefined}
+      />
     </div>
   );
 };

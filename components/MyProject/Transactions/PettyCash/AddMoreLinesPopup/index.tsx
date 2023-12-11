@@ -1,13 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import Image from "next/image";
-import {
-  closeAddMoreLinesPopup,
-  closeAddMoreLinesToPettyCashPopup,
-} from "redux/slices/mySlices/transactions";
+
+import { Button, Modal, ModalBody } from "reactstrap";
+
+import { closeAddMoreLinesToPettyCashPopup } from "redux/slices/mySlices/transactions";
 
 const AddMoreLinesToPettyCashPopup = () => {
   const dispatch = useDispatch();
@@ -15,12 +10,6 @@ const AddMoreLinesToPettyCashPopup = () => {
   const popupStatus = useSelector(
     (state: any) => state.transactions.pettyCash.addMoreLinePopup.status
   );
-
-  const helperData = useSelector(
-    (state: any) => state.transactions.pettyCash.addMoreLinePopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

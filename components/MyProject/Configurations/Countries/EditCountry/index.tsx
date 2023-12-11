@@ -5,39 +5,34 @@ import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
+import { formValidationRules } from "@/constants/common";
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
+  const countryValidations = formValidationRules.countries
+  const fetchCountryDetails = (id) => countryService.countryDetails(id);
 
-
-  const fetchCountryDetails = (id) =>
-    countryService.countryDetails(id);
-
-  const {
-    data: countryData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["COUNTRY_DETAILS", id] : null, () =>
-    fetchCountryDetails(id)
+  const { data: countryData } = useSWR(
+    id ? ["COUNTRY_DETAILS", id] : null,
+    () => fetchCountryDetails(id)
   );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
   } = useForm();
 
-
+  const [activeStatus, setActiveStatus] = useState(countryData?.IsActive);
 
   useEffect(() => {
     if (!countryData) return;
 
     countryData?.Name && setValue("countryname", countryData?.Name);
+    countryData?.Code && setValue("countrycode", countryData?.Code);
+    countryData?.Description && setValue("description",countryData?.Description);
     setActiveStatus(countryData?.IsActive);
   }, [countryData]);
 
@@ -47,20 +42,17 @@ function EditCountry() {
     countryService.getCountries()
   );
 
-  const [activeStatus, setActiveStatus] = useState(countryData?.IsActive);
-
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.countryname,
+      code: data.countrycode,
       description: data.description,
       isActive: activeStatus,
     };
 
     countryService
       .editCountry(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Country Edited successfully");
         mutate(countryMutate());
         router.back();
@@ -125,28 +117,78 @@ function EditCountry() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label>Country name</Label>
+              <Label>Country Name  <span className="required">*</span></Label>
               <Controller
                 name="countryname"
                 control={control}
-                rules={{ required: "Country Name  is required" }}
+                rules={countryValidations.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
-                    placeholder="Country name"
+                    placeholder="Country Name"
                     invalid={errors.countryname && true}
                     {...field}
                   />
                 )}
               />
               {errors.countryname && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.countryname.message as React.ReactNode}
                 </span>
               )}
             </div>
           </Col>
-
+          <Col xl="4">
+              <div className="mb-1">
+                <Label className="form-lable-font">Country Code <span className="required">*</span></Label>
+                <Controller
+                  name="countrycode"
+                  control={control}
+                  rules={countryValidations.code}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Country Code"
+                      invalid={errors.countrycode && true}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.countrycode && (
+                  <span style={{ color: "red" }}>
+                    {errors.countrycode.message as React.ReactNode}
+                  </span>
+                )}
+              </div>
+            </Col>
+            <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                rules={countryValidations.description}
+                render={({ field }) => (
+                  <Input
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      height: "81px",
+                    }}
+                    placeholder="Description"
+                    invalid={errors.description && true}
+                    {...field}
+                    type="textarea"
+                  />
+                )}
+              />
+              {errors.description && (
+                <span style={{ color: "red" }}>
+                  {errors.description.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
           <div className="d-flex flex-column mt-1">
             <Label
               className="text-black"

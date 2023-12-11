@@ -1,32 +1,22 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
+import { Button, Modal, ModalBody,Spinner } from "reactstrap";
 import { closeBulkUploadSeriesPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SeriesService } from "services";
+import { getSessionVariables } from "@/constants/function";
 
-import { checkTenant } from "constants/function";
-
-const SeriesBulkUploadPopup = () => {
+const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
-   
 
   const seriesService = new SeriesService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.series.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.series.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -42,29 +32,29 @@ const SeriesBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+  const [isLoading, setLoader] = useState(false);
 
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
       return;
     }
-
+    setLoader(true);
     const fileName = uploadedFiles[0];
-
+    const {clientID,projectID} = getSessionVariables();
     // Call the uploadbanklist function from your service with only the file name
     seriesService
-      .uploadserieslist(fileName)
-      .then((result) => {
+      .uploadserieslist(fileName,clientID,projectID)
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeBulkUploadSeriesPopup("close"));
+        setLoader(false)
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        toast.error(error.Message || error.error || "Failed to insert data.");
+        setLoader(false)
       });
   };
   const handleDownload = () => {
@@ -197,8 +187,13 @@ const SeriesBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

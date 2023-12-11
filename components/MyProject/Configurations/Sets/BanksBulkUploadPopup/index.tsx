@@ -1,11 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
+import { Button, Modal, ModalBody } from "reactstrap";
+
 import { closeBulkUploadBanksPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
 import React, { useCallback, useState } from "react";
@@ -18,10 +14,6 @@ const BanksBulkUploadPopup = () => {
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.banks.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);

@@ -46,7 +46,6 @@ const ApprovePurchaseOrder = () => {
           }}
           type="text"
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -64,7 +63,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -82,7 +80,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -100,7 +97,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -118,7 +114,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -134,7 +129,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -150,7 +144,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -166,7 +159,6 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -182,14 +174,13 @@ const ApprovePurchaseOrder = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
     {
       name: "Options",
       selector: "Options",
-      cell: (row) => (
+      cell: () => (
         <>
           <div className="d-flex">
             <Button
@@ -579,7 +570,7 @@ const ApprovePurchaseOrder = () => {
                             placeholder="Select Vendor"
                             // defaultOptions={seriesSelectFormat}
                             styles={{
-                              control: (provided) => ({
+                              control: (provided: any) => ({
                                 ...provided,
                                 height: "34px",
                                 minHeight: "34px",
@@ -783,7 +774,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Client"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -805,7 +796,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Production"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -825,7 +816,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Bank"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -847,7 +838,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Currency"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -869,7 +860,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Department"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",
@@ -889,7 +880,7 @@ const ApprovePurchaseOrder = () => {
                               placeholder="Select Period"
                               // defaultOptions={seriesSelectFormat}
                               styles={{
-                                control: (provided) => ({
+                                control: (provided: any) => ({
                                   ...provided,
                                   height: "34px",
                                   minHeight: "34px",

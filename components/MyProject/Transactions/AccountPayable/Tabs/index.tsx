@@ -11,8 +11,7 @@ import {
 import AllAccountPayablesTable from "./AllAccountPayablesTable";
 import AwatingMyApprovalTable from "./AwaitingMyApprovalTable";
 
-function Tabs(props) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+function Tabs() {
   const [active, setActive] = useState("1");
 
   const toggle = (tab) => {

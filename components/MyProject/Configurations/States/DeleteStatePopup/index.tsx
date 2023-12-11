@@ -1,23 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { closeDeleteStatePopup } from "redux/slices/mySlices/configurations";
 import { StatesService } from "services";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteStatePopup = ({ id }) => {
+const DeleteStatePopup = () => {
   const dispatch = useDispatch();
-
 
   const stateService = new StatesService();
 
   const { mutate: stateMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(
@@ -29,7 +25,6 @@ const DeleteStatePopup = ({ id }) => {
   );
 
   const handleDeleteState = async () => {
-
     try {
       await stateService.deleteState(helperData);
       toast.success("State Deleted Successfully");
@@ -39,8 +34,6 @@ const DeleteStatePopup = ({ id }) => {
       console.error("Error deleting State:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

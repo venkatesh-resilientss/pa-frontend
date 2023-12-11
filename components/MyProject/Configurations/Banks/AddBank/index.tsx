@@ -1,7 +1,5 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
 import { BankService } from "services";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
@@ -10,29 +8,25 @@ function AddBank() {
   const router = useRouter();
   const {
     control,
-    setError,
     handleSubmit,
     register,
     reset,
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, setActiveStatus] = useState(false);
   const bankService = new BankService();
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       description: data.description,
-      is_active: activeStatus,
+      is_active: false,
       name: data.bankName,
       location: data.location,
     };
 
     bankService
       .createBank(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Bank Added successfully");
         router.back();
         reset();
@@ -109,7 +103,7 @@ function AddBank() {
             )}
           />
           {errors.bankName && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.bankName.message as React.ReactNode}
             </span>
           )}
@@ -136,7 +130,7 @@ function AddBank() {
             )}
           />
           {errors.description && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.description.message as React.ReactNode}
             </span>
           )}
@@ -159,7 +153,7 @@ function AddBank() {
             )}
           />
           {errors.location && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.location.message as React.ReactNode}
             </span>
           )}

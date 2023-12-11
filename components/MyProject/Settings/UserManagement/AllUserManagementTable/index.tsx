@@ -7,12 +7,9 @@ import {
   DropdownItem,
   Form,
   Modal,
-  ModalHeader,
   ModalBody,
-  ModalFooter,
-  Button,
 } from "reactstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { UsersService } from "services";
 import useSWR from "swr";
@@ -22,14 +19,11 @@ import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
-import router, { useRouter } from "next/router";
+import router from "next/router";
 import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
-import { toast } from "react-toastify";
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteModalId, setDeleteModalId] = useState(null);
   const [searchText, setSearchText] = useState("");
 
   const hasCreateUseerPermission = hasPermission(
@@ -40,36 +34,11 @@ const AllRoleTable = () => {
     "user_and_role_management",
     "edit_user"
   );
-  const hasDeactivateUserPermission = hasPermission(
-    "user_and_role_management",
-    "deactivate_user"
-  );
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
-  };
+  }
 
-  const handleDeleteClick = (id) => {
-    setDeleteModalId(id);
-    toggleDeleteModal();
-  };
-
-  const usersService = new UsersService();
-
-  const handleDeleteUser = async (id) => {
-    try {
-      await usersService.deleteUser(id);
-      // Optionally, you can update your local state or refetch data here
-      toast.success("User deleted successfully");
-      clientMutate();
-    } catch (error) {
-      // Handle error, show a message, or log it
-      // console.error("Error deleting user:", error);
-      toast.error("Error deleting user");
-    } finally {
-      toggleDeleteModal();
-    }
-  };
 
   const DeleteModal = () => (
     <Modal
@@ -110,22 +79,17 @@ const AllRoleTable = () => {
           >
             Cancel
           </a>
-          <Button
-            color="danger"
-            onClick={() => handleDeleteUser(deleteModalId)}
-          >
-            Delete
-          </Button>
+
         </div>
       </ModalBody>
     </Modal>
   );
 
-  const clientService = new UsersService();
+  const userService = new UsersService();
 
-  const { data: clientData, mutate: clientMutate } = useSWR(
+  const { data: clientData } = useSWR(
     ["LIST_CLIENTS", searchText],
-    () => clientService.getUsers()
+    () => userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
   );
 
   const StateBadge = (props) => {
@@ -157,7 +121,7 @@ const AllRoleTable = () => {
           <DropdownToggle tag="span">
             <Image src={actionIcon} alt="" width={14} id={id} />
           </DropdownToggle>
-          <DropdownMenu end container="body">
+          <DropdownMenu end container="body" className="userpopover">
             {hasEditUserPermission && (
               <DropdownItem
                 tag="a"
@@ -166,21 +130,8 @@ const AllRoleTable = () => {
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
-                  name={"Edit User"}
-                  action={() => {}}
-                />
-              </DropdownItem>
-            )}
-            {hasDeactivateUserPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => handleDeleteClick(id)}
-              >
-                <Action
-                  icon={"/icons/delete.svg"}
-                  name={"Delete"}
-                  action={() => {}}
+                  name={"View/Edit User"}
+                  action={undefined}
                 />
               </DropdownItem>
             )}
@@ -206,7 +157,7 @@ const AllRoleTable = () => {
           />
         </div>
         <div>
-          <p style={{ fontSize: "14px" }}>{props.data.adminname}</p>
+          <p style={{ fontSize: "14px" }}>{props.data.adminName}</p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
             {props.data.email}
           </p>
@@ -224,40 +175,46 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params.data.adminname}${params.data.email}`;
+        const res = `${params.data.adminName}${params.data.email}`;
         return res;
       },
     },
     {
       headerName: "Role",
-      field: "rollname",
+      field: "rollName",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => (params.data.roleName),
+      unSortIcon: true
     },
     {
       headerName: "Client",
-      field: "client_name",
+      field: "clientNames",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => { return params.value.map(ele => ele) },
+      unSortIcon: true
     },
     // { headerName: "id", field: "id", sortable: true, resizable: true, cellStyle: { fontSize: "16px", fontWeight: "400" }, headerClass: "custom-header-class", },
-    {
-      headerName: "Production",
-      field: "project_name",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
+    // {
+    //   headerName: "Production",
+    //   field: "project_name",
+    //   sortable: true,
+    //   resizable: true,
+    //   cellStyle: { fontSize: "16px", fontWeight: "400" },
+    //   headerClass: "custom-header-class",
+    //   unSortIcon: true
+    // },
     {
       headerName: "Created On",
-      field: "created_on",
+      field: "createdOn",
       sortable: true,
       resizable: true,
+      unSortIcon: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
@@ -271,6 +228,8 @@ const AllRoleTable = () => {
       cellRenderer: StateBadge,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      unSortIcon: true,
+      sortable: true,
     },
     {
       headerName: "Actions",
@@ -282,50 +241,48 @@ const AllRoleTable = () => {
 
   return (
     <>
-      <Card
-        className="mt-4 px-2"
-        style={{
-          backgroundColor: "#E7EFFF",
-          boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
-        }}
-      >
-        <CardBody>
-          <div className="d-flex justify-content-between">
-            <div>
-              <p className="m-2" style={{ fontWeight: "600" }}>
-                User Management
-              </p>
-            </div>
-            <div className="d-flex align-items-center">
-              <Form>
-                <input
-                  className="search mr-2"
-                  onChange={(e) => setSearchText(e.target.value)}
-                  type="search"
-                  placeholder="Search..."
-                />
-              </Form>
-              {/* <button
-                className='btn btn-primary'
-                onClick={() => router.push('/settings/add-user')}
-              >
-                <Plus size={16} /> Add User
-              </button> */}
-              {hasCreateUseerPermission && (
-                <button
-                  className="btn btn-primary"
-                  onClick={() => router.push("/settings/add-user")}
-                >
-                  <Plus size={16} /> Add User
-                </button>
-              )}
-            </div>
-          </div>
-        </CardBody>
-      </Card>
+      <div className="section mt-4">
+        <div>
+          <Card
+            style={{
+              backgroundColor: "#E7EFFF",
+              boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            <CardBody>
+              <div className="d-flex justify-content-between">
+                <div>
+                  <p className="m-2" style={{ fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>
+                    User Management
+                  </p>
+                </div>
+                <div className="d-flex align-items-center">
+                  <Form>
+                    <input
+                      className="search mr-2"
+                      onChange={(e) => setSearchText(e.target.value)}
+                      type="search"
+                      placeholder="Search..."
+                    />
+                  </Form>
+                  {hasCreateUseerPermission && (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => router.push("/settings/add-user")}
+                    >
+                      <Plus size={16} /> Add User
+                    </button>
+                  )}
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+
       <div className="mt-3">
         <GridTable
-          rowData={clientData?.data}
+          rowData={clientData}
           columnDefs={columnDefs}
           pageSize={10}
           searchText={searchText}

@@ -10,8 +10,7 @@ import {
 } from "reactstrap";
 import AllPettyCashTable from "./AllPettyCashTable";
 
-function Tabs(props) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+function Tabs() {
   const [active, setActive] = useState("1");
 
   const toggle = (tab) => {

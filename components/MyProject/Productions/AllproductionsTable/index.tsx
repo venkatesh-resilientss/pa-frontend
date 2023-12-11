@@ -1,14 +1,11 @@
 import GridTable from "components/grid-tables/gridTable";
 import Form from "react-bootstrap/Form";
-import { InputGroup, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
-import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import { openAssignRSSLPopup } from "../../../../redux/slices/mySlices/productions";
+import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
 
-import { useState } from "react";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import Select from "react-select";
@@ -20,27 +17,19 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import AssignRSSLPopup from "../PendingProductions/AssignRSSLPopup";
 import { useRouter } from "next/router";
 import { ProjectService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 
 const AllProductionsTable = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch();
-
-  const [searchText, setSearchText] = useState("");
 
   const projectService = new ProjectService();
 
-  const {
-    data: projectsData,
-    isLoading: projectsLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_PROJECTS", searchText], () => projectService.getProjects());
+  const { data: projectsData } = useSWR(["LIST_PROJECTS", ""], () =>
+    projectService.getProjectsList("?limit=50&offset=0")
+  );
 
   const router = useRouter();
 
@@ -66,11 +55,7 @@ const AllProductionsTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
     const Action = ({ icon, name, action }) => {
       return (
         <div onClick={action} className="d-flex align-items-center gap-2">
@@ -92,25 +77,36 @@ const AllProductionsTable = () => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem className="w-100">
+            <DropdownItem
+              className="w-100"
+              onClick={() => router.push(`/production/${props.data.ID}`)}
+            >
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                action={() => {
+                  //
+                }}
               />
             </DropdownItem>
 
-            <DropdownItem
+            {/* <DropdownItem
               className="w-100"
-              onClick={(e) => router.push(`/edit-production/${props.data.ID}`)}
+              onClick={() => router.push(`/edit-production/${props.data.ID}`)}
             >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
-            </DropdownItem>
+              <Action
+                icon={editIocn}
+                name={"Edit"}
+                action={() => {
+                  //
+                }}
+              />
+            </DropdownItem> */}
             <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
-                action={(e) => {
+                action={() => {
                   dispatch(openAssignRSSLPopup(props.data));
                 }}
               />
@@ -162,8 +158,16 @@ const AllProductionsTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
-
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
     },
@@ -192,92 +196,6 @@ const AllProductionsTable = () => {
     },
   ];
 
-  const rowData = [
-    {
-      ProductionCode: "P001",
-      ProductionName: "Product A",
-      ProductionType: "Type 1",
-      Client: "Client X",
-      LastPayrollDate: "2023-11-01",
-      LabourType: "Skilled",
-      CreatedBy: "John Doe",
-      CreatedOn: "2023-10-15",
-      status: "active",
-      id: 1,
-    },
-    {
-      ProductionCode: "P002",
-      ProductionName: "Product B",
-      ProductionType: "Type 2",
-      Client: "Client Y",
-      LastPayrollDate: "2023-11-05",
-      LabourType: "Unskilled",
-      CreatedBy: "Jane Smith",
-      CreatedOn: "2023-10-20",
-      status: "inactive",
-      id: 2,
-    },
-    {
-      ProductionCode: "P003",
-      ProductionName: "Product C",
-      ProductionType: "Type 1",
-      Client: "Client Z",
-      LastPayrollDate: "2023-11-10",
-      LabourType: "Skilled",
-      CreatedBy: "Bob Johnson",
-      CreatedOn: "2023-10-25",
-      status: "active",
-      id: 3,
-    },
-    {
-      ProductionCode: "P004",
-      ProductionName: "Product D",
-      ProductionType: "Type 3",
-      Client: "Client W",
-      LastPayrollDate: "2023-11-15",
-      LabourType: "Skilled",
-      CreatedBy: "Alice Brown",
-      CreatedOn: "2023-11-01",
-      status: "inactive",
-      id: 4,
-    },
-    {
-      ProductionCode: "P005",
-      ProductionName: "Product E",
-      ProductionType: "Type 2",
-      Client: "Client V",
-      LastPayrollDate: "2023-11-20",
-      LabourType: "Unskilled",
-      CreatedBy: "Charlie Green",
-      CreatedOn: "2023-11-05",
-      status: "active",
-      id: 5,
-    },
-    {
-      ProductionCode: "P006",
-      ProductionName: "Product F",
-      ProductionType: "Type 1",
-      Client: "Client U",
-      LastPayrollDate: "2023-11-25",
-      LabourType: "Unskilled",
-      CreatedBy: "Eva White",
-      CreatedOn: "2023-11-10",
-      status: "Active",
-      id: 6,
-    },
-    {
-      ProductionCode: "P007",
-      ProductionName: "Product G",
-      ProductionType: "Type 3",
-      Client: "Client T",
-      LastPayrollDate: "2023-11-30",
-      LabourType: "Skilled",
-      CreatedBy: "David Black",
-      CreatedOn: "2023-11-15",
-      status: "active",
-      id: 7,
-    },
-  ];
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -289,25 +207,25 @@ const AllProductionsTable = () => {
       boxShadow: state.isFocused ? null : null,
     }),
 
-    valueContainer: (provided, state) => ({
+    valueContainer: (provided) => ({
       ...provided,
       height: "30px",
       padding: "0 6px",
     }),
 
-    input: (provided, state) => ({
+    input: (provided) => ({
       ...provided,
       margin: "0px",
     }),
-    indicatorSeparator: (state) => ({
+    indicatorSeparator: () => ({
       display: "none",
     }),
-    indicatorsContainer: (provided, state) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
       height: "30px",
     }),
   };
-  const handleChange = (selectedOption) => {
+  const handleChange = () => {
     // setSelectedOption();
   };
 
@@ -322,28 +240,28 @@ const AllProductionsTable = () => {
             }}
           >
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Cient is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Date is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Production is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Status is All"
               onChange={handleChange}
               options={options}
@@ -380,9 +298,14 @@ const AllProductionsTable = () => {
         </Col>
       </Row>
       <GridTable
-        rowData={projectsData}
+        rowData={{
+          data: projectsData,
+          limit: 10,
+          offset: 0,
+          total_records: 25,
+        }}
         columnDefs={columnDefs}
-        pageSize={4}
+        pageSize={10}
         searchText={undefined}
       />
     </div>

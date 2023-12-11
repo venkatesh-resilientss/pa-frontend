@@ -1,23 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+
+import { Button, Input, Label, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info.svg";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
-import {
-  closeRejectJournalEntryPopup,
-  closeRejectPettyCashPopup,
-} from "redux/slices/mySlices/transactions";
+import { closeRejectPettyCashPopup } from "redux/slices/mySlices/transactions";
 
 const RejectPettyCashPopup = () => {
   const dispatch = useDispatch();
@@ -26,11 +12,6 @@ const RejectPettyCashPopup = () => {
     (state: any) => state.transactions.pettyCash.rejectPettyCashPopup.status
   );
 
-  const helperData = useSelector(
-    (state: any) => state.transactions.pettyCash.rejectPettyCashPopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
   return (
     <Modal
       isOpen={popupStatus}

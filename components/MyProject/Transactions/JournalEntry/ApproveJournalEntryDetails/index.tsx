@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Row, Col, CardBody, Card } from "reactstrap";
-import { Button, Form, FormGroup, Label, Input, Popover } from "reactstrap";
+import { Button, Form, Label, Input, Popover } from "reactstrap";
 import DataTable from "react-data-table-component";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
-import ImportExcelIcon from "assets/myIcons/importExel.svg";
 import Image from "next/image";
 import attchFileIcon from "assets/myIcons/attchfile.svg";
 import ThreedotsIcon from "assets/myIcons/Threedotsicon.svg";
@@ -32,10 +31,6 @@ const ApproveJournalEntryDetails = () => {
 
   const {
     control,
-    setError,
-    handleSubmit,
-    register,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -54,7 +49,6 @@ const ApproveJournalEntryDetails = () => {
           }}
           type="text"
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -72,7 +66,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -90,7 +83,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -108,7 +100,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -126,7 +117,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -142,7 +132,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -158,7 +147,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -174,7 +162,6 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
@@ -190,14 +177,13 @@ const ApproveJournalEntryDetails = () => {
             borderStyle: "solid",
           }}
           value={row.inputValue}
-          onChange={(e) => console.log(e.target.value)}
         />
       ),
     },
     {
       name: "Options",
       selector: "Options",
-      cell: (row) => (
+      cell: () => (
         <>
           <div className="d-flex">
             <Button
@@ -655,7 +641,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.JENumber && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.JENumber.message as React.ReactNode}
                               </span>
                             )}
@@ -685,7 +671,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.JEDescription && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.JEDescription
                                     .message as React.ReactNode
@@ -716,7 +702,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.Amount && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.Amount.message as React.ReactNode}
                               </span>
                             )}
@@ -745,7 +731,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.transactionDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.transactionDate
                                     .message as React.ReactNode
@@ -777,7 +763,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.JEEffectiveDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {
                                   errors.JEEffectiveDate
                                     .message as React.ReactNode
@@ -809,7 +795,7 @@ const ApproveJournalEntryDetails = () => {
                               )}
                             />
                             {errors.JEPOSTEDDate && (
-                              <span style={{ color: "red" }}>
+                              <span className="text-danger">
                                 {errors.JEPOSTEDDate.message as React.ReactNode}
                               </span>
                             )}{" "}
@@ -854,7 +840,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Client"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -864,7 +850,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.client && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.client.message as React.ReactNode}
                             </span>
                           )}
@@ -885,7 +871,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Production"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -895,7 +881,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.production && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.production.message as React.ReactNode}
                             </span>
                           )}
@@ -916,7 +902,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Bank"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -926,7 +912,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.bank && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.bank.message as React.ReactNode}
                             </span>
                           )}
@@ -949,7 +935,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Currency"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -959,7 +945,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.currency && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.currency.message as React.ReactNode}
                             </span>
                           )}
@@ -980,7 +966,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Department"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -990,7 +976,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.department && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.department.message as React.ReactNode}
                             </span>
                           )}
@@ -1011,7 +997,7 @@ const ApproveJournalEntryDetails = () => {
                                 placeholder="Select Period"
                                 // defaultOptions={seriesSelectFormat}
                                 styles={{
-                                  control: (provided) => ({
+                                  control: (provided: any) => ({
                                     ...provided,
                                     height: "34px",
                                     minHeight: "34px",
@@ -1021,7 +1007,7 @@ const ApproveJournalEntryDetails = () => {
                             )}
                           />
                           {errors.period && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.period.message as React.ReactNode}
                             </span>
                           )}

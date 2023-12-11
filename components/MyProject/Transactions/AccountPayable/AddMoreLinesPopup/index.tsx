@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import { closeAddMoreLinesToAccountPayablePopup } from "redux/slices/mySlices/transactions";
 
 const AddMoreLinesToAccountPayablePopup = () => {
@@ -10,13 +8,6 @@ const AddMoreLinesToAccountPayablePopup = () => {
   const popupStatus = useSelector(
     (state: any) => state.transactions.accountPayable.addMoreLinePopup.status
   );
-
-  const helperData = useSelector(
-    (state: any) =>
-      state.transactions.accountPayable.addMoreLinePopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

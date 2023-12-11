@@ -1,26 +1,10 @@
 import React, { useState } from "react";
-import {
-  Nav,
-  NavItem,
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
-  NavLink,
-  TabContent,
-  TabPane,
-  Row,
-  Col,
-  Button,
-  Popover,
-} from "reactstrap";
-import Form from "react-bootstrap/Form";
-import { InputGroup } from "react-bootstrap";
+import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import ActiveProductionsCard from "../ActiveProductions";
 import PendingProductionsTable from "../PendingProductions";
 import CompletedProductions from "../CompletedProductions";
 
-function Tabs(props) {
+function Tabs() {
   // const [dropdownOpen, setDropdownOpen] = useState(false);
   const [active, setActive] = useState("1");
   // const [popoverOpen, setPopoverOpen] = useState(false);

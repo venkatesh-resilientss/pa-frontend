@@ -1,15 +1,13 @@
 // ** Third Party Components
-import { BiCheckCircle, BiSolidCameraMovie, BiXCircle } from "react-icons/bi";
+import { BiSolidCameraMovie } from "react-icons/bi";
 import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
 import { LiaClipboardListSolid, LiaMoneyBillSolid } from "react-icons/lia";
 
 // ** Reactstrap Imports
-import { Badge, Card, CardBody } from "reactstrap";
-import { Calendar, CheckCircle, Info, Mail, Users } from "react-feather";
+import { Card, CardBody } from "reactstrap";
+import { Calendar } from "react-feather";
 
-const ProductionsCard = ({
-  
-}) => {
+const ProductionsCard = () => {
   return (
     <Card>
       <CardBody>

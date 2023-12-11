@@ -1,8 +1,7 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function EditAgreement() {

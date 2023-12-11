@@ -12,8 +12,7 @@ import {
 import AllPurchaseOrdersTable from "./AllPurchaseOrderTable";
 import AwatingOrderTable from "./AwaitingOrderTable";
 
-function Tabs(props) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+function Tabs() {
   const [active, setActive] = useState("1");
 
   const toggle = (tab) => {

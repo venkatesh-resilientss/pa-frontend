@@ -1,4 +1,3 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
@@ -7,17 +6,15 @@ import { useEffect, useState } from "react";
 import { ProjectService, UsersService } from "services";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-
+import { formValidationRules } from "@/constants/common";
 function EditProductions() {
   const router = useRouter();
-
+  const productionRules = formValidationRules.productions;
   const { id } = router.query;
 
   const {
     control,
-    setError,
     handleSubmit,
-    register,
     reset,
     setValue,
     formState: { errors },
@@ -26,7 +23,7 @@ function EditProductions() {
   const clientService = new UsersService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getUsers()
+    clientService.getUsers({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const userSelectFormat = clientData?.data.map((b) => {
@@ -61,12 +58,6 @@ function EditProductions() {
 
   const [selectedAPValues, setSelectedAPValues] = useState(["", ""]);
 
-  const handleInputChange = (index, value) => {
-    const newValues = [...selectedPurchaseOrderValues];
-    newValues[index] = value;
-    setSelectedPurchaseOrderValues(newValues);
-  };
-
   const handleCheckboxChange = () => {
     setPurchaseOrderValue(!purchaseOrderValue);
   };
@@ -82,14 +73,14 @@ function EditProductions() {
   const projectsService = new ProjectService();
 
   const onSubmit = (data) => {
-    let backendFormat = {
+    const backendFormat = {
       code: data.productionCode,
       Name: data.productionName,
     };
 
     projectsService
       .editProject(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         router.back();
         toast.success("Productions Updated successfully");
         reset();
@@ -181,7 +172,6 @@ function EditProductions() {
             <Label style={{ color: "#030229" }}>Production Code</Label>
             <Controller
               name="productionCode"
-              rules={{ required: "Production Code is required" }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -191,7 +181,7 @@ function EditProductions() {
                   id="address"
                   placeholder="Enter Production Code"
                   invalid={errors.productionCode && true}
-                  disabled={!editMode}
+                  disabled
                   style={{
                     fontSize: "12px",
                     fontWeight: "400",
@@ -201,7 +191,7 @@ function EditProductions() {
               )}
             />
             {errors.productionCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.productionCode.message as React.ReactNode}
               </span>
             )}
@@ -210,7 +200,7 @@ function EditProductions() {
             <Label style={{ color: "#030229" }}>Production Name</Label>
             <Controller
               name="productionName"
-              rules={{ required: "Production Name is required" }}
+              rules={productionRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -230,7 +220,7 @@ function EditProductions() {
               )}
             />
             {errors.productionName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.productionName.message as React.ReactNode}
               </span>
             )}
@@ -281,7 +271,7 @@ function EditProductions() {
                 }}
               >
                 {selectedPurchaseOrderValues.map((value, index) => (
-                  <Col xl="3">
+                  <Col xl="3" key={index}>
                     <Label>Level {index + 1} Approver</Label>
                     <AsyncSelect
                       isDisabled={!editMode}
@@ -292,7 +282,7 @@ function EditProductions() {
                       placeholder="Select User"
                       // defaultOptions={seriesSelectFormat}
                       styles={{
-                        control: (provided) => ({
+                        control: (provided: any) => ({
                           ...provided,
                           height: "34px",
                           minHeight: "34px",
@@ -332,7 +322,7 @@ function EditProductions() {
         {accountPayableValue && (
           <Row>
             {selectedAPValues.map((value, index) => (
-              <Col xl="3">
+              <Col xl="3" key={index}>
                 <Label>Level {index + 1} Approver</Label>
                 <AsyncSelect
                   isClearable={true}
@@ -343,7 +333,7 @@ function EditProductions() {
                   placeholder="Select User"
                   // defaultOptions={seriesSelectFormat}
                   styles={{
-                    control: (provided) => ({
+                    control: (provided: any) => ({
                       ...provided,
                       height: "34px",
                       minHeight: "34px",
@@ -381,7 +371,6 @@ function EditProductions() {
           <Label style={{ color: "#030229" }}>User</Label>
           <Controller
             name="user"
-            rules={{ required: "User is required" }}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -394,7 +383,7 @@ function EditProductions() {
                 placeholder="Select User"
                 defaultOptions={userSelectFormat}
                 styles={{
-                  control: (provided) => ({
+                  control: (provided: any) => ({
                     ...provided,
                     height: "34px",
                     minHeight: "34px",
@@ -404,7 +393,7 @@ function EditProductions() {
             )}
           />
           {errors.user && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.user.message as React.ReactNode}
             </span>
           )}

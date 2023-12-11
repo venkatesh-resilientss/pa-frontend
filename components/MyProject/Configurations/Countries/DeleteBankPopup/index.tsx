@@ -1,22 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { BankService } from "services";
 import { closeDeleteBanksPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 
-
-const DeleteBankPopup = ({ id }) => {
+const DeleteBankPopup = () => {
   const dispatch = useDispatch();
-
 
   const bankService = new BankService();
 
   const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
+    bankService.getBanks({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(
@@ -28,7 +25,6 @@ const DeleteBankPopup = ({ id }) => {
   );
 
   const handleDeleteBank = async () => {
-
     try {
       await bankService.deleteBank(helperData);
       toast.success("Bank Deleted Successfully");
@@ -38,8 +34,6 @@ const DeleteBankPopup = ({ id }) => {
       console.error("Error deleting Bank:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

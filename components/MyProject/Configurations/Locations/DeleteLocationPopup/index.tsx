@@ -1,27 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
 import { closeDeleteLocationPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteLocationPopup = ({ id }) => {
+const DeleteLocationPopup = () => {
   const dispatch = useDispatch();
-
 
   const locationService = new LocationsService();
 
-  const {
-    data: locationData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: locationMutate,
-  } = useSWR("LIST_LOCATIONS", () => locationService.getLocations());
+  const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
+    locationService.getLocations({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.locations.deleteLocationPopup.status
@@ -42,8 +35,6 @@ const DeleteLocationPopup = ({ id }) => {
       console.error("Error deleting Location:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

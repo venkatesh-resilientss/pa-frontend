@@ -1,9 +1,9 @@
-import Clients from "components/MyProject/Clients";
+import ClientsListTable from "@/components/clients/ClientsTable";
 
 function index() {
   return (
     <div>
-      <Clients />
+      <ClientsListTable />
     </div>
   );
 }

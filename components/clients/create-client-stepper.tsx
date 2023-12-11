@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React from "react";
 
-const CustomStepper = ({ handlePrev, handleNext, steps, activeStep }) => {
+const CustomStepper = ({ steps }) => {
   //   useEffect(() => {
   //     // Initialize activeStep based on some logic, for example, URL parameter
   //     const urlParams = new URLSearchParams(window.location.search);
@@ -27,17 +26,6 @@ const CustomStepper = ({ handlePrev, handleNext, steps, activeStep }) => {
             justifyContent: "flex-end",
           }}
         >
-          {/* <div
-            style={{
-              color: step.state === "completed" ? "#fff" : "#000",
-              width: "50px",
-              height: "50px",
-              borderRadius: "50%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          > */}
           <div
             className="d-flex flex-column text-center align-items-center"
             style={{ fontSize: "12px" }}

@@ -1,7 +1,4 @@
-import { Search } from "react-feather";
-import { Button, Col, Row } from "reactstrap";
-import { BsCameraVideo } from "react-icons/bs";
-import Tabs from "./Tabs";
+import { Button, Col } from "reactstrap";
 import { useRouter } from "next/router";
 import AssignRSSLPopup from "./PendingProductions/AssignRSSLPopup";
 import { hasPermission } from "commonFunctions/functions";

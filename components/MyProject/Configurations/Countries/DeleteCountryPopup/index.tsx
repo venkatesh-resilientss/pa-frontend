@@ -1,16 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
-import { BankService, CountryService } from "services";
+import { CountryService } from "services";
 import { closeDeleteCountryPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 
 const DeleteCountryPopup = () => {
   const dispatch = useDispatch();
-   
 
   const countryService = new CountryService();
 
@@ -33,11 +31,9 @@ const DeleteCountryPopup = () => {
       dispatch(closeDeleteCountryPopup("close"));
       mutate(countryMutate());
     } catch (error) {
-      console.error("Error deleting Bank:", error);
+      toast.error(error.Message || 'Unable to delete country' )
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

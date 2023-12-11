@@ -1,51 +1,47 @@
 import { useForm, Controller } from "react-hook-form";
-import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
-import Select from "react-select";
-import useSWR from "swr";
 import { CurrencyService } from "services";
-import { useState, useEffect } from "react";
-import { checkTenant } from "constants/function";
+import { useEffect, useState } from "react";
+import { selectStyles } from "constants/common";
 
-function BasicDetailsForm({ control, watch, onSubmit, errors }) {
-  const {
-    // control,
-    setError,
-    handleSubmit,
-    register,
-    reset,
-  } = useForm();
-
-  const options = [
-    { value: "cheque", label: "Cheque" },
-    { value: "wireTransfer", label: "Wire Transfer" },
-    { value: "manualCheque", label: "Manual Cheque" },
-    { value: "eft", label: "EFT" },
-  ];
-
-  const [currency, setCurrency] = useState("");
+function BasicDetailsForm({ control, onSubmit, errors }) {
+  const { handleSubmit } = useForm();
+  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([])
 
   const currencyService = new CurrencyService();
 
-  const {
-    data: currencyData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
-
-  const currenciesSelectFormat = currencyData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  useEffect(() => {
+    const fetchInitialCurrencyOptions = async () => {
+      try {
+        const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCurrencyOptions(options);
+      } catch (error) {
+        console.error('Error fetching initial options:', error);
+      }
     };
-  });
 
-  const loadCurrencyOptions = (values, callBack) => {
-    setCurrency(values);
-    callBack(currenciesSelectFormat);
+    fetchInitialCurrencyOptions();
+  }, []);
+
+  const loadCurrencyOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await currencyService.getCurrencies({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error('Error loading options:', error);
+    }
   };
+
   return (
     <div className="text-black">
       <Form
@@ -53,12 +49,12 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Name
+              Bank Name <span className="required">*</span>
             </Label>
             <Controller
               name="bankName"
@@ -74,19 +70,19 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.bankName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.bankName.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Bank Code
+              Bank Code <span className="required">*</span>
             </Label>
             <Controller
               name="bankCode"
@@ -102,19 +98,19 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.bankCode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.bankCode.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Number
+              Account Number <span className="required">*</span>
             </Label>
             <Controller
               name="accountNumber"
@@ -124,6 +120,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               control={control}
               render={({ field }) => (
                 <Input
+                  type="number"
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Account Number"
                   invalid={errors.accountNumber && true}
@@ -132,13 +129,13 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.accountNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.accountNumber.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -147,9 +144,6 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             </Label>
             <Controller
               name="description"
-              rules={{
-                required: "Description is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -157,23 +151,23 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                  // type="textarea"
+                // type="textarea"
                 />
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Routing Number
+              Routing Number <span className="required">*</span>
             </Label>
             <Controller
               name="routingNumber"
@@ -191,18 +185,18 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.routingNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.routingNumber.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Account Fraction
+              Account Fraction <span className="required">*</span>
             </Label>
             <Controller
               name="accountFraction"
@@ -220,15 +214,19 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.accountFraction && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.accountFraction.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
-            <Label className="form-lable-font"
-            style={{ fontSize: "12px", fontWeight: "400" }}>Currency</Label>
+          <Col xl="4" className="my-2">
+            <Label
+              className="form-lable-font"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Currency <span className="required">*</span>
+            </Label>
             <Controller
               name={"currency"}
               rules={{ required: "Currency is required" }}
@@ -240,8 +238,9 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
                   className="react-select"
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
-                  placeholder="Select Currency"
-                  defaultOptions={currenciesSelectFormat}
+                  placeholder="Select Series"
+                  defaultOptions={initialCurrencyOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -255,7 +254,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -264,9 +263,6 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             </Label>
             <Controller
               name="contactName"
-              rules={{
-                required: "Contact Name is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -278,13 +274,13 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.contactName && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.contactName.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -293,9 +289,6 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
             </Label>
             <Controller
               name="branchNumber"
-              rules={{
-                required: " Branch Number is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -307,7 +300,7 @@ function BasicDetailsForm({ control, watch, onSubmit, errors }) {
               )}
             />
             {errors.branchNumber && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.branchNumber.message as React.ReactNode}
               </span>
             )}

@@ -1,4 +1,3 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import useSWR, { mutate } from "swr";
@@ -7,41 +6,39 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CountryService, StatesService } from "services";
 import AsyncSelect from "react-select/async";
-import { checkTenant } from "constants/function";
-
+import { selectStyles } from "constants/common";
+import { formValidationRules } from "constants/common";
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
-   
-
+  const statesValidationRules = formValidationRules.states;
   const statesService = new StatesService();
   const fetchStateDetails = (id) => statesService.stateDetails(id);
 
-  const {
-    data: stateData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["STATE_DETAILS", id] : null, () => fetchStateDetails(id));
+  const { data: stateData } = useSWR(id ? ["STATE_DETAILS", id] : null, () =>
+    fetchStateDetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
   } = useForm();
-
   useEffect(() => {
     if (!stateData) return;
 
     stateData?.Name && setValue("Statename", stateData?.Name);
     stateData?.Description && setValue("description", stateData?.Description);
-    stateData?.Country.Name && setValue("country", stateData?.Country.Name);
+    const country = {
+      value: stateData?.Country.ID,
+      label: stateData?.Country.Name,
+    };
+    setValue("country", country);
     stateData?.Code && setValue("Statecode", stateData?.Code);
-    setActiveStatus(stateData?.IsActive)
-  },[stateData]);
+    setActiveStatus(stateData?.IsActive);
+  }, [stateData]);
 
   const countryService = new CountryService();
 
@@ -49,29 +46,23 @@ function EditState() {
     countryService.getCountries()
   );
 
-  const countrySelectFormat = countryData?.data.map((b) => {
+  const countrySelectOptions = countryData?.data.map((b) => {
     return {
       value: b.ID,
       label: b.Name,
     };
   });
 
-  const loadCountryOptions = (values, callBack) => {
-    callBack(countrySelectFormat);
-  };
-
   const stateService = new StatesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates()
+    stateService.getStates({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.Statename,
       description: data.description,
       isActive: activeStatus,
@@ -81,7 +72,7 @@ function EditState() {
 
     statesService
       .editState(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("State Edited successfully");
         mutate(countryMutate());
         router.back();
@@ -148,12 +139,12 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                State Name
+                State Name <span className="required">*</span>
               </Label>
               <Controller
                 name="Statename"
                 control={control}
-                rules={{ required: "State Name  is required" }}
+                rules={statesValidationRules.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
@@ -164,7 +155,7 @@ function EditState() {
                 )}
               />
               {errors.Statename && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statename.message as React.ReactNode}
                 </span>
               )}
@@ -174,11 +165,11 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                State Code
+                State Code <span className="required">*</span>
               </Label>
               <Controller
                 name="Statecode"
-                rules={{ required: "State Code  is required" }}
+                rules={statesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -190,7 +181,7 @@ function EditState() {
                 )}
               />
               {errors.Statecode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statecode.message as React.ReactNode}
                 </span>
               )}
@@ -200,26 +191,26 @@ function EditState() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Country
+                Country <span className="required">*</span>
               </Label>
               <Controller
                 name="country"
                 control={control}
-                rules={{ required: "Country  is required" }}
+                rules={statesValidationRules.country}
                 render={({ field }) => (
                   <AsyncSelect
                     {...field}
                     isClearable={true}
                     className="react-select"
                     classNamePrefix="select"
-                    loadOptions={loadCountryOptions}
                     placeholder="Select Country"
-                    defaultOptions={countrySelectFormat}
+                    defaultOptions={countrySelectOptions}
+                    styles={selectStyles}
                   />
                 )}
               />
               {errors.country && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.country.message as React.ReactNode}
                 </span>
               )}
@@ -233,8 +224,8 @@ function EditState() {
               </Label>
               <Controller
                 name="description"
-                rules={{ required: "Dscription  is required" }}
                 control={control}
+                rules={statesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{
@@ -250,7 +241,7 @@ function EditState() {
                 )}
               />
               {errors.description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.description.message as React.ReactNode}
                 </span>
               )}

@@ -1,4 +1,3 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import useSWR, { mutate } from "swr";
@@ -6,27 +5,22 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { SeriesService } from "services";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function EditSeries() {
   const router = useRouter();
-   
-
+  const seriesValidationRules = formValidationRules.series;
   const { id } = router.query;
 
   const fetchSeriesDetails = (id) => seriesService.seriesDetails(id);
 
-  const {
-    data: seriesData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["SERIES_DETAILS", id] : null, () => fetchSeriesDetails(id));
+  const { data: seriesData } = useSWR(id ? ["SERIES_DETAILS", id] : null, () =>
+    fetchSeriesDetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
@@ -40,29 +34,30 @@ function EditSeries() {
 
     seriesData?.Description && setValue("description", seriesData?.Description);
     setActiveStatus(seriesData?.IsActive);
-  },[seriesData]);
+  }, [seriesData]);
 
   const seriesService = new SeriesService();
 
   const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.seriesname,
       description: data.description,
       isActive: activeStatus,
       code: data.Seriescode,
+      clientID,
+      projectID
     };
 
     seriesService
       .editSeries(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Series Edited successfully");
         mutate(countryMutate());
         router.back();
@@ -129,11 +124,11 @@ function EditSeries() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Series Name
+                Series Name <span className="required">*</span>
               </Label>
               <Controller
                 name="seriesname"
-                rules={{ required: "Series Name is required" }}
+                rules={seriesValidationRules.name}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -145,7 +140,7 @@ function EditSeries() {
                 )}
               />
               {errors.seriesname && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.seriesname.message as React.ReactNode}
                 </span>
               )}
@@ -155,11 +150,11 @@ function EditSeries() {
           <Col xl="4">
             <div className="mb-1">
               <Label className="form-label" for="login-email">
-                Series Code
+                Series Code <span className="required">*</span>
               </Label>
               <Controller
                 name="Seriescode"
-                rules={{ required: "Series Code is required" }}
+                rules={seriesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -171,7 +166,7 @@ function EditSeries() {
                 )}
               />
               {errors.Seriescode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Seriescode.message as React.ReactNode}
                 </span>
               )}
@@ -186,7 +181,7 @@ function EditSeries() {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: "Description is required" }}
+                rules={seriesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{
@@ -202,7 +197,7 @@ function EditSeries() {
                 )}
               />
               {errors.description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.description.message as React.ReactNode}
                 </span>
               )}

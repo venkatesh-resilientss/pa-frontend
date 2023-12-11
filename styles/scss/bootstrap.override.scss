@@ -23,6 +23,40 @@
 }
 
 .accordion{
-    --bs-accordion-active-bg : #79dbff;
+    --bs-accordion-active-bg : transparent;
     --bs-accordion-btn-focus-box-shadow : none;
+    --bs-accordion-btn-bg : transparent;
+    --bs-accordion-bg : transparent;
+    --bs-accordion-border-width : 0;
+    --bs-accordion-active-color : #000;
+    .accordion-item{
+        border-bottom: 1px solid #BEBEBE;
+        .accordion-header{
+            .accordion-button{
+                padding: 1rem 0;
+                font-weight: 600;
+                font-family:'Segoe UI' sans-serif;
+            }
+        }
+    }
+    .accordion-item:last-child{
+        border-bottom: none;
+    }
+}
+
+.form-control{
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.form-control:focus{
+    border: 1px solid #00aeef !important;
+    box-shadow: none !important;
+}
+.form-check-input{
+    padding: 0;
+}
+.form-check-input:focus{
+    border: 1px solid #00aeef !important;
+    box-shadow: none !important;
 }

@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { decode } from "punycode";
 
 export const verifyJWTToken = (token: string): boolean => {
   try {

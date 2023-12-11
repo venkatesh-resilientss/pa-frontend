@@ -1,4 +1,3 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { useState } from "react";

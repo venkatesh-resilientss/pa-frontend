@@ -1,4 +1,3 @@
-import { Card, CardBody } from "reactstrap";
 import StatsCard from "./StatsCard";
 
 function Stats() {

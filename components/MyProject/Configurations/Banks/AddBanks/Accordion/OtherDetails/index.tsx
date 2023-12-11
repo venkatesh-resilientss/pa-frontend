@@ -1,71 +1,154 @@
 import { useForm, Controller } from "react-hook-form";
-import ReactSelect from "react-select";
-import { Col, Form, Input, Label, Row } from "reactstrap";
+import { Col, Form, Label, Row } from "reactstrap";
 import AsyncSelect from "react-select/async";
-import { useState, useEffect } from "react";
 import { LocationsService, SeriesService, SetsService } from "services";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
+import { getSessionVariables } from "constants/function"
 
-function OtherDetailsForm({ onSubmit, control, watch, errors }) {
-  const { register, handleSubmit } = useForm();
-  const [activeStatus, setActiveStatus] = useState(false);
-   
-
-  const [series, setSeries] = useState("");
-  const [location, setLocation] = useState("");
-  const [set, setSet] = useState("");
+function OtherDetailsForm({ onSubmit, control, errors }) {
+  const { handleSubmit } = useForm();
 
   const seriesService = new SeriesService();
 
-  const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
-  );
-
-  const seriesSelectFormat = seriesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadSeriesOptions = (values, callBack) => {
-    setSeries(values);
-    callBack(seriesSelectFormat);
-  };
-
   const locationsService = new LocationsService();
-
-  const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
-  );
-
-  const locationsSelectFormat = locationsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadLocationsOptions = (values, callBack) => {
-    setLocation(values);
-    callBack(locationsSelectFormat);
-  };
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const [initialSets, setInitialSets] = useState([]);
+  const [initialLocations, setInitialLocations] = useState([]);
+  const [initialSeries, setInitialSeries] = useState([]);
 
-  const setsSelectFormat = setsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  useEffect(() => {
+    const { clientID, projectID } = getSessionVariables();
+    const fetchInitialOptions = async () => {
+      try {
+        const res = await setsService.getSets({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        }, { clientId: clientID, projectId: projectID });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSets(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     };
-  });
 
-  const loadSetsOptions = (values, callBack) => {
-    setSet(values);
-    callBack(setsSelectFormat);
+    fetchInitialOptions();
+  }, []);
+
+  const loadSetsOptions: any = async (inputValue, callback) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: inputValue.toString(), pageLimit: 25, offset: 0,
+      }
+      const data = { clientId: clientID, projectId: projectID }
+      const res = await setsService.getSets(queryParams, data);
+
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchInitialLocations = async () => {
+      try {
+        const { clientID, projectID } = getSessionVariables();
+        const queryParams = {
+          search: "", pageLimit: 25, offset: 0,
+        }
+        const data = { clientId: clientID, projectId: projectID }
+        const res = await locationsService.getLocations(queryParams, data);
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialLocations(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialLocations();
+  }, []);
+
+  const loadLocationOptions: any = async (inputValue, callback) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: inputValue.toString(), pageLimit: 25, offset: 0,
+      }
+      const data = { clientId: clientID, projectId: projectID }
+      const res = await locationsService.getLocations(queryParams, data);
+
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+  useEffect(() => {
+    const fetchInitialSeries = async () => {
+      try {
+        const { clientID, projectID } = getSessionVariables();
+        const queryParams = {
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        }
+        const data = { clientId: clientID, projectId: projectID }
+        const res = await seriesService.getSeries(queryParams, data);
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSeries(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialSeries();
+  }, []);
+
+  const loadSeriesOptions: any = async (inputValue, callback) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const data = { clientId: clientID, projectId: projectID }
+      const queryParams = {
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      }
+      const res = await seriesService.getSeries(queryParams, data);
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  // const loadSetsOptions = (values, callBack) => {
+  //   callBack(setsSelectFormat);
+  // };
 
   return (
     <div className="text-black">
@@ -88,7 +171,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
                   classNamePrefix="select"
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
-                  defaultOptions={seriesSelectFormat}
+                  defaultOptions={initialSeries}
                 />
               )}
             />
@@ -114,9 +197,9 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  loadOptions={loadLocationsOptions}
+                  loadOptions={loadLocationOptions}
                   placeholder="Select Location"
-                  defaultOptions={locationsSelectFormat}
+                  defaultOptions={initialLocations}
                 />
               )}
             />
@@ -133,7 +216,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
           <Col xl="4">
             <Label className="form-lable-font">Set</Label>
             <Controller
-              name={"set"}
+              name="set"
               rules={{ required: "Set is required" }}
               control={control}
               render={({ field }) => (
@@ -144,7 +227,7 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
                   classNamePrefix="select"
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
-                  defaultOptions={setsSelectFormat}
+                  defaultOptions={initialSets} // Provide an empty array initially
                 />
               )}
             />
@@ -158,34 +241,6 @@ function OtherDetailsForm({ onSubmit, control, watch, errors }) {
             )}
           </Col>
         </Row>
-
-        <div className="d-flex flex-column mt-1">
-          <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-                onChange={() => {
-                  setActiveStatus(true);
-                }}
-              />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                name="ex1"
-                id="ex1-inactive"
-                onChange={() => {
-                  setActiveStatus(false);
-                }}
-              />
-              <div>In-Active</div>
-            </div>
-          </div>
-        </div>
       </Form>
     </div>
   );

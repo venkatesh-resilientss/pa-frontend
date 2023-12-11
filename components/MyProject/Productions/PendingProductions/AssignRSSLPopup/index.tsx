@@ -1,17 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
+import { Button, Form, Input, Label, Modal, ModalBody } from "reactstrap";
 import { closeAssignRSSLPopup } from "redux/slices/mySlices/productions";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ReactSelect from "react-select";
 
 const AssignRSSLPopup = () => {
@@ -25,9 +15,7 @@ const AssignRSSLPopup = () => {
     (state: any) => state.productions.assignRSSLPopup.helperData
   );
 
-  console.log("helperData", helperData);
-
-  const { register, handleSubmit } = useForm();
+  const { register } = useForm();
 
   const users = [
     { value: "Andrew", label: "Andrew" },

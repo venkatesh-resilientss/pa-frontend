@@ -1,6 +1,6 @@
-body {
-  overflow: hidden;
-}
+// body {
+//   overflow: hidden;
+// }
 ul {
   padding: 0;
 }
@@ -22,13 +22,14 @@ a {
   box-shadow: 2px 0px 10px 0px rgba(0, 0, 0, 0.25);
   background-color: #fff;
   width: 300px;
+  height: 100vh;
   overflow-x: hidden;
-  transition: 0.2s ease;
+  // transition: 0.2s ease;
   .bottom-bar {
     padding: 0 0.5rem;
   }
   .sidebar-body {
-    max-height: 70vh;
+    max-height: calc(100vh - 300px);
     overflow-y: auto;
     height: fit-content;
   }
@@ -101,6 +102,21 @@ a {
   width: 80px;
 }
 
-.custom-tooltip{
+.custom-tooltip {
   z-index: 999;
+}
+.custom-tooltip-card {
+  color: #030229;
+  background: #fff;
+  font-size: 14px;
+  width: 15rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: justify;
+}
+
+.iconsSpace {
+  padding: 0px 0px 0px 13px;
+  ;
 }

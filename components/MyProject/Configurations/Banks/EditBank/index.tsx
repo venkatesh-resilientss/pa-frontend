@@ -1,11 +1,11 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { BankService } from "services";
-import useSWR, { mutate } from "swr";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+const bankService = new BankService();
 
 function EditBank() {
   const router = useRouter();
@@ -13,20 +13,15 @@ function EditBank() {
 
   const fetchBankDetails = (id) => bankService.bankDetails(id);
 
-  const {
-    data: bankData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["BANK_DETAILS", id] : null, () => fetchBankDetails(id));
+  const { data: bankData } = useSWR(id ? ["BANK_DETAILS", id] : null, () =>
+    fetchBankDetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
-    reset,
   } = useForm();
 
   useEffect(() => {
@@ -38,29 +33,18 @@ function EditBank() {
   }),
     [bankData];
 
-  const bankService = new BankService();
-
-  const { mutate: bankMutate } = useSWR("LIST_BANKS", () =>
-    bankService.getBanks()
-  );
-
-  const [activeStatus, setActiveStatus] = useState(bankData?.IsActive);
-
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.name,
       description: data.description,
-      is_active: activeStatus,
+      is_active: bankData?.IsActive,
       location: data.location,
     };
 
     bankService
       .editBank(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Bank Edited successfully");
-        mutate(bankMutate());
         router.back();
       })
       .catch((error) => {
@@ -144,7 +128,7 @@ function EditBank() {
             )}
           />
           {errors.bankName && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.bankName.message as React.ReactNode}
             </span>
           )}
@@ -176,7 +160,7 @@ function EditBank() {
             )}
           />
           {errors.description && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.description.message as React.ReactNode}
             </span>
           )}

@@ -10,8 +10,7 @@ import {
 } from "reactstrap";
 import AllJournalEntriesTable from "./AllJournalEntryTable";
 
-function Tabs(props) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+function Tabs() {
   const [active, setActive] = useState("1");
 
   const toggle = (tab) => {

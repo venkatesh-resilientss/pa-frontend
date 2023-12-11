@@ -1,27 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
+
 import infoImage from "assets/MyImages/info 1.svg";
 import { closeDeleteSetPopup } from "redux/slices/mySlices/configurations";
 import { SetsService } from "services";
 import useSWR, { mutate } from "swr";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteSetPopup = ({ id }) => {
+const DeleteSetPopup = () => {
   const dispatch = useDispatch();
-
 
   const setService = new SetsService();
 
-  const {
-    data: setData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: setMutate,
-  } = useSWR("LIST_SETS", () => setService.getSets());
+  const { mutate: setMutate } = useSWR("LIST_SETS", () =>
+    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.sets.deleteSetPopup.status
@@ -32,7 +26,6 @@ const DeleteSetPopup = ({ id }) => {
   );
 
   const handleDeleteSet = async () => {
-
     try {
       await setService.deleteSet(helperData);
       toast.success("Set Deleted Successfully");
@@ -42,8 +35,6 @@ const DeleteSetPopup = ({ id }) => {
       console.error("Error deleting Set:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

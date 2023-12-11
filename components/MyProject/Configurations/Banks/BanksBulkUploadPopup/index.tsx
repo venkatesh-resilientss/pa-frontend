@@ -1,14 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
+import { Button, Modal, ModalBody } from "reactstrap";
 import { closeBulkUploadBanksPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
@@ -20,10 +16,6 @@ const BanksBulkUploadPopup = () => {
   const bankService = new BankService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.banks.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.banks.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -53,7 +45,7 @@ const BanksBulkUploadPopup = () => {
     // Call the uploadbanklist function from your service with only the file name
     bankService
       .uploadbanklist(fileName)
-      .then((result) => {
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
 

@@ -1,27 +1,7 @@
-import {
-  Card,
-  CardBody,
-  Badge,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import axios from "axios";
+import { Card } from "reactstrap";
 import GridTable from "components/grid-tables/gridTable";
 
 const FlightStatusTrackerTable = () => {
-  const tableCustomStyles = {
-    headRow: {
-      style: {
-        color: "#223336",
-        backgroundColor: "#D9D9D9",
-      },
-    },
-  };
-  const styleColor = {
-    fontSize: "14px",
-  };
   const rowData = [
     {
       id: 1,
@@ -177,19 +157,28 @@ const FlightStatusTrackerTable = () => {
 
   return (
     <>
-    <Card className="col-12" style={{ height: "100%" }}>
-      <div className="text-black p-3">
-        <div className="d-flex mb-3 justify-content-between align-items-center">
-          <h5 style={{fontWeight : 600}}>Flight Status Tracker</h5>
-          <div className="d-flex cursor-pointer gap-2 align-items-center">
-            <p>View all</p>  
-            <img src="/icons/arrow-left.svg" alt="" style={{transform : 'rotate(180deg)'}} />
+      <Card className="col-12" style={{ height: "100%" }}>
+        <div className="text-black p-3">
+          <div className="d-flex mb-3 justify-content-between align-items-center">
+            <h5 style={{ fontWeight: 600 }}>Flight Status Tracker</h5>
+            <div className="d-flex cursor-pointer gap-2 align-items-center">
+              <p>View all</p>
+              <img
+                src="/icons/arrow-left.svg"
+                alt=""
+                style={{ transform: "rotate(180deg)" }}
+              />
+            </div>
           </div>
-        </div>
 
-        <GridTable rowData={rowData} columnDefs={colDef} pageSize={4} searchText={undefined} />
-      </div>
-    </Card>
+          <GridTable
+            rowData={rowData}
+            columnDefs={colDef}
+            pageSize={4}
+            searchText={undefined}
+          />
+        </div>
+      </Card>
     </>
   );
 };

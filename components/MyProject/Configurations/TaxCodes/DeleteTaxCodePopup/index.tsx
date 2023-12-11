@@ -1,20 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { closeDeleteTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import { TaxCodesService } from "services";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteTaxCodePopup = ({ id }) => {
+const DeleteTaxCodePopup = () => {
   const dispatch = useDispatch();
 
   const taxCodeService = new TaxCodesService();
-
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
     taxCodeService.getTaxCodes()
@@ -29,8 +25,6 @@ const DeleteTaxCodePopup = ({ id }) => {
   );
 
   const handleDeleteTaxCode = async () => {
-
-
     try {
       await taxCodeService.deleteTaxCode(helperData);
       toast.success("TaxCode Deleted Successfully");
@@ -40,8 +34,6 @@ const DeleteTaxCodePopup = ({ id }) => {
       console.error("Error deleting TaxCode:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

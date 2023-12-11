@@ -1,24 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { closeDeletePeriodPopup } from "redux/slices/mySlices/configurations";
 import { PeriodsService } from "services";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeletePeriodPopup = ({ id }) => {
+const DeletePeriodPopup = () => {
   const dispatch = useDispatch();
-   
 
   const periodService = new PeriodsService();
 
-  const { mutate: periodMutate } = useSWR("GET_PERIODS", () =>
-    periodService.getPeriods()
-  );
+ 
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.periods.deletePeriodPopup.status
@@ -33,13 +26,10 @@ const DeletePeriodPopup = ({ id }) => {
       await periodService.deletePeriod(helperData);
       toast.success("Period Deleted Successfully");
       dispatch(closeDeletePeriodPopup("close"));
-      periodMutate();
     } catch (error) {
       console.error("Error deleting Period:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

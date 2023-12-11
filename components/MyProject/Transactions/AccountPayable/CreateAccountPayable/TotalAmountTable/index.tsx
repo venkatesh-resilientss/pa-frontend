@@ -1,93 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import GridTable from "components/grid-tables/gridTable";
-import Image from "next/image";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import approveIcon from "assets/myIcons/approveIcon.svg";
 
-import detailsIocn from "assets/myIcons/list.svg";
-import CustomBadge from "components/Generic/CustomBadge";
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-  Input,
-} from "reactstrap";
 
 const TotalAmountTable = () => {
-  const StateBadge = (props) => {
-    return (
-      <div>
-        {props.value === "open" ? (
-          <Badge
-            color="#C9EFFF"
-            className="text-black"
-            style={{
-              width: "54px",
-              height: "22px",
-              borderRadius: "3px",
-              backgroundColor: "#C9EFFF",
-              fontSize: "14px",
-              fontWeight: "400",
-              paddingTop: "4px",
-              paddingRight: "6px",
-              paddingBottom: "4px",
-              paddingLeft: "6px",
-            }}
-          >
-            Open
-          </Badge>
-        ) : (
-          <Badge
-            color="#C9EFFF"
-            className="text-black"
-            style={{
-              width: "54px",
-              height: "22px",
-              borderRadius: "3px",
-              backgroundColor: "#C9EFFF",
-              fontSize: "14px",
-              fontWeight: "400",
-              paddingTop: "4px",
-              paddingRight: "6px",
-              paddingBottom: "4px",
-              paddingLeft: "6px",
-            }}
-          >
-            Posted
-          </Badge>
-        )}
-      </div>
-    );
-  };
 
-  const ActionsButton = (props) => {
-    const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const toggle = () => {
-      setOpen(!open);
-    };
 
-    return (
-      <div>
-        <Badge
-          color="#F1F3FF"
-          style={{
-            fontSize: "14px",
-            fontWeight: "400",
-            borderRadius: "3px",
-            backgroundColor: "#F1F3FF",
-            color: "#3341CD",
-          }}
-        >
-          Open AP
-        </Badge>
-      </div>
-    );
-  };
+
   const columnDefs = [
     {
       headerName: "S.no",

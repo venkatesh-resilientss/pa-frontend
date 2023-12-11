@@ -1,33 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
+import { Button, Modal, ModalBody } from "reactstrap";
+
 import { VendorsService } from "services";
 import {
   closeBulkUploadVendorsPopup,
   closeDeleteVendorPopup,
 } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
-import { checkTenant } from "constants/function";
 
-const VendorsBulkUploadPopup = () => {
+const VendorsBulkUploadPopup = (rerender, setRerender) => {
   const dispatch = useDispatch();
-   
+
   const vendorsService = new VendorsService();
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.vendors.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.vendors.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -55,16 +48,13 @@ const VendorsBulkUploadPopup = () => {
     // Call the uploadbanklist function from your service with only the file name
     vendorsService
       .uploadVendors(fileName)
-      .then((result) => {
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
+        setRerender(!rerender)
         dispatch(closeDeleteVendorPopup("close"));
       })
-      .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
+      .catch(() => {
         toast.error("Failed to insert data.");
       });
   };

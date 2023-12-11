@@ -1,23 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import useSWR, { mutate } from "swr";
 import { closeDeleteCurrencyPopup } from "redux/slices/mySlices/configurations";
 import { CurrencyService } from "services";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteCurrencyPopup = ({ id }) => {
+const DeleteCurrencyPopup = () => {
   const dispatch = useDispatch();
-   
 
   const currencyService = new CurrencyService();
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const popupStatus = useSelector(
@@ -38,8 +34,6 @@ const DeleteCurrencyPopup = ({ id }) => {
       console.error("Error deleting Currency:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

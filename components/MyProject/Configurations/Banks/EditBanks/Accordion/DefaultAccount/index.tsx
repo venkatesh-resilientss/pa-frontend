@@ -1,9 +1,8 @@
 import { useForm, Controller } from "react-hook-form";
-import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
-function DefaultAccountForm({ onSubmit, control, watch, errors }) {
-  const { register, handleSubmit } = useForm();
+function DefaultAccountForm({ onSubmit, control, errors }) {
+  const { handleSubmit } = useForm();
 
   return (
     <div className="text-black">
@@ -12,7 +11,7 @@ function DefaultAccountForm({ onSubmit, control, watch, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -35,13 +34,13 @@ function DefaultAccountForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.defaultAccountCash && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountCash.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -65,13 +64,13 @@ function DefaultAccountForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.defaultAccountClearing && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountClearing.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -95,13 +94,13 @@ function DefaultAccountForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.defaultAccountDeposit && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountDeposit.message as React.ReactNode}
               </span>
             )}
           </Col>
 
-          <Col xl="4">
+          <Col xl="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -125,7 +124,7 @@ function DefaultAccountForm({ onSubmit, control, watch, errors }) {
               )}
             />
             {errors.defaultAccountDiscount && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.defaultAccountDiscount.message as React.ReactNode}
               </span>
             )}

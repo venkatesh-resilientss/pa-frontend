@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 
 // ** Next Imports
 import Link from "next/link";
@@ -14,11 +14,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 // ** Layout Import
-import { Info } from "react-feather";
 import { useRouter } from "next/router";
 import { Image } from "react-bootstrap";
-const source = require("assets/MyImages/Login2.svg");
-const Logo = require("assets/MyImages/productionLogo.svg");
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -26,28 +23,16 @@ const schema = yup.object().shape({
   tenant: yup.string().min(3).required(),
 });
 
-interface FormData {
-  email: string;
-  password: string;
-}
-
 const LoginPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [alertVisible, setAlertVisible] = useState<boolean>(false);
   const [password, setPassword] = useState("");
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(() => FaRegEyeSlash);
-  const [Error, SetErrors] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
 
   // ** Hooks
   const router = useRouter();
 
   const {
     control,
-    setError,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
@@ -74,7 +59,6 @@ const LoginPage = () => {
   //     }
   //   }
 
-
   const handleToggle = () => {
     if (type === "password") {
       setIcon(FaRegEye);
@@ -94,33 +78,44 @@ const LoginPage = () => {
           style={{
             // backgroundColor: "#283891",
             minHeight: "100vh",
-             overflowY: 'hidden'
+            overflowY: "hidden",
           }}
         >
           <div className="d-lg-flex">
             <Image
-              src={'/SideImage.png'}
+              src={"/SideImage.png"}
               alt="Login Cover"
               fluid
-               height={800}
-             style={{ maxWidth: '100%', height: 'auto',width:'2000px' }}
+              height={800}
+              style={{ maxWidth: "100%", height: "auto", width: "2000px" }}
             />
           </div>
-          <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', color: '#ffffff', marginLeft:'-400px', marginTop:'300px'}}>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="text-container text-center">
-              <div className="d-flex align-items-start">
-                <p className="intutive">INTUITIVE</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="entertainment">ENTERTAINMENT</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="software">SOFTWARE</p>
+          <div
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              color: "#ffffff",
+              marginLeft: "-400px",
+              marginTop: "300px",
+            }}
+          >
+            <div className="d-flex align-items-center justify-content-center">
+              <div className="text-container text-center">
+                <div className="d-flex align-items-start">
+                  <p className="intuitive">INTUITIVE</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="entertainment">ENTERTAINMENT</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="software">SOFTWARE</p>
+                </div>
               </div>
             </div>
           </div>
-  </div>
         </Col>
         <Col
           className="d-flex auth-bg p-lg-5"
@@ -136,8 +131,7 @@ const LoginPage = () => {
           >
             <div className="w-full h-[1500px] p-[78px,103.94px,78px,103.94px] justify-between">
               <div className="w-[283.94px] h-[107.34px]">
-                <Image src={'/Logo.svg'} alt="Logo"  width={112}
-              height={43}/>
+                <Image src={"/Logo.svg"} alt="Logo" width={112} height={43} />
               </div>
               <div className="w-[963.38px] h-[562.42px] gap-91.27">
                 <p
@@ -193,21 +187,6 @@ const LoginPage = () => {
                               />
                             )}
                           />
-                          {Error === true ? (
-                            <div className="d-flex justify-center">
-                              <Info
-                                size={14}
-                                style={{
-                                  color: "red",
-                                  marginRight: "5px",
-                                  marginTop: "5px",
-                                }}
-                              />
-                              <p style={{ color: "red", fontWeight: 500 }}>
-                                Email is required
-                              </p>
-                            </div>
-                          ) : null}
                         </div>
                         <div
                           className="font-Segoe-UI text-41 font-normal leading-54 tracking-0 text-left mt-3 p-2"
@@ -244,7 +223,7 @@ const LoginPage = () => {
                           />
 
                           {errors.email && (
-                            <span style={{ color: "red" }}>
+                            <span className="text-danger">
                               {errors.email.message as React.ReactNode}
                             </span>
                           )}
@@ -357,35 +336,65 @@ const LoginPage = () => {
                     marginTop: "10px",
                     fontSize: "12px",
                     color: "#656472",
-                    marginLeft:"-60px"
+                    marginLeft: "-60px",
                   }}
                 >
+                  <p className="privacy-text">Have Questions or Suggestions?</p>
                   <p className="privacy-text">
-                    Have Questions or Suggestions?
+                    Please{" "}
+                    <a
+                      style={{
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                      href="mailto:support@example.com"
+                    >
+                      email
+                    </a>{" "}
+                    support or call{" "}
+                    <a
+                      style={{
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                      href="tel:805-428-8024"
+                    >
+                      805-428-8024
+                    </a>
                   </p>
-                  <p className="privacy-text">
-    Please{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
-      email
-    </a>{" "}
-    support or call{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
-      805-428-8024
-    </a>
-  </p>
                   <p className="privacy-text">
                     Powered by Resilient Software Solutions LLC
                   </p>
                 </div>
                 <div
                   className="d-flex justify-content-between"
-                  style={{ marginTop: "10px", color: "#030229"}}
+                  style={{ marginTop: "10px", color: "#030229" }}
                 >
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginLeft:"85px" }}>
+                  <a
+                    href="#"
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      marginLeft: "85px",
+                    }}
+                  >
                     Terms & conditions
                   </a>{" "}
                   <span style={{ fontSize: "12px", color: "#030229" }}>|</span>
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginRight:"125px" }}>
+                  <a
+                    href="#"
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      marginRight: "125px",
+                    }}
+                  >
                     Privacy Policy
                   </a>{" "}
                 </div>

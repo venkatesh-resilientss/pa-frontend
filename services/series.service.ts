@@ -2,8 +2,8 @@
   import {CREATE_SERIES, DELETE_SERIES, EDIT_SERIES, GET_SERIES, SERIES_DETAIL_ENDPOINT,UPLOAD_SERIES_LIST} from '../lib/endpoints';
 
   class SeriesService extends APIService {
-    getSeries(): Promise<any> {
-      return this.get(`${GET_SERIES}`)
+    getSeries(params?,data?): Promise<any> {
+      return this.post(`${GET_SERIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,data)
         .then((res) => {
           return res?.data;
         })
@@ -24,12 +24,14 @@
     }
 
 
-       uploadserieslist(fileName: any) {
+       uploadserieslist(fileName: any,clientId,projectId) {
       // Create a FormData object
       const formData = new FormData();
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
+      formData.append("clientId",clientId);
+      formData.append("projectId",projectId);
 
       return this.post(UPLOAD_SERIES_LIST, formData,  {
           'Content-Type': 'multipart/form-data',

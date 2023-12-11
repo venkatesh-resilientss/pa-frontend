@@ -1,27 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import { DepartmentsService } from "services";
 import { closeDeleteDepartmentPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
-const DeleteDepartmentPopup = ({ id }) => {
+const DeleteDepartmentPopup = () => {
   const dispatch = useDispatch();
 
   const departmentsService = new DepartmentsService();
 
-
-  const {
-    data: departmentsData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: departmentMutate,
-  } = useSWR("LIST_DEPARTMENTS", () => departmentsService.getDepartments());
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.department.deleteDepartmentPopup.status
@@ -36,14 +25,12 @@ const DeleteDepartmentPopup = ({ id }) => {
     try {
       await departmentsService.deleteDepartment(helperData);
       toast.success("Department Deleted Successfully");
-      dispatch(closeDeleteDepartmentPopup(id));
-      mutate(departmentMutate());
+      dispatch(closeDeleteDepartmentPopup("delete"))
     } catch (error) {
       console.error("Error deleting Department:", error);
     }
   };
 
-  const { register, handleSubmit } = useForm();
   return (
     <Modal
       isOpen={popupStatus}

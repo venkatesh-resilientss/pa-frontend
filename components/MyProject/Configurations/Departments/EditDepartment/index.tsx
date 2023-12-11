@@ -4,36 +4,30 @@ import { useRouter } from "next/router";
 import { DepartmentsService } from "services";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
-import { checkTenant } from "constants/function";
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 
 function EditDepartment() {
   const router = useRouter();
   const { id } = router.query;
+  const departmentValidationRules = formValidationRules.department;
   const departmentsService = new DepartmentsService();
 
   const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
     departmentsService.departmentDetails(id)
   );
-  const { mutate: userMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentsService.getDepartments()
-  );
-
-  const [editedData, setEditedData] = useState(departmentsData);
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
   } = useForm();
 
-  const { mutate: departmentMutate } = useSWR("LIST_DEPARTMENTS", () =>
-    departmentService.getDepartments()
-  );
+  
   useEffect(() => {
     if (!departmentsData) return;
 
@@ -43,30 +37,26 @@ function EditDepartment() {
     departmentsData?.Description &&
       setValue("description", departmentsData?.Description);
     setActiveStatus(departmentsData?.IsActive);
-  },[departmentsData]);
+  }, [departmentsData]);
 
   const departmentService = new DepartmentsService();
 
-  
-
   // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
-  const [activeStatus, setActiveStatus] = useState(
-    departmentsData?.IsActive
-  );
+  const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID} = getSessionVariables();
+    const backendFormat = {
       name: data.name,
       description: data.description,
-      is_active: activeStatus,
+      code: data.code,
+      isActive: activeStatus,
+      clientID
     };
 
     departmentService
       .editDepartment(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Department Edited successfully");
-        mutate(departmentMutate());
         router.back();
 
         reset();
@@ -76,22 +66,18 @@ function EditDepartment() {
       });
   };
 
-  const handleCheckboxChange = (value) => {
-    setActiveStatus(value);
-  };
   return (
-    <div className="mt-4">
+    <div className="mt-4 configuration-add">
       <div
-        className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600" }}
+        className="title-sub"
+        
       >
         All Departments
       </div>
 
       <div className="d-flex justify-content-between">
         <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
+          className="title"
         >
           Edit Department
         </div>
@@ -132,11 +118,11 @@ function EditDepartment() {
         <Col xl="4">
           <div className="mb-1 mt-1">
             <Label className="form-label" for="login-email">
-              Department Name
+              Department Name<span className="required">*</span>
             </Label>
             <Controller
               name="name"
-              rules={{ required: "Department Name is required" }}
+              rules={departmentValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -148,7 +134,7 @@ function EditDepartment() {
               )}
             />
             {errors.name && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.name.message as React.ReactNode}
               </span>
             )}
@@ -158,11 +144,11 @@ function EditDepartment() {
         <Col xl="4">
           <div className="mb-1 mt-1">
             <Label className="form-label" for="login-email">
-              Department Code
+              Department Code<span className="required">*</span>
             </Label>
             <Controller
               name="code"
-              rules={{ required: "Department Code is required" }}
+              rules={departmentValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -177,7 +163,7 @@ function EditDepartment() {
               )}
             />
             {errors.code && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.code.message as React.ReactNode}
               </span>
             )}
@@ -191,8 +177,8 @@ function EditDepartment() {
             </Label>
             <Controller
               name="description"
-              rules={{ required: "Description is required" }}
               control={control}
+              rules={departmentValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{
@@ -208,7 +194,7 @@ function EditDepartment() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}
@@ -226,6 +212,7 @@ function EditDepartment() {
                 type="radio"
                 id="ex1-active"
                 name="ex1"
+                checked={activeStatus}
                 onChange={() => {
                   setActiveStatus(true);
                 }}
@@ -237,6 +224,7 @@ function EditDepartment() {
                 type="radio"
                 name="ex1"
                 id="ex1-inactive"
+                checked={!activeStatus}
                 onChange={() => {
                   setActiveStatus(false);
                 }}

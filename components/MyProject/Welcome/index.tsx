@@ -1,6 +1,5 @@
-"use client";
-import { Row, Col, Button } from "reactstrap";
-import { useState } from "react";
+import { Button } from "reactstrap";
+import { useState, useEffect } from "react";
 import { AiOutlineLock } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { Image } from "react-bootstrap";
@@ -13,12 +12,13 @@ import { useRouter } from "next/router";
 import { AuthService } from "services";
 import { toast } from "react-toastify";
 import { signIn, signOut, useSession } from "next-auth/client";
-import { Session } from "inspector";
 import { Session as NextAuthSession } from "next-auth";
+import { Spinner } from "reactstrap";
 
 const authService = new AuthService();
 
 const Welcome = () => {
+  const [loading, setLoading] = useState(false);
   const [singleinput, setSingleinput] = useState(true);
   const [multiinput, setMultiinput] = useState(false);
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ const Welcome = () => {
   const [tenantName, setTenantName] = useState("");
   const [tenantSlug, setTenantSlug] = useState("");
 
-  const [session, loading] = useSession();
+  const [session] = useSession();
 
   useEffect(() => {
     if (session && session.user) {
@@ -44,8 +44,8 @@ const Welcome = () => {
         .oktaUserLogin(JSON.stringify(tokenPayload))
         .then((response) => {
           authService
-            .tenantSignIn({ email: oktaEMail })
-            .then((res) => {
+            .checkTenant({ email: oktaEMail })
+            .then(() => {
               // window.location.href = `http://${res.Name}.lvh.me:3000/?accessToken=${response.token}`;
 
               // for live url
@@ -61,13 +61,11 @@ const Welcome = () => {
         });
     } else {
       // Handle the case where session or user is undefined
-      console.log("User details not available");
+      // console.log("User details not available");
     }
   }, [session]);
 
-  const handleButtonClick: React.MouseEventHandler<HTMLButtonElement> = (
-    event
-  ) => {
+  const handleButtonClick: any = () => {
     if (session) {
       signOut();
     } else {
@@ -111,12 +109,18 @@ const Welcome = () => {
       singleinput ? validationEmailSchema : validationSchema
     ),
   });
-  const handleDragStart = (e) => {
-    e.preventDefault();
-  };
+
   const togglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };
+
+  useEffect(() => {
+    const token: any = router.query.accessToken;
+    if (token) {
+      authService.authenticateUser(token);
+      router.push("/dashboard");
+    }
+  }, [router.query.accessToken]);
 
   const formSubmit = async (values: any) => {
     const payload: any = {
@@ -124,32 +128,33 @@ const Welcome = () => {
       password: values.password,
     };
 
-    authService.userSignIN(payload).then((res: any) => {
-      console.log(res);
-      authService.authenticateUser(res?.token);
-
-      // router.push("/dashboard");
-      //for local
-      window.location.href = `http://${tenantName}.lvh.me:3000/dashboard`;
-
+    authService
+      .userSignIn(payload)
+      .then((res: any) => {
+        //for local
+        //  window.location.href = `http://${tenantName}.lvh.me:3000/?accessToken=${res?.token}`;
         // for live url
         window.location.href = `http://${tenantName}.devpa.resilientss.com/?accessToken=${res?.token}`;
       })
       .catch((err) => {
         toast.error(err.error);
+        setLoading(false);
       });
   };
 
-  const signInSubmit = async (payload: any) => {
+  const signInSubmit = async () => {
+    setLoading(true);
     authService
-      .tenantSignIn({ email })
+      .checkTenant({ email })
       .then((res) => {
+        setLoading(false);
         setTenantName(res.Name);
         setTenantSlug(res.Slug);
         setSingleinput(false);
         setMultiinput(true);
       })
       .catch((err: any) => {
+        setLoading(false);
         toast.error(err?.error);
       });
   };
@@ -159,30 +164,41 @@ const Welcome = () => {
       <div className="d-flex w-100 h-100 justify-content-evenly">
         {/* left */}
         <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
-          <div >
-          <Image
-            src={"/SideImage.png"}
-            alt="logo"
-            className="img-fluid mt-5"
-            // width={400}
-            fluid
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
+          <div>
+            <Image
+              src={"/SideImage.png"}
+              alt="logo"
+              className="img-fluid mt-5"
+              // width={400}
+              fluid
+              style={{ maxWidth: "100%", height: "auto" }}
+            />
           </div>
-          <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center', color: '#ffffff', marginLeft:'-400px', marginTop:'300px'}}>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="text-container text-center">
-              <div className="d-flex align-items-start">
-                <p className="intutive">INTUITIVE</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="entertainment">ENTERTAINMENT</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="software">SOFTWARE</p>
+          <div
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              color: "#ffffff",
+              marginLeft: "-400px",
+              marginTop: "300px",
+            }}
+          >
+            <div className="d-flex align-items-center justify-content-center">
+              <div className="text-container text-center">
+                <div className="d-flex align-items-start">
+                  <p className="intuitive">INTUITIVE</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="entertainment">ENTERTAINMENT</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="software">SOFTWARE</p>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
 
@@ -230,7 +246,7 @@ const Welcome = () => {
                   <div className="d-flex justify-content-end mt-2">
                     <Button
                       type="submit"
-                      // loading={loading}
+                      disabled={loading}
                       className="f-16 mt-2"
                       style={{
                         width: "380px",
@@ -241,7 +257,18 @@ const Welcome = () => {
                         fontSize: "16px",
                       }}
                     >
-                      Continue
+                      {loading ? (
+                        <Spinner
+                          animation="border"
+                          role="status"
+                          size="sm"
+                          style={{ marginRight: "5px" }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      ) : (
+                        "Continue"
+                      )}
                     </Button>
                   </div>
 
@@ -264,7 +291,7 @@ const Welcome = () => {
                         borderRadius: "10px",
                       }}
                     >
-                      <div className="d-flex flex-row text-center align-items-center justify-content-center">
+                      <div className="d-flex flex-row text-centerhttps://example.com/profile-image.jpg align-items-center justify-content-center">
                         <AiOutlineLock size={18} style={{ color: "#A8A8A8" }} />
                         <span  onClick={handleButtonClick}
                           className="ms-2"
@@ -319,43 +346,76 @@ const Welcome = () => {
                     </button>
                   </form> */}
                   <div
-                  className="d-flex flex-column align-items-center justify-content-center"
-                  style={{
-                    marginTop: "50px",
-                    fontSize: "12px",
-                    color: "#656472",
-                  }}
-                >
-                  <p className="privacy-text">
-                    Have Questions or Suggestions?
-                  </p>
-                  <p className="privacy-text">
-    Please{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
-      email
-    </a>{" "}
-    support or call{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
-      805-428-8024
-    </a>
-  </p>
-                  <p className="privacy-text">
-                    Powered by Resilient Software Solutions LLC
-                  </p>
-                </div>
-                <div
-                  className="d-flex justify-content-between"
-                  style={{ marginTop: "10px", color: "#030229" }}
-                >
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginLeft:"90px" }}>
-                    Terms & conditions
-                  </a>{" "}
-                  <span style={{ fontSize: "12px", color: "#030229" }}>|</span>
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginRight:"100px" }}>
-                    Privacy Policy
-                  </a>{" "}
-                </div>
-                 
+                    className="d-flex flex-column align-items-center justify-content-center"
+                    style={{
+                      marginTop: "50px",
+                      fontSize: "12px",
+                      color: "#656472",
+                    }}
+                  >
+                    <p className="privacy-text">
+                      Have Questions or Suggestions?
+                    </p>
+                    <p className="privacy-text">
+                      Please{" "}
+                      <a
+                        style={{
+                          color: "#030229",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                        href="mailto:support@example.com"
+                      >
+                        email
+                      </a>{" "}
+                      support or call{" "}
+                      <a
+                        style={{
+                          color: "#030229",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                        href="tel:805-428-8024"
+                      >
+                        805-428-8024
+                      </a>
+                    </p>
+                    <p className="privacy-text">
+                      Powered by Resilient Software Solutions LLC
+                    </p>
+                  </div>
+                  <div
+                    className="d-flex justify-content-between"
+                    style={{ marginTop: "10px", color: "#030229" }}
+                  >
+                    <a
+                      href="#"
+                      style={{
+                        fontSize: "12px",
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        marginLeft: "90px",
+                      }}
+                    >
+                      Terms & conditions
+                    </a>{" "}
+                    <span style={{ fontSize: "12px", color: "#030229" }}>
+                      |
+                    </span>
+                    <a
+                      href="#"
+                      style={{
+                        fontSize: "12px",
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        marginRight: "100px",
+                      }}
+                    >
+                      Privacy Policy
+                    </a>{" "}
+                  </div>
                 </form>
               </div>
             </div>
@@ -422,7 +482,7 @@ const Welcome = () => {
                     </label>
                     <input
                       type={showPassword ? "text" : "password"}
-                      placeholder="password"
+                      placeholder="Password"
                       {...register("password")}
                       className={`form-control mt-2 teamworkspaceformpassword ${
                         errors.password ? "is-invalid" : ""
@@ -458,7 +518,7 @@ const Welcome = () => {
                         Forgot password?
                       </h4>
                     </Link>
-                    <Button
+                    {/* <Button
                       type="submit"
                       // loading={loading}
                       className="f-16 mt-2"
@@ -471,6 +531,32 @@ const Welcome = () => {
                       }}
                     >
                       Login
+                    </Button> */}
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="f-16 mt-2"
+                      style={{
+                        width: "134px",
+                        height: "55px",
+                        background: "#00AEEF",
+                        border: "#00AEEF",
+                        borderRadius: "12px",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {loading ? (
+                        <Spinner
+                          animation="border"
+                          role="status"
+                          size="sm"
+                          style={{ marginRight: "5px" }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      ) : (
+                        "Login"
+                      )}
                     </Button>
                   </div>
 

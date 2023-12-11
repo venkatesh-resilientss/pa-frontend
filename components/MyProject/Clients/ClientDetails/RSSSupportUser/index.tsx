@@ -1,47 +1,17 @@
 import { FcFilmReel } from "react-icons/fc";
-import { useRouter } from "next/router";
-
 import {
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
   Card,
   CardBody,
-  Button,
-  CardTitle,
   Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
 } from "reactstrap";
-import { useDispatch } from "react-redux";
-import {
-  ArrowUp,
-  Check,
-  CheckCircle,
-  Copy,
-  Download,
-  Edit,
-  File,
-  MoreVertical,
-  Plus,
-  Trash,
-  User,
-  Users,
-  X,
-} from "react-feather";
-import axios from "axios";
+import { Edit, File, MoreVertical, Trash } from "react-feather";
 import DataTableWithButtons from "../../../../Generic/Table/index";
-import { BiCheckCircle } from "react-icons/bi";
-import { openDeleteClientPopup } from "redux/slices/mySlices/clients";
 
 const RSSSupportUserTable = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
   const tableData = [
     {
       member: "Johnie",
@@ -57,7 +27,7 @@ const RSSSupportUserTable = () => {
       member: "Harley",
       create_on: "2020-01-15",
       status: "In-Active",
-      role: "Rss Support User",
+      role: "RSSL Support User",
       modules: "All Modules",
       image:
         "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=1280",
@@ -132,7 +102,7 @@ const RSSSupportUserTable = () => {
 
     {
       name: <div>Options</div>,
-      cell: (row) => (
+      cell: () => (
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <MoreVertical size={17} className="cursor-pointer" />
@@ -160,10 +130,7 @@ const RSSSupportUserTable = () => {
               <Edit size={14} className="me-50" />
               <span className="align-middle">Edit</span>
             </DropdownItem>
-            <DropdownItem
-              className="w-100"
-              
-            >
+            <DropdownItem className="w-100">
               <Trash size={14} className="me-50" />
               <span className="align-middle">Delete</span>
             </DropdownItem>
@@ -176,15 +143,7 @@ const RSSSupportUserTable = () => {
   return (
     <Card className="col-12">
       <CardBody className="overflow-auto">
-        <DataTableWithButtons
-          tableTitle={"All Clients"}
-          data={tableData}
-          columns={columns}
-          showButton={true}
-          buttonClick={() => router.push(`/create-client`)}
-          buttonName={<div>
-            <Users size={14} /> Create Client
-          </div>} header={undefined} date={undefined} status={undefined} title={undefined}        />
+        <DataTableWithButtons data={tableData} columns={columns} />
       </CardBody>
     </Card>
   );

@@ -1,10 +1,9 @@
 // ** Third Party Components
-import { BiCheckCircle, BiSolidCameraMovie, BiXCircle } from "react-icons/bi";
-import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
+import { AiFillCaretRight } from "react-icons/ai";
 
 // ** Reactstrap Imports
-import { Badge, Card, CardBody } from "reactstrap";
-import { Calendar, CheckCircle, Info, Mail, Users } from "react-feather";
+import { Card } from "reactstrap";
+import { Mail } from "react-feather";
 import Image from "next/image";
 import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 import user from "assets/DashboardIcons/person.svg";
@@ -19,7 +18,9 @@ const ClientsCard = ({ data }) => {
         <div className={` rounded-circle  ${"bg-light-secondary"}`}>
           <img
             src={
-              data.clientLogo == undefined ? "/icons/dummy-client-logo.svg" : data.clientLogo
+              data.clientLogo == undefined
+                ? "/icons/dummy-client-logo.svg"
+                : data.clientLogo
             }
             alt="logo"
             style={{
@@ -35,7 +36,7 @@ const ClientsCard = ({ data }) => {
             <div
               style={{ fontSize: "18px", fontWeight: "700", color: "#030229" }}
             >
-              {data.name ? data.name : '-'}
+              {data.name ? data.name : "-"}
             </div>
 
             <div
@@ -80,7 +81,7 @@ const ClientsCard = ({ data }) => {
                 }}
                 alt={""}
               />{" "}
-              {data.contact.full_name ? data.contact.full_name : '-'}
+              {data.contact.full_name ? data.contact.full_name : "-"}
             </div>
             <div
               style={{
@@ -90,7 +91,8 @@ const ClientsCard = ({ data }) => {
                 marginLeft: "90px",
               }}
             >
-              No. of Active Productions: {data.projects_count ? data.projects_count : '-'}
+              No. of Active Productions:{" "}
+              {data.projects_count ? data.projects_count : "-"}
             </div>
           </div>
           <div className="d-flex flex-column gap-1 mt-1">
@@ -98,7 +100,8 @@ const ClientsCard = ({ data }) => {
               className="text-black"
               style={{ fontSize: "10px", fontWeight: "400" }}
             >
-              <Mail size={12} /> Email:{data.contact.email_id ? data.contact.email_id : '-'}
+              <Mail size={12} /> Email:
+              {data.contact.email_id ? data.contact.email_id : "-"}
             </div>
           </div>
         </div>
@@ -119,23 +122,23 @@ const ClientsCard = ({ data }) => {
       </div>
 
       <div className="d-flex gap-1 mt-2">
-  {data.softwares.map((software, i) => (
-    <div
-      key={i}
-      style={{
-        fontSize: "10px",
-        fontWeight: "400",
-        backgroundColor: "#B5DEF0",
-        width: "auto",
-        color: "#030229",
-        padding: "4px",
-        borderRadius: "5%",
-      }}
-    >
-      {software.software_name}
-    </div>
-  ))}
-</div>
+        {data.softwares.map((software, i) => (
+          <div
+            key={i}
+            style={{
+              fontSize: "10px",
+              fontWeight: "400",
+              backgroundColor: "#B5DEF0",
+              width: "auto",
+              color: "#030229",
+              padding: "4px",
+              borderRadius: "5%",
+            }}
+          >
+            {software.software_name}
+          </div>
+        ))}
+      </div>
     </Card>
   );
 };

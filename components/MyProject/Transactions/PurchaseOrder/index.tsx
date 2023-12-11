@@ -4,7 +4,6 @@ import Tabs from "./Tabs";
 import Plus from "assets/myIcons/plus.svg";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import Example from "components/DropDown";
 import DeletePurchaseOrderPopup from "./DeletePurchaseOrderPopup";
 
 function PurchaseOrder() {

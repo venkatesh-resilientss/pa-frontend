@@ -24,7 +24,7 @@ function ClientTabs(props) {
   }));
 
   const selectStyle = {
-    control: (provided) => ({
+    control: (provided: any) => ({
       ...provided,
       border: "1px solid #dee2e6",
     }),
@@ -98,73 +98,6 @@ function ClientTabs(props) {
           </NavLink>
         </NavItem>
 
-        {/* <NavItem>
-          <NavLink
-            style={{
-              borderBottom: active === "4" ? "2px solid #293991" : "none",
-              transition: "border-bottom 0.3s ease",
-              color: active === "4" ? "#293991" : "#C9C9C9",
-              cursor:"pointer"
-            }}
-            active={active === "4"}
-            onClick={() => {
-              toggle("4");
-            }}
-          >
-            Productions
-          </NavLink>
-        </NavItem> */}
-
-        {/* <NavItem>
-          <NavLink
-            style={{
-              borderBottom: active === "3" ? "2px solid #293991" : "none",
-              transition: "border-bottom 0.3s ease",
-              color: active === "3" ? "#293991" : "#C9C9C9",
-              cursor:"pointer"
-            }}
-            active={active === "3"}
-            onClick={() => {
-              toggle("3");
-            }}
-          >
-            Approval Flow
-          </NavLink>
-        </NavItem> */}
-
-        {/* <NavItem>
-          <NavLink
-            style={{
-              borderBottom: active === "4" ? "2px solid #293991" : "none",
-              transition: "border-bottom 0.3s ease",
-              color: active === "4" ? "#293991" : "#C9C9C9",
-              cursor:"pointer"
-            }}
-            active={active === "4"}
-            onClick={() => {
-              toggle("4");
-            }}
-          >
-            RSS Support User
-          </NavLink>
-        </NavItem> */}
-
-        {/* <NavItem>
-          <NavLink
-            style={{
-              borderBottom: active === "5" ? "2px solid #293991" : "none",
-              transition: "border-bottom 0.3s ease",
-              color: active === "5" ? "#293991" : "#C9C9C9",
-              cursor:"pointer"
-            }}
-            active={active === "5"}
-            onClick={() => {
-              toggle("5");
-            }}
-          >
-            Client Control
-          </NavLink>
-        </NavItem> */}
       </Nav>
       <TabContent className="py-50" activeTab={active}>
         <TabPane tabId="1">
@@ -447,9 +380,9 @@ function ClientTabs(props) {
                     }
                     options={(clientData?.pCountry && clientData?.pState
                       ? City.getCitiesOfState(
-                          clientData?.pCountry.value,
-                          clientData?.pState.value
-                        )
+                        clientData?.pCountry.value,
+                        clientData?.pState.value
+                      )
                       : []
                     ).map((city) => ({
                       value: city.name,
@@ -600,9 +533,9 @@ function ClientTabs(props) {
                     }
                     options={(clientData?.iCountry && clientData?.iState
                       ? City.getCitiesOfState(
-                          clientData?.iCountry.value,
-                          clientData?.iState.value
-                        )
+                        clientData?.iCountry.value,
+                        clientData?.iState.value
+                      )
                       : []
                     ).map((city) => ({
                       value: city.name,

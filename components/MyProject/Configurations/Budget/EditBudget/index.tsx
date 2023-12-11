@@ -1,10 +1,9 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
-import Select from "react-select";
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
+import { getSessionVariables } from "@/constants/function";
 import {
   BudgetService,
   CurrencyService,
@@ -15,29 +14,19 @@ import {
 } from "services";
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
-import { checkTenant } from "constants/function";
+import { formValidationRules } from "@/constants/common";
 
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
 
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [currency, setCurrency] = useState("");
-  const [series, setSeries] = useState("");
-  const [location, setLocation] = useState("");
-  const [company, setCompany] = useState("");
-  const [set, setSet] = useState("");
-  const [uploadExcel, setUploadExcel]: any = useState({});
 
   const currencyService = new CurrencyService();
   const { id } = router.query;
 
-  const {
-    data: currencyData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR("LIST_CURRENCIES", () => currencyService.getCurrencies());
+  const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
     return {
@@ -46,15 +35,17 @@ function EditBudget() {
     };
   });
 
+  const budgetValidationRules = formValidationRules.budgets;
+
   const loadCurrencyOptions = (values, callBack) => {
-    setCurrency(values);
+    values;
     callBack(currenciesSelectFormat);
   };
 
   const seriesService = new SeriesService();
 
   const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries()
+    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const seriesSelectFormat = seriesData?.data.map((b) => {
@@ -65,14 +56,13 @@ function EditBudget() {
   });
 
   const loadSeriesOptions = (values, callBack) => {
-    setSeries(values);
     callBack(seriesSelectFormat);
   };
 
   const locationsService = new LocationsService();
 
   const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const locationsSelectFormat = locationsData?.result.map((b) => {
@@ -83,13 +73,14 @@ function EditBudget() {
   });
 
   const loadLocationsOptions = (values, callBack) => {
-    setLocation(values);
     callBack(locationsSelectFormat);
   };
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  const { data: setsData } = useSWR("LIST_SETS", () =>
+    setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -99,7 +90,6 @@ function EditBudget() {
   });
 
   const loadSetsOptions = (values, callBack) => {
-    setSet(values);
     callBack(setsSelectFormat);
   };
 
@@ -143,9 +133,7 @@ function EditBudget() {
   );
   const {
     control,
-    setError,
     handleSubmit,
-    register,
     reset,
     setValue,
     formState: { errors },
@@ -159,9 +147,8 @@ function EditBudget() {
     setActiveStatus(budgetData1?.IsActive);
   }, [budgetData, budgetData1]);
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       Code: data?.code,
       Name: data?.name,
       Description: data?.description,
@@ -173,13 +160,15 @@ function EditBudget() {
       LocationID: data?.location?.value,
       BankID: 0,
       Amount: 0.0,
-      budgetFile: uploadExcel.name,
+      budgetFile: "",
       IsActive: activeStatus,
+      clientID,
+      projectID
     };
 
     budgetService
       .editBudget(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Budget Edited successfully");
         router.back();
 
@@ -246,12 +235,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Budget Name
+            Budget Name <span className="required">*</span>
           </Label>
           <Controller
             name="name"
             control={control}
-            rules={{ required: "Budget Name is required" }}
+            rules={budgetValidationRules.name}
             render={({ field }) => (
               <Input
                 placeholder="Budget Name"
@@ -262,7 +251,7 @@ function EditBudget() {
             )}
           />
           {errors.name && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.name.message as React.ReactNode}
             </span>
           )}
@@ -272,12 +261,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Budget Code
+            Budget Code <span className="required">*</span>
           </Label>
           <Controller
             name="code"
             control={control}
-            rules={{ required: "Budget Code is required" }}
+            rules={budgetValidationRules.code}
             render={({ field }) => (
               <Input
                 placeholder="Budget Code"
@@ -288,7 +277,7 @@ function EditBudget() {
             )}
           />
           {errors.code && (
-            <span style={{ color: "red" }}>
+            <span className="text-danger">
               {errors.code.message as React.ReactNode}
             </span>
           )}
@@ -300,12 +289,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Company
+            Company <span className="required">*</span>
           </Label>
           <Controller
             name="company"
             control={control}
-            rules={{ required: "Company is required" }}
+            rules={budgetValidationRules.company}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -331,11 +320,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Production
+            Production <span className="required">*</span>
           </Label>
           <Controller
             name={"production"}
-            rules={{ required: "Production is required" }}
+            rules={budgetValidationRules.production}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -363,11 +352,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Currency
+            Currency <span className="required">*</span>
           </Label>
           <Controller
             name={"currency"}
-            rules={{ required: "Currency is required" }}
+            rules={budgetValidationRules.currency}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -394,11 +383,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Series
+            Series <span className="required">*</span>
           </Label>
           <Controller
             name={"series"}
-            rules={{ required: "Series is required" }}
+            rules={budgetValidationRules.series}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -426,12 +415,12 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Location
+            Location <span className="required">*</span>
           </Label>
           <Controller
             name={"location"}
             control={control}
-            rules={{ required: "Location is required" }}
+            rules={budgetValidationRules.location}
             render={({ field }) => (
               <AsyncSelect
                 {...field}
@@ -457,11 +446,11 @@ function EditBudget() {
             className="text-black"
             style={{ fontSize: "12px", fontWeight: "400" }}
           >
-            Set
+            Set <span className="required">*</span>
           </Label>
           <Controller
             name={"set"}
-            rules={{ required: "Set is required" }}
+            rules={budgetValidationRules.set}
             control={control}
             render={({ field }) => (
               <AsyncSelect
@@ -486,15 +475,28 @@ function EditBudget() {
 
       <Row className="mt-2">
         <Col xl="3">
-          <Label className="form-lable-font">Upload Budget File</Label>
-          <div className="d-flex flex-column gap-2 w-100">
-            <input
-              type="file"
-              accept=".xls, xlsx"
-              className="remove-value"
-              onChange={(e: any) => setUploadExcel(e.target.files[0])}
-            />
-          </div>
+          <Label className="form-lable-font">
+            Upload Budget File <span className="required">*</span>
+          </Label>
+          <Controller
+            name="budgetfile"
+            control={control}
+            rules={budgetValidationRules.budgetfile}
+            render={({ field }) => (
+              <Input
+                type="file"
+                style={{ fontSize: "12px", fontWeight: "400" }}
+                invalid={errors.budgetfile && true}
+                {...field}
+                accept=".txt"
+              />
+            )}
+          />
+          {errors.budgetfile && (
+            <span style={{ color: "red" }}>
+              {errors.budgetfile.message as React.ReactNode}
+            </span>
+          )}
         </Col>
       </Row>
 

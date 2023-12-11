@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import GridTable from "components/grid-tables/gridTable";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
-import { decrypt, encrypt } from "lib/encypt";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -26,13 +25,10 @@ const MyPage = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <img src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -51,11 +47,7 @@ const MyPage = () => {
               className="w-100"
               onClick={(e) => e.preventDefault()}
             >
-              <Action
-                icon={"/icons/edit_square.svg"}
-                name={"Edit"}
-                action={() => {}}
-              />
+              <Action icon={"/icons/edit_square.svg"} name={"Edit"} />
             </DropdownItem>
             <DropdownItem
               tag="a"
@@ -63,18 +55,10 @@ const MyPage = () => {
               className="w-100"
               onClick={(e) => e.preventDefault()}
             >
-              <Action
-                icon={"/icons/delete.svg"}
-                name={"Delete"}
-                action={() => {}}
-              />
+              <Action icon={"/icons/delete.svg"} name={"Delete"} />
             </DropdownItem>
             <DropdownItem className="w-100">
-              <Action
-                icon={"/icons/list.svg"}
-                name={"View Details"}
-                action={() => {}}
-              />
+              <Action icon={"/icons/list.svg"} name={"View Details"} />
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
@@ -207,30 +191,30 @@ const MyPage = () => {
       status: "active",
     },
   ];
-  const sampleData = {
-    name: "Jhon",
-    email: "jhnodoe@gmail.com",
-    phoneNumber: "+91 6309648049",
-    address: "2-173, ola amigo, Park Avenue",
-  };
-  const encryptTest = async ()=>{
+
+  const encryptTest = async () => {
     // var res = await encrypt('krish');
     // var res  = await decrypt(de);
-  }
+  };
 
   useEffect(() => {
-    encryptTest()
+    encryptTest();
   }, []);
   return (
     <>
       <div className="my-5 m-auto d-flex">
-        <GridTable rowData={rowData} columnDefs={columnDefs} pageSize={4} searchText={undefined}/>
+        <GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={4}
+          searchText={undefined}
+        />
       </div>
       {/* <div className="">
     <Sidebar />
     </div> */}
     </>
   );
-};;
+};
 
 export default MyPage;

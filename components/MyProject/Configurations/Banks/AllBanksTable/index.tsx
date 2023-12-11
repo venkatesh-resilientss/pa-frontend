@@ -1,67 +1,80 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Button,
   Input,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import DataTableWithButtons from "components/Generic/Table/index";
-import GridTable from "components/grid-tables/gridTable";
+// import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import { BankService } from "services";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import useSWR from "swr";
 import moment from "moment";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadBanksPopup,
-  openDeleteBanksPopup,
-} from "redux/slices/mySlices/configurations";
-import { useDispatch } from "react-redux";
+// import {
+//   openBulkUploadBanksPopup,
+//   openDeleteBanksPopup,
+// } from "redux/slices/mySlices/configurations";
+// import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
 const AllBanksTable = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  // const [pageOffset, setPageOffset] = useState(0);
+  // const [bankData, setBankData] = useState([]);
+  // const [bankLoading, setBankLoading] = useState(false);
+  // const [totalRecords, setTotalRecords] = useState(0);
+  const [rerender] = useState(false);
+  const perPage = 3;
 
   const bankService = new BankService();
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
   );
-    const hasEditConfigurationPermission = hasPermission(
+  const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  // const hasDeactivateConfiguration = hasPermission(
+  //   "configuration_management",
+  //   "deactivate_configuration"
+  // );
 
-  const {
-    data: bankData,
-    isLoading: bankLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_BANKS", searchText], () => bankService.getBanks());
-
-  const dataSource = bankData?.data;
+  const fetchData1 = async (pageNumber) => {
+    const clientId = sessionStorage.getItem("clientid");
+    const projectId = sessionStorage.getItem("projectid");
+    if (clientId && projectId) {
+      try {
+        const response = await bankService.getBanksNew(
+          {
+            search: searchText,
+            pageLimit: perPage,
+            offset: pageNumber,
+          },
+          { clientId: parseInt(clientId), projectId: parseInt(projectId) }
+        );
+        const data = response.data; // Adjust based on the actual structure of the response
+        const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+        return { data, totalRecords };
+      } catch (error) {
+        return { data: null, totalRecords: 0 };
+      } finally {
+        // setBankLoading(false)
+      }
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -78,11 +91,7 @@ const AllBanksTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
     const Action = ({ icon, name, action }) => {
       return (
         <div onClick={action} className="d-flex align-items-center gap-2">
@@ -108,42 +117,45 @@ const AllBanksTable = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => {
-                e.preventDefault();
-                const additionalData = {
-                  rowData: JSON.stringify(props.data),
-                };
-                router.push({
-                  pathname: `/configurations/edit-bank/${props.data?.ID}`,
-                  query: { ...additionalData },
-                });
-              }}
-            >
-              <Action icon={editIocn} name={"Edit"} action={(e) => {}} />
-            </DropdownItem>
-            )}
-            {hasDeactivateConfiguration && (
-            <DropdownItem
-              tag="a"
-              className="w-100"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Action
-                icon={deleteIcon}
-                name={"Delete"}
-                action={() => {
-                  dispatch(openDeleteBanksPopup(props.data.ID));
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // const additionalData = {
+                  //   rowData: JSON.stringify(props.data),
+                  // };
+                  router.push(`/configurations/edit-bank/${props.data?.ID}`);
                 }}
-              />
-            </DropdownItem>
+              >
+                <Action
+                  icon={editIocn}
+                  name={"Edit"}
+                  action={() => {
+                    //
+                  }}
+                />
+              </DropdownItem>
             )}
+            {/* {hasDeactivateConfiguration && (
+              <DropdownItem
+                tag="a"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Action
+                  icon={deleteIcon}
+                  name={"Delete"}
+                  action={() => {
+                    dispatch(openDeleteBanksPopup(props.data.ID));
+                  }}
+                />
+              </DropdownItem>
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -169,7 +181,16 @@ const AllBanksTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -179,7 +200,9 @@ const AllBanksTable = () => {
     {
       headerName: "Updated On",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
+        const formattedDate = moment(params.data?.UpdatedDate).format(
+          "YYYY-MM-DD"
+        );
         return <div>{formattedDate}</div>;
       },
       sortable: true,
@@ -203,56 +226,6 @@ const AllBanksTable = () => {
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-    },
-  ];
-  const rowData = [
-    {
-      BankCode: "001",
-      BankName: "Bank A",
-      CreatedBy: "John Doe",
-      UpdatedOn: "2023-11-13",
-      Status: "active",
-      id: 1,
-    },
-    {
-      BankCode: "002",
-      BankName: "Bank B",
-      CreatedBy: "Jane Smith",
-      UpdatedOn: "2023-11-12",
-      Status: "inactive",
-      id: 2,
-    },
-    {
-      BankCode: "003",
-      BankName: "Bank C",
-      CreatedBy: "Mike Johnson",
-      UpdatedOn: "2023-11-11",
-      Status: "active",
-      id: 3,
-    },
-    {
-      BankCode: "004",
-      BankName: "Bank D",
-      CreatedBy: "Sara Williams",
-      UpdatedOn: "2023-11-10",
-      Status: "inactive",
-      id: 4,
-    },
-    {
-      BankCode: "005",
-      BankName: "Bank E",
-      CreatedBy: "David Brown",
-      UpdatedOn: "2023-11-09",
-      Status: "active",
-      id: 5,
-    },
-    {
-      BankCode: "006",
-      BankName: "Bank F",
-      CreatedBy: "Emily Davis",
-      UpdatedOn: "2023-11-08",
-      Status: "inactive",
-      id: 6,
     },
   ];
 
@@ -281,9 +254,9 @@ const AllBanksTable = () => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {bankData?.data.length} Banks
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -292,7 +265,7 @@ const AllBanksTable = () => {
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
                 />
-                {hasCreateConfiguration && (
+                {/* {hasCreateConfiguration && (
                   <Button
                     onClick={() => dispatch(openBulkUploadBanksPopup("banks"))}
                     style={{
@@ -311,7 +284,7 @@ const AllBanksTable = () => {
                     />{" "}
                     Bulk Upload
                   </Button>
-                )}
+                )} */}
 
                 {/* <Button
                   style={{
@@ -321,7 +294,7 @@ const AllBanksTable = () => {
                     fontWeight: "600",
                     border: "none",
                   }}
-                  onClick={() => router.push(`/configurations/add-bank`)}
+                  onClick={() => router.push(`/ configurations / add - bank`)}
                 >
                   <Image
                     style={{ width: "14px", height: "14px" }}
@@ -354,39 +327,40 @@ const AllBanksTable = () => {
           </CardBody>
         </Card>
       </div>
-      {bankLoading ? (
+      {/* {bankLoading ? (
         <div className="mt-3">
           <GridTable
-            rowData={dataSource}
             columnDefs={columnDefs}
-            pageSize={10}
+            pageSize={perPage}
             searchText={searchText}
+            fetchData={""}
           />
         </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={9}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add Bank"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Bank" : "No button"
-                }
-                buttonLink={"/configurations/add-bank"}
-              />
-            </div>
-          )}
-        </>
-      )}
+      ) : ( */}
+      <AGGridTable
+        rerender={rerender}
+        // rowData={bankData}
+        // totalRecords={totalRecords}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        // setPageOffset={setPageOffset}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
+            buttonLink={"/configurations/add-bank"}
+          />
+        )}
+      />
+      {/* {bankData.length > 0 ? (
+      ): (
+          <NoDataPage
+          buttonName = {
+            hasCreateConfiguration? "Create Bank": "No button"
+          }
+          buttonLink = { "/configurations/add-bank" }
+        />)} */}
     </div>
   );
 };

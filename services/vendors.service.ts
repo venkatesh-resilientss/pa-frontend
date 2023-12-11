@@ -9,8 +9,13 @@ import {
 } from "../lib/endpoints";
 
 class VendorsService extends APIService {
-  getVendors(): Promise<any> {
-    return this.get(`${GET_VENDORS}`)
+  getVendors(data,params?): Promise<any> {
+    return this.post(
+      params ? 
+      `${GET_VENDORS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+      `${GET_VENDORS}`,
+      data
+      )
       .then((res) => {
         return res?.data;
       })
@@ -19,13 +24,16 @@ class VendorsService extends APIService {
       });
   }
 
-  getVendorDetails(id: any): Promise<any> {
-    return this.get(`${VENDORS_DETAIL_ENDPOINT(id)}`)
-      .then((res) => {
-        return res?.data;
+  
+
+  getVendorDetails(id: any) {
+    return this
+      .get(VENDORS_DETAIL_ENDPOINT(id))
+      .then((response) => {
+        return response.data;
       })
-      .catch((error: any) => {
-        throw error?.response?.data;
+      .catch((error) => {
+        throw error.response.data;
       });
   }
 

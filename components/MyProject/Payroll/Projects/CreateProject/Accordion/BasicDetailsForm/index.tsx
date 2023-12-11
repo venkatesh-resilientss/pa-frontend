@@ -1,6 +1,8 @@
 import { Controller } from "react-hook-form";
 import ReactSelect from "react-select";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import InvalidFeedBack from "components/Generic/InvalidFeedBack";
+
 function BasicDetailsForm({ control, errors }) {
 
   const childFields = [
@@ -8,22 +10,24 @@ function BasicDetailsForm({ control, errors }) {
     { name: 'project_name', label: 'Project Name', required: true, placeholder: 'Project Name' },
     { name: 'code', label: 'Client Code', required: true, placeholder: 'Enter Client Code ex:102910381' },
     { name: 'client_name', label: 'Client Name', required: true, placeholder: 'Client Name' },
-    { name: 'preProductionStart', label: 'Pre-Production Start', required: true, type: 'date', placeholder: 'Enter Pre-Production Start' },
-    { name: 'startPrincipalPhotography', label: 'Start Principal Photography', required: true, type: 'date', placeholder: 'Enter Start Principal Photography' },
-    { name: 'postProductionStart', label: 'Post Production Start', required: true, type: 'date', placeholder: 'Enter Post Production Start' },
+    { name: 'preProductionStart', label: 'Pre-Production Start', type: 'date', placeholder: 'Enter Pre-Production Start' },
+    { name: 'startPrincipalPhotography', label: 'Start Principal Photography', type: 'date', placeholder: 'Enter Start Principal Photography' },
+    { name: 'postProductionStart', label: 'Post Production Start', type: 'date', placeholder: 'Enter Post Production Start' },
     { name: 'budget', label: 'Budget', placeholder: 'Enter Budget' },
-    { name: 'projectType', label: 'Project Type', placeholder: 'Enter Project Type' },
-    { name: 'departments', label: 'Departments', placeholder: 'Enter Departments' },
-    { name: 'batchingRequirements', label: 'Batching Requirements', placeholder: 'Enter Batching Requirements' },
-    { name: 'separateallowancechecks', label: 'Separate allowance checks', type: 'check', placeholder: 'Enter Separate allowance checks' },
+    { name: 'projectType', label: 'Project Type', required: true, placeholder: 'Enter Project Type' },
+    { name: 'departments', label: 'Departments', options: [{label: 'CLIENT SET-UP', value: 'CLIENT SET-UP'}], placeholder: 'Enter Departments' },
+    { name: 'batchingRequirements', label: 'Batching Requirements', required: true, options: [{label: 'Program', value: 'Program'}], placeholder: 'Enter Batching Requirements' },
     { name: 'dGAProjectType', label: 'DGA Project Type', type: 'select', placeholder: 'Enter DGA Project Type' },
     { name: 'showLength', label: 'Show Length', type: 'select', placeholder: 'Enter Show Length' },
     { name: 'videotapeProjectType', label: 'Videotape Project Type', type: 'select', placeholder: 'Enter Videotape Project Type' },
+    { name: 'payFrequency', label: ' Pay Frequency', type: 'select', required: true, options: [{ value: "Daily", label: "Daily" },{ value: "Weekly", label: "Weekly" }, { value: "Bi-Weekly", label: "Bi-Weekly" }, { value: "Semi-Monthly", label: "Semi-Monthly" }, { value: "Monthly", label: "Monthly" }, { value: "Quarterly", label: "Quarterly" }], placeholder: 'Enter  Pay Frequency' },
+    { name: 'separateallowancechecks', required: true, label: 'Separate allowance checks', type: 'check', placeholder: 'Enter Separate allowance checks' },
     { name: 'separatecheckperemployeetimecard', label: 'Separate check per employee time card', type: 'check', placeholder: 'Enter Separate check per employee time card' },
-    { name: 'payFrequency', label: 'Pay Frequency', type: 'select', placeholder: 'Enter Pay Frequency' },
-    { name: 'processingDefaultInvoice', label: 'Processing Default Invoice', type: 'check', placeholder: 'Enter Processing Default Invoice' },
+    { name: 'processingDefaultInvoice', label: 'Processing Default Invoice', required: true, type: 'check', placeholder: 'Enter Processing Default Invoice' },
     { name: 'processingDefaulteechecks', label: 'Processing Default EE Check', type: 'check', placeholder: 'Enter Processing Default EE Check' },
-    { name: 'separateCheckPerTimeCard', label: 'Separate Check Per TimeCard', type: 'check', placeholder: 'Enter Separate Check Per TimeCard' }
+    { name: 'separateCheckPerTimeCard', label: 'Separate Check Per TimeCard', type: 'check', placeholder: 'Enter Separate Check Per TimeCard' },
+    { name: 'combinebatchesintooneinvoice', label: 'Combine batches into one invoice', type: 'check', placeholder: 'Enter Combine batches into one invoice' },
+    { name: 'allbatchesintoonecheck', label: 'Timecards from all batches into one check', type: 'check', placeholder: 'Enter Combine employee time cards from all batches into one check' }
   ];
 
   return (
@@ -35,18 +39,19 @@ function BasicDetailsForm({ control, errors }) {
         <Row>
           {childFields.map((formField) => (
             <Col xl="4" key={formField.name}>
-              {formField.type !== 'check' && <Label className="form-lable-font text-black"
-              style={{ fontSize: "14px", fontWeight: "400" }}>
-                {formField.label}{formField.required && '*'}
+              {formField.type !== 'check' && <Label className="form-lable-font text-black form-label">
+                {formField.label}{formField.required && <span className='text-danger'>*</span>}
         </Label>}
-              {/* <Label className="text-black" style={{ fontSize: "14px", fontWeight: "400" }}>{formField.label}{formField.required && '*'}</Label> */}
               {formField.type === 'select' ? (
                 <Controller
                   name={formField.name}
                   control={control}
                   rules={{ required: formField.required && `${formField.label} is required` }}
                   render={({ field }) => (
-                    <ReactSelect {...field} isClearable />
+                    <ReactSelect 
+                    value={field.value}
+                    onChange={(selectedOption) => field.onChange(selectedOption)}
+                    className={`selectField ${errors[`${formField.name}`] ? 'errorBorder' : ''}`} {...field} options={formField.options} isClearable />
                   )}
                 />
               ) : formField.type === 'date'? (
@@ -79,8 +84,7 @@ function BasicDetailsForm({ control, errors }) {
                      {...field}
                    />
                    <Label
-                    className="text-black"
-                    style={{ fontSize: "14px", fontWeight: "400", marginLeft: "10px" }}
+                    className="text-black checkbox-label"
                   >
                     {formField.label}
                   </Label>
@@ -104,9 +108,7 @@ function BasicDetailsForm({ control, errors }) {
                 />
               )}
               {errors[`${formField.name}`] && formField.required && (
-                <span style={{ color: "red" }}>
-                  {errors[`${formField.name}`].message as React.ReactNode}
-                </span>
+                <InvalidFeedBack message={errors[`${formField.name}`].message} />
               )}
             </Col>
           ))}

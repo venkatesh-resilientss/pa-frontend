@@ -1,70 +1,25 @@
-import { useEffect, useState } from "react";
-import { IoAlertCircle, IoTimerOutline } from "react-icons/io5";
-import { MdCancel, MdPlayCircleFilled } from "react-icons/md";
-import { AiFillCheckCircle } from "react-icons/ai";
 import { FcFilmReel } from "react-icons/fc";
-import clientLogo from "src/assets/MyImages/client.svg";
-import BluBlu from "src/assets/MyImages/blublu.svg";
-import storyFoam from "src/assets/MyImages/storyfarm.svg";
-import Indigo from "src/assets/MyImages/indigo.svg";
-import fiveFilms from "src/assets/MyImages/5films.svg";
+
 import { hasPermission } from "commonFunctions/functions";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-} from "reactstrap";
 
 import {
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
   Card,
-  CardBody,
   Button,
-  CardTitle,
   Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
 } from "reactstrap";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import {
-  ArrowUp,
-  Check,
-  CheckCircle,
-  Copy,
-  Download,
-  Edit,
-  File,
-  MoreVertical,
-  Plus,
-  Trash,
-  User,
-  Users,
-  X,
-} from "react-feather";
-import axios from "axios";
+import { Edit, File, MoreVertical, Trash, Users } from "react-feather";
 import DataTableWithButtons from "../../Table/index";
-import { BiCheckCircle } from "react-icons/bi";
-import { openDeleteClientPopup } from "redux/slices/mySlices/clients";
 import { ClientsService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { toast } from "react-toastify";
 
 const ClientsListTable = () => {
-  const dispatch = useDispatch();
-
   const router = useRouter();
   const hasClientEditPermission = hasPermission(
     "client_management",
@@ -78,7 +33,7 @@ const ClientsListTable = () => {
   const clientService = new ClientsService();
 
   const { data: clientData, mutate } = useSWR("LIST_CLIENTS", () =>
-    clientService.getClients()
+    clientService.getClients({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const columns = [
@@ -127,7 +82,7 @@ const ClientsListTable = () => {
     },
 
     {
-      name: <div>Rss Support User</div>,
+      name: <div>RSSL Support User</div>,
       width: "150px",
       sortable: true,
       sortField: "production_name",
@@ -275,18 +230,7 @@ const ClientsListTable = () => {
         </div>
       </Card>
       {/* <GridTable rowData={clientData} columnDefs={columns} pageSize={4} /> */}
-      <DataTableWithButtons
-        tableTitle={"All Clients"}
-        data={clientData}
-        columns={columns}
-        showButton={true}
-        buttonClick={() => router.push(`/clients/create-client`)}
-        buttonName={
-          <div>
-            <Users size={14} /> Create Client
-          </div>
-        }
-      />
+      <DataTableWithButtons data={clientData} columns={columns} />
     </div>
   );
 };

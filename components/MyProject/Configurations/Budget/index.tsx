@@ -1,13 +1,15 @@
 import AllBudgetTable from "./AllBudgetTable";
 import BudgetBulkUploadPopup from "./BudgetBulkUploadPopup";
 import DeleteBudgetPopup from "./DeleteBudgetPopup";
-
+import { useState } from "react";
 function Budgets() {
+  const [searchText, setSearchText] = useState("");
+  const [rerender, setRerender] = useState(false);
   return (
     <div>
-      <BudgetBulkUploadPopup />
+      <BudgetBulkUploadPopup {...{rerender,setRerender}} />
       <DeleteBudgetPopup />
-      <AllBudgetTable />
+      <AllBudgetTable {...{ rerender, searchText, setSearchText }} />
     </div>
   );
 }

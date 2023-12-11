@@ -1,46 +1,37 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Button,
   Input,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import axios from "axios";
-import DataTableWithButtons from "../../../../Generic/Table/index";
-import { FcFilmReel } from "react-icons/fc";
-import GridTable from "components/grid-tables/gridTable";
+
+// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import { useRouter } from "next/router";
 import { SetsService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadSetsPopup,
-  openDeleteSetPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import Image from "next/image";
-import { useState, useEffect } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
-import { checkTenant } from "constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getSessionVariables } from "@/constants/function";
+const setsService = new SetsService();
 
-const AllSetsTable = () => {
-  const setsService = new SetsService();
+const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
+  // const setsService = new SetsService();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const perPage = 10;
+  // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -50,22 +41,31 @@ const AllSetsTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
-
   const dispatch = useDispatch();
 
-  const {
-    data: setsData,
-    isLoading: setsLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_SETS", searchText], () => setsService.getSets());
-  const dataSource = setsData?.result;
+  // const { data: setsData, isLoading: setsLoading } = useSWR(
+  //   ["LIST_SETS", searchText],
+  //   () => setsService.getSets()
+  // );
+  // const dataSource = setsData?.result;
 
-
+  const fetchData1 = async (pageNumber) => {
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      const queryParams = {
+        search: searchText,
+        pageLimit: perPage,
+        offset: pageNumber,
+      };
+      const payload = { clientId: clientID, projectId: projectID };
+      const response = await setsService.getSets(queryParams, payload);
+      const data = response.result; // Adjust based on the actual structure of the response
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -82,14 +82,10 @@ const AllSetsTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -112,7 +108,7 @@ const AllSetsTable = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
@@ -123,16 +119,7 @@ const AllSetsTable = () => {
                 tag="a"
                 className="w-100 cursor-pointer"
               >
-                <Action icon={editIocn} name={"Edit"} action={() => { }} />
-              </DropdownItem>
-            )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => dispatch(openDeleteSetPopup(props.data?.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} action={() => { }} />
+                <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
           </DropdownMenu>
@@ -168,7 +155,16 @@ const AllSetsTable = () => {
     },
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -179,8 +175,10 @@ const AllSetsTable = () => {
       headerName: "Updated On",
       field: "UpdatedDate",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
-        return <div>{formattedDate}</div>;
+        if (params.value) {
+          const formattedDate = moment(params.value).format("YYYY-MM-DD");
+          return <div>{formattedDate}</div>;
+        }
       },
       sortable: true,
       resizable: true,
@@ -205,7 +203,6 @@ const AllSetsTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-
 
   return (
     <div>
@@ -232,9 +229,9 @@ const AllSetsTable = () => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
+                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
                   {setsData?.result.length} Sets
-                </div>
+                </div> */}
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -304,7 +301,7 @@ const AllSetsTable = () => {
           </CardBody>
         </Card>
       </div>
-      {setsLoading ? (
+      {/* {setsLoading ? (
         <div className="mt-3">
           <GridTable
             rowData={dataSource}
@@ -334,7 +331,22 @@ const AllSetsTable = () => {
             </div>
           )}
         </>
-      )}
+      )} */}
+      <div className="mt-3">
+      <AGGridTable
+        rerender={rerender}
+        columnDefs={columnDefs}
+        searchText={searchText}
+        fetchData={fetchData1}
+        pageSize={perPage}
+        noDataPage={() => (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+            buttonLink={"/configurations/add-set"}
+          />
+        )}
+      />
+      </div>
     </div>
   );
 };

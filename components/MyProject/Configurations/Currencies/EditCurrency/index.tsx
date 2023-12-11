@@ -1,36 +1,28 @@
 import { useRouter } from "next/router";
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { CurrencyService } from "services";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
 function EditCurrency() {
   const router = useRouter();
-
+  const currencyValidationRules = formValidationRules.currencies;
   const { id } = router.query;
-   
+
   const currencyService = new CurrencyService();
 
-  const fetchCurrencyDetails = (id) =>
-    currencyService.currencyDetails(id);
+  const fetchCurrencyDetails = (id) => currencyService.currencyDetails(id);
 
-  const {
-    data: currencyData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["CURRENCY_DETAILS", id] : null, () =>
-    fetchCurrencyDetails(id)
+  const { data: currencyData } = useSWR(
+    id ? ["CURRENCY_DETAILS", id] : null,
+    () => fetchCurrencyDetails(id)
   );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
@@ -44,20 +36,18 @@ function EditCurrency() {
 
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
-    
+
     setActiveStatus(currencyData?.IsActive);
-  },[currencyData]);
+  }, [currencyData]);
 
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies()
+    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.currencyname,
       description: data.description,
       isActive: activeStatus,
@@ -66,7 +56,7 @@ function EditCurrency() {
 
     currencyService
       .editCurrency(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());
         router.back();
@@ -79,22 +69,12 @@ function EditCurrency() {
   };
 
   return (
-    <div className="section mt-4">
+    <div className="section mt-4 configuration-add">
       <div className="overflow-auto">
-        <div
-          className="text-black"
-          style={{ fontSize: "16px", fontWeight: "600" }}
-        >
-          All currencies
-        </div>
+        <div className="title-head">All currencies</div>
 
         <div className="d-flex justify-content-between">
-          <div
-            className="text-black"
-            style={{ fontSize: "32px", fontWeight: "600" }}
-          >
-            Edit Currency
-          </div>
+          <div className="title">Edit Currency</div>
           <div className="d-flex me-2 " style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}
@@ -135,7 +115,7 @@ function EditCurrency() {
               <Label>Currency Code</Label>
               <Controller
                 name="currencycode"
-                rules={{ required: "Currency Code  is required" }}
+                rules={currencyValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -147,7 +127,7 @@ function EditCurrency() {
                 )}
               />
               {errors.currencycode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.currencycode.message as React.ReactNode}
                 </span>
               )}
@@ -158,7 +138,7 @@ function EditCurrency() {
               <Label>Currency Name</Label>
               <Controller
                 name="currencyname"
-                rules={{ required: "Currency Name  is required" }}
+                rules={currencyValidationRules.name}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -170,59 +150,85 @@ function EditCurrency() {
                 )}
               />
               {errors.currencyname && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.currencyname.message as React.ReactNode}
                 </span>
               )}
             </div>
           </Col>
-          {/* <Col xl="4">
-                <div className="mb-1 mt-2">
-                  <Label>Currency Symbol</Label>
-                  <Controller
-                    name="currencysymbol"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        placeholder="Currency Symbol"
-                        invalid={errors.currencysymbol && true}
-                        style={{ fontSize: "12px", fontWeight: "400" }}
-                        {...field}
-                      />
-                    )}
+          <Col xl="5">
+            <div className="mb-1 mt-2 d-flex gap-2 align-items-center">
+              <Controller
+                name="BaseCurrency"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="checkbox"
+                    invalid={errors.isBaseCurrency && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
                   />
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1 mt-2">
-                  <Label>Current rate vs 1.00 unit of base currency</Label>
-                  <Controller
-                    name="currencyrate"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        placeholder="Currency rate"
-                        invalid={errors.currencyrate && true}
-                        style={{ fontSize: "12px", fontWeight: "400" }}
-                        {...field}
-                      />
-                    )}
+                )}
+              />
+              <Label className="form-lable-font mb-0">
+                Is Base Currency
+              </Label>
+            </div>
+          </Col>
+          <Col xl="5">
+            <div className="mb-1 mt-2">
+              <Label className="form-lable-font">
+                Decimal Value of 1 current rate vs 1.00 unit of base currency
+                <span className="required">*</span>
+              </Label>
+              <Controller
+                name="currentRate"
+                rules={currencyValidationRules.currentRate}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="Enter Value"
+                    invalid={errors.currencyname && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
                   />
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1 mt-2">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
-                    />
-                    <label className="form-check-label">Default checkbox</label>
-                  </div>
-                </div>
-              </Col> */}
+                )}
+              />
+              {errors.currentRate && (
+                <span style={{ color: "red" }}>
+                  {errors.currentRate.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
+          <Col xl="5">
+            <div className="mb-1 ">
+              <Label className="form-lable-font">Description</Label>
+              <Controller
+                name="description"
+                control={control}
+                rules={currencyValidationRules.description}
+                render={({ field }) => (
+                  <Input
+                    type="textarea"
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      height: "81px",
+                    }}
+                    placeholder="Description"
+                    invalid={errors.description && true}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.description && (
+                <span style={{ color: "red" }}>
+                  {errors.description.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
           <div className="d-flex flex-column mt-2">
             <Label
               className="text-black"

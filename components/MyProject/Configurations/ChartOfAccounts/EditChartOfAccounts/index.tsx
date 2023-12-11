@@ -1,39 +1,87 @@
-import ReactSelect from "react-select";
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { COAAccountsService } from "services";
+import { COAAccountyTypeOptions } from "@/constants/common";
+import { formValidationRules } from "@/constants/common";
+import { selectStyles } from "constants/common";
+import Select from "react-select";
+import { getSessionVariables } from "@/constants/function";
+import AsyncSelect from "react-select/async";
 
 function EditChartOfAccounts() {
   const router = useRouter();
-
+  const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
 
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
   const { id } = router.query;
+  const [postableActiveStatus,setPostableActiveStatus] = useState(false);
 
   const fetchCOADetails = (id) => coaAccountsService.coaDetails(id);
 
-  const {
-    data: coaData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["COA_DETAILS", id] : null, () => fetchCOADetails(id));
+  const { data: coaData } = useSWR(id ? ["COA_DETAILS", id] : null, () =>
+    fetchCOADetails(id)
+  );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
   } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
-  const [postable, setPostable] = useState(coaData?.IsActive);
 
   useEffect(() => {
     if (!coaData) return;
@@ -49,28 +97,26 @@ function EditChartOfAccounts() {
 
   const cOAAccountsService = new COAAccountsService();
 
-  const { mutate: currencyMutate } = useSWR("LIST_COA", () =>
-    cOAAccountsService.getCoasAccounts()
-  );
+  
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.COAName,
       description: data.Description,
       IsActive: activeStatus,
       code: data.COACode,
       parentID: parseInt(data.COAParent),
-      accountType: data.AccountType,
-      postable: postable,
+      accountType: data.AccountType.value,
+      postable: coaData?.IsActive,
+      clientID,
+      projectID
     };
 
     cOAAccountsService
       .editCOA(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("COA Edited successfully");
-        mutate(currencyMutate());
         router.back();
 
         reset();
@@ -126,202 +172,202 @@ function EditChartOfAccounts() {
 
       <hr style={{ height: "2px" }} />
       <Form
-        style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-        className=" mt-2 d-flex flex-column"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {" "}
-        <Col xl="4">
-          <div className="mb-1">
-            <Label>COA Name</Label>
-            <Controller
-              name="COAName"
-              rules={{
-                required: "COA Parent  is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  placeholder="COA Name"
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  invalid={errors.COAName && true}
-                  {...field}
-                />
+          style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
+          className=" mt-2 d-flex flex-column"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {" "}
+          <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">COA Name <span className="required">*</span></Label>
+              <Controller
+                name="COAName"
+                rules={coaValidationRules.name}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="COA Name"
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    invalid={errors.COAName && true}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.COAName && (
+                <span style={{ color: "red" }}>
+                  {errors.COAName.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.COAName && (
-              <span style={{ color: "red" }}>
-                {errors.COAName.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-        <Col xl="4">
-          <div className="mb-1">
-            <Label>COA Code</Label>
-            <Controller
-              name="COACode"
-              rules={{ required: "COA Code  is required" }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  placeholder="COA Code"
-                  invalid={errors.COACode && true}
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  {...field}
-                />
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">COA Code <span className="required">*</span></Label>
+              <Controller
+                name="COACode"
+                rules={coaValidationRules.code}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    placeholder="COA Code"
+                    invalid={errors.COACode && true}
+                    style={{ fontSize: "12px", fontWeight: "400" }}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.COACode && (
+                <span style={{ color: "red" }}>
+                  {errors.COACode.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.COACode && (
-              <span style={{ color: "red" }}>
-                {errors.COACode.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-        <Col xl="4">
-          <div className="mb-1">
-            <Label>COA Parent</Label>
-            <Controller
-              name="COAParent"
-              control={control}
-              rules={{ required: "COA Parent  is required" }}
-              render={({ field }) => (
-                <Input
-                  placeholder="COAParent"
-                  invalid={errors.COAParent && true}
-                  style={{ fontSize: "12px", fontWeight: "400" }}
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">COA Parent</Label>
+              <Controller
+                name="COAParent"
+                control={control}
+                rules={coaValidationRules.parent}
+                render={({ field }) => (
+                  <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
                 />
+                )}
+              />
+              {errors.COAParent && (
+                <span style={{ color: "red" }}>
+                  {errors.COAParent.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.COAParent && (
-              <span style={{ color: "red" }}>
-                {errors.COAParent.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-        <Col xl="4">
-          <div className="mb-1">
-            <Label> Account Type</Label>
-            <Controller
-              name="AccountType"
-              rules={{ required: "Account Type Name  is required" }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  placeholder="AccountType"
-                  invalid={errors.AccountType && true}
-                  style={{ fontSize: "12px", fontWeight: "400" }}
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font"> Account Type <span className="required">*</span></Label>
+              <Controller
+                name="AccountType"
+                rules={coaValidationRules.accountType}
+                control={control}
+                render={({ field }) => (
+                  <Select
                   {...field}
+                  options={COAAccountyTypeOptions}
+                  placeholder="Select an option"
+                  styles={selectStyles}
                 />
+                )}
+              />
+              {errors.AccountType && (
+                <span style={{ color: "red" }}>
+                  {errors.AccountType.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.AccountType && (
-              <span style={{ color: "red" }}>
-                {errors.AccountType.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-        <Col xl="4">
-          <div className="mb-1">
-            <Label> Description</Label>
-            <Controller
-              name="Description"
-              rules={{ required: "Description  is required" }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="textarea"
-                  placeholder="Description"
-                  invalid={errors.Description && true}
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "400",
-                    height: "81px",
-                  }}
-                  {...field}
-                />
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font"> Description</Label>
+              <Controller
+                name="Description"
+                rules={coaValidationRules.description}
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="textarea"
+                    placeholder="Description"
+                    invalid={errors.Description && true}
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: "400",
+                      height: "81px",
+                    }}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.Description && (
+                <span style={{ color: "red" }}>
+                  {errors.Description.message as React.ReactNode}
+                </span>
               )}
-            />
-            {errors.Description && (
-              <span style={{ color: "red" }}>
-                {errors.Description.message as React.ReactNode}
-              </span>
-            )}
-          </div>
-        </Col>
-        {/* <Col xl="4">
+            </div>
+          </Col>
+          <Col xl="4">
+            <div className="d-flex flex-column mt-1">
+              <Label className="form-lable-font">Postable <span className="required">*</span></Label>
+              <div className="d-flex gap-1">
+                <div className="d-flex gap-1">
+                  <input
+                    type="radio"
+                    id="ex1-active"
+                    name="postable"
+                    checked={postableActiveStatus}
+                    onChange={() => {
+                      setPostableActiveStatus(true);
+                    }}
+                  />
+                  <div>Yes</div>
+                </div>
+                <div className="d-flex gap-1">
+                  <input
+                    type="radio"
+                    id="ex1-active"
+                    name="postable"
+                    checked={!postableActiveStatus}
+                    onChange={() => {
+                      setPostableActiveStatus(false);
+                    }}
+                  />
+                  <div>No</div>
+                </div>
+              </div>
+            </div>
+          </Col>
           <div className="d-flex flex-column mt-1">
             <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
+              className="form-lable-font"
+              
             >
-              Postable{" "}
+              Status{" "}
             </Label>
             <div className="d-flex gap-1">
               <div className="d-flex gap-1">
                 <input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
                   type="radio"
                   id="ex1-active"
                   name="ex1"
+                  checked={activeStatus}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
                 />
-                <div>Yes</div>
+                <div>Active</div>
               </div>
               <div className="d-flex gap-1">
                 <input
                   type="radio"
-                  id="ex1-active"
                   name="ex1"
+                  checked={!activeStatus}
+                  id="ex1-inactive"
                   onChange={() => {
                     setActiveStatus(false);
                   }}
                 />
-                <div>No</div>
+                <div>In-Active</div>
               </div>
             </div>
           </div>
-        </Col> */}
-        <div className="d-flex flex-column mt-1">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Status{" "}
-          </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-                checked={activeStatus}
-                onChange={() => {
-                  setActiveStatus(true);
-                }}
-              />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                name="ex1"
-                id="ex1-inactive"
-                checked={!activeStatus}
-                onChange={() => {
-                  setActiveStatus(false);
-                }}
-              />
-              <div>In-Active</div>
-            </div>
-          </div>
-        </div>
-      </Form>
+        </Form>
     </div>
   );
 }

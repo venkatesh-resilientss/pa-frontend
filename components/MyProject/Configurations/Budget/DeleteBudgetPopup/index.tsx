@@ -1,24 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
-import { BankService, BudgetService } from "services";
+import { BudgetService } from "services";
 import { closeDeleteBudgetPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 
 const DeleteBudgetPopup = () => {
   const dispatch = useDispatch();
-   
 
   const budgetService = new BudgetService();
 
-  const { mutate: budgetMutate } = useSWR("LIST_BUDGETS", () =>
-    budgetService.getBudgets()
-  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.budgets.deleteBudgetPopup.status
@@ -29,18 +21,14 @@ const DeleteBudgetPopup = () => {
   );
 
   const handleDeleteBudget = async () => {
-
     try {
-      await budgetService.deleteBudget( helperData);
+      await budgetService.deleteBudget(helperData);
       toast.success("Budget Deleted Successfully");
       dispatch(closeDeleteBudgetPopup("close"));
-      mutate(budgetMutate());
     } catch (error) {
       console.error("Error deleting Budget:", error);
     }
   };
-
-  const { register, handleSubmit } = useForm();
 
   return (
     <Modal

@@ -1,5 +1,5 @@
 import ReactSelect from "react-select";
-import { Col, Label, Row } from "reactstrap";
+import { Col, Label } from "reactstrap";
 
 function ClientControl() {
   const options = [
@@ -12,7 +12,7 @@ function ClientControl() {
         Deactivate Client Account
       </div>
       <div style={{ fontSize: "16px", fontWeight: "400" }}>
-        Deactivating an account suspends the client's access to our system{" "}
+        Deactivating an account suspends the client&apos;s access to our system{" "}
       </div>
       <hr />
 

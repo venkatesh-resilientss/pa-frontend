@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Card, CardBody, CardFooter, Col, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import Image from "next/image";

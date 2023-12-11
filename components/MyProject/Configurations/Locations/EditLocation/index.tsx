@@ -5,30 +5,25 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
-import { checkTenant } from "constants/function";
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 
 function EditLocation() {
   const router = useRouter();
   const { id } = router.query;
-   
+  const locationValidationRules = formValidationRules.locations;
   const locationService = new LocationsService();
 
-  const fetchLocationDetails = (id) =>
-    locationService.locationDetails(id);
+  const fetchLocationDetails = (id) => locationService.locationDetails(id);
 
-  const {
-    data: locationData,
-    isLoading: userLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(id ? ["LOCATION_DETAILS", id] : null, () =>
-    fetchLocationDetails(id)
+  const { data: locationData } = useSWR(
+    id ? ["LOCATION_DETAILS", id] : null,
+    () => fetchLocationDetails(id)
   );
 
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
     control,
     reset,
@@ -43,31 +38,31 @@ function EditLocation() {
     locationData?.Description &&
       setValue("description", locationData?.Description);
 
-    setActiveStatus(locationData?.IsActive)
-  },
-    [locationData]);
+    setActiveStatus(locationData?.IsActive);
+  }, [locationData]);
 
   const locationsService = new LocationsService();
 
   const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations()
+    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.locationname,
       description: data.description,
       isActive: activeStatus,
       code: data.locationcode,
+      clientID,
+      projectID
     };
 
     locationsService
       .editLocation(id, backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());
         router.back();
@@ -80,21 +75,11 @@ function EditLocation() {
   };
 
   return (
-    <div className="mt-4">
-      <div
-        className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600" }}
-      >
-        All Locations
-      </div>
+    <div className="mt-4 configuration-add">
+      <div className="title-head">All Locations</div>
 
       <div className="d-flex justify-content-between">
-        <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
-        >
-          Edit Location
-        </div>
+        <div className="title">Edit Location</div>
 
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
           <Button
@@ -135,11 +120,11 @@ function EditLocation() {
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-label" for="login-email">
-              Location Name
+              Location Name <span className="required">*</span>
             </Label>
             <Controller
               name="locationname"
-              rules={{ required: "Location Name is required" }}
+              rules={locationValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -152,7 +137,7 @@ function EditLocation() {
             />
 
             {errors.locationname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationname.message as React.ReactNode}
               </span>
             )}
@@ -161,11 +146,11 @@ function EditLocation() {
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-label" for="login-email">
-              Location Code
+              Location Code <span className="required">*</span>
             </Label>
             <Controller
               name="locationcode"
-              rules={{ required: "Location Code is required" }}
+              rules={locationValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -177,7 +162,7 @@ function EditLocation() {
               )}
             />
             {errors.locationcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationcode.message as React.ReactNode}
               </span>
             )}
@@ -190,8 +175,8 @@ function EditLocation() {
             </Label>
             <Controller
               name="description"
-              rules={{ required: "Description  is required" }}
               control={control}
+              rules={locationValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{
@@ -207,7 +192,7 @@ function EditLocation() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}

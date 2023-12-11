@@ -1,30 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
+import { Button, Modal, ModalBody,Spinner } from "reactstrap";
 import { closeBulkUploadSetsPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SetsService } from "services";
-import { checkTenant } from "constants/function";
+import { getSessionVariables } from "@/constants/function";
 
-const SetsBulkUploadPopup = () => {
+const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
-   
+
   const setsService = new SetsService();
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.sets.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.sets.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -40,6 +33,7 @@ const SetsBulkUploadPopup = () => {
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
   };
+  const [isLoading, setLoader] = useState(false);
 
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
@@ -47,22 +41,22 @@ const SetsBulkUploadPopup = () => {
       return;
     }
 
+    setLoader(true);
     const fileName = uploadedFiles[0];
-
+    const {clientID,projectID} = getSessionVariables()
     // Call the uploadbanklist function from your service with only the file name
     setsService
-      .uploadsetlist(fileName)
-      .then((result) => {
+      .uploadsetlist(fileName,clientID,projectID)
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
+        setRerender(!rerender)
 
         dispatch(closeBulkUploadSetsPopup("close"));
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        toast.error(error.Message || error.error || "Failed to insert data.");
+        setLoader(false);
       });
   };
 
@@ -197,8 +191,13 @@ const SetsBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+           {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>

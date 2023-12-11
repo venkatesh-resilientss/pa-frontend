@@ -1,4 +1,4 @@
-import { Card, CardBody } from "reactstrap";
+import { Card } from "reactstrap";
 
 function StatsCard({ title, value }) {
   return (

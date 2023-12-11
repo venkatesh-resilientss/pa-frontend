@@ -43,6 +43,9 @@ abstract class APIService {
   setAccessToken(token: any): void {
     cookie.set("accessToken", token, { expires: this.expiry.toDate() });
   }
+  getAccessToken() {
+    return cookie.get("accessToken");
+  }
 
   // Setting refresh token in a cookie
   setRefreshToken(token: string): void {
@@ -52,15 +55,25 @@ abstract class APIService {
   purgeAuth(): void {
     cookie.remove("accessToken");
     cookie.remove("refreshToken");
-    cookie.remove('next-auth.callback-url');
-    cookie.remove('next-auth.csrf-token');
-    cookie.remove('session');
-
+    cookie.remove("next-auth.callback-url");
+    cookie.remove("next-auth.csrf-token");
+    cookie.remove("session");
+    cookie.remove("tenant_id");
   }
 
   // Axios get method
   get(url: string): AxiosPromise<any> {
     return axios({ method: "GET", url, headers: this.getAxiosHeaders() });
+  }
+  getWithHeaders(url: string, token: any): AxiosPromise<any> {
+    return axios({
+      method: "GET",
+      url,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
+      },
+    });
   }
   // Axios post method
   post(url: string, data = {}, headers?: any): AxiosPromise<any> {
@@ -74,6 +87,17 @@ abstract class APIService {
             ["Content-Type"]: headers["Content-Type"],
           }
         : this.getAxiosHeaders(),
+    });
+  }
+  postWithMultiPartHeaders(url: string, data = {}): AxiosPromise<any> {
+    return axios({
+      method: "POST",
+      url,
+      data,
+      headers: {
+        Authorization: `Bearer ${cookie.get("accessToken")}`,
+        "Content-Type": "multipart/form-data",
+      },
     });
   }
   // Axios put method

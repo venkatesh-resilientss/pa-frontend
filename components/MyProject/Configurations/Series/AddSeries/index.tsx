@@ -1,39 +1,35 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import { SeriesService } from "services";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 function AddSeries() {
   const router = useRouter();
-   
+  const seriesValidationRules = formValidationRules.series;
   const seriesService = new SeriesService();
   const {
     control,
     handleSubmit,
-    register,
     reset,
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, SeriesActiveStatus] = useState(false);
-
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.seriesname,
       code: data.Seriescode,
       description: data.description,
-      is_active: activeStatus,
+      is_active: false,
+      clientID,
+      projectID
     };
 
     seriesService
       .createSeries(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Series Added successfully");
         reset();
         router.back();
@@ -97,10 +93,10 @@ function AddSeries() {
           >
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Name</Label>
+                <Label className="form-lable-font">Series Name <span className="required">*</span></Label>
                 <Controller
                   name="seriesname"
-                  rules={{ required: "Series Name is required" }}
+                  rules={seriesValidationRules.name}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -112,7 +108,7 @@ function AddSeries() {
                   )}
                 />
                 {errors.seriesname && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.seriesname.message as React.ReactNode}
                   </span>
                 )}
@@ -121,10 +117,10 @@ function AddSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Code</Label>
+                <Label className="form-lable-font">Series Code <span className="required">*</span></Label>
                 <Controller
                   name="Seriescode"
-                  rules={{ required: "Series Code is required" }}
+                  rules={seriesValidationRules.code}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -136,7 +132,7 @@ function AddSeries() {
                   )}
                 />
                 {errors.Seriescode && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.Seriescode.message as React.ReactNode}
                   </span>
                 )}
@@ -149,7 +145,7 @@ function AddSeries() {
                 <Controller
                   name="description"
                   control={control}
-                  rules={{ required: "Description is required" }}
+                  rules={seriesValidationRules.description}
                   render={({ field }) => (
                     <Input
                       style={{
@@ -165,14 +161,12 @@ function AddSeries() {
                   )}
                 />
                 {errors.description && (
-                  <span style={{ color: "red" }}>
+                  <span className="text-danger">
                     {errors.description.message as React.ReactNode}
                   </span>
                 )}
               </div>
             </Col>
-
-            
           </Form>
         </div>
       </div>

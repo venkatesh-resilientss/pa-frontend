@@ -1,47 +1,33 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Button,
   Input,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import axios from "axios";
-import DataTableWithButtons from "components/Generic/Table/index";
-import { FcFilmReel } from "react-icons/fc";
+
 import { useRouter } from "next/router";
 import { StatesService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import {
-  openBulkUploadStatesPopup,
-  openDeleteStatePopup,
-} from "redux/slices/mySlices/configurations";
-import GridTable from "components/grid-tables/gridTable";
+import { openBulkUploadStatesPopup } from "redux/slices/mySlices/configurations";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
-
-import { useState, useEffect } from "react";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
-const AllStatesTable = () => {
+const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordLimit = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -51,21 +37,27 @@ const AllStatesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+  const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
 
   const statesService = new StatesService();
 
-  const {
-    data: statesData,
-    isLoading: stateLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_STATES", searchText], () => statesService.getStates());
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await statesService.getStates({
+        search: searchText,
+        pageLimit: recordLimit,
+        offset: pageNumber,
+      });
+      const data = response.data; // Adjust based on the actual structure of the response
 
-  const dataSource = statesData?.data;
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -81,14 +73,8 @@ const AllStatesTable = () => {
   };
 
   const ActionsButton = (props) => {
-
-    const row = props.data;
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
     const Action = ({ icon, name, action }) => {
       return (
         <div onClick={action} className="d-flex align-items-center gap-2">
@@ -114,24 +100,30 @@ const AllStatesTable = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
                 className="w-100"
-                onClick={(e) =>
+                onClick={() =>
                   router.push(`/configurations/edit-state/${props.data?.ID}`)
                 }
               >
-                <Action icon={editIocn} name={"Edit"} action={() => { }} />
+                <Action
+                  icon={editIocn}
+                  name={"Edit"}
+                  action={() => {
+                    //
+                  }}
+                />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={(e) => e.preventDefault()}
               >
                 <Action
@@ -142,7 +134,7 @@ const AllStatesTable = () => {
                   }}
                 />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -153,6 +145,7 @@ const AllStatesTable = () => {
       headerName: "State Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -161,6 +154,7 @@ const AllStatesTable = () => {
       headerName: "State Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -169,6 +163,7 @@ const AllStatesTable = () => {
       headerName: "Country",
       field: "Country.Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -177,6 +172,7 @@ const AllStatesTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -184,8 +180,18 @@ const AllStatesTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -198,6 +204,7 @@ const AllStatesTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -207,6 +214,7 @@ const AllStatesTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -223,38 +231,6 @@ const AllStatesTable = () => {
       // },
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      StateCode: "CA",
-      StateName: "California",
-      Country: "United States",
-      Description: "Golden State",
-      CreatedBy: "UserA",
-      UpdatedOn: "2023-01-15",
-      Status: "active",
-    },
-    {
-      id: 2,
-      StateCode: "NY",
-      StateName: "New York",
-      Country: "United States",
-      Description: "Empire State",
-      CreatedBy: "UserB",
-      UpdatedOn: "2023-02-20",
-      Status: "inactive",
-    },
-    {
-      id: 3,
-      StateCode: "ON",
-      StateName: "Ontario",
-      Country: "Canada",
-      Description: "Province in Canada",
-      CreatedBy: "UserC",
-      UpdatedOn: "2023-03-25",
-      Status: "active",
-    },
-  ];
 
   return (
     <div>
@@ -267,14 +243,9 @@ const AllStatesTable = () => {
           }}
         >
           <CardBody>
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between configuration-table">
               <div>
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All States
-                </div>
+                <div className="m-2 title">All States</div>
               </div>
 
               <div
@@ -282,7 +253,7 @@ const AllStatesTable = () => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {statesData?.data.length} States
+                  States
                 </div>
 
                 <Input
@@ -293,24 +264,28 @@ const AllStatesTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() => dispatch(openBulkUploadStatesPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button>
+                {hasBulkUploadConfiguration && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadStatesPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />{" "}
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -353,37 +328,22 @@ const AllStatesTable = () => {
           </CardBody>
         </Card>
       </div>
-      {stateLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add State"}
-                buttonName={hasCreateConfiguration ? "Add State" : ""}
-                buttonLink={"/configurations/add-state"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordLimit}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Add State"}
+              buttonName={hasCreateConfiguration ? "Add State" : ""}
+              buttonLink={"/configurations/add-state"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

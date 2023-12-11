@@ -3,8 +3,7 @@ import { useState } from "react";
 
 // ** Next Import
 import Link from "next/link";
-import { Row, Col, Button } from "reactstrap";
-import { useRouter } from "next/router";
+import { Button } from "reactstrap";
 import { toast } from "react-toastify";
 
 import { useForm } from "react-hook-form";
@@ -14,10 +13,12 @@ import * as Yup from "yup";
 // ** Demo Imports
 import { Image } from "react-bootstrap";
 import { ForgotPasswordService } from "services";
+import { Spinner } from "reactstrap";
 
 const forgotPassword = new ForgotPasswordService();
 
 const ForgotPassword = () => {
+  const [loading, setLoading] = useState(false);
   const validationEmailSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Email is invalid"),
   });
@@ -31,54 +32,65 @@ const ForgotPassword = () => {
   // ** Vars
   const [email, setEmail] = useState("");
 
-  const forgotSubmit = async (values: any) => {
+  const forgotSubmit = async () => {
     const payload: any = {
       email: email,
     };
-
+    setLoading(true);
     forgotPassword
       .forgotPassword(payload)
-      .then((res: any) => {
+      .then(() => {
         toast.success("Email has been sent to your registered email");
+        setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         toast.error(err?.error);
       });
   };
 
-  const handleDragStart = (e) => {
-    e.preventDefault();
-  };
   return (
     <div className="d-flex main-container-i overflow-hidden">
       <div className="d-flex w-100 h-100 justify-content-evenly">
         {/* left */}
+        <div className="col-md-8 bg-tenantsignup text-center align-items-center justify-content-center">
           <Image
             src={"/ForgotSide.png"}
             alt="ForgotSide"
             className="img-fluid mt-5 forgotScreen1"
             fluid
-            width={1150}             
+            width={1150}
           />
-          <div style={{position:'absolute',top:"20%",left:"50%",transform:'translate(-50%,-50%)',textAlign:'center',color:'#ffffff', marginLeft:'-400px',marginTop:'300px'}}>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="text-container text-center">
-              <div className="d-flex align-items-start">
-                <p className="intutive">INTUITIVE</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="entertainment">ENTERTAINMENT</p>
-              </div>
-              <div className="d-flex align-items-start">
-                <p className="software">SOFTWARE</p>
+          <div
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translate(-50%,-50%)",
+              textAlign: "center",
+              color: "#ffffff",
+              marginLeft: "-400px",
+              marginTop: "300px",
+            }}
+          >
+            <div className="d-flex align-items-center justify-content-center">
+              <div className="text-container text-center">
+                <div className="d-flex align-items-start">
+                  <p className="intuitive">INTUITIVE</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="entertainment">ENTERTAINMENT</p>
+                </div>
+                <div className="d-flex align-items-start">
+                  <p className="software">SOFTWARE</p>
+                </div>
               </div>
             </div>
           </div>
-  </div>
           {/* <div className="d-flex align-items-center justify-content-center">
             <div className="text-container text-center">
               <div className="d-flex align-items-start">
-                <p className="intutive">INTUITIVE</p>
+                <p className="intuitive">INTUITIVE</p>
               </div>
               <div className="d-flex align-items-start">
                 <p className="entertainment">ENTERTAINMENT</p>
@@ -133,7 +145,6 @@ const ForgotPassword = () => {
                     className={`form-control mt-2 teamworkspaceplaceholder forgotScreen2 ${
                       errors.email ? "is-invalid" : ""
                     }`}
-                   
                     onChange={(e: any) => {
                       setEmail(e.target.value);
                     }}
@@ -149,14 +160,25 @@ const ForgotPassword = () => {
                     // loading={loading}
                     className="f-16 mt-2 forgotScreen2"
                   >
-                    Reset Password
+                    {loading ? (
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        size="sm"
+                        style={{ marginRight: "5px" }}
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    ) : (
+                      "Reset Password"
+                    )}
                   </Button>
                 </div>
-                <div className="mt-3" style={{ textAlign: "center",marginTop:'30px' }}>
-                  <Link
-                    href="/"
-                    className="forgotScreen3"
-                  >
+                <div
+                  className="mt-3"
+                  style={{ textAlign: "center", marginTop: "30px" }}
+                >
+                  <Link href="/" className="forgotScreen3">
                     <small>Click Here To Login</small>
                   </Link>
                 </div>
@@ -169,19 +191,31 @@ const ForgotPassword = () => {
                     color: "#656472",
                   }}
                 >
+                  <p className="privacy-text">Have Questions or Suggestions?</p>
                   <p className="privacy-text">
-                    Have Questions or Suggestions?
+                    Please{" "}
+                    <a
+                      style={{
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                      href="mailto:support@example.com"
+                    >
+                      email
+                    </a>{" "}
+                    support or call{" "}
+                    <a
+                      style={{
+                        color: "#030229",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                      href="tel:805-428-8024"
+                    >
+                      805-428-8024
+                    </a>
                   </p>
-                  <p className="privacy-text">
-    Please{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="mailto:support@example.com">
-      email
-    </a>{" "}
-    support or call{" "}
-    <a style={{ color: "#030229", textDecoration: "underline", cursor: "pointer" }} href="tel:805-428-8024">
-      805-428-8024
-    </a>
-  </p>
                   <p className="privacy-text">
                     Powered by Resilient Software Solutions LLC
                   </p>
@@ -190,11 +224,29 @@ const ForgotPassword = () => {
                   className="d-flex justify-content-between"
                   style={{ marginTop: "10px", color: "#030229" }}
                 >
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginLeft:"90px" }}>
+                  <a
+                    href="#"
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      marginLeft: "90px",
+                    }}
+                  >
                     Terms & conditions
                   </a>{" "}
                   <span style={{ fontSize: "12px", color: "#030229" }}>|</span>
-                  <a href="#" style={{ fontSize: "12px", color: "#030229",textDecoration: "underline", cursor: "pointer",marginRight:"100px" }}>
+                  <a
+                    href="#"
+                    style={{
+                      fontSize: "12px",
+                      color: "#030229",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                      marginRight: "100px",
+                    }}
+                  >
                     Privacy Policy
                   </a>{" "}
                 </div>
@@ -207,4 +259,3 @@ const ForgotPassword = () => {
   );
 };
 export default ForgotPassword;
-

@@ -1,31 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
-import infoImage from "assets/MyImages/info 1.svg";
-import { DepartmentsService } from "services";
+import { Button, Modal, ModalBody,Spinner } from "reactstrap";
 import { closeBulkUploadCurrenciesPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CurrencyService } from "services";
-import { checkTenant } from "constants/function";
 
-const CurrenciesBulkUploadPopup = () => {
+const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
-   
 
   const currencyService = new CurrencyService();
   const popupStatus = useSelector(
     (state: any) => state.configurations.currency.bulkUploadPopup.status
-  );
-
-  const helperData = useSelector(
-    (state: any) => state.configurations.currency.bulkUploadPopup.helperData
   );
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -42,6 +32,7 @@ const CurrenciesBulkUploadPopup = () => {
     setUploadedFiles(updatedFiles);
   };
 
+  const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {
     if (uploadedFiles.length === 0) {
       toast.error("Please select a file to upload.");
@@ -53,17 +44,15 @@ const CurrenciesBulkUploadPopup = () => {
     // Call the uploadbanklist function from your service with only the file name
     currencyService
       .uploadcurrencylist(fileName)
-      .then((result) => {
+      .then(() => {
         // Handle success
         toast.success("Data inserted successfully.");
-
         dispatch(closeBulkUploadCurrenciesPopup("close"));
+        setRerender(!rerender)
       })
       .catch((error) => {
-        // Handle error
-        console.error("Upload failed", error);
-
-        toast.error("Failed to insert data.");
+        toast.error(error.Message || error.error || "Failed to insert data.");
+        setLoader(false);
       });
   };
 
@@ -198,8 +187,13 @@ const CurrenciesBulkUploadPopup = () => {
               backgroundColor: "#00AEEF",
               border: "none",
             }}
+            disabled={isLoading}
           >
-            Upload
+            {isLoading ? (
+              <Spinner animation="border" role="status" size="sm" />
+            ) : (
+              "Upload"
+            )}
           </Button>
         </div>
       </ModalBody>
@@ -208,6 +202,3 @@ const CurrenciesBulkUploadPopup = () => {
 };
 
 export default CurrenciesBulkUploadPopup;
-function closeBulkUploadBanksPopup(arg0: string): any {
-  throw new Error("Function not implemented.");
-}

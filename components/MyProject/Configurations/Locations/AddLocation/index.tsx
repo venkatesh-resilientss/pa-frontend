@@ -2,38 +2,36 @@ import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import { LocationsService } from "services";
-import { checkTenant } from "constants/function";
+import { formValidationRules } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
 
 function AddLocation() {
   const router = useRouter();
-   
+  const locationValidationRules = formValidationRules.locations;
   const locationService = new LocationsService();
 
   const {
     control,
     handleSubmit,
-    register,
     reset,
     formState: { errors },
   } = useForm();
 
-  const [activeStatus, LocationActiveStatus] = useState(false);
-
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const {clientID,projectID} = getSessionVariables();
+    const backendFormat = {
       name: data.locationname,
       code: data.locationcode,
       description: data.description,
-      IsActive: activeStatus,
+      IsActive: false,
+      clientID,
+      projectID
     };
 
     locationService
       .createLocation(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("Location Added successfully");
         reset();
         router.back();
@@ -44,18 +42,17 @@ function AddLocation() {
   };
 
   return (
-    <div className="overflow-auto mt-4">
+    <div className="overflow-auto mt-4 configuration-add">
       <div
-        className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600" }}
+        className="title-head"
+        
       >
         All Locations
       </div>
 
       <div className="d-flex justify-content-between">
         <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
+          className="title"
         >
           Add New Location
         </div>
@@ -95,10 +92,10 @@ function AddLocation() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Location Name</Label>
+            <Label className="form-lable-font">Location Name<span className="required">*</span></Label>
             <Controller
               name="locationname"
-              rules={{ required: "Location Name is required" }}
+              rules={locationValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -111,7 +108,7 @@ function AddLocation() {
             />
 
             {errors.locationname && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationname.message as React.ReactNode}
               </span>
             )}
@@ -119,10 +116,10 @@ function AddLocation() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Location Code</Label>
+            <Label className="form-lable-font">Location Code<span className="required">*</span></Label>
             <Controller
               name="locationcode"
-              rules={{ required: "Location Code is required" }}
+              rules={locationValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -134,7 +131,7 @@ function AddLocation() {
               )}
             />
             {errors.locationcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.locationcode.message as React.ReactNode}
               </span>
             )}
@@ -145,8 +142,8 @@ function AddLocation() {
             <Label className="form-lable-font">Description</Label>
             <Controller
               name="description"
-              rules={{ required: "Description  is required" }}
               control={control}
+              rules={locationValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{
@@ -162,13 +159,12 @@ function AddLocation() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}
           </div>
         </Col>
-        
       </Form>
     </div>
   );

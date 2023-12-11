@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { useMemo, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 
 const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
   const gridRef = useRef(null);
@@ -40,7 +40,7 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText }) => {
   /**
    * Page variables
    */
-  const [pageCount, setPageCount] = useState(0);
+
   //  const changePage = (page: number) => {
   //   if (gridRef.current) {
   //     gridRef.current.api.paginationGoToPage(page);

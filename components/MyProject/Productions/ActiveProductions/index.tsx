@@ -1,14 +1,12 @@
 import GridTable from "components/grid-tables/gridTable";
 import Form from "react-bootstrap/Form";
-import { InputGroup, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
-import { FaSearch } from "react-icons/fa";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import { openAssignRSSLPopup } from "../../../../redux/slices/mySlices/productions";
 
-import { useState } from "react";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import Select from "react-select";
@@ -20,12 +18,9 @@ import {
   DropdownItem,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-import AssignRSSLPopup from "../PendingProductions/AssignRSSLPopup";
 import { useRouter } from "next/router";
 
 const ActiveProductionsCard = () => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -51,11 +46,7 @@ const ActiveProductionsCard = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
     const Action = ({ icon, name, action }) => {
       return (
         <div onClick={action} className="d-flex align-items-center gap-2">
@@ -81,21 +72,29 @@ const ActiveProductionsCard = () => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                action={() => {}}
+                action={() => {
+                  //
+                }}
               />
             </DropdownItem>
 
             <DropdownItem
               className="w-100"
-              onClick={(e) => router.push(`/edit-production/${props.data.id}`)}
+              onClick={() => router.push(`/edit-production/${props.data.id}`)}
             >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              <Action
+                icon={editIocn}
+                name={"Edit"}
+                action={() => {
+                  //
+                }}
+              />
             </DropdownItem>
             <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
-                action={(e) => {
+                action={() => {
                   dispatch(openAssignRSSLPopup("data"));
                 }}
               />
@@ -279,25 +278,25 @@ const ActiveProductionsCard = () => {
       boxShadow: state.isFocused ? null : null,
     }),
 
-    valueContainer: (provided, state) => ({
+    valueContainer: (provided) => ({
       ...provided,
       height: "30px",
       padding: "0 6px",
     }),
 
-    input: (provided, state) => ({
+    input: (provided) => ({
       ...provided,
       margin: "0px",
     }),
-    indicatorSeparator: (state) => ({
+    indicatorSeparator: () => ({
       display: "none",
     }),
-    indicatorsContainer: (provided, state) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
       height: "30px",
     }),
   };
-  const handleChange = (selectedOption) => {
+  const handleChange = () => {
     // setSelectedOption();
   };
 
@@ -312,28 +311,28 @@ const ActiveProductionsCard = () => {
             }}
           >
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Cient is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Date is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Production is All"
               onChange={handleChange}
               options={options}
               styles={customStyles}
             />
             <Select
-              value={selectedOption}
+              value={null}
               defaultInputValue="Status is All"
               onChange={handleChange}
               options={options}

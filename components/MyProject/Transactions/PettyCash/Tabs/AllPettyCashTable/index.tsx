@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import GridTable from "components/grid-tables/gridTable";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -7,11 +7,7 @@ import deleteIcon from "assets/myIcons/delete.svg";
 import approveIcon from "assets/myIcons/check_circle.svg";
 
 import detailsIocn from "assets/myIcons/list.svg";
-import CustomBadge from "components/Generic/CustomBadge";
 import {
-  Popover,
-  PopoverBody,
-  PopoverHeader,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -74,14 +70,10 @@ const AllPettyCashTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -109,11 +101,7 @@ const AllPettyCashTable = () => {
                 });
               }}
             >
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {}}
-              />
+              <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
             <DropdownItem
               tag="a"
@@ -126,7 +114,7 @@ const AllPettyCashTable = () => {
                 });
               }}
             >
-              <Action icon={editIocn} name={"Edit"} action={() => {}} />
+              <Action icon={editIocn} name={"Edit"} />
             </DropdownItem>
             <DropdownItem
               className="w-100"
@@ -136,14 +124,14 @@ const AllPettyCashTable = () => {
                 )
               }
             >
-              <Action icon={approveIcon} name={"Approve"} action={() => {}} />
+              <Action icon={approveIcon} name={"Approve"} />
             </DropdownItem>
             <DropdownItem
               tag="a"
               className="w-100 cursor-pointer"
               onClick={() => dispatch(openDeletePettyCashPopup(props.data?.ID))}
             >
-              <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+              <Action icon={deleteIcon} name={"Delete"} />
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>

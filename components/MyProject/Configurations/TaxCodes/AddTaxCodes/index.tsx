@@ -3,35 +3,52 @@ import { useRouter } from "next/router";
 import { TaxCodesService } from "services";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
+import { CountryService } from "services";
+import { selectStyles } from "@/constants/common";
+import AsyncSelect from "react-select/async";
+import { useEffect, useState } from "react";
 function AddTaxCode() {
   const {
     control,
-    setError,
     handleSubmit,
-    register,
     reset,
     formState: { errors },
   } = useForm();
   const router = useRouter();
-   
+  const taxCodeValidationRules = formValidationRules.taxCodes;
   const taxCodeService = new TaxCodesService();
-  const [activeStatus, setActiveStatus] = useState(false);
+  const countryService = new CountryService();
 
+  const [initialCountryOptions,setInitialCountryOptions] = useState([]);
+  useEffect(()=>{
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries();
+        const options = res?.data.map(item=>({
+          value : item.ID,
+          label : `${item.Code} - ${item.Name}`
+        }))
+        setInitialCountryOptions(options);
+      }catch(error){
+        toast.error(error?.Message || error?.error ||'Error while fetching countries')
+      }
+    }
+    fetchInitialCountryOptions();
+  },[]);
+  const loadCountryOptions = (callback=>{
+    callback(initialCountryOptions);
+  })
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
+      name : data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      is_active: activeStatus,
+      countryID : parseInt(data.country.value)
     };
-
     taxCodeService
       .createTaxCode(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("TaxCode Added successfully");
         reset();
         router.back();
@@ -41,7 +58,7 @@ function AddTaxCode() {
       });
   };
   return (
-    <div className="overflow-auto mt-4">
+    <div className="mt-4">
       <div
         className="text-black"
         style={{ fontSize: "16px", fontWeight: "600" }}
@@ -93,10 +110,10 @@ function AddTaxCode() {
       >
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code</Label>
+            <Label className="form-lable-font">Tax Code<span className="required">*</span> </Label>
             <Controller
               name="taxcode"
-              rules={{ required: "Tax Code  is required" }}
+              rules={taxCodeValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -108,13 +125,62 @@ function AddTaxCode() {
               )}
             />
             {errors.taxcode && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.taxcode.message as React.ReactNode}
               </span>
             )}
           </div>
         </Col>
-
+        <Col xl="4">
+          <div className="mb-1">
+            <Label className="form-lable-font">Tax Code Name<span className="required">*</span> </Label>
+            <Controller
+              name="taxcodename"
+              rules={taxCodeValidationRules.name}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Tax Code"
+                  invalid={errors.taxcodename && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.taxcodename && (
+              <span style={{ color: "red" }}>
+                {errors.taxcodename.message as React.ReactNode}
+              </span>
+            )}
+          </div>
+        </Col>
+        <Col xl="4">
+            <div className="mb-1">
+              <Label className="form-lable-font">Country <span className="required">*</span></Label>
+              <Controller
+                name="country"
+                control={control}
+                rules={taxCodeValidationRules.country}
+                render={({ field }) => (
+                  <AsyncSelect
+                    {...field}
+                    isClearable={true}
+                    className="react-select"
+                    classNamePrefix="select"
+                    placeholder="Select Country"
+                    loadOptions={loadCountryOptions}
+                    defaultOptions={initialCountryOptions}
+                    styles={selectStyles}
+                  />
+                )}
+              />
+              {errors.country && (
+                <span style={{ color: "red" }}>
+                  {errors.country.message as React.ReactNode}
+                </span>
+              )}
+            </div>
+          </Col>
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-lable-font" f>
@@ -123,7 +189,7 @@ function AddTaxCode() {
             <Controller
               name="description"
               control={control}
-              rules={{ required: "Description  is required" }}
+              rules={taxCodeValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{
@@ -139,13 +205,12 @@ function AddTaxCode() {
               )}
             />
             {errors.description && (
-              <span style={{ color: "red" }}>
+              <span className="text-danger">
                 {errors.description.message as React.ReactNode}
               </span>
             )}
           </div>
         </Col>
-
       </Form>
     </div>
   );

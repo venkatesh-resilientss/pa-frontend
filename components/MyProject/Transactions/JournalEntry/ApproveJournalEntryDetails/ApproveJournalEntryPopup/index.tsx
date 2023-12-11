@@ -1,21 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Input, Label, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/ApproveImage.svg";
-import { DepartmentsService } from "services";
-import { closeDeleteDepartmentPopup } from "redux/slices/mySlices/configurations";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 import { closeApproveJournalEntryPopup } from "redux/slices/mySlices/transactions";
 
 const ApproveJournalEntryPopup = () => {
@@ -26,12 +12,6 @@ const ApproveJournalEntryPopup = () => {
       state.transactions.journalEntry.approveJournalEntryPopup.status
   );
 
-  const helperData = useSelector(
-    (state: any) =>
-      state.transactions.journalEntry.approveJournalEntryPopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
   return (
     <Modal
       isOpen={popupStatus}

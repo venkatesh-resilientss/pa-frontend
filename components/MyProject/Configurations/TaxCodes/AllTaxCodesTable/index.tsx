@@ -1,44 +1,32 @@
 import {
   Card,
   CardBody,
-  Badge,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Form,
   Input,
   Button,
 } from "reactstrap";
-import { ArrowUp, Edit, File, MoreVertical, Plus, Trash } from "react-feather";
-import DataTableWithButtons from "components/Generic/Table/index";
 import { useRouter } from "next/router";
 import { TaxCodesService } from "services";
-import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
-import detailsIocn from "assets/myIcons/list.svg";
-import useSWR from "swr";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadTaxCodesPopup,
-  openDeleteTaxCodesPopup,
-} from "redux/slices/mySlices/configurations";
-import { useState, useEffect } from "react";
+import { openBulkUploadTaxCodesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import { checkTenant } from "constants/function";
+import AGGridTable from "@/components/grid-tables/AGGridTable";
 
-const AllTaxCodesTable = () => {
+const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
+  const recordLimit = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -48,23 +36,28 @@ const AllTaxCodesTable = () => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
+
+  const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
 
   const taxcodesService = new TaxCodesService();
 
-  const {
-    data: taxcodesData,
-    isLoading: taxCodesLoading,
-    error: userError,
-    mutate: userMutate,
-  } = useSWR(["LIST_TAXCODES", searchText], () =>
-    taxcodesService.getTaxCodes()
-  );
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await taxcodesService.getTaxCodes({
+        search: searchText,
+        pageLimit: recordLimit,
+        offset: pageNumber,
+      });
+      const data = response.data; // Adjust based on the actual structure of the response
 
-  const dataSource = taxcodesData?.data;
+      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    } finally {
+      // setBankLoading(false)
+    }
+  };
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -81,14 +74,10 @@ const AllTaxCodesTable = () => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-    const [open, setOpen] = useState(false);
 
-    const toggle = () => {
-      setOpen(!open);
-    };
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -111,7 +100,7 @@ const AllTaxCodesTable = () => {
             <Action
               icon={detailsIocn}
               name={"View Details"}
-              action={() => {}}
+              
             />
           </DropdownItem> */}
             {hasEditConfigurationPermission && (
@@ -124,10 +113,10 @@ const AllTaxCodesTable = () => {
                   router.push(`/configurations/edit-taxcode/${props.data.ID}`);
                 }}
               >
-                <Action icon={editIocn} name={"Edit"} action={() => {}} />
+                <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
+            {/* {hasDeactivateConfiguration && (
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
@@ -135,9 +124,9 @@ const AllTaxCodesTable = () => {
                   dispatch(openDeleteTaxCodesPopup(props.data?.ID))
                 }
               >
-                <Action icon={deleteIcon} name={"Delete"} action={() => {}} />
+                <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
-            )}
+            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -148,6 +137,16 @@ const AllTaxCodesTable = () => {
       headerName: "Tax Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "Name",
+      field: "Name",
+      sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -156,6 +155,7 @@ const AllTaxCodesTable = () => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -163,8 +163,18 @@ const AllTaxCodesTable = () => {
 
     {
       headerName: "Created By",
-      field: "CreatedBy",
+      field: "Created",
+      cellRenderer: (params) => {
+        return (
+          <div className="f-ellipsis">
+            {(params?.data?.Created?.first_name || "") +
+              " " +
+              (params?.data?.Created?.last_name || "")}
+          </div>
+        );
+      },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -177,6 +187,7 @@ const AllTaxCodesTable = () => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -186,6 +197,7 @@ const AllTaxCodesTable = () => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -207,7 +219,7 @@ const AllTaxCodesTable = () => {
 
   return (
     <div>
-      <div className="section">
+      <div className="section ">
         <Card
           className="mt-2"
           style={{
@@ -217,13 +229,8 @@ const AllTaxCodesTable = () => {
         >
           <CardBody>
             <div className="d-flex justify-content-between">
-              <div className="d-flex align-items-center ">
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  All Tax Codes
-                </div>
+              <div className="d-flex align-items-center configuration-table">
+                <div className="title">All Tax Codes</div>
               </div>
 
               <div
@@ -234,7 +241,7 @@ const AllTaxCodesTable = () => {
                   className=""
                   style={{ fontSize: "16px", fontWeight: "400" }}
                 >
-                  {taxcodesData?.data.length} Tax Codes
+                  Tax Codes
                 </div>
 
                 <Input
@@ -245,26 +252,28 @@ const AllTaxCodesTable = () => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                <Button
-                  onClick={() =>
-                    dispatch(openBulkUploadTaxCodesPopup("upload"))
-                  }
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />
-                  Bulk Upload
-                </Button>
+                {hasBulkUploadConfiguration && (
+                  <Button
+                    onClick={() =>
+                      dispatch(openBulkUploadTaxCodesPopup("upload"))
+                    }
+                    style={{
+                      height: "38px",
+                      backgroundColor: "#E7EFFF",
+                      color: "#4C4C61",
+                      fontSize: "14px",
+                      fontWeight: "600",
+                      borderColor: "#4C4C61",
+                    }}
+                  >
+                    <Image
+                      style={{ width: "14px", height: "14px" }}
+                      src={plusIcon}
+                      alt="plus-icon"
+                    />
+                    Bulk Upload
+                  </Button>
+                )}
 
                 {/* <Button
                   style={{
@@ -308,39 +317,21 @@ const AllTaxCodesTable = () => {
         </Card>
       </div>
 
-      {taxCodesLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add Tax Code"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Tax Code" : "No button"
-                }
-                buttonLink={"/configurations/add-tax-code"}
-              />
-            </div>
+      <div className="mt-3">
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordLimit}
+          noDataPage={() => (
+            <NoDataPage
+              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
+              buttonLink={"/configurations/add-set"}
+            />
           )}
-        </>
-      )}
+        />
+      </div>
     </div>
   );
 };

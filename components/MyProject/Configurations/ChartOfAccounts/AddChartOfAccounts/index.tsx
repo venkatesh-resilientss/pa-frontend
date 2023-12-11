@@ -1,46 +1,96 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
-import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { COAAccountsService } from "services";
-import { checkTenant } from "constants/function";
-
+import { formValidationRules } from "@/constants/common";
+import Select from "react-select";
+import { selectStyles } from "constants/common";
+import { useEffect, useState } from "react";
+import { COAAccountyTypeOptions } from "@/constants/common";
+import { getSessionVariables } from "@/constants/function";
+import AsyncSelect from "react-select/async";
 function AddChartOfAccounts() {
   const router = useRouter();
-  const [activeStatus, setActiveStatus] = useState(false);
-
+  const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
 
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          }
+        );
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  const [postableActiveStatus, setPostableActiveStatus] = useState(false);
   const {
     control,
-    setError,
     handleSubmit,
-    register,
     reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-
-    let backendFormat;
-
-    backendFormat = {
+    const { clientID, projectID } = getSessionVariables();
+    const backendFormat = {
       name: data.COAName,
       code: data.COACode,
       parentID: parseInt(data.COAParent),
-      IsActive: activeStatus,
+      IsActive: false,
       description: data.Description,
-      type: data.AccountType,
+      type: data.AccountType.value,
+      postable: postableActiveStatus,
+      clientID,
+      projectID,
     };
 
     coaAccountsService
       .createCOA(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("COA Added successfully");
         router.back();
-
         reset();
       })
       .catch((error) => {
@@ -50,7 +100,7 @@ function AddChartOfAccounts() {
 
   return (
     <div className="section mt-4">
-      <div className="overflow-auto">
+      <div className="">
         <div
           className="text-black"
           style={{ fontSize: "16px", fontWeight: "600" }}
@@ -102,10 +152,12 @@ function AddChartOfAccounts() {
           {" "}
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Name</Label>
+              <Label className="form-lable-font">
+                COA Name <span className="required">*</span>
+              </Label>
               <Controller
                 name="COAName"
-                rules={{ required: "COA Name  is required" }}
+                rules={coaValidationRules.name}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -117,7 +169,7 @@ function AddChartOfAccounts() {
                 )}
               />
               {errors.COAName && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.COAName.message as React.ReactNode}
                 </span>
               )}
@@ -125,10 +177,12 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">COA Code</Label>
+              <Label className="form-lable-font">
+                COA Code <span className="required">*</span>
+              </Label>
               <Controller
                 name="COACode"
-                rules={{ required: "COA Code  is required" }}
+                rules={coaValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -140,7 +194,7 @@ function AddChartOfAccounts() {
                 )}
               />
               {errors.COACode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.COACode.message as React.ReactNode}
                 </span>
               )}
@@ -152,18 +206,22 @@ function AddChartOfAccounts() {
               <Controller
                 name="COAParent"
                 control={control}
-                rules={{ required: "COA Parent  is required" }}
+                rules={coaValidationRules.parent}
                 render={({ field }) => (
-                  <Input
-                    placeholder="COA Parent"
-                    invalid={errors.COAParent && true}
-                    style={{ fontSize: "12px", fontWeight: "400" }}
-                    {...field}
-                  />
+                  <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
+                />
                 )}
               />
               {errors.COAParent && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.COAParent.message as React.ReactNode}
                 </span>
               )}
@@ -171,22 +229,25 @@ function AddChartOfAccounts() {
           </Col>
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font"> Account Type</Label>
+              <Label className="form-lable-font">
+                {" "}
+                Account Type <span className="required">*</span>
+              </Label>
               <Controller
                 name="AccountType"
-                rules={{ required: "Account Type Name  is required" }}
+                rules={coaValidationRules.accountType}
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    placeholder="AccountType"
-                    invalid={errors.AccountType && true}
-                    style={{ fontSize: "12px", fontWeight: "400" }}
+                  <Select
                     {...field}
+                    options={COAAccountyTypeOptions}
+                    placeholder="Select an option"
+                    styles={selectStyles}
                   />
                 )}
               />
               {errors.AccountType && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.AccountType.message as React.ReactNode}
                 </span>
               )}
@@ -197,7 +258,7 @@ function AddChartOfAccounts() {
               <Label className="form-lable-font"> Description</Label>
               <Controller
                 name="Description"
-                rules={{ required: "Description  is required" }}
+                rules={coaValidationRules.description}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -214,23 +275,26 @@ function AddChartOfAccounts() {
                 )}
               />
               {errors.Description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Description.message as React.ReactNode}
                 </span>
               )}
             </div>
           </Col>
-          {/* <Col xl="4">
+          <Col xl="4">
             <div className="d-flex flex-column mt-1">
-              <Label className="form-lable-font">Postable </Label>
+              <Label className="form-lable-font">
+                Postable <span className="required">*</span>
+              </Label>
               <div className="d-flex gap-1">
                 <div className="d-flex gap-1">
                   <input
                     type="radio"
                     id="ex1-active"
                     name="ex1"
+                    checked={postableActiveStatus}
                     onChange={() => {
-                      setActiveStatus(true);
+                      setPostableActiveStatus(true);
                     }}
                   />
                   <div>Yes</div>
@@ -240,15 +304,16 @@ function AddChartOfAccounts() {
                     type="radio"
                     id="ex1-active"
                     name="ex1"
+                    checked={!postableActiveStatus}
                     onChange={() => {
-                      setActiveStatus(false);
+                      setPostableActiveStatus(false);
                     }}
                   />
                   <div>No</div>
                 </div>
               </div>
             </div>
-          </Col> */}
+          </Col>
         </Form>
       </div>
     </div>

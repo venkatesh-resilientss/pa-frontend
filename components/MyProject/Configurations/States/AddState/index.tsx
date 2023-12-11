@@ -1,27 +1,21 @@
-import ReactSelect from "react-select";
 import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { CountryService, StatesService } from "services";
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import AsyncSelect from "react-select/async";
 import useSWR from "swr";
-import { checkTenant } from "constants/function";
-
+import { selectStyles } from "@/constants/common";
+import { formValidationRules } from "@/constants/common";
 function AddState() {
   const router = useRouter();
-
+  const statesValidationRules = formValidationRules.states;
   const {
     control,
     handleSubmit,
     reset,
-    register,
     formState: { errors },
   } = useForm();
-
-  const [activeStatus, StateActiveStatus] = useState(false);
-   
 
   const countryService = new CountryService();
   const statesService = new StatesService();
@@ -42,19 +36,16 @@ function AddState() {
   };
 
   const onSubmit = (data) => {
-    let backendFormat;
-
-    backendFormat = {
+    const backendFormat = {
       name: data.Statename,
       code: data.Statecode,
       Description: data.description,
       CountryID: data.country?.value,
-      is_active: activeStatus,
     };
 
     statesService
       .createState(backendFormat)
-      .then((res) => {
+      .then(() => {
         toast.success("State Added successfully");
         reset();
         router.back();
@@ -118,11 +109,11 @@ function AddState() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">State Name</Label>
+              <Label className="form-lable-font">State Name <span className="required">*</span></Label>
               <Controller
                 name="Statename"
                 control={control}
-                rules={{ required: "State Name  is required" }}
+                rules={statesValidationRules.name}
                 render={({ field }) => (
                   <Input
                     style={{ fontSize: "12px", fontWeight: "400" }}
@@ -133,7 +124,7 @@ function AddState() {
                 )}
               />
               {errors.Statename && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statename.message as React.ReactNode}
                 </span>
               )}
@@ -142,10 +133,10 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="fform-lable-font">State Code</Label>
+              <Label className="fform-lable-font">State Code <span className="required">*</span></Label>
               <Controller
                 name="Statecode"
-                rules={{ required: "State Code  is required" }}
+                rules={statesValidationRules.code}
                 control={control}
                 render={({ field }) => (
                   <Input
@@ -157,7 +148,7 @@ function AddState() {
                 )}
               />
               {errors.Statecode && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.Statecode.message as React.ReactNode}
                 </span>
               )}
@@ -166,11 +157,11 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">Country</Label>
+              <Label className="form-lable-font">Country <span className="required">*</span></Label>
               <Controller
                 name="country"
                 control={control}
-                rules={{ required: "Country  is required" }}
+                rules={statesValidationRules.country}
                 render={({ field }) => (
                   <AsyncSelect
                     {...field}
@@ -180,11 +171,12 @@ function AddState() {
                     loadOptions={loadCountryOptions}
                     placeholder="Select Country"
                     defaultOptions={countrySelectFormat}
+                    styles={selectStyles}
                   />
                 )}
               />
               {errors.country && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.country.message as React.ReactNode}
                 </span>
               )}
@@ -196,8 +188,8 @@ function AddState() {
               <Label className="form-lable-font">Description</Label>
               <Controller
                 name="description"
-                rules={{ required: "Dscription  is required" }}
                 control={control}
+                rules={statesValidationRules.description}
                 render={({ field }) => (
                   <Input
                     style={{
@@ -213,14 +205,12 @@ function AddState() {
                 )}
               />
               {errors.description && (
-                <span style={{ color: "red" }}>
+                <span className="text-danger">
                   {errors.description.message as React.ReactNode}
                 </span>
               )}
             </div>
           </Col>
-
-          
         </Form>
       </div>
     </>

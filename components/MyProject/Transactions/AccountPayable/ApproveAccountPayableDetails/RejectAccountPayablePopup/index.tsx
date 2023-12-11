@@ -1,19 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
-} from "reactstrap";
-import { Controller, useForm } from "react-hook-form";
+import { Button, Input, Label, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info.svg";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
-import { checkTenant } from "constants/function";
-import { useState, useEffect } from "react";
 import { closeRejectAccountPayablePopup } from "redux/slices/mySlices/transactions";
 
 const RejectAccountPayablePopup = () => {
@@ -24,12 +12,6 @@ const RejectAccountPayablePopup = () => {
       state.transactions.accountPayable.rejectAccountPayablePopup.status
   );
 
-  const helperData = useSelector(
-    (state: any) =>
-      state.transactions.accountPayable.rejectAccountPayablePopup.helperData
-  );
-
-  const { register, handleSubmit } = useForm();
   return (
     <Modal
       isOpen={popupStatus}

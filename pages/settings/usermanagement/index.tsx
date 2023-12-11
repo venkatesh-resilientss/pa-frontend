@@ -1,5 +1,4 @@
 import UserManagement from "components/MyProject/Settings/UserManagement";
-import Sidebar from "components/Sidebar";
 
 function index() {
   return (

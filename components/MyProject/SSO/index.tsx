@@ -1,5 +1,4 @@
 // ** React Imports
-import { ReactNode } from "react";
 import Link from "next/link";
 import { Row, Col, Button } from "reactstrap";
 import { useForm, Controller } from "react-hook-form";
@@ -10,12 +9,7 @@ const SSOLogo = require("assets/MyImages/ssoLogo.svg");
 
 const Singlesignon = () => {
   // ** Hooks
-  const {
-    control,
-    setError,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control } = useForm({
     // defaultValues,
     mode: "onBlur",
     // resolver: yupResolver(schema)
