@@ -2,9 +2,25 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-
+import React, { useState, useEffect } from "react";
+import ExtendedMultiSelect from "@/components/ExtendedMultiSelect";
+export type Option = {
+  value: number | string;
+  label: string;
+};
 function AddSeries() {
+
   const router = useRouter();
+  const options = [
+    { value: 0, label: "Goranboy" },
+    { value: 1, label: "Safikurd" },
+    { value: 2, label: "Baku" },
+    { value: 3, label: "Ganja" },
+  ];
+  const [optionSelected, setSelected] = useState<Option[] | null>();
+  const handleChange = (selected: Option[]) => {
+    setSelected(selected);
+  };
   const onSubmit = async () => {
     // Handle form submission logic here
     try {
@@ -125,72 +141,19 @@ function AddSeries() {
                     name="EmployeeType"
                     rules={{ required: "Employee Type is required" }}
                     control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Employee Type"
-                        invalid={errors.EmployeeType && true}
-                        {...field}
+                    render={() => (
+                      <ExtendedMultiSelect
+                        key="example_id"
+                        options={options}
+                        onChange={handleChange}
+                        value={optionSelected}
+                        isSelectAll={true}
+                        menuPlacement={"top"}
                       />
                     )}
                   />
-                  {errors.EmployeeType && (
-                    <span className="text-danger">
-                      {errors.EmployeeType.message as React.ReactNode}
-                    </span>
-                  )}
                 </div>
               </Col>
-
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">OFF Production<span className="text-danger">*</span></Label>
-                  <Controller
-                    name="OFFProduction"
-                    rules={{ required: "OFF Production is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="OFF Production"
-                        invalid={errors.OFFProduction && true}
-                        {...field}
-                      />
-                    )}
-                  />
-                  {errors.OFFProduction && (
-                    <span className="text-danger">
-                      {errors.OFFProduction.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Agreements<span className="text-danger">*</span></Label>
-                  <Controller
-                    name="Agreements"
-                    rules={{ required: "Agreements is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Agreements"
-                        invalid={errors.Agreements && true}
-                        {...field}
-                      />
-                    )}
-                  />
-                  {errors.Agreements && (
-                    <span className="text-danger">
-                      {errors.Agreements.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-            </Row>
-            <Row>
               <Col><div className="d-flex flex-column mt-1">
                 <Label className="form-lable-font">Status </Label>
                 <div className="d-flex gap-1">
@@ -213,7 +176,27 @@ function AddSeries() {
                   </div>
                 </div>
               </div>
-              </Col></Row>
+              </Col>
+              <Col xl="4">
+                <div className="mb-1">
+                  <Controller
+                    name="OFFProduction"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        className="p-2 occupation-checkboox"
+                        placeholder="OFF Production"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Label className="form-lable-font occupation-checkbox-text">OFF Production</Label>
+                </div>
+              </Col>
+
+            </Row>
+           
             <Row className="occupation-button-header">
               <Col>
                 <div className="d-flex me-2 " style={{ gap: "20px" }}>

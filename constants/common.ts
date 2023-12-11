@@ -395,6 +395,10 @@ export const sidebarRoutesProduction = [
         name: "Project Types",
         path: "/project-type",
       },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      }
     ]
   },
 
@@ -430,6 +434,10 @@ export const sidebarRoutesNonStaff = [
         name: "Departments",
         path: "/departments",
       },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      }
 
     ],
   },
