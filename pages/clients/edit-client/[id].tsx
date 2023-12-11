@@ -14,7 +14,7 @@ function Clients() {
   const [loading, setLoading] = useState(false);
 
   const defaultClientData: any = {
-    SoftwareID: "",
+    Softwares: [],
 
     Name: "",
     Code: "",
@@ -108,17 +108,18 @@ function Clients() {
 
         tempObj.PhysicalAddress.country =
           tempObj?.PhysicalAddress?.CountryID &&
-          resp?.mailing_address?.country_name
+          resp?.physical_address?.country_name
             ? {
-                label: resp?.mailing_address?.country_name,
+                label: resp?.physical_address?.country_name,
                 value: tempObj?.PhysicalAddress?.CountryID,
               }
             : null;
 
         tempObj.PhysicalAddress.state =
-          tempObj?.PhysicalAddress?.StateID && resp?.mailing_address?.state_name
+          tempObj?.PhysicalAddress?.StateID &&
+          resp?.physical_address?.state_name
             ? {
-                label: resp?.mailing_address?.state_name,
+                label: resp?.physical_address?.state_name,
                 value: tempObj?.PhysicalAddress?.StateID,
               }
             : null;

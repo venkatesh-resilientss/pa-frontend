@@ -15,7 +15,7 @@ import { UsersService } from "services";
 import useSWR from "swr";
 import moment from "moment";
 import { Plus } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
+import GridTable from "components/dataTable/table";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
@@ -37,8 +37,7 @@ const AllRoleTable = () => {
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
-  }
-
+  };
 
   const DeleteModal = () => (
     <Modal
@@ -79,7 +78,6 @@ const AllRoleTable = () => {
           >
             Cancel
           </a>
-
         </div>
       </ModalBody>
     </Modal>
@@ -87,9 +85,8 @@ const AllRoleTable = () => {
 
   const userService = new UsersService();
 
-  const { data: clientData } = useSWR(
-    ["LIST_CLIENTS", searchText],
-    () => userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
+  const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
+    userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
   );
 
   const StateBadge = (props) => {
@@ -186,8 +183,8 @@ const AllRoleTable = () => {
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params) => (params.data.roleName),
-      unSortIcon: true
+      cellRenderer: (params) => params.data.roleName,
+      unSortIcon: true,
     },
     {
       headerName: "Client",
@@ -196,8 +193,10 @@ const AllRoleTable = () => {
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params) => { return params.value.map(ele => ele) },
-      unSortIcon: true
+      cellRenderer: (params) => {
+        return params.value.map((ele) => ele);
+      },
+      unSortIcon: true,
     },
     // { headerName: "id", field: "id", sortable: true, resizable: true, cellStyle: { fontSize: "16px", fontWeight: "400" }, headerClass: "custom-header-class", },
     // {
@@ -252,7 +251,13 @@ const AllRoleTable = () => {
             <CardBody>
               <div className="d-flex justify-content-between">
                 <div>
-                  <p className="m-2" style={{ fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>
+                  <p
+                    className="m-2"
+                    style={{
+                      fontWeight: "600",
+                      fontFamily: "Segoe UI Semibold",
+                    }}
+                  >
                     User Management
                   </p>
                 </div>

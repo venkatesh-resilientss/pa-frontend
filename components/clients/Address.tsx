@@ -62,7 +62,7 @@ export default function Address(props) {
       ph: "Enter Address",
       typ: "text",
       vl: "MailingAddress.Line1",
-      err: "Enter Address",
+      err: "",
     },
     {
       lb: "Address Line 2",
@@ -76,28 +76,28 @@ export default function Address(props) {
       ph: "Select City",
       typ: "text",
       vl: "MailingAddress.CityName",
-      err: "Enter City Name",
+      err: "",
     },
     {
       lb: "Country",
       ph: "Select Country",
       typ: "select",
       vl: "MailingAddress.country",
-      err: "Select Country",
+      err: "",
     },
     {
       lb: "State",
       ph: "Select State",
       typ: "select",
       vl: "MailingAddress.state",
-      err: "Select State",
+      err: "",
     },
     {
       lb: "Zip Code",
       ph: "Enter Zip Code",
       typ: "number",
       vl: "MailingAddress.Zipcode",
-      err: "Enter Zip Code",
+      err: "",
     },
   ];
 
