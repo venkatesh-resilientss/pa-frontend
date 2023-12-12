@@ -218,12 +218,12 @@ const ClientsListTable = () => {
 
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() =>
-                router.push(`/configurations/edit-country/${props.data?.ID}`)
+                router.push(`/clients/edit-client/${props.data?.ID}`)
               }
             >
-              <Action icon={editIocn} name={"Edit"} />
+              <Action icon={editIocn} name={"View/Edit Clients"} />
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
