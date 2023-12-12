@@ -3,7 +3,6 @@ import cookie from "js-cookie";
 
 import Dashboard from "components/MyProject/Dashboard";
 
-
 import { AuthService } from "services";
 import ProductionDashboard from "@/components/productionDashboard";
 
@@ -45,16 +44,19 @@ function Index({ loginStatus, user, mutate, router }) {
       loginStatus === "loggedOut" &&
       !cookie.get("accessToken")
     )
-
-
       window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
   }, [user, loginStatus, router.query?.accessToken]);
 
   return (
     <div>
-      {loginStatus==="loading"?<></>:user?.IsStaffUser?
-      <Dashboard />:<ProductionDashboard/>}
-    </div> 
+      {loginStatus === "loading" ? (
+        <></>
+      ) : user?.IsStaffUser ? (
+        <Dashboard {...{ router, user }} />
+      ) : (
+        <ProductionDashboard />
+      )}
+    </div>
   );
 }
 
