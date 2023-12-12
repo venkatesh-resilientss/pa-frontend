@@ -22,6 +22,8 @@ function EditUser() {
   );
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
+  const [roleOptions, setRoleOptions] = useState();
+  const [selectedRole, setSelectedRole] = useState(null) as any
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -82,13 +84,13 @@ function EditUser() {
         dateEnd: "",
         clients: [],
         softwares: [],
-        limit: 10,
+        limit: 250,
         offset: 0,
         search: "",
         status: "true",
         is_active: true
       });
-      const options = res?.map((item) => ({
+      const options = res.result?.map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -127,17 +129,22 @@ function EditUser() {
   //   }))
   //   : [];
 
-  const { data: rolesdata } = useSWR("LIST_ROLES", () =>
-    roleservice.getRoles()
-  );
-  const roleOptions = Array.isArray(rolesdata)
-    ? rolesdata.map((role) => ({
-      value: role.ID,
-      label: role.RoleName,
-    }))
-    : [];
+  useEffect(() => {
+    const params = {
+      search: "",
+      limit: 25,
+      offset: 0,
+    }
+    roleservice.getRoles(params).then((response) => {
 
-  const [selectedRole, setSelectedRole] = useState(null);
+      const roleOptions = response?.result?.map((role) => ({
+        value: role.ID,
+        label: role.RoleName,
+      }));
+      setRoleOptions(roleOptions)
+    })
+  }, [])
+
   const [selectedClient, setSelectedClient] = useState(null);
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
@@ -283,13 +290,31 @@ function EditUser() {
       },
       IsActive: activeStatus === "active" ? true : false,
     };
-    const userPreferences = clientProductionsList.map((list) => {
-      return {
-        ClientID: list.client_id,
-        ProjectIDs: [...list.production_id],
-      };
-    });
-    userPayload.Meta.userCPReference = userPreferences;
+
+    if (selectedRole === "Client Admin") {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    } else {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+          ProjectIDs: [...list.production_id],
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    }
+
+    // const userPreferences = clientProductionsList.map((list) => {
+    //   return {
+    //     ClientID: list.client_id,
+    //     ProjectIDs: [...list.production_id],
+    //   };
+    // });
+    // userPayload.Meta.userCPReference = userPreferences;
 
     usersService
       .editUser(id, userPayload)
@@ -575,7 +600,7 @@ function EditUser() {
                 <Col xl="4">
                   <div className="mt-1">
                     <Label>Select Productions</Label>
-                    {selectedClient ? (
+                    {selectedClient && selectedRole.label !== "Client Admin" ? (
                       <>
                         <Controller
                           name="productions"

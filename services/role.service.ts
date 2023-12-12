@@ -3,9 +3,8 @@ import { GET_ROLES, GET_ROLE_BY_ID } from "../lib/endpoints";
 
 class RoleService extends APIService {
   getRoles(params?): Promise<any> {
-    return this.get(
-      `${GET_ROLES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
-    )
+    const queryParams = new URLSearchParams(params).toString();
+    return this.get(`${GET_ROLES}?${queryParams}`)
       .then((res) => {
         return res?.data;
       })

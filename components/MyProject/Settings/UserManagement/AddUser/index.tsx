@@ -30,6 +30,7 @@ function AddUser() {
   const [clientDetails, setClientDetails] = useState(null) as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
+  const [selectedRole, setSelectedRole] = useState("");
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -108,12 +109,12 @@ function AddUser() {
           dateEnd: "",
           clients: [],
           softwares: [],
-          limit: 10,
+          limit: 250,
           offset: 0,
           search: "",
           status: "true"
         });
-        const options = (res || [])
+        const options = (res?.result || [])
           ?.filter((e) => e?.IsActive)
           ?.map((item) => ({
             value: item.ID,
@@ -240,13 +241,24 @@ function AddUser() {
         userCPReference: [],
       },
     };
-    const userPreferences = clientProductionsList.map((list) => {
-      return {
-        ClientID: list.client_id,
-        ProjectIDs: [...list.production_id],
-      };
-    });
-    userPayload.Meta.userCPReference = userPreferences;
+
+    if (selectedRole === "Client Admin") {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    } else {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+          ProjectIDs: [...list.production_id],
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    }
+
 
     usersService
       .postUsers(userPayload)
@@ -429,6 +441,9 @@ function AddUser() {
                     //   // setValue("role", selectedOption.value);
                     // }}
                     styles={roleSelectStyles}
+                    onChange={(e) => {
+                      setSelectedRole(e.label)
+                    }}
                   />
                 )}
               />
@@ -533,7 +548,7 @@ function AddUser() {
             <Col xl="4">
               <div className="mt-1">
                 <Label>Select Productions</Label>
-                {selectedClient ? (
+                {selectedClient && selectedRole !== "Client Admin" ? (
                   <>
                     <Controller
                       name="productions"
