@@ -54,13 +54,10 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address Line 1 <span className="required">*</span>
+              Physical Address Line 1
             </Label>
             <Controller
               name="physicalAddress1"
-              rules={{
-                required: "Physical Address Line 1 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -110,13 +107,10 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address City <span className="required">*</span>
+              Physical Address City
             </Label>
             <Controller
               name="physicalAddressCity"
-              rules={{
-                required: "City is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -140,13 +134,10 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address State <span className="required">*</span>
+              Physical Address State
             </Label>
             <Controller
               name="physicalAddressState"
-              rules={{
-                required: "State is required",
-              }}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -172,13 +163,10 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Physical Address Postal Code <span className="required">*</span>
+              Physical Address Postal Code
             </Label>
             <Controller
               name="physicalAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

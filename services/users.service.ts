@@ -7,13 +7,23 @@ import {
   GET_CLIENT_USERS,
   GET_USERS,
   USERS_DETAIL_ENDPOINT,
-  getProductionByClint,
+  getProductionByClint,RESEND_RESET_PASSWORD_LINK
 } from "../lib/endpoints";
 
 class UsersService extends APIService {
   getUsers(params): Promise<any> {
     const queryParams = new URLSearchParams(params).toString();
     return this.get(`${GET_USERS}?${queryParams}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+  resendResetPasswordLink(data): Promise<any> {
+    return this.post(`${RESEND_RESET_PASSWORD_LINK}`,data)
       .then((res) => {
         return res?.data;
       })

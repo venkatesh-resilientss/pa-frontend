@@ -21,8 +21,10 @@ import router from "next/router";
 import { hasPermission } from "commonFunctions/functions";
 import NoDataPage from "@/components/NoDataPage";
 import { useEffect, useState } from "react";
-import { AuthService } from "services";
+import { AuthService, ForgotPasswordService } from "services";
+import { toast } from "react-toastify";
 const authService = new AuthService();
+const forgotPassword = new ForgotPasswordService();
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -134,6 +136,17 @@ const AllRoleTable = () => {
   //   userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
   // );
 
+
+  const resendPasswordLink = (data) => {
+    const payload = { email: data.email }
+    forgotPassword.forgotPassword(payload).then(() => {
+      toast.success("Password reset link has been sent to registred email.")
+    }).catch((e) => {
+      console.error(e)
+      toast.error("something went wrong")
+    })
+  }
+
   const StateBadge = (props) => {
     const stateDir = {
       true: "success",
@@ -147,6 +160,54 @@ const AllRoleTable = () => {
     );
   };
 
+  const ActionsButtonNonStaff = (props) => {
+    const id = props.data.ID;
+
+    const Action = ({ icon, name, action }) => (
+      <div onClick={action} className="d-flex align-items-center gap-2">
+        <img src={icon} alt={name} />
+        <p>{name}</p>
+      </div>
+    );
+
+    return (
+      <div className="cursor-pointer">
+        <UncontrolledDropdown>
+          <DropdownToggle tag="span">
+            <Image src={actionIcon} alt="" width={14} id={id} />
+          </DropdownToggle>
+          <DropdownMenu end container="body" className="userpopover">
+            {hasEditUserPermission && (
+              <DropdownItem
+                tag="a"
+                className="w-100 cursor-pointer"
+                onClick={() => router.push(`/settings/edit-user/${id}`)}
+              >
+                <Action
+                  icon={"/icons/edit_square.svg"}
+                  name={"View/Edit User"}
+                  action={undefined}
+                />
+              </DropdownItem>
+            )}
+            <DropdownItem
+              tag="a"
+              className="w-100 cursor-pointer"
+              onClick={() => {
+                resendPasswordLink(props.data)
+              }}
+            >
+              <Action
+                icon={"/icons/edit_square.svg"}
+                name={"Reset Link"}
+                action={undefined}
+              />
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      </div>
+    );
+  };
   const ActionsButton = (props) => {
     const id = props.value;
 
@@ -284,6 +345,82 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
     },
   ];
+  const nonStaffUsersCol = [
+    {
+      headerName: "Member",
+      field: "user.profile_image",
+      cellRenderer: MemberRenderer,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      resizable: true,
+      getQuickFilterText: (params) => {
+        const res = `${params.data.adminName}${params.data.email}`;
+        return res;
+      },
+    },
+    {
+      headerName: "Role",
+      field: "Role",
+      sortable: true,
+      resizable: true,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (params) => params?.value?.RoleName,
+      unSortIcon: true,
+    },
+    {
+      headerName: "Client",
+      field: "Client",
+      sortable: true,
+      resizable: true,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value.Name
+      },
+      unSortIcon: true,
+    },
+    // {
+    //   headerName: "Created By",
+    //   field: "createdBy",
+    //   sortable: true,
+    //   resizable: true,
+    //   unSortIcon: true,
+    //   cellStyle: { fontSize: "16px", fontWeight: "400" },
+    //   headerClass: "custom-header-class",
+    //   cellRenderer: (params) => {
+    //     return params.value.createdBy
+    //   },
+    // },
+    {
+      headerName: "Created On",
+      field: "createdOn",
+      sortable: true,
+      resizable: true,
+      unSortIcon: true,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        const formattedDate = moment(params.value).format("MM/DD/YYYY, HH:mm");
+        return <span>{formattedDate}</span>;
+      },
+    },
+    {
+      headerName: "Status",
+      field: "IsActive",
+      cellRenderer: StateBadge,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      unSortIcon: true,
+      sortable: true,
+    },
+    {
+      headerName: "Actions",
+      field: "id",
+      cellRenderer: ActionsButtonNonStaff,
+      headerClass: "custom-header-class",
+    },
+  ];
 
   return (
     <>
@@ -336,7 +473,7 @@ const AllRoleTable = () => {
         <div className="mt-3">
           <GridTable
             rowData={{}}
-            columnDefs={columnDefs}
+            columnDefs={userDetails?.IsStaffUser ? columnDefs : nonStaffUsersCol}
             pageSize={pageLimit}
             searchText={searchText}
             pageNumber={pageNumber}
@@ -350,7 +487,7 @@ const AllRoleTable = () => {
             <div className="mt-3">
               <GridTable
                 rowData={tableData}
-                columnDefs={columnDefs}
+                columnDefs={userDetails?.IsStaffUser ? columnDefs : nonStaffUsersCol}
                 pageSize={pageLimit}
                 searchText={searchText}
                 pageNumber={pageNumber}

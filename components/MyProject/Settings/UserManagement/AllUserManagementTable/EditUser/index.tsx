@@ -90,7 +90,7 @@ function EditUser() {
         status: "true",
         is_active: true
       });
-      const options = res.result?.map((item) => ({
+      const options = res.data?.map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
