@@ -25,7 +25,7 @@ const ClientsCard = ({ data }) => {
           <img
             src={
               data.clientLogo == undefined
-                ? "/icons/dummy-client-logo.svg"
+                ? "/default.svg"
                 : data.clientLogo
             }
             alt="logo"
@@ -42,56 +42,35 @@ const ClientsCard = ({ data }) => {
             <div
               style={{ fontSize: "18px", fontWeight: "700", color: "#030229" }}
             >
-              {data.name ? data.name : "-"}
-            </div>
+                {data.name ? data.name.charAt(0).toUpperCase() + data.name.slice(1) : "-"}
 
-
-            <div className="border rounded cursor-pointer text-black text-center d-flex px-1 p-1"
-              style={{
-                fontSize: "14px",
-                gap: "3px",
-              }}
-              onClick={handleViewDetailsClick}
-            >
-              <div>
-                 <Image
-                  src={carbonDecumentView}
-                  style={{ height: "11px", width: "11px" }}
-                  alt={""}
-                />
-              </div>
-              <div>View Details</div>
-              <div>
-                <AiFillCaretRight style={{ marginBottom: "1px" }} />
-              </div>
             </div>
+            <div
+                className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
+                style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}  onClick={handleViewDetailsClick}              
+              >
+                  <div>
+                    <img src="/view_details.svg" alt="" />
+                  </div>{" "}
+                  <p style={{ fontSize: "14px" }}>View Details</p>
+                </div>
           </div>
 
-          <div className="d-flex gap-4 justify-content-between mt-2">
+          <div className="d-flex gap-4 justify-content-between mt-3">
             <div
-              className="text-black mt-1"
+              className="text-black d-flex align-items-center"
               style={{
                 fontSize: "10px",
                 fontWeight: "400",
                 marginBottom: "4px",
-                display: "flex",
               }}
             >
-              <Image
-                src={user}
-                style={{
-                  height: "12px",
-                  width: "12px",
-                  fontWeight: "400",
-                  color: "#030229",
-                }}
-                alt={""}
-              />{" "}
-              {data.contact.full_name ? data.contact.full_name : "-"}
+              <img src="user.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
+              <p style={{fontSize:"12px"}}>{data.contact.full_name ? data.contact.full_name : "-"}</p>
             </div>
             <div
               style={{
-                fontSize: "10px",
+                fontSize: "14px",
                 fontWeight: "400",
                 color: "#030229",
                 marginLeft: "90px",
@@ -100,31 +79,46 @@ const ClientsCard = ({ data }) => {
               No. of Active Productions:{" "}
               {data.projects_count ? data.projects_count : "-"}
             </div>
-          </div>
-          <div className="d-flex flex-column gap-1 mt-1">
+        </div>
+          <div className="d-flex gap-4 justify-content-between mt-3">
             <div
-              className="text-black"
-              style={{ fontSize: "10px", fontWeight: "400" }}
+              className="text-black d-flex align-items-center"
+              style={{
+                fontSize: "10px",
+                fontWeight: "400",
+                marginBottom: "4px",
+              }}
             >
-              <Mail size={12} /> Email:
-              {data.contact.email_id ? data.contact.email_id : "-"}
+              <img src="mail.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
+              <p style={{fontSize:"12px"}}>{data.contact.full_name ? data.contact.full_name : "-"}</p>
             </div>
-          </div>
+        </div>
+
+          
+         <div className="d-flex mt-2">
+          <p style={{ fontSize: "14px" }} className="d-flex align-items-center">
+            <img src="psa.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
+            PSA
+          </p>
+          <p style={{ fontSize: "14px" }} className="d-flex align-items-center ms-2">
+            <img src="psa.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
+            Software Requirement
+          </p>
+          <p style={{ fontSize: "14px" }} className="d-flex align-items-center ms-2">
+            <img src="work_order.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
+            Work Order
+          </p>
+        </div>
+
+
         </div>
       </div>
 
       <hr className="mt-2" />
-
-      <div
-        className="text-black"
-        style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}
-      >
-        <Image
-          src={fluentEmoji}
-          style={{ height: "18px", width: "18px" }}
-          alt={""}
-        />
-        <span className="m-2">Subscribed Softwares</span>
+      
+      <div className="text-black d-flex align-items-center" style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}>
+        <Image src={fluentEmoji} style={{ height: "18px", width: "18px" }} alt={""} />
+        <span className="m-2" style={{ fontSize: "14px" }}>Subscribed Softwares</span>
       </div>
 
       <div className="d-flex gap-1 mt-2">
@@ -132,7 +126,7 @@ const ClientsCard = ({ data }) => {
           <div
             key={i}
             style={{
-              fontSize: "10px",
+              fontSize: "12px",
               fontWeight: "400",
               backgroundColor: "#B5DEF0",
               width: "auto",

@@ -55,15 +55,15 @@ const ProjectCard = ({ data }) => {
                     color: "#030229",
                   }}
                 >
-                  {data.project_name ? data.project_name : "-"}
+                  {data.project_name ? data.project_name.replace(/\b\w/g, match => match.toUpperCase()) : "-"}
                 </div>
               </div>
             </div>
 
-            {/* <div  className="mt-1 font-size-14">
+            <div  className="mt-2 font-size-14">
               Payroll Coordinator :{" "}
               {data.payroll_coordinator ? data.payroll_coordinator : "-"}
-            </div> */}
+            </div>
           </div>
         </div>
 
@@ -84,7 +84,7 @@ const ProjectCard = ({ data }) => {
                 {data.budget || 0}
               </div>
             </div>
-            {/* Add margin to create space */}
+            
             <div className="d-flex gap-2 iconsSpace">
             <Image
               src={budgetSpend}
@@ -142,19 +142,19 @@ const ProjectCard = ({ data }) => {
               <div className="d-flex gap-2">
                 <div></div>
               </div>
-              {/* <div className="d-flex gap-2">
+              <div className="d-flex gap-2">
                 
                  <div className="d-flex gap-2">
-              <img src="calender.svg" alt="" />
-              Last Payroll Date
+              <img src="production_type.svg" alt="" />
+              Production Type
             </div>
-              </div> */}
-            </div>
-            {/* <div>
-              <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-                {data.payrolldate ? formatDate() : "-"}
               </div>
-            </div> */}
+            </div>
+            <div>
+              <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+                <p>Custom Design</p>
+              </div>
+            </div>
           </div>
         </div>
       </CardBody>

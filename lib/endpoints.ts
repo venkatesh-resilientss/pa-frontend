@@ -38,14 +38,14 @@ export const DELETE_TRANSACTION_LINES = (id: any) =>
 export const CREATE_TRANSACTION_LINES = `${tenantIdEndpoint}/transactionlines/`; //Create transactionlines
 
 export const CREATE_PROJECT = `${tenantIdEndpoint}/projects/`; //Create projects
-export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard Stats
-export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; //Recent Productions
-export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
+export const GET_DASHBOARD_STATS = `${withoutTenantIdEndpoint}/overview`; //Dashboard Stats
+export const GET_RECENT_PRODUCTIONS = `${withoutTenantIdEndpoint}/recent-productions`; //Recent Productions
+export const GET_ONBOARDED_CLIENTS = `${withoutTenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
 export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
-export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects?id=${id}`; //onboarded projects with id
-export const ALL_PRODUCTIONS = `${tenantIdEndpoint}/onboarded-projects`; //onboarded projects
-export const PRODUCTION_DASHBOARD_CARDS = (id: any) => `${tenantIdEndpoint}/production-overview?id=${id}`; //production overview
-export const ALL_PRODUCTION_CARDS = `${tenantIdEndpoint}/production-overview`; //production overview
+export const ON_BOARDED_PROJECTS = (id: any) => `${withoutTenantIdEndpoint}/onboarded-projects?id=${id}`; //onboarded projects with id
+export const ALL_PRODUCTIONS = `${withoutTenantIdEndpoint}/onboarded-projects`; //onboarded projects
+export const PRODUCTION_DASHBOARD_CARDS = (id: any) => `${withoutTenantIdEndpoint}/production-overview?id=${id}`; //production overview
+export const ALL_PRODUCTION_CARDS = `${withoutTenantIdEndpoint}/production-overview`; //production overview
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 
@@ -208,7 +208,7 @@ export const BANK_CONFIG_details = (id) =>
   `${tenantIdEndpoint}/bankconfigs/${id}`;
 export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
 export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;
-export const GET_PRODUCTIONS = `${tenantIdEndpoint}/projects/userprojects`;
+export const GET_PRODUCTIONS = `${withoutTenantIdEndpoint}/projects/userprojects`;
 
 export const UPLOAD_FILE_S3 = `/s3-upload`;
 
