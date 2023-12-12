@@ -62,21 +62,13 @@ const AllRoleTable = () => {
         limit: pageLimit,
         offset: offfset,
       };
-      if (userDetails?.IsStaffUser) {
-        userService.getUsers(queryParams).then((response) => {
-          setTableData(response)
-          setLoading(false)
-        }).catch((e) => {
-          console.error(e)
-        })
-      } else {
-        userService.getClientUsers(userDetails.client_id, queryParams).then((response) => {
-          setTableData(response)
-          setLoading(false)
-        }).catch((e) => {
-          console.error(e)
-        })
-      }
+      userService.getUsers(queryParams).then((response) => {
+        setTableData(response)
+        setLoading(false)
+      }).catch((e) => {
+        console.error(e)
+      })
+
     }
 
   }, [searchText, pageNumber, userDetails])
@@ -160,8 +152,9 @@ const AllRoleTable = () => {
     );
   };
 
-  const ActionsButtonNonStaff = (props) => {
-    const id = props.data.ID;
+
+  const ActionsButton = (props) => {
+    const id = props.value;
 
     const Action = ({ icon, name, action }) => (
       <div onClick={action} className="d-flex align-items-center gap-2">
@@ -203,41 +196,6 @@ const AllRoleTable = () => {
                 action={undefined}
               />
             </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </div>
-    );
-  };
-  const ActionsButton = (props) => {
-    const id = props.value;
-
-    const Action = ({ icon, name, action }) => (
-      <div onClick={action} className="d-flex align-items-center gap-2">
-        <img src={icon} alt={name} />
-        <p>{name}</p>
-      </div>
-    );
-
-    return (
-      <div className="cursor-pointer">
-        <UncontrolledDropdown>
-          <DropdownToggle tag="span">
-            <Image src={actionIcon} alt="" width={14} id={id} />
-          </DropdownToggle>
-          <DropdownMenu end container="body" className="userpopover">
-            {hasEditUserPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => router.push(`/settings/edit-user/${id}`)}
-              >
-                <Action
-                  icon={"/icons/edit_square.svg"}
-                  name={"View/Edit User"}
-                  action={undefined}
-                />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -345,82 +303,7 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const nonStaffUsersCol = [
-    {
-      headerName: "Member",
-      field: "user.profile_image",
-      cellRenderer: MemberRenderer,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      resizable: true,
-      getQuickFilterText: (params) => {
-        const res = `${params.data.adminName}${params.data.email}`;
-        return res;
-      },
-    },
-    {
-      headerName: "Role",
-      field: "Role",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      cellRenderer: (params) => params?.value?.RoleName,
-      unSortIcon: true,
-    },
-    {
-      headerName: "Client",
-      field: "Client",
-      sortable: true,
-      resizable: true,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      cellRenderer: (params) => {
-        return params.value.Name
-      },
-      unSortIcon: true,
-    },
-    // {
-    //   headerName: "Created By",
-    //   field: "createdBy",
-    //   sortable: true,
-    //   resizable: true,
-    //   unSortIcon: true,
-    //   cellStyle: { fontSize: "16px", fontWeight: "400" },
-    //   headerClass: "custom-header-class",
-    //   cellRenderer: (params) => {
-    //     return params.value.createdBy
-    //   },
-    // },
-    {
-      headerName: "Created On",
-      field: "createdOn",
-      sortable: true,
-      resizable: true,
-      unSortIcon: true,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("MM/DD/YYYY, HH:mm");
-        return <span>{formattedDate}</span>;
-      },
-    },
-    {
-      headerName: "Status",
-      field: "IsActive",
-      cellRenderer: StateBadge,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      unSortIcon: true,
-      sortable: true,
-    },
-    {
-      headerName: "Actions",
-      field: "id",
-      cellRenderer: ActionsButtonNonStaff,
-      headerClass: "custom-header-class",
-    },
-  ];
+
 
   return (
     <>
@@ -473,7 +356,7 @@ const AllRoleTable = () => {
         <div className="mt-3">
           <GridTable
             rowData={{}}
-            columnDefs={userDetails?.IsStaffUser ? columnDefs : nonStaffUsersCol}
+            columnDefs={columnDefs}
             pageSize={pageLimit}
             searchText={searchText}
             pageNumber={pageNumber}
@@ -487,7 +370,7 @@ const AllRoleTable = () => {
             <div className="mt-3">
               <GridTable
                 rowData={tableData}
-                columnDefs={userDetails?.IsStaffUser ? columnDefs : nonStaffUsersCol}
+                columnDefs={columnDefs}
                 pageSize={pageLimit}
                 searchText={searchText}
                 pageNumber={pageNumber}
