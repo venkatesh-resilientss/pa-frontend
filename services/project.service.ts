@@ -11,11 +11,13 @@ import {
   CREATE_PRODUCTION_APPROVER,
   PROJECT_DETAILS,
   GET_CLIENT_USERS,
+  GET_ALL_PROJECTS_LIST,
+  GET_CLIENTS_LIST,
 } from "../lib/endpoints";
 
 class ProjectService extends APIService {
-  getClients(queries: any): Promise<any> {
-    return this.get(`${CREATE_CLIENT}${queries}`)
+  getClients(data: any): Promise<any> {
+    return this.post(`${GET_CLIENTS_LIST}`, data)
       .then((res) => {
         return res?.data;
       })
@@ -32,8 +34,8 @@ class ProjectService extends APIService {
         throw error?.response?.data;
       });
   }
-  createProjectApprover(id: any, data: any): Promise<any> {
-    return this.post(CREATE_PRODUCTION_APPROVER(id), data)
+  createProjectApprover(data: any): Promise<any> {
+    return this.post(CREATE_PRODUCTION_APPROVER, data)
       .then((response) => {
         return response.data;
       })
@@ -62,6 +64,15 @@ class ProjectService extends APIService {
   }
   getProjectsList(query: any): Promise<any> {
     return this.get(`${GET_ALL_PROJECTS}${query}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getAllProjectsList(data: any): Promise<any> {
+    return this.post(`${GET_ALL_PROJECTS_LIST}`, data)
       .then((res) => {
         return res?.data;
       })
@@ -110,8 +121,8 @@ class ProjectService extends APIService {
       });
   }
 
-  createProject(id: any, data: any): Promise<any> {
-    return this.post(CREATE_PRODUCTION(id), data)
+  createProject(data: any): Promise<any> {
+    return this.post(CREATE_PRODUCTION, data)
       .then((response) => {
         return response.data;
       })
