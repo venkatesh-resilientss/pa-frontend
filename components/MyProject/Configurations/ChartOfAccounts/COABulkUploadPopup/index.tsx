@@ -24,7 +24,10 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
     setUploadedFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept : {
+    'text/csv' : ['.csv'],
+    'application/vnd.ms-excel' : ['.xls','.xlsx']
+  } });
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -32,7 +35,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
     setUploadedFiles(updatedFiles);
   };
   const handleDownload = () => {
-    const url = "/upload-sample-files/coa_sample.csv";
+    const url = "/upload-sample-files/COA_Sample.xlsx";
     window.open(url);
   };
   const [isLoading, setLoader] = useState(false);
@@ -52,6 +55,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
         toast.success("Data inserted successfully.");
         dispatch(closeBulkUploadCOAPopup("close"));
         setRerender(!rerender)
+        setLoader(false);
       })
       .catch((error) => {
         toast.error(error.error || error.Message || "Unable to insert data");
@@ -134,7 +138,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx and .xls file types are allowed
+                  All .xlsx,  .xlsa and .csv file types are allowed
                 </div>
               </div>
             )}

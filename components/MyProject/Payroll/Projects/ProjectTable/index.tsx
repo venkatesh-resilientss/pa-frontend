@@ -283,7 +283,7 @@ const ProjectsListTable = () => {
           )} */}
         </div>
       </Card>
-      <GridTable rowData={{data: rowData}} columnDefs={columns} pageSize={4} searchText={searchText} />
+      <GridTable rowData={rowData} columnDefs={columns} pageSize={4} searchText={searchText} />
       {/* <DataTableWithButtons
         tableTitle={"All Projects"}
         data={projectData}

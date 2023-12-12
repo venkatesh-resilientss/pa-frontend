@@ -10,13 +10,12 @@ function AGGridTable({
   fetchData,
   pageSize,
   noDataPage,
-  rerender,
+  rerender
 }) {
   const [gridApi, setGridApi] = useState(null);
   const gridRef = useRef(null);
-  const [noData, setNoData] = useState(false);
+  const [noData, setNoData] = useState(true);
   const [loading, setLoading] = useState(true);
-
   const gridOptions = {
     pagination: true,
     paginationPageSize: pageSize,

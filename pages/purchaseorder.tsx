@@ -673,7 +673,7 @@ const Purchaseorder = () => {
                   borderStyle: "solid",
                   marginLeft: "18%",
                 }}
-                placeholder="Enter AdditionalNote"
+                // placeholder="Enter AdditionalNote"
               >
                 <span
                   style={{

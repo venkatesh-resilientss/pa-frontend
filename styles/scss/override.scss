@@ -52,3 +52,14 @@ input[type="number"] {
   --bs-btn-disabled-bg: #00aeef;
   --bs-btn-disabled-border-color: #00aeef;
 }
+
+.phone-input {
+  height: 40px !important;
+  border-color: #dee2e6 !important;
+}
+
+.file-div {
+  input[type="file"]::file-selector-button {
+    height: 40px;
+  }
+}

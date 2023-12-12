@@ -244,6 +244,12 @@ export const sidebarRoutesMaster = [
         path: "/countries",
       },
       {
+        name: "Departments",
+        path: "/departments",
+      },
+
+
+      {
         name: "States",
         path: "/states",
       },
@@ -251,6 +257,14 @@ export const sidebarRoutesMaster = [
         name: "Tax Codes",
         path: "/taxcodes",
       },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
+      }
     ],
   },
   {
@@ -346,7 +360,10 @@ export const sidebarRoutesProduction = [
         name: "Agents",
         path: "/agent",
       },
-
+      {
+        name: "Banks",
+        path: "/banks",
+      },
       {
         name: "Budget",
         path: "/budgets",
@@ -354,6 +371,15 @@ export const sidebarRoutesProduction = [
       {
         name: "Chart of Accounts (COA)",
         path: "/coaaccounts",
+      },
+
+      {
+        name: "Countries",
+        path: "/countries",
+      },
+      {
+        name: "Currencies",
+        path: "/currencies",
       },
       {
         name: "Departments",
@@ -379,6 +405,7 @@ export const sidebarRoutesProduction = [
         name: "Vendors",
         path: "/vendors",
       },
+
       {
         name: "Company",
         path: "/company",
@@ -387,23 +414,17 @@ export const sidebarRoutesProduction = [
         name: "Project Types",
         path: "/project-type",
       },
-    ],
-  },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
       {
-        name: "Projects",
-        path: "/projects",
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
       },
       {
-        name: "Employees",
-        path: "/employees",
-      },
-    ],
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
+      }
+    ]
   },
+
 ];
 
 export const sidebarRoutesNonStaff = [
@@ -436,21 +457,14 @@ export const sidebarRoutesNonStaff = [
         name: "Departments",
         path: "/departments",
       },
-    ],
-  },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
       {
-        name: "Projects",
-        path: "/projects",
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
       },
       {
-        name: "Employees",
-        path: "/employees",
-      },
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
+      }
     ],
   },
   {
@@ -462,8 +476,10 @@ export const sidebarRoutesNonStaff = [
         name: "User Management",
         path: "/usermanagement",
       },
+
     ],
   },
+
 ];
 
 /**Chart of accounts */

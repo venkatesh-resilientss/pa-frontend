@@ -12,6 +12,7 @@ import router from "next/router";
 export default function ProductionDashboard() {
   const productionService = new DashboardService();
   const [productionsData, setProductionsData] = useState(null);
+  const [productionCards, setProductionCards] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -19,6 +20,23 @@ export default function ProductionDashboard() {
       try {
         const result = await productionService.getAllProductions();
         setProductionsData(result.data);
+      } catch (error) {
+        console.error('Error fetching production data:', error);
+        setError(error.response?.data?.error || 'Unknown error occurred');
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //all production cards
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await productionService.getAllProductionCards();
+        // Set dashboardCards state
+        setProductionCards(result);
+        console.log(result)
       } catch (error) {
         console.error('Error fetching production data:', error);
         setError(error.response?.data?.error || 'Unknown error occurred');
@@ -80,26 +98,27 @@ export default function ProductionDashboard() {
   // Return your JSX (UI) structure
   return (
     <>
-      <div className="rounded mt-3">
+      
+       <div className="rounded mt-3">
         <Row noGutters className="d-flex gap-2">
-          {/* Create card calls with your data */}
-          {createCard("Total Active Productions", "/active_productions.png", null, <h4>1</h4>)}
-          {createCard("Total Budget Vs Actual Spending", "/total_budget.svg", "The Lost Heirloom", <p>$500,000 vs $350,000</p>)}
-          {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>$150,000</p>)}
+          {createCard("Total Active Productions", "/active_productions.png", null, <h4>{productionCards?.TotalActiveProductions || '-'}</h4>)}
+          {createCard("Total Budget Vs Actual Spending", "/total_budget.svg", "The Lost Heirloom", <p>{productionCards?.TotalBudget || '-'}</p>)}
+          {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>{productionCards?.RemainingBudgetAllocation || '-'}</p>)}
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
             <div className="row">
               <div className="col-md-6 text-nowrap">
                 <h6 className="text-center">Purchase Order</h6>
-                <p className="text-center font-size-16">21</p>
+                <p className="text-center font-size-16">{productionCards?.PendingApprovalItems?.PettyCash || '-'}</p>
               </div>
               <div className="col-md-6">
                 <h6 className="text-center">Account Payable</h6>
-                <p className="text-center">21</p>
+                <p className="text-center">{productionCards?.PendingApprovalItems?.AccountPayable || '-'}</p>
               </div>
             </div>
           ))}
         </Row>
       </div>
+
        <Row>
         {error ? (
           <div className="text-center nodataAvailable">

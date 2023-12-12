@@ -78,7 +78,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
     return (
       <CustomBadge
         bg={sateDir[props.value]}
-        value={props.value ? "active" : "In-active"}
+        value={props.value ? "Active" : "In-active"}
       />
     );
   };

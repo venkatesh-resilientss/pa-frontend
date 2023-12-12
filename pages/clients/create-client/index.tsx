@@ -9,7 +9,7 @@ function Index({ router }) {
   const [show, setShow] = useState(true);
 
   const defaultClientData: any = {
-    SoftwareID: "",
+    Softwares: [],
 
     Name: "",
     Code: "",
@@ -69,12 +69,16 @@ function Index({ router }) {
   const [clientData, setClientData] = useState(defaultClientData);
 
   useEffect(() => {
-    if (!clientData.SoftwareID) setShow(true);
+    if (clientData.Softwares.length === 0) setShow(true);
   }, [clientData]);
 
   return (
     <div>
-      {!clientData.SoftwareID || clientData.SoftwareID === 1 ? (
+      {clientData.Softwares.length === 0 ||
+      (clientData.Softwares.length === 1 &&
+        clientData.Softwares.find(
+          (e) => e.Name === "Production Accounting"
+        )) ? (
         <CreateClient {...{ show, setShow, clientData, setClientData }} />
       ) : (
         <PayrollCreateClient />

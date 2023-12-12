@@ -228,12 +228,6 @@ function AddUser() {
           : clientDetails?.value
         : userDetails.Client.ID,
       roleID: data?.role?.value,
-      tenant_id: userDetails?.IsStaffUser
-        ? isCheckedStaffUser
-          ? 0
-          : clientDetails?.field
-        : userDetails.Client.tenant_id,
-      // tenant_id: userDetails.tenant_id,
       IsStaffUser: isCheckedStaffUser,
       Meta: {
         userCPReference: [],
@@ -283,7 +277,7 @@ function AddUser() {
         </div>
       </div>
 
-      <hr style={{ height: "2px" }} />
+      <hr className="height-2" />
 
       <Form className=" mt-2" onSubmit={handleSubmit(onSubmit)}>
         {/* <div className="d-flex gap-4"> */}

@@ -4,7 +4,7 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function AddressForm({ control, errors }) {
     const formData = [
-      { name: 'resident_address', label: 'Resident Address', required: false, placeholder: 'Resident Address' },
+      { name: 'resident_address', label: 'Resident Address', required: true, placeholder: 'Resident Address' },
       { name: 'mailing_address', label: 'Mailing Address', required: false, placeholder: 'Mailing Address' },
       { name: 'w2_address', label: 'W-2 Address', placeholder: 'W-2 Address' }
     ];

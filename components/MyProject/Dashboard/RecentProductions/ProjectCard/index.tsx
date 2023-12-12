@@ -3,6 +3,8 @@ import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
 import budget from "assets/DashboardIcons/budget.svg";
 import budgetSpend from "assets/DashboardIcons/budget_spend.svg";
 import Image from "next/image";
+import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
+
 
 
 // ** Reactstrap Imports
@@ -15,8 +17,7 @@ const ProjectCard = ({ data }) => {
     return res;
   };
 
-   const handleViewDetailsClick = () => {
-    // Use the router.push() method to navigate to the desired URL
+  const handleViewDetailsClick = () => {
     router.push(`/edit-production/${data.id}`);
   };
   
@@ -36,10 +37,10 @@ const ProjectCard = ({ data }) => {
                     fontSize: "14px",
                     gap: "3px",
                   }}
-                  onClick={handleViewDetailsClick} // Call the new function on click
+                  onClick={handleViewDetailsClick}
                 >
                   <div>
-                    <AiOutlineProfile className="font-size-14" style={{ marginBottom: "1px",}} />
+                    <Image src={carbonDecumentView} style={{ height: "11px", width: "11px" }} alt={""}/>
                   </div>
                   <div>View Details</div>
                   <div>

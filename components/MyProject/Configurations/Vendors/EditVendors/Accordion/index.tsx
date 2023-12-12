@@ -43,7 +43,7 @@ function VendorAccordion() {
     id ? ["STATE_DETAILS", id] : null,
     () => fetchVendorData(id)
   );
-
+  const [activeStatus, setActiveStatus] = useState(vendorData?.IsActive);
   const paymentTypes = [
     { value: "cheque", label: "Cheque" },
     { value: "wireTransfer", label: "Wire Transfer" },
@@ -92,6 +92,7 @@ function VendorAccordion() {
       setValue("contactNumber", primaryContactData.CellPhone);
       setValue("vendorEmail", primaryContactData.EmailID);
     }
+    setActiveStatus(data.IsActive)
   };
 
   useEffect(() => {
@@ -118,6 +119,10 @@ function VendorAccordion() {
         value: data.State.ID,
         label: data.State.Name,
       });
+    data.Country && setValue("contactAddressCountry",{
+      value : data.Country.ID,
+      label : data.Country.Name
+    })
     data.Zipcode && setValue("contactAddressPostalCode", data.Zipcode);
     data.CityName && setValue("contactAddressCity", data.CityName);
   };
@@ -130,6 +135,10 @@ function VendorAccordion() {
         value: data.State.ID,
         label: data.State.Name,
       });
+    data.Country && setValue("billingAddressCountry",{
+      value : data.Country.ID,
+      label : data.Country.Name
+    })
     data.Zipcode && setValue("billingAddressPostalCode", data.Zipcode);
     data.CityName && setValue("billingAddressCity", data.CityName);
   };
@@ -142,6 +151,10 @@ function VendorAccordion() {
         value: data.State.ID,
         label: data.State.Name,
       });
+    data.Country && setValue("mailingAddressCountry",{
+      value : data.Country.ID,
+      label : data.Country.Name
+    })
     data.Zipcode && setValue("mailingAddressPostalCode", data.Zipcode);
     data.CityName && setValue("mailingAddressCity", data.CityName);
   };
@@ -192,6 +205,7 @@ function VendorAccordion() {
       DefaultAddress: data.defaultAddress.value,
       AchBankAccountNUmber: parseInt(data.achAccountNumber),
       AchRoutingNumber: parseInt(data.achRoutingNumber),
+      IsActive : activeStatus,
       PrimaryAddress: contactAddressPaylaod,
       MailingAddress: mailingAddressPaylaod,
       BillingAddress: billingAddressPaylaod,
@@ -266,6 +280,8 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                activeStatus={activeStatus}
+                setActiveStatus={setActiveStatus}
               />
             </AccordionBody>
           </AccordionItem>

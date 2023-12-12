@@ -127,7 +127,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={[countrySelectOptions]}
+                  options={countrySelectOptions}
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}

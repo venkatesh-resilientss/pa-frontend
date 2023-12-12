@@ -10,9 +10,9 @@ import {
   GET_CLIENT_TYPES,
   GET_CLIENT_COUNTRIES,
   GET_STATES_BY_COUNTRY,
-  GET_USERS_BY_ROLE,
   UPLOAD_FILE_S3,
   GET_ALL_USERS,
+  GET_CLIENT_USERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
@@ -25,7 +25,15 @@ class ClientsService extends APIService {
         throw error?.response?.data;
       });
   }
-
+  getClientUsers(id: any, queries: any): Promise<any> {
+    return this.get(`${GET_CLIENT_USERS(id)}${queries}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
   getSoftwares(): Promise<any> {
     return this.get(`${GET_SOFTWARES}`)
       .then((res) => {
@@ -56,15 +64,6 @@ class ClientsService extends APIService {
   }
   getStates(id: any): Promise<any> {
     return this.get(`${GET_STATES_BY_COUNTRY(id)}`)
-      .then((res) => {
-        return res?.data;
-      })
-      .catch((error: any) => {
-        throw error?.response?.data;
-      });
-  }
-  getUsersByRole(id: any): Promise<any> {
-    return this.get(`${GET_USERS_BY_ROLE(id)}`)
       .then((res) => {
         return res?.data;
       })

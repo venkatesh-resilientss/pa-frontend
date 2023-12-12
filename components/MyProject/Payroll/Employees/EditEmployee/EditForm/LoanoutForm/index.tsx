@@ -5,9 +5,9 @@ import InvalidFeedBack from "components/Generic/InvalidFeedBack";
 
 function LoanoutForm({ control, errors }) {
     const formData = [
-      { name: 'loanout_name', label: 'Loanout Name', required: true, placeholder: 'Loanout Name' },
-      { name: 'fein', label: 'FEIN', required: true, placeholder: 'FEIN' },
-      { name: 'loanout_registered_in', label: 'Loanout Registered In', required: true, placeholder: 'Loanout Registered In' },
+      { name: 'loanout_name', label: 'Loanout Name', required: false, placeholder: 'Loanout Name' },
+      { name: 'fein', label: 'FEIN', required: false, placeholder: 'FEIN' },
+      { name: 'loanout_registered_in', label: 'Loanout Registered In', required: false, placeholder: 'Loanout Registered In' },
       { name: 'is_loanout', label: 'Is Loanout', type: 'check', placeholder: 'Is Loanout' },
     ];
 

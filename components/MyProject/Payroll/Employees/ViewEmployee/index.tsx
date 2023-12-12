@@ -275,7 +275,7 @@ function ViewEmployee() {
       </Row>
       <Row>
         <h5 className="mb-3">Payments</h5>
-        <GridTable rowData={{data: employee.payments}} columnDefs={columns} pageSize={4} searchText={searchText} />
+        <GridTable rowData={employee.payments} columnDefs={columns} pageSize={4} searchText={searchText} />
       </Row>
       <hr />
       

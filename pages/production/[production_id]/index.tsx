@@ -39,7 +39,7 @@ function Production() {
     productionService.getClients("")
   );
   const { data: users, mutate } = useSWR("Users", () =>
-    productionService.getClientUsers(`?client_id=${client?.value || ""}`)
+    client ? productionService.getClientUsers(client?.value, ``) : null
   );
 
   useEffect(() => {
@@ -206,7 +206,7 @@ function Production() {
       });
     } else if (lb === "users" && client) {
       return productionService
-        .getClientUsers(`?client_id=${client?.value || ""}&search=${value}`)
+        .getClientUsers(client?.value, `?search=${value}`)
         .then((res) => {
           return [...(res?.data || [])].map((e) => {
             return { label: e.Name, value: e.ID };

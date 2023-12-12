@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import  { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { Modal, Button } from "react-bootstrap";
 
@@ -42,6 +42,7 @@ const Sidebar = ({ props }) => {
   const [temp1, setTemp1] = useState() as any;
   const [temp2, setTemp2] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [filteredProductionData, setFilteredProductionData] = useState([]);
 
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
@@ -87,7 +88,14 @@ const Sidebar = ({ props }) => {
     const routeNames = router.pathname.split("/").filter((name) => name != "");
     
 
-    setParentRoute(`/${routeNames[0]}`);
+    if (routeNames[0] === "production") {
+      const lastRoute = routeNames[routeNames.length - 1];
+
+      setParentRoute(`/${lastRoute}`);
+    } else {
+      setParentRoute(`/${routeNames[0]}`);
+    }
+
     if (routeNames[1]) {
       setChildRoute(`/${routeNames[1]}`);
       handleDropDownChange(`/${routeNames[0]}`);
@@ -96,13 +104,24 @@ const Sidebar = ({ props }) => {
     }
   }, [router.pathname]);
 
-  const filteredProductionData = (productionData || []).filter(
-    (item) =>
-      item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
-      (item.Client.Name &&
-        item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
-      item.Description.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // const filteredProductionData = (productionData || []).filter(
+  //   (item) =>
+  //     item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     (item.Client.Name &&
+  //       item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
+  //     item.Description.toLowerCase().includes(searchText.toLowerCase())
+  // );
+
+  useEffect(() => {
+    const filteredData = (productionData || []).filter(
+      (item) =>
+        item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
+        (item.Client.Name &&
+          item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
+        item.Description.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredProductionData(filteredData);
+  }, [productionData, searchText]);
 
   const getPlaceholderImage = (name) => {
     const firstLetter = name ? name.charAt(0).toUpperCase() : "";
@@ -188,7 +207,13 @@ const Sidebar = ({ props }) => {
             ) : (
               <Link
                 className="d-flex gap-2"
-                href={route.children ? "" : route.path}
+                href={
+                  clickedItemIndex
+                    ? `/production/${temp1?.ID}/dashboard`
+                    : route.children
+                    ? ""
+                    : route.path
+                }
               >
                 <img
                   src={route.icon}
@@ -196,7 +221,7 @@ const Sidebar = ({ props }) => {
                   width={14}
                   style={{ filter: "brightness(0)" }}
                 />
-                <p className={`route-name`}>{route.name}</p>
+                <p className={`route-name`}>{route?.name}</p>
               </Link>
             )}
             {route.children ? (
@@ -447,13 +472,13 @@ const Sidebar = ({ props }) => {
                     }}
                   >
                     <div
-                    onClick={() => {
-                      // Redirect to the dashboard when clicking on "HOME"
-                      router.push('/dashboard');
-                    }}
-                  >
-                    HOME
-                  </div>
+                      onClick={() => {
+                        // Redirect to the dashboard when clicking on "HOME"
+                        router.push("/dashboard");
+                      }}
+                    >
+                      Home
+                    </div>
                   </p>
                 </div>
               </div>
@@ -465,7 +490,7 @@ const Sidebar = ({ props }) => {
                 style={{ height: "38px" }}
               />
 
-              {(filteredProductionData || [])?.map((item: any, index: any) => {
+              {filteredProductionData?.map((item: any, index: any) => {
                 const isClicked = index === clickedItemIndex;
 
                 return (
@@ -501,7 +526,7 @@ const Sidebar = ({ props }) => {
                         </p>
                       </div>
                       <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
-                        <p className="ressl">
+                        <p className="ressl ellipsis">
                           {item.Client.Name
                             ? item.Client.Name
                             : item.Description}
@@ -682,17 +707,17 @@ const Sidebar = ({ props }) => {
         centered
         // dialogClassName="modal-40w"
       >
-        <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 ps-4">
-          <Modal.Title className="mb-0">Confirm action!!</Modal.Title>
+        <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 pt-2 pb-0 ps-4">
+          <Modal.Title className="mb-0 fw-bold">Are you sure?</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="mb-0 mt-0 d-flex justify-content-center align-items-center pt-0">
+        <Modal.Body className="mb-0 mt-0 pb-0 pt-4 d-flex justify-content-center align-items-center">
           <div className="d-flex flex-column">
-            <p className="d-flex justify-content-center mt-3 mb-0 align-items-center">
+            <p className="d-flex justify-content-center mb-0 align-items-center">
               Do you want to switch production!!
             </p>
           </div>
         </Modal.Body>
-        <Modal.Footer className="border-0 mt-2 mb-2 d-flex justify-content-center align-items-center">
+        <Modal.Footer className="border-0 pt-0 mt-4 mb-4 pb-0 d-flex justify-content-center align-items-center">
           <button
             className="btn ms-3 bg-white"
             onClick={() => {
