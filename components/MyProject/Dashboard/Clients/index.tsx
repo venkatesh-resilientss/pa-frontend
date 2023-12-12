@@ -36,9 +36,7 @@ function Clients() {
   return (
   <div className="h-100 d-flex gap-2 flex-column">
     <div className="d-flex justify-content-between">
-      <div
-        style={{ fontSize: "16px", fontWeight: "600", color: "#030229" }}
-        className="mt-2"
+      <div style={{color: "#030229" }} className="mt-2 fw-600"
       >
         Newly Onboarded Clients
       </div>
@@ -70,19 +68,12 @@ function Clients() {
           <img
             src="./no_client_data_available.svg"
             alt="No clients available"
-            style={{ maxWidth: '100%' }}
           />
           <p className="nodataAvailable">No Data available.</p>
           <h6 className="text-sm">Please create your first client to be able to work.</h6>
            <Button
             size="sm"
-            className="py-2 px-3 mt-2"
-            color="info"
-            style={{
-              fontSize: "14px",
-              color: "#FFFFFF",
-              backgroundColor: "#00AEEF",
-            }}
+            className="py-2 px-3 mt-2 btn-primary"
             onClick={() => router.push(`/clients/create-client`)}
           >
             <Plus size={16} /> Create Client

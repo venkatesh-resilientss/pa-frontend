@@ -44,27 +44,7 @@ const ClientsCard = ({ data }) => {
             >
               {data.name ? data.name : "-"}
             </div>
-{/* 
-            <div
-              className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
-              style={{
-                fontSize: "10px",
-                fontWeight: "400",
-                gap: "3px",
-              }}
-            >
-              <div>
-                <Image
-                  src={carbonDecumentView}
-                  style={{ height: "11px", width: "11px" }}
-                  alt={""}
-                />
-              </div>{" "}
-              <p>View Details</p>
-              <div>
-                <AiFillCaretRight style={{ marginBottom: "1px" }} />
-              </div>
-            </div> */}
+
 
             <div className="border rounded cursor-pointer text-black text-center d-flex px-1 p-1"
               style={{

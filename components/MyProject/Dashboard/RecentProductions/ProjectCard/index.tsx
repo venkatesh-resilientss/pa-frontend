@@ -40,7 +40,7 @@ const ProjectCard = ({ data }) => {
                   onClick={handleViewDetailsClick}
                 >
                   <div>
-                    <Image src={carbonDecumentView} style={{ height: "11px", width: "11px" }} alt={""}/>
+                    <Image src={carbonDecumentView} style={{ height: "11px", width: "11px" }} alt={"view details"}/>
                   </div>
                   <div>View Details</div>
                   <div>
@@ -60,10 +60,10 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
 
-            <div  className="mt-1 font-size-14">
+            {/* <div  className="mt-1 font-size-14">
               Payroll Coordinator :{" "}
               {data.payroll_coordinator ? data.payroll_coordinator : "-"}
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -127,7 +127,7 @@ const ProjectCard = ({ data }) => {
                         borderRadius: "5%",
                       }}
                     >
-                      {software.name} test
+                      {software.name}
                     </div>
                   );
                 })}
@@ -142,19 +142,19 @@ const ProjectCard = ({ data }) => {
               <div className="d-flex gap-2">
                 <div></div>
               </div>
-              <div className="d-flex gap-2">
+              {/* <div className="d-flex gap-2">
                 
                  <div className="d-flex gap-2">
               <img src="calender.svg" alt="" />
               Last Payroll Date
             </div>
-              </div>
+              </div> */}
             </div>
-            <div>
+            {/* <div>
               <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-                {data.payrolldate ? formatDate() : "-"} {/* Payroll date */}
+                {data.payrolldate ? formatDate() : "-"}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </CardBody>

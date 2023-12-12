@@ -81,7 +81,7 @@ function Stats() {
         </Col>
         <Col>
           <StatsHorizontal
-            statTitle="Outstanding Payments"
+            statTitle="Outstanding Invoices"
             icon={fluentMoneyHand}
             statTooltip="Represents the total amount of payments that are pending or overdue."
             renderStats={

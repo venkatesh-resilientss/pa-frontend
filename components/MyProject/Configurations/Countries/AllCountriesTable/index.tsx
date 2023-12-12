@@ -250,23 +250,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
                   </Button>
                 )}
 
-                {/* <Button
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                  onClick={() => router.push(`/configurations/add-country`)}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Add Country
-                </Button> */}
+               
                 {hasCreateConfiguration && (
                   <Button
                     style={{
