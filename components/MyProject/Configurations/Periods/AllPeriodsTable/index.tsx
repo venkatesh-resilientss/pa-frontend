@@ -15,17 +15,13 @@ import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { PeriodsService } from "services";
-import { useDispatch } from "react-redux";
-import { openBulkUploadPeriodsPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 import { getSessionVariables } from "@/constants/function";
 const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
   const recordsPerPage = 10;
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const hasCreateConfiguration = hasPermission(
@@ -36,11 +32,8 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
-  // const hasDeactivateConfiguration = hasPermission(
-  //   "configuration_management",
-  //   "deactivate_configuration"
-  // );
+
+
 
   const periodsService = new PeriodsService();
 
@@ -107,7 +100,7 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
               <Action
                 icon={detailsIocn}
                 name={"View Details"}
-                
+
               />
             </DropdownItem> */}
             {hasEditConfigurationPermission && (
