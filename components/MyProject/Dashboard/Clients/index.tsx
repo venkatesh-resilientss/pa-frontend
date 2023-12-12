@@ -31,6 +31,8 @@ function Clients() {
     getTenant();
   }, []);
 
+  
+
   return (
   <div className="h-100 d-flex gap-2 flex-column">
     <div className="d-flex justify-content-between">

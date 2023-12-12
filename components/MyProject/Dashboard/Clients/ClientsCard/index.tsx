@@ -8,7 +8,13 @@ import Image from "next/image";
 import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 import user from "assets/DashboardIcons/person.svg";
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
+import router from "next/router";
 const ClientsCard = ({ data }) => {
+  
+  const handleViewDetailsClick = () => {
+    router.push(`/configurations/edit-country/${data.id}`)
+  };
+
   return (
     <Card
       style={{ padding: "10px", borderRadius: "10px", gap: "4px" }}
@@ -38,7 +44,7 @@ const ClientsCard = ({ data }) => {
             >
               {data.name ? data.name : "-"}
             </div>
-
+{/* 
             <div
               className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
               style={{
@@ -55,6 +61,26 @@ const ClientsCard = ({ data }) => {
                 />
               </div>{" "}
               <p>View Details</p>
+              <div>
+                <AiFillCaretRight style={{ marginBottom: "1px" }} />
+              </div>
+            </div> */}
+
+            <div className="border rounded cursor-pointer text-black text-center d-flex px-1 p-1"
+              style={{
+                fontSize: "14px",
+                gap: "3px",
+              }}
+              onClick={handleViewDetailsClick}
+            >
+              <div>
+                 <Image
+                  src={carbonDecumentView}
+                  style={{ height: "11px", width: "11px" }}
+                  alt={""}
+                />
+              </div>
+              <div>View Details</div>
               <div>
                 <AiFillCaretRight style={{ marginBottom: "1px" }} />
               </div>
