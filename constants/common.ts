@@ -4,15 +4,15 @@ export const selectStyles = {
     ...provided,
     background: state.isDisabled ? "#e3e3e3" : "#fff",
     borderColor: "#9e9e9e",
-    minHeight: "31px",
-    height: "31px",
+    minHeight: "40px",
+    height: "40px",
     boxShadow: state.isFocused ? null : null,
     border: state.isFocused ? "1px solid #00aeef" : "1px solid #dee2e6",
   }),
 
   valueContainer: (provided) => ({
     ...provided,
-    height: "31px",
+    height: "40px",
     padding: "0 6px",
   }),
 
@@ -22,7 +22,7 @@ export const selectStyles = {
   }),
   indicatorsContainer: (provided) => ({
     ...provided,
-    height: "31px",
+    height: "40px",
   }),
   option: (provided, state) => {
     return {

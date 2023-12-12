@@ -138,40 +138,34 @@ function EditBudget() {
     setValue,
     formState: { errors },
   } = useForm();
-  useEffect(() => {
-    if (!budgetData1) return;
+  const [budgetFile,setBudgetFile] = useState(null);
 
-    budgetData1?.Name && setValue("name", budgetData1?.Name);
-    budgetData1?.Code && setValue("code", budgetData1?.Code);
-
-    setActiveStatus(budgetData1?.IsActive);
-  }, [budgetData, budgetData1]);
+  useEffect(()=>{
+    console.log(budgetData1);
+  },[budgetData1])
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       Code: data?.code,
       Name: data?.name,
-      Description: data?.description,
-      CompanyID: data?.company?.value,
-      ProjectID: data?.production?.value,
-      CurrencyID: data?.currency?.value,
+      CompanyID: parseInt(data?.company?.value),
+      ProjectID: parseInt(data?.production?.value),
+      CurrencyID: parseInt(data?.currency?.value),
       SeriesID: parseInt(data?.series?.value),
-      SetID: data?.set?.value,
-      LocationID: data?.location?.value,
-      BankID: 0,
-      Amount: 0.0,
-      budgetFile: "",
-      IsActive: activeStatus,
+      SetID: parseInt(data?.set?.value),
+      LocationID: parseInt(data?.location?.value),
+      budgetFile: budgetFile,
       clientID,
-      projectID
+      projectID,
     };
 
-    budgetService
-      .editBudget(id, backendFormat)
-      .then(() => {
-        toast.success("Budget Edited successfully");
-        router.back();
+    // console.log(backendFormat);
 
+    budgetService
+      .editBudget(id,backendFormat)
+      .then(() => {
+        toast.success("Budget Added successfully");
+        router.back();
         reset();
       })
       .catch((error) => {
@@ -224,293 +218,251 @@ function EditBudget() {
 
       <hr style={{ height: "2px" }} />
 
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-        className=" mt-2 d-flex "
-      >
-        {" "}
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Budget Name <span className="required">*</span>
-          </Label>
-          <Controller
-            name="name"
-            control={control}
-            rules={budgetValidationRules.name}
-            render={({ field }) => (
-              <Input
-                placeholder="Budget Name"
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                invalid={errors.name && true}
-                {...field}
-              />
+      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Row className="gap-2">
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Budget Name <span className="required">*</span>
+            </Label>
+            <Controller
+              name="name"
+              control={control}
+              rules={budgetValidationRules.name}
+              render={({ field }) => (
+                <Input
+                  placeholder="Budget Name"
+                  invalid={errors.name && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.name && (
+              <span className="text-danger">
+                {errors.name.message as React.ReactNode}
+              </span>
             )}
-          />
-          {errors.name && (
-            <span className="text-danger">
-              {errors.name.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Budget Code <span className="required">*</span>
-          </Label>
-          <Controller
-            name="code"
-            control={control}
-            rules={budgetValidationRules.code}
-            render={({ field }) => (
-              <Input
-                placeholder="Budget Code"
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                invalid={errors.code && true}
-                {...field}
-              />
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Budget Code <span className="required">*</span>
+            </Label>
+            <Controller
+              name="code"
+              control={control}
+              rules={budgetValidationRules.code}
+              render={({ field }) => (
+                <Input
+                  placeholder="Budget Code"
+                  invalid={errors.code && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.code && (
+              <span className="text-danger">
+                {errors.code.message as React.ReactNode}
+              </span>
             )}
-          />
-          {errors.code && (
-            <span className="text-danger">
-              {errors.code.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-      </Form>
-      <Row>
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Company <span className="required">*</span>
-          </Label>
-          <Controller
-            name="company"
-            control={control}
-            rules={budgetValidationRules.company}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadCompanyOptions}
-                placeholder="Select Company"
-                defaultOptions={companySelectFormat}
-              />
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Company <span className="required">*</span>
+            </Label>
+            <Controller
+              name="company"
+              control={control}
+              rules={budgetValidationRules.company}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCompanyOptions}
+                  placeholder="Select Company"
+                  defaultOptions={companySelectFormat}
+                />
+              )}
+            />
+            {errors.company && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.company.message as React.ReactNode}
+              </span>
             )}
-          />
-          {errors.company && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.company.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Production <span className="required">*</span>
+            </Label>
+            <Controller
+              name={"production"}
+              rules={budgetValidationRules.production}
+              control={control}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadProductionOptions}
+                  placeholder="Select Productions"
+                  defaultOptions={productionSelectFormat}
+                />
+              )}
+            />
+            {errors.production && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.production.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Currency <span className="required">*</span>
+            </Label>
+            <Controller
+              name={"currency"}
+              rules={budgetValidationRules.currency}
+              control={control}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCurrencyOptions}
+                  placeholder="Select Currency"
+                  defaultOptions={currenciesSelectFormat}
+                />
+              )}
+            />
+            {errors.currency && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.currency.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Series <span className="required">*</span>
+            </Label>
+            <Controller
+              name={"series"}
+              rules={budgetValidationRules.series}
+              control={control}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadSeriesOptions}
+                  placeholder="Select Series"
+                  defaultOptions={seriesSelectFormat}
+                />
+              )}
+            />
+            {errors.series && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.series.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Location <span className="required">*</span>
+            </Label>
+            <Controller
+              name={"location"}
+              control={control}
+              rules={budgetValidationRules.location}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadLocationsOptions}
+                  placeholder="Select Location"
+                  defaultOptions={locationsSelectFormat}
+                />
+              )}
+            />
+            {errors.location && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.location.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Set <span className="required">*</span>
+            </Label>
+            <Controller
+              name={"set"}
+              rules={budgetValidationRules.set}
+              control={control}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadSetsOptions}
+                  placeholder="Select Set"
+                  defaultOptions={setsSelectFormat}
+                />
+              )}
+            />
+            {errors.set && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                {" "}
+                {errors.set.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="mt-2">
+            <Label className="form-lable-font">
+              Upload Budget File <span className="required">*</span>
+            </Label>
+            <Controller
+              name="budgetfile"
+              control={control}
+              render={() => <input type="file" onChange={(e)=>{
+                setBudgetFile(e.target.files[0])
+              }} />}
+            />
+            <br />
+            {/* {!budgetFile && (
+              <span
+                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
+              >
+                Budget file is required
+              </span>
+            )} */}
+          </Col>
+        </Row>
 
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Production <span className="required">*</span>
-          </Label>
-          <Controller
-            name={"production"}
-            rules={budgetValidationRules.production}
-            control={control}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadProductionOptions}
-                placeholder="Select Productions"
-                defaultOptions={productionSelectFormat}
-              />
-            )}
-          />
-          {errors.production && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.production.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-      </Row>
-      <Row>
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Currency <span className="required">*</span>
-          </Label>
-          <Controller
-            name={"currency"}
-            rules={budgetValidationRules.currency}
-            control={control}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadCurrencyOptions}
-                placeholder="Select Series"
-                defaultOptions={currenciesSelectFormat}
-              />
-            )}
-          />
-          {errors.currency && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.currency.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Series <span className="required">*</span>
-          </Label>
-          <Controller
-            name={"series"}
-            rules={budgetValidationRules.series}
-            control={control}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadSeriesOptions}
-                placeholder="Select Currency"
-                defaultOptions={seriesSelectFormat}
-              />
-            )}
-          />
-          {errors.series && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.series.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-      </Row>
-      <Row>
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Location <span className="required">*</span>
-          </Label>
-          <Controller
-            name={"location"}
-            control={control}
-            rules={budgetValidationRules.location}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadLocationsOptions}
-                placeholder="Select Location"
-                defaultOptions={locationsSelectFormat}
-              />
-            )}
-          />
-          {errors.location && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.location.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-
-        <Col xl="3">
-          <Label
-            className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
-          >
-            Set <span className="required">*</span>
-          </Label>
-          <Controller
-            name={"set"}
-            rules={budgetValidationRules.set}
-            control={control}
-            render={({ field }) => (
-              <AsyncSelect
-                {...field}
-                isClearable={true}
-                className="react-select"
-                classNamePrefix="select"
-                loadOptions={loadSetsOptions}
-                placeholder="Select Set"
-                defaultOptions={setsSelectFormat}
-              />
-            )}
-          />
-          {errors.set && (
-            <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
-              {" "}
-              {errors.set.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-      </Row>
-
-      <Row className="mt-2">
-        <Col xl="3">
-          <Label className="form-lable-font">
-            Upload Budget File <span className="required">*</span>
-          </Label>
-          <Controller
-            name="budgetfile"
-            control={control}
-            rules={budgetValidationRules.budgetfile}
-            render={({ field }) => (
-              <Input
-                type="file"
-                style={{ fontSize: "12px", fontWeight: "400" }}
-                invalid={errors.budgetfile && true}
-                {...field}
-                accept=".txt"
-              />
-            )}
-          />
-          {errors.budgetfile && (
-            <span style={{ color: "red" }}>
-              {errors.budgetfile.message as React.ReactNode}
-            </span>
-          )}
-        </Col>
-      </Row>
-
-      <div className="d-flex flex-column mt-1">
-        <Label
-          className="text-black"
-          style={{ fontSize: "12px", fontWeight: "400" }}
-        >
-          Status{" "}
-        </Label>
         <div className="d-flex flex-column mt-1">
           <Label
             className="text-black"
-            style={{ fontSize: "12px", fontWeight: "400" }}
           >
             Status{" "}
           </Label>
@@ -542,7 +494,7 @@ function EditBudget() {
             </div>
           </div>
         </div>
-      </div>
+        </Form>
     </div>
   );
 }

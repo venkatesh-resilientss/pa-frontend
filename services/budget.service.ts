@@ -41,8 +41,12 @@ class BudgetService extends APIService {
  
 
   createBudget(data:any) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key=>{
+      formData.append(key,data[key]);
+    })
     return this
-      .post(CREATE_BUDGET, data)
+      .post(CREATE_BUDGET, formData,{'Content-Type': 'multipart/form-data',})
       .then((response) => {
         return response.data;
       })
@@ -85,13 +89,17 @@ class BudgetService extends APIService {
   }
 
   editBudget(id: any,data) {
+    const formData = new FormData();
+    Object.keys(data).forEach(key=>{
+      formData.append(key,data[key]);
+    })
     return this
-      .put(EDIT_BUDGET(id),data)
+      .post(CREATE_BUDGET, formData,{'Content-Type': 'multipart/form-data',})
       .then((response) => {
-        return response?.data;
+        return response.data;
       })
       .catch((error) => {
-        throw error?.response?.data;
+        throw error.response.data;
       });
   }
 }

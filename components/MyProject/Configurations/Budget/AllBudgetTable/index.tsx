@@ -12,12 +12,8 @@ import { useRouter } from "next/router";
 import { BudgetService } from "services";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import moment from "moment";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openDeleteBudgetPopup,
-} from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import Image from "next/image";
 import CustomBadge from "components/Generic/CustomBadge";
@@ -26,7 +22,6 @@ import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
 const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const recordsPerPage = 10;
 
@@ -37,10 +32,6 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
     "edit_configuration"
-  );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
   );
 
   const budgetService = new BudgetService();
@@ -59,7 +50,7 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           offset: pageNumber,
         }
       );
-      const data = response.data.filter(item=>item.IsActive == false); // Adjust based on the actual structure of the response
+      const data = response.data; // Adjust based on the actual structure of the response
       const totalRecords = response.totalCount; // Adjust based on the actual structure of the response
       return { data, totalRecords };
     } catch (error) {
@@ -120,15 +111,6 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
                 }
               >
                 <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100"
-                onClick={() => dispatch(openDeleteBudgetPopup(props.data.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
               </DropdownItem>
             )}
           </DropdownMenu>
