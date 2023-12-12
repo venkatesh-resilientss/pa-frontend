@@ -162,7 +162,6 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
             <Controller
               name="series"
               control={control}
-              rules={{ required: "Series is required" }}
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
@@ -190,7 +189,6 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
             <Controller
               name={"location"}
               control={control}
-              rules={{ required: "Location is required" }}
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
@@ -217,7 +215,6 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
             <Label className="form-lable-font">Set</Label>
             <Controller
               name="set"
-              rules={{ required: "Set is required" }}
               control={control}
               render={({ field }) => (
                 <AsyncSelect

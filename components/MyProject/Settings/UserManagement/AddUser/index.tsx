@@ -22,7 +22,7 @@ function AddUser() {
   // const { data: clientData } = useSWR("LIST_CLIENTS", () =>
   //   clientService.getClients()
   // );
-  const [initialClientOptions, setInitialClientOptions] = useState([]);
+  const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const router = useRouter();
   // const [selectedRole, setSelectedRole] = useState(null);
   const [selectedClient] = useState(true);
@@ -30,6 +30,7 @@ function AddUser() {
   const [clientDetails, setClientDetails] = useState(null) as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
+  const [selectedRole, setSelectedRole] = useState("");
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -43,7 +44,7 @@ function AddUser() {
 
   useEffect(() => {
     roleservice
-      .getRoles({ search: "", pageLimit: 50, offset: 0, is_active: true })
+      .getRoles({ search: "", limit: 50, offset: 0, is_active: true })
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
@@ -59,44 +60,26 @@ function AddUser() {
 
   useEffect(() => {
     setUserDetails(userData?.data);
+    if (userData?.data) {
+      const client_id = userData?.data.client_id
+      if (!userData?.data?.IsStaffUser) {
+        const productionOptions = getProductionOptions("client_1", client_id)
+        const listObject: any = [
+          {
+            client: "client_1",
+            production: "production_1",
+            client_id: client_id,
+            production_id: [],
+            productionOptions: productionOptions,
+            tenant_id: null,
+          },
+        ]
+        setClientProductionsList(listObject)
+      }
+
+    }
   }, [userData]);
 
-  useEffect(() => {
-    if (userDetails) {
-      if (!userDetails.IsStaffUser && userDetails?.Client?.ID) {
-        setInitialClientOptions([
-          {
-            label: userDetails?.Client?.Name,
-            value: userDetails?.Client?.ID,
-            field: userDetails?.Client?.tenant_id,
-          },
-        ]);
-        usersService
-          .getProductionsByClient(userDetails.Client.ID)
-          .then((res) => {
-            const productions = (res || [])
-              ?.filter((e) => e?.IsActive)
-              .map((pr) => {
-                setClientProductionsList([
-                  {
-                    client: "client_1",
-                    production: "production_1",
-                    client_id: 0,
-                    production_id: [],
-                    productionOptions: [...productions],
-                    tenant_id: pr.Client.tenant_id,
-                  },
-                ]);
-                return {
-                  label: pr.Name,
-                  value: pr.ID,
-                  tenant_id: pr.tenant_id,
-                };
-              });
-          });
-      }
-    }
-  }, [userDetails]);
 
   useEffect(() => {
     const fetchInitialClients = async () => {
@@ -108,12 +91,12 @@ function AddUser() {
           dateEnd: "",
           clients: [],
           softwares: [],
-          limit: 10,
+          limit: 250,
           offset: 0,
           search: "",
           status: "true"
         });
-        const options = (res || [])
+        const options = (res?.data || [])
           ?.filter((e) => e?.IsActive)
           ?.map((item) => ({
             value: item.ID,
@@ -127,7 +110,7 @@ function AddUser() {
     };
 
     fetchInitialClients();
-  }, []);
+  }, [userDetails]);
 
   const loadClientOptions: any = async (inputValue, callback) => {
     try {
@@ -240,13 +223,24 @@ function AddUser() {
         userCPReference: [],
       },
     };
-    const userPreferences = clientProductionsList.map((list) => {
-      return {
-        ClientID: list.client_id,
-        ProjectIDs: [...list.production_id],
-      };
-    });
-    userPayload.Meta.userCPReference = userPreferences;
+
+    if (selectedRole === "Client Admin") {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    } else {
+      const userPreferences = clientProductionsList.map((list) => {
+        return {
+          ClientID: list.client_id,
+          ProjectIDs: [...list.production_id],
+        };
+      });
+      userPayload.Meta.userCPReference = userPreferences;
+    }
+
 
     usersService
       .postUsers(userPayload)
@@ -416,19 +410,17 @@ function AddUser() {
               <Controller
                 name="role"
                 control={control}
-                rules={{
-                  required: "Select Role",
-                }}
+                // rules={{
+                //   required: "Select Role",
+                // }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={roleOptions}
-                    // value={selectedRole}
-                    // onChange={(selectedOption) => {
-                    //   setSelectedRole(selectedOption);
-                    //   // setValue("role", selectedOption.value);
-                    // }}
                     styles={roleSelectStyles}
+                    onChange={(e) => {
+                      setSelectedRole(e.label);
+                    }}
                   />
                 )}
               />
@@ -459,7 +451,7 @@ function AddUser() {
         <Row className="mt-4 mb-2">
           <label> {"Assign Client(s) & Production(s)"}</label>
         </Row>
-        {clientProductionsList.map((CPlist, index) => (
+        {userDetails && initialClientOptions && clientProductionsList.map((CPlist, index) => (
           <Row key={index}>
             {userDetails?.IsStaffUser ? (
               <Col xl="4">
@@ -518,6 +510,11 @@ function AddUser() {
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
+                        defaultValue={() => {
+                          return initialClientOptions?.filter(
+                            (option) => option.value === userDetails.client_id
+                          );
+                        }}
                       />
                     )}
                   />
@@ -533,7 +530,7 @@ function AddUser() {
             <Col xl="4">
               <div className="mt-1">
                 <Label>Select Productions</Label>
-                {selectedClient ? (
+                {selectedClient && selectedRole !== "Client Admin" ? (
                   <>
                     <Controller
                       name="productions"

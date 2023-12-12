@@ -55,6 +55,8 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
+    const clientId = sessionStorage.getItem("clientid");
+    const projectId = sessionStorage.getItem("projectid");
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -63,9 +65,15 @@ function BankAccordion() {
       Description: data.description,
       Fax: data.mailingFax,
       BranchNumber: parseInt(data.branchNumber),
-      ClientId: 2,
-      projectId: 1,
+      ClientId: clientId,
+      projectId: projectId,
       IsActive: activeStatus,
+      PrimaryContact: {
+        FullName: data.contactName,
+        PhoneCode: parseInt(data.basicInfoCountryCode),
+        CellPhone: data.basicInfoContactNumber,
+        EmailID: data.emailIDBasicInfo
+      },
       PhysicalAddress: {
         Line1: data.physicalAddress1,
         Line2: data.physicalAddress2,
@@ -422,7 +430,7 @@ function BankAccordion() {
           </AccordionItem>
 
           <AccordionItem>
-            <AccordionHeader targetId="6">Other Details</AccordionHeader>
+            <AccordionHeader targetId="6">Set/Series/Location Information</AccordionHeader>
             <AccordionBody accordionId="6">
               <OtherDetailsForm
                 control={control}

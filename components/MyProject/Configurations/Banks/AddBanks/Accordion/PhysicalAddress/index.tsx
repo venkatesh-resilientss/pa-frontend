@@ -82,9 +82,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddress1"
-              rules={{
-                required: "Physical Address Line 1 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -112,9 +109,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddress2"
-              rules={{
-                required: "  Physical Address Line 2 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -141,9 +135,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddressCity"
-              rules={{
-                required: "  City is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -171,9 +162,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddressState"
-              rules={{
-                required: " State is required",
-              }}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -203,9 +191,6 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

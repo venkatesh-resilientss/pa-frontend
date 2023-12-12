@@ -50,7 +50,7 @@ function BankAccordion() {
       projectId: projectID,
       AccountFraction: data.accountFraction,
       PrimaryContact: {
-        // "FullName": "john philips",
+        FullName: data.contactName,
         PhoneCode: parseInt(data.basicInfoCountryCode),
         CellPhone: data.basicInfoContactNumber,
         EmailID: data.emailIDBasicInfo
@@ -254,7 +254,7 @@ function BankAccordion() {
           </AccordionItem>
 
           <AccordionItem>
-            <AccordionHeader targetId="5">Default Account</AccordionHeader>
+            <AccordionHeader targetId="5">Default Accounts</AccordionHeader>
             <AccordionBody accordionId="5">
               <DefaultAccountForm
                 control={control}
@@ -265,7 +265,7 @@ function BankAccordion() {
           </AccordionItem>
 
           <AccordionItem>
-            <AccordionHeader targetId="6">Other Details</AccordionHeader>
+            <AccordionHeader targetId="6">Set/Series/Location Information</AccordionHeader>
             <AccordionBody accordionId="6">
               <OtherDetailsForm
                 control={control}

@@ -174,6 +174,7 @@ export const PERIODS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/periods/${id}`; //periods Details
 
 export const GET_USERS = `${withoutTenantIdEndpoint}/users/`; //Users
+export const RESEND_RESET_PASSWORD_LINK = `${withoutTenantIdEndpoint}/resendPasswordLink/`; //Users
 export const CREATE_USERS = `${withoutTenantIdEndpoint}/users/`; //Create Users
 export const EDIT_USERS = (id: any) => `${withoutTenantIdEndpoint}/users/${id}`; //EDIT users
 export const USERS_DETAIL_ENDPOINT = (id: any) =>
@@ -214,7 +215,7 @@ export const GET_PRODUCTIONS = `${withoutTenantIdEndpoint}/projects/userprojects
 export const UPLOAD_FILE_S3 = `/s3-upload`;
 
 export const getProductionByClint = (id) =>
-  `${tenantIdEndpoint}/projects/clientprojects/${id}`;
+  `${withoutTenantIdEndpoint}/projects/clientprojects/${id}`;
 
 export const PROJECT_DETAILS = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`;

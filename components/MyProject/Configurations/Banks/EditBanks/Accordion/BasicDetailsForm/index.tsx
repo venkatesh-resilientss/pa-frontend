@@ -305,6 +305,85 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               </span>
             )}
           </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Email ID <span className="required">*</span>
+            </Label>
+            <Controller
+              name="emailIDBasicInfo"
+              rules={{
+                required: "Email ID is Required",
+              }}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Email ID"
+                  invalid={errors.emailIDBasicInfo && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.emailIDBasicInfo && (
+              <span className="text-danger">
+                {errors.emailIDBasicInfo.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Contact Number
+            </Label>
+            <div className="d-flex gap-2">
+              <div style={{ width: "20%" }}>
+                <Controller
+                  name="basicInfoCountryCode"
+                  rules={{
+                    required: "Country Code is Required",
+                  }}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="00"
+                      invalid={errors.emailIDBasicInfo && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              <div style={{ width: "80%" }}>
+                <Controller
+                  name="basicInfoContactNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder=" Enter Contact Number"
+                      invalid={errors.emailIDBasicInfo && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {errors.basicInfoCountryCode ? (
+              <span className="text-danger">
+                {errors.basicInfoCountryCode.message as React.ReactNode}
+              </span>
+            ) : errors.basicInfoContactNumber ? (
+              <span className="text-danger">
+                {errors.basicInfoContactNumber.message as React.ReactNode}
+              </span>
+            ) : null}
+          </Col>
         </Row>
       </Form>
     </div>

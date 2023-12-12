@@ -54,11 +54,7 @@ const AllRoleTable = () => {
   const fetchData1 = async (pageNumber) => {
     // setBankLoading(true)
     try {
-      const response = await roleservice.getRoles({
-        search: searchText,
-        pageLimit: perPage,
-        offset: pageNumber,
-      });
+      const response = await roleservice.getRoles({ search: searchText, limit: perPage, offset: pageNumber });
       const data = response.result; // Adjust based on the actual structure of the response
 
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
