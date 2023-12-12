@@ -11,9 +11,8 @@ import {
 
 class UsersService extends APIService {
   getUsers(params): Promise<any> {
-    return this.get(
-      `${GET_USERS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
-    )
+    const queryParams = new URLSearchParams(params).toString();
+    return this.get(`${GET_USERS}?${queryParams}`)
       .then((res) => {
         return res?.data;
       })

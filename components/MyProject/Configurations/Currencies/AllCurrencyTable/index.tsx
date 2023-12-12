@@ -48,7 +48,7 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
     try {
       const response = await currencyService.getCurrencies({
         search: searchText,
-        pageLimit: recordsPerPage,
+        limit: recordsPerPage,
         offset: pageNumber,
       });
       const data = response.result || []; // Adjust based on the actual structure of the response

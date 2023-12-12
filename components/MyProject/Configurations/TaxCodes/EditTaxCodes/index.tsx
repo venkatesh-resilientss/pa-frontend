@@ -36,22 +36,24 @@ function EditTaxCode() {
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
     taxcodesData?.Description &&
       setValue("description", taxcodesData?.Description);
-    taxcodesData?.Name && setValue("taxcodename",taxcodesData.Name);
+    taxcodesData?.Name && setValue("taxcodename", taxcodesData.Name);
     const taxCodeCountry = {
-      value : taxcodesData.Country.ID,
-      label : taxcodesData.Country.Name
+      value: taxcodesData.Country.ID,
+      label: taxcodesData.Country.Name
     }
-    setValue("country",taxCodeCountry);
+    setValue("country", taxCodeCountry);
     setActiveStatus(taxcodesData?.IsActive);
   }, [taxcodesData]);
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes()
+    taxCodeService.getTaxCodes({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries()
+    countryService.getCountries({
+      search: "", limit: 25, offset: 0, is_active: true
+    })
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -61,15 +63,15 @@ function EditTaxCode() {
     };
   });
 
-  const loadCountryOptions = ( callBack) => {
+  const loadCountryOptions = (callBack) => {
     callBack(countrySelectFormat);
   };
   const onSubmit = (data) => {
     const backendFormat = {
-      name : data.taxcodename,
+      name: data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      countryID : parseInt(data.country)
+      countryID: parseInt(data.country)
     };
 
     taxCodeService
@@ -183,32 +185,32 @@ function EditTaxCode() {
           </div>
         </Col>
         <Col xl="4">
-            <div className="mb-1">
-              <Label className="form-lable-font">Country <span className="required">*</span></Label>
-              <Controller
-                name="country"
-                control={control}
-                rules={taxCodeValidationRules.country}
-                render={({ field }) => (
-                  <AsyncSelect
-                    {...field}
-                    isClearable={true}
-                    className="react-select"
-                    classNamePrefix="select"
-                    loadOptions={loadCountryOptions}
-                    placeholder="Select Country"
-                    defaultOptions={countrySelectFormat}
-                    styles={selectStyles}
-                  />
-                )}
-              />
-              {errors.country && (
-                <span style={{ color: "red" }}>
-                  {errors.country.message as React.ReactNode}
-                </span>
+          <div className="mb-1">
+            <Label className="form-lable-font">Country <span className="required">*</span></Label>
+            <Controller
+              name="country"
+              control={control}
+              rules={taxCodeValidationRules.country}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCountryOptions}
+                  placeholder="Select Country"
+                  defaultOptions={countrySelectFormat}
+                  styles={selectStyles}
+                />
               )}
-            </div>
-          </Col>
+            />
+            {errors.country && (
+              <span style={{ color: "red" }}>
+                {errors.country.message as React.ReactNode}
+              </span>
+            )}
+          </div>
+        </Col>
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-lable-font" f>

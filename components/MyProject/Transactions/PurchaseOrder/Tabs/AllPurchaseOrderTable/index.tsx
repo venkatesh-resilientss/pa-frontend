@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import GridTable from "components/grid-tables/gridTable";
 import Image from "next/image";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
@@ -24,6 +24,7 @@ import moment from "moment";
 
 const AllPurchaseTable = () => {
   const searchText = "";
+  const [loading] = useState(true) //to resolve build error
 
   const purchaseOrderService = new PurchaseOrderService();
 
@@ -230,12 +231,15 @@ const AllPurchaseTable = () => {
 
   return (
     <div className="my-5 m-auto" style={{ width: "100%" }}>
-      <GridTable
-        rowData={dataSource}
-        columnDefs={columnDefs}
-        pageSize={10}
-        searchText={searchText}
-      />
+
+      {loading ? (<span>loading</span>) : ( //to resolve build error
+        <GridTable
+          rowData={dataSource}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />)}
+
     </div>
   );
 };

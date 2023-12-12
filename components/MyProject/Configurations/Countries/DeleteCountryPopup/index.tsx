@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { CountryService } from "services";
 import { closeDeleteCountryPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
@@ -11,10 +10,6 @@ const DeleteCountryPopup = () => {
   const dispatch = useDispatch();
 
   const countryService = new CountryService();
-
-  const { mutate: countryMutate } = useSWR("LIST_COUNTRIES", () =>
-    countryService.getCountries()
-  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.countries.deleteCountryPopup.status
@@ -29,9 +24,8 @@ const DeleteCountryPopup = () => {
       await countryService.deleteCountry(helperData);
       toast.success("Country Deleted Successfully");
       dispatch(closeDeleteCountryPopup("close"));
-      mutate(countryMutate());
     } catch (error) {
-      toast.error(error.Message || 'Unable to delete country' )
+      toast.error(error.Message || 'Unable to delete country')
     }
   };
 

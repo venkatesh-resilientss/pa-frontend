@@ -5,7 +5,6 @@ import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
 import { closeDeleteSetPopup } from "redux/slices/mySlices/configurations";
 import { SetsService } from "services";
-import useSWR, { mutate } from "swr";
 import Image from "next/image";
 
 const DeleteSetPopup = () => {
@@ -13,9 +12,7 @@ const DeleteSetPopup = () => {
 
   const setService = new SetsService();
 
-  const { mutate: setMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
-  );
+
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.sets.deleteSetPopup.status
@@ -30,7 +27,6 @@ const DeleteSetPopup = () => {
       await setService.deleteSet(helperData);
       toast.success("Set Deleted Successfully");
       dispatch(closeDeleteSetPopup("close"));
-      mutate(setMutate());
     } catch (error) {
       console.error("Error deleting Set:", error);
     }

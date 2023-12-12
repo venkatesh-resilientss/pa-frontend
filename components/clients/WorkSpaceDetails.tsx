@@ -44,11 +44,11 @@ export default function WorkSpaceDetails(props) {
 
   const { data: users } = useSWR("Users", () =>
     clientData
-      ? clientService.getClientUsers(clientData?.ID, `?limit=50&offset=0`)
+      ? clientService.getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active:true`)
       : null
   );
   const { data: supportUsers } = useSWR("Support Users", () =>
-    clientService.getUsers(`?limit=50&offset=0`)
+    clientService.getUsers(`?limit=50&offset=0&is_active:true`)
   );
 
   const data = [...(users?.data || [])]?.filter(
@@ -62,7 +62,7 @@ export default function WorkSpaceDetails(props) {
   const loadOptions = (value, vl) => {
     if (vl === "rsslSupportUser")
       return clientService
-        .getClientUsers(clientData?.ID, `?limit=50&offset=0`)
+        .getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active:true`)
         .then((res) => {
           const getName = (e) =>
             (e?.first_name || "") + " " + (e?.last_name || "");
@@ -72,7 +72,7 @@ export default function WorkSpaceDetails(props) {
           });
         });
     else
-      return clientService.getUsers(`?limit=50&offset=0`).then((res) => {
+      return clientService.getUsers(`?limit=50&offset=0&is_active:true`).then((res) => {
         return [...(res?.data || [])].map((e) => {
           return { label: e?.adminName, value: e.id };
         });

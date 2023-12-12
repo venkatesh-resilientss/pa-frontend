@@ -250,7 +250,7 @@ const AllMPIPHPTable = () => {
         <GridTable
           rowData={rowData}
           columnDefs={columnDefs}
-          pageSize={10}
+          pageSize={7}
           searchText={searchText}
         />
       </div>

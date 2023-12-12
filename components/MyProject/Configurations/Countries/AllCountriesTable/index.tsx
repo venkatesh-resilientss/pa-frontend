@@ -38,7 +38,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
   const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
-  
+
   const dispatch = useDispatch();
 
   const fetchData = async (pageNumber) => {
@@ -46,7 +46,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
       const response = await countryService.getCountries(
         {
           search: searchText,
-          pageLimit: recordsPerPage,
+          limit: recordsPerPage,
           offset: pageNumber,
         }
       );

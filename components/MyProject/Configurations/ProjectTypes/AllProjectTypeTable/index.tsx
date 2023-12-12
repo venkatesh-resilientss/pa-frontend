@@ -15,27 +15,29 @@ import useSWR from "swr";
 const AllProjectTypeTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const [loadingState] = useState(true);
   const projectTypesService = new ProjectTypesService();
+
 
   const { data: rowData } = useSWR(
     ["LIST_PROJECTTYPES", searchText],
     () => projectTypesService.getProjecttypes()
   );
-  
+
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-          <div
-           onClick={() =>router.push(`/configurations/edit-project-type/${props.data?.ID}`)}
-            className="cursor-pointer"
-            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
-          >
-            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
-          </div>
+        <div
+          onClick={() => router.push(`/configurations/edit-project-type/${props.data?.ID}`)}
+          className="cursor-pointer"
+          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+        >
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+        </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-          {/* <div
+        {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -117,7 +119,7 @@ const AllProjectTypeTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  
+
   return (
     <div>
       <div className="section mt-4">
@@ -184,17 +186,18 @@ const AllProjectTypeTable = () => {
           </CardBody>
         </Card>
       </div>
-      
-        <div className="mt-2">
-          <GridTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-     
-       
+
+      <div className="mt-2">
+        {loadingState ? (<span>Loading</span>) : (<GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />)}
+
+      </div>
+
+
     </div>
   );
 };

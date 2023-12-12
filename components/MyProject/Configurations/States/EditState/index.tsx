@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -43,7 +43,14 @@ function EditState() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries()
+    countryService.getCountries(
+      {
+        search: "",
+        limit: 25,
+        offset: 0,
+        is_active: true
+      }
+    )
   );
 
   const countrySelectOptions = countryData?.data.map((b) => {
@@ -53,11 +60,7 @@ function EditState() {
     };
   });
 
-  const stateService = new StatesService();
 
-  const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    stateService.getStates({ search: "", pageLimit: 25, offset: 0 })
-  );
 
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
 
@@ -74,7 +77,6 @@ function EditState() {
       .editState(id, backendFormat)
       .then(() => {
         toast.success("State Edited successfully");
-        mutate(countryMutate());
         router.back();
 
         reset();

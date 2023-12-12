@@ -84,8 +84,9 @@ function EditUser() {
       // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
       const res = await clientService.getClients({
         search: "",
-        pageLimit: 25,
+        limit: 25,
         offset: 0,
+        is_active: true
       });
       const options = res?.map((item) => ({
         value: item.ID,
