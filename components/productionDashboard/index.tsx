@@ -102,11 +102,11 @@ export default function ProductionDashboard() {
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
             <div className="row">
               <div className="col-md-6 text-nowrap">
-                <h6 className="text-center">Purchase Order</h6>
+                <h6 className="text-center fw-600">Purchase Order</h6>
                 <p className="text-center font-size-16">{productionCards?.PendingApprovalItems?.PettyCash || '-'}</p>
               </div>
               <div className="col-md-6">
-                <h6 className="text-center">Account Payable</h6>
+                <h6 className="text-center fw-600">Account Payable</h6>
                 <p className="text-center">{productionCards?.PendingApprovalItems?.AccountPayable || '-'}</p>
               </div>
             </div>
@@ -118,7 +118,7 @@ export default function ProductionDashboard() {
         {error ? (
           <div className="text-center nodataAvailable">
           <img src="/no_client_data_available.svg" alt="Error"/>
-           <p >No Data available.</p>
+           <p>No Data available.</p>
         </div>
         ) : (
           productionsData && productionsData.data.length > 0 ? (
@@ -165,31 +165,31 @@ export default function ProductionDashboard() {
                 <div className="d-flex justify-content-between mt-4">
                     <div>
                         <div>
-                        <p style={{fontSize:"21px", fontWeight:"600"}}>$500,000</p>
+                        <p className="fw-600" style={{fontSize:"21px"}}>-</p>
                         </div>
                     </div>
                     <div>
                         <div>
-                            <p style={{fontSize:"21px", fontWeight:"600"}}>$350,190</p>
+                            <p className="fw-600" style={{fontSize:"21px"}}>-</p>
                         </div>
                     </div>
                  </div>
                  <div className="row mt-2">
                     <div className="col-md-4">
                         <h6 className="text-center">Project Type</h6>
-                        <p className="text-center" style={{fontWeight:"600"}}>{production.projectType.name}</p>
+                        <p className="text-center fw-600" >{production.projectType.name}</p>
                     </div>
                     <div className="col-md-4 text-nowrap">
                         <h6 className="text-center">Last Payroll Date</h6>
-                        <p className="text-center" style={{fontWeight:"600"}}>{production.LastPayrollDate}</p>
+                        <p className="text-center fw-600" >{production.LastPayrollDate}</p>
                     </div>
                     <div className="col-md-4">
                         <h6 className="text-center">Labour Type</h6>
-                        <p className="text-center" style={{fontWeight:"600"}}>{production.LabourType}</p>
+                        <p className="text-center fw-600" >{production.LabourType}</p>
                     </div>
                 </div>
                  <div className="mt-2">
-                    <p><img src="software_subscribed.svg" alt="" /> Softwares Subscribed</p>
+                    <p><img src="software_subscribed.svg" alt="Subscribed Softwares" /> Softwares Subscribed</p>
                     </div>
                     <div className="d-flex mt-3">
                         <p className="mr-4 productionBorder">Production Accounting</p>
