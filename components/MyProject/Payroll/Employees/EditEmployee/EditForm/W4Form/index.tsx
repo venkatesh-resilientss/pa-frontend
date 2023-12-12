@@ -185,9 +185,9 @@ function W4Form({ control, errors }) {
         </Row>
       </Form>
       <div className="form-lable-font text-black mb-4 mt-2">Federal W4&apos;`s</div>
-      <GridTable rowData={{data: federal}} columnDefs={federalColumns} pageSize={4} searchText={undefined} />
+      <GridTable rowData={federal} columnDefs={federalColumns} pageSize={4} searchText={undefined} />
       <div className="form-lable-font text-black mb-4">Resident W4&apos;`s</div>
-      <GridTable rowData={{data: state}} columnDefs={stateColumns} pageSize={4} searchText={undefined} />
+      <GridTable rowData={state} columnDefs={stateColumns} pageSize={4} searchText={undefined} />
     </div>
   );
 }
