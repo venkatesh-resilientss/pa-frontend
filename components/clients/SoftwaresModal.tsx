@@ -1,12 +1,16 @@
 import { Modal, ModalBody, ModalFooter } from "reactstrap";
 import useSWR from "swr";
 
+import { useState } from "react";
+
 import { ClientsService } from "services";
 
 const clientService = new ClientsService();
 
 export default function SoftwaresModal(props: any) {
-  const { router, show, setShow, clientData, setClientData } = props;
+  const { router, show, setShow } = props;
+
+  const [softwares, setSoftwares] = useState<any>([]);
 
   const { data } = useSWR("SOFTWARES", () => clientService.getSoftwares());
 
@@ -24,24 +28,13 @@ export default function SoftwaresModal(props: any) {
                   name={software.Name}
                   type="checkbox"
                   className=""
-                  checked={clientData.Softwares.find(
-                    (e) => e.Name === software.Name
-                  )}
+                  checked={softwares.find((e) => e === software.ID)}
                   onChange={(event) => {
-                    let tempArr: any = [...clientData.Softwares];
-                    if (event.target.checked)
-                      tempArr = [
-                        ...tempArr,
-                        { Name: software.Name, ID: software.ID },
-                      ];
-                    else
-                      tempArr = [...tempArr].filter(
-                        (e) => e.Name !== software.Name
-                      );
-                    setClientData({
-                      ...clientData,
-                      Softwares: tempArr,
-                    });
+                    const tempArr: any = event.target.checked
+                      ? [...softwares, software.ID]
+                      : [...softwares].filter((e) => e !== software.ID);
+
+                    setSoftwares(tempArr);
                   }}
                 />
                 <p className="text-nowrap f-12 m-0">{software.Name}</p>
@@ -51,13 +44,15 @@ export default function SoftwaresModal(props: any) {
         </div>
       </ModalBody>
       <ModalFooter>
-        <button className="btn" onClick={() => router.back()}>
+        <button className="btn" onClick={() => setShow(false)}>
           Cancel
         </button>
         <button
           className="btn btn-primary"
-          onClick={() => setShow(false)}
-          disabled={clientData.Softwares.length === 0}
+          onClick={() =>
+            router.push(`/clients/create-client?softwares=${softwares.join()}`)
+          }
+          disabled={softwares.length === 0}
         >
           Create
         </button>

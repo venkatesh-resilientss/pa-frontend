@@ -7,10 +7,24 @@ export default function ContactInformation(props) {
   const [err, setErr] = useState(false);
   const primaryFields = [
     {
-      lb: "Name",
-      ph: "Enter POC Name",
+      lb: "Last Name",
+      ph: "Enter Last Name",
       typ: "text",
-      vl: "Company.PrimaryContact.FullName",
+      vl: "Company.PrimaryContact.FirstName",
+      err: "Enter Last Name",
+    },
+    {
+      lb: "First Name",
+      ph: "Enter First Name",
+      typ: "text",
+      vl: "Company.PrimaryContact.LastName",
+      err: "Enter First Name",
+    },
+    {
+      lb: "Middle Initial Name",
+      ph: "Enter Middle Name",
+      typ: "text",
+      vl: "Company.PrimaryContact.MiddleName",
       err: "",
     },
     {
@@ -45,10 +59,24 @@ export default function ContactInformation(props) {
 
   const invoiceFields = [
     {
-      lb: "Name",
-      ph: "Enter POC Name",
+      lb: "Last Name",
+      ph: "Enter Last Name",
       typ: "text",
-      vl: "Company.SecondaryContact.FullName",
+      vl: "Company.SecondaryContact.FirstName",
+      err: "",
+    },
+    {
+      lb: "First Name",
+      ph: "Enter First Name",
+      typ: "text",
+      vl: "Company.SecondaryContact.LastName",
+      err: "",
+    },
+    {
+      lb: "Middle Initial Name",
+      ph: "Enter Middle Name",
+      typ: "text",
+      vl: "Company.SecondaryContact.MiddleName",
       err: "",
     },
     {
