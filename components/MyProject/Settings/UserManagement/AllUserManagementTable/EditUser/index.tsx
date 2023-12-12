@@ -20,8 +20,6 @@ function EditUser() {
     id ? ["USER_DETAILS", id] : null,
     () => getUserdetails(id)
   );
-
-  const [userDetails, setUserDetails] = useState() as any;
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [clientProductionsList, setClientProductionsList] = useState([
@@ -35,57 +33,59 @@ function EditUser() {
     },
   ]);
 
-  useEffect(() => {
-    setUserDetails(eachclicntdata);
-  }, [eachclicntdata]);
 
-  useEffect(() => {
-    if (userDetails) {
-      if (!userDetails.IsStaffUser) {
-        setClientProductionsList([
-          {
-            client: "client_1",
-            production: "production_1",
-            client_id: userDetails.Client.ID,
-            production_id: [],
-            productionOptions: [],
-            disabledClient: true,
-          },
-        ]);
-        setInitialClientOptions([
-          { label: userDetails.Client.Name, value: userDetails.Client.ID },
-        ]);
-        usersService
-          .getProductionsByClient(userDetails.Client.ID)
-          .then((res) => {
-            const productions = res.map((pr) => {
-              return {
-                label: pr.Name,
-                value: pr.ID,
-              };
-            });
-            setClientProductionsList([
-              {
-                client: "client_1",
-                production: "production_1",
-                client_id: userDetails.Client.ID,
-                production_id: [],
-                productionOptions: [...productions],
-                disabledClient: true,
-              },
-            ]);
-          });
-      }
-    }
-  }, [userDetails]);
+  // useEffect(() => {
+  //   if (userDetails) {
+  //     if (!userDetails.IsStaffUser) {
+  //       setClientProductionsList([
+  //         {
+  //           client: "client_1",
+  //           production: "production_1",
+  //           client_id: userDetails.Client.ID,
+  //           production_id: [],
+  //           productionOptions: [],
+  //           disabledClient: true,
+  //         },
+  //       ]);
+  //       setInitialClientOptions([
+  //         { label: userDetails.Client.Name, value: userDetails.Client.ID },
+  //       ]);
+  //       usersService
+  //         .getProductionsByClient(userDetails.Client.ID)
+  //         .then((res) => {
+  //           const productions = res.map((pr) => {
+  //             return {
+  //               label: pr.Name,
+  //               value: pr.ID,
+  //             };
+  //           });
+  //           setClientProductionsList([
+  //             {
+  //               client: "client_1",
+  //               production: "production_1",
+  //               client_id: userDetails.Client.ID,
+  //               production_id: [],
+  //               productionOptions: [...productions],
+  //               disabledClient: true,
+  //             },
+  //           ]);
+  //         });
+  //     }
+  //   }
+  // }, [userDetails]);
 
   const fetchInitialClients = async () => {
     try {
       // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
       const res = await clientService.getClients({
-        search: "",
-        limit: 25,
+        dateStart: "",
+        dateEnd: "",
+        clients: [],
+        softwares: [],
+        limit: 10,
         offset: 0,
+        search: "",
+        status: "true",
         is_active: true
       });
       const options = res?.map((item) => ({
@@ -190,8 +190,7 @@ function EditUser() {
       setIsCheckedStaffUser(eachclicntdata.IsStaffUser);
       const getdata = async () => {
         if (
-          eachclicntdata.Meta?.userCPReference &&
-          eachclicntdata.IsStaffUser
+          eachclicntdata.Meta?.userCPReference
         ) {
           const list = await Promise.all(
             eachclicntdata.Meta?.userCPReference.map(async (meta, index) => {
@@ -206,7 +205,6 @@ function EditUser() {
               };
             })
           );
-
           if (list.length > 0) {
             // const clientIds = list.map(ele => ele.client_id)
             fetchInitialClients();
@@ -537,9 +535,9 @@ function EditUser() {
                       control={control}
                       render={({ field }) => (
                         <AsyncSelect
-                          isDisabled={!editMode || CPlist.disabledClient}
+                          isDisabled={!editMode}
                           {...field}
-                          isClearable={true}
+                          // isClearable={true}
                           className="react-select"
                           classNamePrefix="select"
                           // loadOptions={loadClientOptions}

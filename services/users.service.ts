@@ -4,6 +4,7 @@ import cookie from "js-cookie";
 import {
   CREATE_USERS,
   EDIT_USERS,
+  GET_CLIENT_USERS,
   GET_USERS,
   USERS_DETAIL_ENDPOINT,
   getProductionByClint,
@@ -13,6 +14,17 @@ class UsersService extends APIService {
   getUsers(params): Promise<any> {
     const queryParams = new URLSearchParams(params).toString();
     return this.get(`${GET_USERS}?${queryParams}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+
+  getClientUsers(id: any, queries: any): Promise<any> {
+    const queryParams = new URLSearchParams(queries).toString();
+    return this.get(`${GET_CLIENT_USERS(id)}?${queryParams}`)
       .then((res) => {
         return res?.data;
       })

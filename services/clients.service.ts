@@ -91,9 +91,9 @@ class ClientsService extends APIService {
   //       throw error?.response?.data;
   //     });
   // }
-  getClients(params): Promise<any> {
-    return this.get(
-      `${GET_CLIENTS}?limit=${params.limit}&offset=${params.offset}&search=${params.search}`
+  getClients(data): Promise<any> {
+    return this.post(
+      `${GET_CLIENTS}`,data
     )
       .then((res) => {
         return res?.data;
