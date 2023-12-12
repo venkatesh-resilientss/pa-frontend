@@ -18,6 +18,7 @@ import moment from "moment";
 import { Image } from "react-bootstrap";
 import { useState } from "react";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import CustomBadge from "components/Generic/CustomBadge";
 
 const AllRoleTable = () => {
   const router = useRouter();
@@ -36,6 +37,19 @@ const AllRoleTable = () => {
   //   "user_and_role_management",
   //   "deactivate_role"
   // );
+
+  const StateBadge = (props) => {
+    const stateDir = {
+      true: "success",
+      false: "danger",
+    };
+    return (
+      <CustomBadge
+        bg={stateDir[props.value]}
+        value={props.value ? "Active" : "In-active"}
+      />
+    );
+  };
 
   const fetchData1 = async (pageNumber) => {
     // setBankLoading(true)
@@ -88,6 +102,12 @@ const AllRoleTable = () => {
         );
         return <span>{formattedDate}</span>;
       },
+    },
+    {
+      field: "IsActive",
+      cellRenderer: StateBadge,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
     },
 
     {
