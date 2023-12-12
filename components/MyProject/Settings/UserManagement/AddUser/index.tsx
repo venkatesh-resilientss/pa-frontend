@@ -43,15 +43,15 @@ function AddUser() {
 
   useEffect(() => {
     roleservice
-      .getRoles({ search: "", pageLimit: 50, offset: 0 })
+      .getRoles({ search: "", pageLimit: 50, offset: 0, is_active: true })
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-              ?.filter((e) => e?.IsActive)
-              .map((role) => ({
-                value: role.ID,
-                label: role.RoleName,
-              }))
+            ?.filter((e) => e?.IsActive)
+            .map((role) => ({
+              value: role.ID,
+              label: role.RoleName,
+            }))
           : [];
         setRoleOptions(temproleOptions);
       });
@@ -104,8 +104,9 @@ function AddUser() {
         // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
         const res = await clientService.getClients({
           search: "",
-          pageLimit: 25,
+          limit: 25,
           offset: 0,
+          is_active: true
         });
         const options = (res || [])
           ?.filter((e) => e?.IsActive)
@@ -129,6 +130,7 @@ function AddUser() {
         search: inputValue.toString(),
         pageLimit: 25,
         offset: 0,
+        is_active: true
       });
       const options = res?.data.map((item) => ({
         value: item.ID,
@@ -361,7 +363,7 @@ function AddUser() {
                     )} */}
                   </>
                 )}
-                // rules={{ required: "Middle Name is required" }}
+              // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -539,9 +541,8 @@ function AddUser() {
                           options={CPlist.productionOptions}
                           onChange={(e) => {
                             const temp = e.map((ele) => ele.value);
-                            const productionToUpdate = `production_${
-                              index + 1
-                            }`;
+                            const productionToUpdate = `production_${index + 1
+                              }`;
                             setClientProductionsList((prevList) => {
                               return prevList.map((item: any) => {
                                 if (item.production == productionToUpdate) {

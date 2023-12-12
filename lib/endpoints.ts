@@ -130,13 +130,13 @@ export const CREATE_STATES = `${withoutTenantIdEndpoint}/states/`; //Create Stat
 export const STATES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/states/${id}`; //States Details
 
-export const GET_TAXCODES = `${tenantIdEndpoint}/taxcodes/`; //TaxCodes
+export const GET_TAXCODES = `${withoutTenantIdEndpoint}/taxcodes/`; //TaxCodes
 export const DELETE_TAXCODES = (id: any) =>
-  `${tenantIdEndpoint}/taxcodes/${id}`; //DELETE taxcodes
-export const EDIT_TAXCODES = (id: any) => `${tenantIdEndpoint}/taxcodes/${id}`; //EDIT Taxcodes
-export const CREATE_TAXCODES = `${tenantIdEndpoint}/taxcodes/`; // Create TaxCodes
+  `${withoutTenantIdEndpoint}/taxcodes/${id}`; //DELETE taxcodes
+export const EDIT_TAXCODES = (id: any) => `${withoutTenantIdEndpoint}/taxcodes/${id}`; //EDIT Taxcodes
+export const CREATE_TAXCODES = `${withoutTenantIdEndpoint}/taxcodes/`; // Create TaxCodes
 export const TAXCODES_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/taxcodes/${id}`; //Tax Codes Details
+  `${withoutTenantIdEndpoint}/taxcodes/${id}`; //Tax Codes Details
 
 export const GET_LOCATIONS = `${tenantIdEndpoint}/locations/search`; //Locations
 export const CREATE_LOCATIONS = `${tenantIdEndpoint}/locations/`; //Create Locations

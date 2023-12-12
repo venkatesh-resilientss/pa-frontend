@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { SetsService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
@@ -37,14 +37,10 @@ function EditSet() {
     setActiveStatus(setData?.IsActive);
   }, [setData]);
 
-  const { mutate: countryMutate } = useSWR("LIST_SETS", () =>
-    setService.getSets({ search: "", pageLimit: 25, offset: 0 })
-  );
-
   const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       name: data.setname,
       description: data.description,
@@ -58,7 +54,6 @@ function EditSet() {
       .editSet(id, backendFormat)
       .then(() => {
         toast.success("Set Edited successfully");
-        mutate(countryMutate());
         router.back();
 
         reset();

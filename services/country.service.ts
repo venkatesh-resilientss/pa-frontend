@@ -3,11 +3,8 @@
 
   class CountryService extends APIService {
     getCountries(params?): Promise<any> {
-      return this.get(
-        params ?
-        `${GET_COUNTRIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
-        `${GET_COUNTRIES}`
-      )
+      const queryParams = new URLSearchParams(params).toString();
+      return this.get(`${GET_COUNTRIES}?${queryParams}`)
         .then((res) => {
           return res?.data;
         })

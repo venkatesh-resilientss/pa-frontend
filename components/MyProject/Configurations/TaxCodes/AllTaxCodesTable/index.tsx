@@ -45,7 +45,7 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
     try {
       const response = await taxcodesService.getTaxCodes({
         search: searchText,
-        pageLimit: recordLimit,
+        limit: recordLimit,
         offset: pageNumber,
       });
       const data = response.data; // Adjust based on the actual structure of the response

@@ -112,6 +112,59 @@ const CreatePurchaseOrder = () => {
 
   const selectedVendor = watch("vendor");
   const selectedBank = watch("bank");
+  const [sessionData, setSessionData] = useState() as any;
+  const [setsData, setSetsData] = useState() as any;
+
+
+  const intervalIdRef = useRef(null);
+  const attemptsCountRef = useRef(0);
+  const maxAttempts = 10;
+
+  useEffect(() => {
+    const retrieveSessionData = () => {
+      // Retrieve data from sessionStorage
+      const clientID = parseInt(sessionStorage.getItem("clientid"));
+      const projectID = parseInt(sessionStorage.getItem("projectid"));
+
+      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
+        clearInterval(intervalIdRef.current);
+        if (clientID && projectID) {
+          setSessionData({ clientID: clientID, projectID: projectID });
+        }
+      }
+
+      // Increment the attempts count
+      attemptsCountRef.current += 1;
+    };
+
+    // Retrieve session data initially
+    retrieveSessionData();
+
+    // Set up interval to check for session data every 1 second
+    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalIdRef.current);
+  }, []);
+
+
+  useEffect(() => {
+    if (sessionData) {
+      const queryParams = {
+        search: "",
+        pageLimit: 25,
+        offset: 0,
+        is_active: true
+      };
+      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
+      setsService.getSets(queryParams, payload).then((response) => {
+        setSetsData(response)
+      }).catch((e) => {
+        console.error(e)
+      })
+    }
+
+  }, [sessionData])
 
   const vendorId = selectedVendor?.value;
 
@@ -397,7 +450,9 @@ const CreatePurchaseOrder = () => {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+  // const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
+
+
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
@@ -422,7 +477,7 @@ const CreatePurchaseOrder = () => {
   const taxcodesService = new TaxCodesService();
 
   const { data: taxcodesData } = useSWR("LIST_TAXCODES", () =>
-    taxcodesService.getTaxCodes()
+    taxcodesService.getTaxCodes({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const taxcodeSelectFormat = taxcodesData?.data.map((b) => {

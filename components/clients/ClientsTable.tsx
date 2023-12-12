@@ -158,7 +158,7 @@ const ClientsListTable = () => {
     try {
       const response = await clientService.getClients({
         search: "",
-        pageLimit: recordsPerPage,
+        limit: recordsPerPage,
         offset: pageNumber,
       });
       const data = response || []; // Adjust based on the actual structure of the response

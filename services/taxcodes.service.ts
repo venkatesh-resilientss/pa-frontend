@@ -3,7 +3,8 @@ import {CREATE_TAXCODES, DELETE_TAXCODES, EDIT_TAXCODES, GET_TAXCODES, TAXCODES_
 
 class TaxCodesService extends APIService {
   getTaxCodes(params?): Promise<any> {
-    return this.get(`${GET_TAXCODES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+    const queryParams = new URLSearchParams(params).toString();
+    return this.get(`${GET_TAXCODES}?${queryParams}`)
       .then((res) => {
         return res?.data;
       })
