@@ -101,12 +101,17 @@ abstract class APIService {
     });
   }
   // Axios put method
-  put(url: string, data = {}): AxiosPromise<any> {
+  put(url: string, data = {}, headers? : any): AxiosPromise<any> {
     return axios({
       method: "PUT",
       url,
       data,
-      headers: this.getAxiosHeaders(),
+      headers: headers
+      ? {
+          ...this.getAxiosHeaders(),
+          ["Content-Type"]: headers["Content-Type"],
+        }
+      : this.getAxiosHeaders(),
     });
   }
   // Axios delete method

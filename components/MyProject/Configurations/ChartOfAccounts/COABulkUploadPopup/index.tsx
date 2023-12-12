@@ -10,6 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { COAAccountsService } from "@/services";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const COABulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -35,8 +36,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
     setUploadedFiles(updatedFiles);
   };
   const handleDownload = () => {
-    const url = "/upload-sample-files/COA_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.coa);
   };
   const [isLoading, setLoader] = useState(false);
   const handleUpload = () => {

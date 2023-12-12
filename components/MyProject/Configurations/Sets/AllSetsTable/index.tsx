@@ -353,7 +353,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
         </div>
       ) : (
         <>
-          {tableData?.result?.length > 0 ? (
+          {tableData?.data?.length > 0 ? (
             <div className="mt-3">
               <GridTable
                 rowData={tableData}

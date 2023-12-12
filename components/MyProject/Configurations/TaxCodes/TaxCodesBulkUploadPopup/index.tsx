@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { TaxCodesService } from "services";
+import { UploadSampleFiles } from "@/constants/common";
 
 const TaxCodesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ const TaxCodesBulkUploadPopup = ({ setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/TaxCodes_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.taxcodes);
   };
   return (
     <Modal

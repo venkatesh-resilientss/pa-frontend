@@ -104,7 +104,7 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() =>
                   router.push(`/configurations/edit-budget/${props.data?.ID}`)
                 }
@@ -136,8 +136,8 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Company",
-      field: "Company.Name",
+      headerName: "Client",
+      field: "Client.Name",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },

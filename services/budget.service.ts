@@ -63,7 +63,7 @@ class BudgetService extends APIService {
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
 
-      return this.post(UPLOAD_BUDGET_LIST, formData,  {
+      return this.put(UPLOAD_BUDGET_LIST, formData,  {
           'Content-Type': 'multipart/form-data',
         },)
       .then((response) => {
@@ -77,7 +77,7 @@ class BudgetService extends APIService {
       });
     }
 
-  budgetDetails(id: string) {
+  budgetDetails(id: any) {
     return this
       .get(BUDGETS_DETAIL_ENDPOINT(id))
       .then((response) => {

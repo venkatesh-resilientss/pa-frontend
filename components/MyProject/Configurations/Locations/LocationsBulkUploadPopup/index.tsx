@@ -11,6 +11,7 @@ import cancelIcon from "assets/myIcons/cancel.svg";
 import { closeBulkUploadLocationsPopup } from "redux/slices/mySlices/configurations";
 import { LocationsService } from "services";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -64,8 +65,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
       });
   };
   const handleDownload = () => {
-    const url = "/upload-sample-files/Locations_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.locations);
   };
   return (
     <Modal

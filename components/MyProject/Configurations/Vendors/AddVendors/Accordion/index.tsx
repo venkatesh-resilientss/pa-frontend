@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { getSessionVariables } from "@/constants/function";
 function VendorAccordion() {
   const { reset } = useForm();
 
@@ -30,6 +31,7 @@ function VendorAccordion() {
   };
 
   const onSubmit = (data) => {
+    const {clientID, projectID} = getSessionVariables();
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
       countryID: data.contactAddressCountry?.value,
@@ -75,17 +77,19 @@ function VendorAccordion() {
       MailingAddress  : mailingAddressPaylaod,
       BillingAddress : billingAddressPaylaod,
       PrimaryContact : {
-        FullName : data.contactName,
+        FirstName : data.contactName,
         CellPhone : data.contactNumber,
         EmailID : data.vendorEmail
-      }
+      },
+      clientID : clientID,
+      projectID : projectID
     }
     vendorService.createVendor(vendorsPayload).then(()=>{
       toast.success("Vendors Added successfully");
         reset();
         router.back();
     }).catch(error=>{
-      toast.error(error.Message || error.error || 'Unable to add vendor');
+      toast.error(error.Message || error.error || 'Unable to add Vendor');
     });
 };
 

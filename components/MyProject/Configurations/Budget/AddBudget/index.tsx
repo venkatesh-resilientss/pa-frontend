@@ -1,11 +1,9 @@
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
-import useSWR from "swr";
 import {
   BudgetService,
   CurrencyService,
-  DashboardService,
   LocationsService,
   SeriesService,
   SetsService,
@@ -14,133 +12,199 @@ import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
 import { formValidationRules } from "constants/common";
 import { getSessionVariables } from "@/constants/function";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 function AddBudget() {
   const router = useRouter();
   const budgetValidationRules = formValidationRules.budgets;
-  const [sessionData, setSessionData] = useState() as any;
-  const [setsData, setSetsData] = useState() as any;
   const currencyService = new CurrencyService();
-
-  const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies({ search: "", limit: 25, offset: 0, is_active: true })
-  );
-
-  const currenciesSelectFormat = currencyData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadCurrencyOptions = (values, callBack) => {
-    callBack(currenciesSelectFormat);
-  };
-
   const seriesService = new SeriesService();
-
-  const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
-  );
-
-  const seriesSelectFormat = seriesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadSeriesOptions = (values, callBack) => {
-    callBack(seriesSelectFormat);
-  };
-
-  const locationsService = new LocationsService();
-
-  const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
-  );
-
-  const locationsSelectFormat = locationsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadLocationsOptions = (values, callBack) => {
-    callBack(locationsSelectFormat);
-  };
-
+  const locationService = new LocationsService();
   const setsService = new SetsService();
 
-  // const { data: setsData } = useSWR("LIST_SETS", () =>
-  //   setsService.getSets({ search: "", limit: 25, offset: 0 })
-  // );
+  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
+  const [initialSeriesOptions, setInitialSeriesOptions] = useState([]);
+  const [initialLocationOptions, setInitialLocationOptions] = useState([]);
+  const [inititalSetOptions, setInitialSetOptions] = useState([]);
 
-
-
-  const intervalIdRef = useRef(null);
-  const attemptsCountRef = useRef(0);
-  const maxAttempts = 10;
-
+  /** Load Initial Options */
   useEffect(() => {
-    const retrieveSessionData = () => {
-      // Retrieve data from sessionStorage
-      const clientID = parseInt(sessionStorage.getItem("clientid"));
-      const projectID = parseInt(sessionStorage.getItem("projectid"));
-
-      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
-        clearInterval(intervalIdRef.current);
-        if (clientID && projectID) {
-          setSessionData({ clientID: clientID, projectID: projectID });
-        }
+    /**Currencies */
+    const fetchInitialCurrencyOptions = async () => {
+      try {
+        const res = await currencyService.getCurrencies({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCurrencyOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
       }
-
-      // Increment the attempts count
-      attemptsCountRef.current += 1;
     };
+    fetchInitialCurrencyOptions();
 
-    // Retrieve session data initially
-    retrieveSessionData();
+    /** Series */
+    const fetchInitalSeriesOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await seriesService.getSeries(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          },
+          {
+            clientId: clientID,
+            projectId: projectID,
+          }
+        );
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSeriesOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+    fetchInitalSeriesOptions();
 
-    // Set up interval to check for session data every 1 second
-    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalIdRef.current);
-  }, []);
-
-
-  useEffect(() => {
-    if (sessionData) {
-      const queryParams = {
-        search: "",
-        pageLimit: 25,
-        offset: 0,
-        is_active: true
-      };
-      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
-      setsService.getSets(queryParams, payload).then((response) => {
-        setSetsData(response)
-      }).catch((e) => {
-        console.error(e)
-      })
+    /** Locations */
+    const fetchLocationsOptions = async ()=>{
+      try {
+        const res = await locationService.getLocations({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialLocationOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
     }
 
-  }, [sessionData])
+    fetchLocationsOptions();
 
+    /** Sets */
+    const fetchSetsOptions = async ()=>{
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await setsService.getSets({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        },
+        {
+          clientId : clientID,
+          projectID : projectID
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSetOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    }
 
+    fetchSetsOptions();
 
-  const setsSelectFormat = setsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
+  }, []);
 
-  const loadSetsOptions = (values, callBack) => {
-    callBack(setsSelectFormat);
+  /**Currencies */
+  const loadCurrencyOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await currencyService.getCurrencies({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
   };
+
+  /** Series */
+  const loadSeriesOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await seriesService.getSeries(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        },
+        {
+          clientId: clientID,
+          projectId: projectID,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  /** Locations */
+  const loadLocationsOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await locationService.getLocations({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  }; 
+
+  /** Sets */
+  const loadSetsOptions : any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await setsService.getSets({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      },
+      {
+        clientId : clientID,
+        projectID : projectID
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  }
+  
 
   const budgetService = new BudgetService();
 
@@ -150,7 +214,7 @@ function AddBudget() {
     reset,
     formState: { errors },
   } = useForm();
-  const [budgetFile,setBudgetFile] = useState(null);
+  const [budgetFile, setBudgetFile] = useState(null);
   const onSubmit = (data) => {
     const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
@@ -160,7 +224,7 @@ function AddBudget() {
       SeriesID: parseInt(data?.series?.value),
       SetID: parseInt(data?.set?.value),
       LocationID: parseInt(data?.location?.value),
-      budgetFile: budgetFile,
+      file: budgetFile,
       clientID,
       projectID,
     };
@@ -175,7 +239,7 @@ function AddBudget() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add state');
+        toast.error(error?.error || error?.Message || "Unable to add Budget");
       });
   };
   return (
@@ -240,6 +304,7 @@ function AddBudget() {
                   placeholder="Budget Name"
                   invalid={errors.name && true}
                   {...field}
+                  style={{ fontSize : '1rem'}}
                 />
               )}
             />
@@ -262,6 +327,7 @@ function AddBudget() {
                   placeholder="Budget Code"
                   invalid={errors.code && true}
                   {...field}
+                  style={{ fontSize : '1rem'}}
                 />
               )}
             />
@@ -287,7 +353,7 @@ function AddBudget() {
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
                   placeholder="Select Currency"
-                  defaultOptions={currenciesSelectFormat}
+                  defaultOptions={initialCurrencyOptions}
                 />
               )}
             />
@@ -316,7 +382,7 @@ function AddBudget() {
                   classNamePrefix="select"
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
-                  defaultOptions={seriesSelectFormat}
+                  defaultOptions={initialSeriesOptions}
                 />
               )}
             />
@@ -345,7 +411,7 @@ function AddBudget() {
                   classNamePrefix="select"
                   loadOptions={loadLocationsOptions}
                   placeholder="Select Location"
-                  defaultOptions={locationsSelectFormat}
+                  defaultOptions={initialLocationOptions}
                 />
               )}
             />
@@ -374,7 +440,7 @@ function AddBudget() {
                   classNamePrefix="select"
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
-                  defaultOptions={setsSelectFormat}
+                  defaultOptions={inititalSetOptions}
                 />
               )}
             />
@@ -394,9 +460,15 @@ function AddBudget() {
             <Controller
               name="budgetfile"
               control={control}
-              render={() => <input type="file" accept=".txt" onChange={(e)=>{
-                setBudgetFile(e.target.files[0])
-              }} />}
+              render={() => (
+                <input
+                  type="file"
+                  accept=".txt"
+                  onChange={(e) => {
+                    setBudgetFile(e.target.files[0]);
+                  }}
+                />
+              )}
             />
             <br />
             {!budgetFile && (

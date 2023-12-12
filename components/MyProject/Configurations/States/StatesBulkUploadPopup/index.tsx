@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { StatesService } from "services";
+import { UploadSampleFiles } from "@/constants/common";
 
 const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -59,8 +60,7 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/States_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.states);
   };
   return (
     <Modal

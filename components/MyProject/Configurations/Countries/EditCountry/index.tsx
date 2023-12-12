@@ -60,7 +60,7 @@ function EditCountry() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add state');
+        toast.error(error?.error || error?.Message || 'Unable to edit Country');
       });
   };
 

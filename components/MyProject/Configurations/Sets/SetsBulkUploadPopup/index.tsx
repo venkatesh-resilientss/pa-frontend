@@ -10,6 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SetsService } from "services";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -64,8 +65,7 @@ const SetsBulkUploadPopup = ({ setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/Sets_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.sets);
   };
 
   return (

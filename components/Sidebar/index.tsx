@@ -370,15 +370,21 @@ const Sidebar = ({ props }) => {
             onClick={() => {
               if (productionList) {
                 setProductionList(false);
-                setSelectedProduction();
-                setClickedItemIndex(null);
+                // setSelectedProduction();
+                // setClickedItemIndex(null);
+                setSearchText("")
               } else {
                 setProductionList(true);
               }
             }}
           >
             {selectedProduction ? (
-              <div className="d-flex align-items-center cursor-pointer flex-row">
+              <div 
+                className="d-flex align-items-center cursor-pointer flex-row"
+                onClick={()=>{
+                  setSearchText("")
+                }}
+                >
                 <div className="d-flex align-items-center justify-content-center">
                   <Image
                     src="/home.svg"
@@ -469,6 +475,7 @@ const Sidebar = ({ props }) => {
                       setProductionList(false);
                       setSelectedProduction();
                       setClickedItemIndex(null);
+                      setSearchText("")
                     }}
                   >
                     <div
@@ -735,11 +742,8 @@ const Sidebar = ({ props }) => {
               setProductionList(false);
               setClickedItemIndex(temp2);
               setSelectedProduction(temp1);
-              sessionStorage.setItem(
-                "clientid",
-                selectedProduction?.Client?.ID
-              );
-              sessionStorage.setItem("projectid", selectedProduction?.ID);
+              sessionStorage.setItem("clientid",temp1?.Client?.ID);
+              sessionStorage.setItem("projectid", temp1?.ID);
               router.push(`/production/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
             }}

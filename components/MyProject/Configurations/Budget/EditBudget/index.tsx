@@ -1,13 +1,12 @@
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import useSWR from "swr";
 import { getSessionVariables } from "@/constants/function";
 import {
   BudgetService,
   CurrencyService,
-  DashboardService,
   LocationsService,
   SeriesService,
   SetsService,
@@ -18,151 +17,241 @@ import { formValidationRules } from "@/constants/common";
 
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
-  const [sessionData, setSessionData] = useState() as any;
-  const [setsData, setSetsData] = useState() as any;
 
   const router = useRouter();
-
-  const currencyService = new CurrencyService();
   const { id } = router.query;
-
-  const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies({ search: "", limit: 25, offset: 0, is_active: true })
-  );
-
-  const currenciesSelectFormat = currencyData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
   const budgetValidationRules = formValidationRules.budgets;
-
-  const loadCurrencyOptions = (values, callBack) => {
-    values;
-    callBack(currenciesSelectFormat);
-  };
-
+  const currencyService = new CurrencyService();
   const seriesService = new SeriesService();
-
-  const { data: seriesData } = useSWR("LIST_SERIES", () =>
-    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
-  );
-
-  const seriesSelectFormat = seriesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadSeriesOptions = (values, callBack) => {
-    callBack(seriesSelectFormat);
-  };
-
-  const locationsService = new LocationsService();
-
-  const { data: locationsData } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
-  );
-
-  const locationsSelectFormat = locationsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadLocationsOptions = (values, callBack) => {
-    callBack(locationsSelectFormat);
-  };
-
+  const locationService = new LocationsService();
   const setsService = new SetsService();
-
-  const intervalIdRef = useRef(null);
-  const attemptsCountRef = useRef(0);
-  const maxAttempts = 10;
-
-  useEffect(() => {
-    const retrieveSessionData = () => {
-      // Retrieve data from sessionStorage
-      const clientID = parseInt(sessionStorage.getItem("clientid"));
-      const projectID = parseInt(sessionStorage.getItem("projectid"));
-
-      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
-        clearInterval(intervalIdRef.current);
-        if (clientID && projectID) {
-          setSessionData({ clientID: clientID, projectID: projectID });
-        }
-      }
-
-      // Increment the attempts count
-      attemptsCountRef.current += 1;
-    };
-
-    // Retrieve session data initially
-    retrieveSessionData();
-
-    // Set up interval to check for session data every 1 second
-    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalIdRef.current);
-  }, []);
-
-
-  useEffect(() => {
-    if (sessionData) {
-      const queryParams = {
-        search: "",
-        pageLimit: 25,
-        offset: 0,
-      };
-      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
-      setsService.getSets(queryParams, payload).then((response) => {
-        setSetsData(response)
-      }).catch((e) => {
-        console.error(e)
-      })
-    }
-
-  }, [sessionData])
-
-  // const { data: setsData } = useSWR("LIST_SETS", () =>
-  //   setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
-  // );
-
-  const setsSelectFormat = setsData?.result.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadSetsOptions = (values, callBack) => {
-    callBack(setsSelectFormat);
-  };
-
   const budgetService = new BudgetService();
 
-  const fetchBudgetDetails = (id) => budgetService.budgetDetails(id);
+  const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
+  const [initialSeriesOptions, setInitialSeriesOptions] = useState([]);
+  const [initialLocationOptions, setInitialLocationOptions] = useState([]);
+  const [inititalSetOptions, setInitialSetOptions] = useState([]);
+  const [budgetFileUrl, setBudgetFileUrl] = useState(null);
+  /** Load Initial Options */
+  useEffect(() => {
+    /**Currencies */
+    const fetchInitialCurrencyOptions = async () => {
+      try {
+        const res = await currencyService.getCurrencies({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCurrencyOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+    fetchInitialCurrencyOptions();
 
-  const { data: budgetData1 } = useSWR(id ? ["BUDGET_DETAILS", id] : null, () =>
-    fetchBudgetDetails(id)
-  );
+    /** Series */
+    const fetchInitalSeriesOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await seriesService.getSeries(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          },
+          {
+            clientId: clientID,
+            projectId: projectID,
+          }
+        );
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSeriesOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+    fetchInitalSeriesOptions();
+
+    /** Locations */
+    const fetchLocationsOptions = async () => {
+      try {
+        const res = await locationService.getLocations({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.result.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialLocationOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchLocationsOptions();
+
+    /** Sets */
+    const fetchSetsOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await setsService.getSets(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          },
+          {
+            clientId: clientID,
+            projectID: projectID,
+          }
+        );
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialSetOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchSetsOptions();
+  }, []);
+
+  /**Currencies */
+  const loadCurrencyOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await currencyService.getCurrencies({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  /** Series */
+  const loadSeriesOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await seriesService.getSeries(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        },
+        {
+          clientId: clientID,
+          projectId: projectID,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  /** Locations */
+  const loadLocationsOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await locationService.getLocations({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  /** Sets */
+  const loadSetsOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await setsService.getSets(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        },
+        {
+          clientId: clientID,
+          projectID: projectID,
+        }
+      );
+      const options = res?.result.map((item) => ({
+        value: item.ID,
+        label: item.Name,
+      }));
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
   const {
     control,
     handleSubmit,
     reset,
-    // setValue,
+    setValue,
     formState: { errors },
   } = useForm();
-  const [budgetFile,setBudgetFile] = useState(null);
+  const [budgetFile, setBudgetFile] = useState(null);
 
-  useEffect(()=>{
-    // console.log(budgetData1);
-  },[budgetData1])
+  const { data: budgetData } = useSWR(id ? ["STATE_DETAILS", id] : null, () =>
+    budgetService.budgetDetails(id)
+  );
+
+  useEffect(() => {
+    if (!budgetData) return;
+
+    setValue("name", budgetData?.Name);
+    setValue("code", budgetData?.Code);
+    setValue("currency", {
+      value: budgetData?.Currency?.ID,
+      label: budgetData?.Currency?.Name,
+    });
+    setValue("series", {
+      value: budgetData?.Series?.ID,
+      label: budgetData?.Series?.Name,
+    });
+    setValue("set", {
+      value: budgetData?.Set?.ID,
+      label: budgetData?.Set?.Name,
+    });
+    setValue("location", {
+      value : budgetData?.Location?.ID,
+      label : budgetData?.Location?.Name
+    })
+    setActiveStatus(budgetData?.IsActive);
+    setBudgetFileUrl(budgetData?.budgetFile);
+  }, [budgetData]);
+
   const onSubmit = (data) => {
     const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
@@ -172,23 +261,23 @@ function EditBudget() {
       SeriesID: parseInt(data?.series?.value),
       SetID: parseInt(data?.set?.value),
       LocationID: parseInt(data?.location?.value),
-      budgetFile: budgetFile,
+      file: budgetFile,
       clientID,
       projectID,
-      isActive : activeStatus,
+      isActive: activeStatus,
     };
 
     // console.log(backendFormat);
 
     budgetService
-      .editBudget(id,backendFormat)
+      .editBudget(id, backendFormat)
       .then(() => {
-        toast.success("Budget Added successfully");
+        toast.success("Budget updated successfully");
         router.back();
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add state');
+        toast.error(error?.error || error?.Message || "Unable to edit Budget");
       });
   };
   return (
@@ -238,7 +327,7 @@ function EditBudget() {
       <hr style={{ height: "2px" }} />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-      <Row className="gap-2">
+        <Row className="gap-2">
           <Col xl="4" className="mt-2">
             <Label className="form-lable-font">
               Budget Name <span className="required">*</span>
@@ -299,7 +388,7 @@ function EditBudget() {
                   classNamePrefix="select"
                   loadOptions={loadCurrencyOptions}
                   placeholder="Select Currency"
-                  defaultOptions={currenciesSelectFormat}
+                  defaultOptions={initialCurrencyOptions}
                 />
               )}
             />
@@ -328,7 +417,7 @@ function EditBudget() {
                   classNamePrefix="select"
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
-                  defaultOptions={seriesSelectFormat}
+                  defaultOptions={initialSeriesOptions}
                 />
               )}
             />
@@ -357,7 +446,7 @@ function EditBudget() {
                   classNamePrefix="select"
                   loadOptions={loadLocationsOptions}
                   placeholder="Select Location"
-                  defaultOptions={locationsSelectFormat}
+                  defaultOptions={initialLocationOptions}
                 />
               )}
             />
@@ -386,7 +475,7 @@ function EditBudget() {
                   classNamePrefix="select"
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
-                  defaultOptions={setsSelectFormat}
+                  defaultOptions={inititalSetOptions}
                 />
               )}
             />
@@ -406,27 +495,40 @@ function EditBudget() {
             <Controller
               name="budgetfile"
               control={control}
-              render={() => <input type="file" onChange={(e)=>{
-                setBudgetFile(e.target.files[0])
-              }} />}
+              render={() => (
+                <input
+                  type="file"
+                  accept=".txt"
+                  onChange={(e) => {
+                    setBudgetFile(e.target.files[0]);
+                  }}
+                />
+              )}
             />
             <br />
-            {/* {!budgetFile && (
+            {!budgetFile && budgetFileUrl && (
               <span
                 style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
               >
                 Budget file is required
               </span>
-            )} */}
+            )}
+            {budgetFileUrl ? (
+              <a
+                onClick={() => {
+                  window.open(budgetFileUrl);
+                }}
+              >
+                Download File
+              </a>
+            ) : (
+              <></>
+            )}
           </Col>
         </Row>
 
-        <div className="d-flex flex-column mt-1">
-          <Label
-            className="text-black"
-          >
-            Status{" "}
-          </Label>
+        <div className="d-flex flex-column mt-3">
+          <Label className="text-black">Status </Label>
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
               <input
@@ -455,7 +557,7 @@ function EditBudget() {
             </div>
           </div>
         </div>
-        </Form>
+      </Form>
     </div>
   );
 }

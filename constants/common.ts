@@ -515,44 +515,40 @@ export const COAAccountyTypeOptions = [
   },
   {
     label: "Asset: Inventory",
-    value: "asset_inventroy",
+    value: "Asset: Inventory",
   },
   {
     label: "Cost Of Goods",
-    value: "cost_of_goods",
+    value: "Cost Of Goods",
   },
   {
     label: "Expense: Other",
-    value: "expense_other",
+    value: "Expense: Other",
   },
   {
     label: "Expense: ATL",
-    value: "expense_atl",
+    value: "Expense: ATL",
   },
   {
     label: "Expense: BTL",
-    value: "expense_btl",
+    value: "Expense: BTL",
   },
   {
     label: "Expense: Post",
-    value: "expense_post",
+    value: "Expense: Post",
   },
   {
     label: "Liability",
-    value: "liability",
+    value: "Liability",
   },
   {
     label: "Income",
-    value: "income",
+    value: "Income",
   },
   {
     label: "Capital",
-    value: "capital",
-  },
-  {
-    label: "Header - Separate Table",
-    value: "header_seperate_table",
-  },
+    value: "Capital",
+  }
 ];
 
 /**Payment Options */
@@ -1246,3 +1242,18 @@ export const formValidationRules = {
     contactName: contactValidationRules.fullName,
   },
 };
+
+const UPLOAD_BASE_URL  = '/upload-sample-files'
+export const UploadSampleFiles = {
+  countries : `${UPLOAD_BASE_URL}/RSSL Sample Data - countries.csv`,
+  coa : `${UPLOAD_BASE_URL}/RSSL Sample Data - coa.csv`,
+  currencies : `${UPLOAD_BASE_URL}/RSSL Sample Data - currencies.csv`,
+  departments : `${UPLOAD_BASE_URL}/RSSL Sample Data - departments.csv`,
+  locations : `${UPLOAD_BASE_URL}/RSSL Sample Data - locations.csv`,
+  periods : `${UPLOAD_BASE_URL}/RSSL Sample Data - periods.csv`,
+  series : `${UPLOAD_BASE_URL}/RSSL Sample Data - series.csv`,
+  sets : `${UPLOAD_BASE_URL}/RSSL Sample Data - sets.csv`,
+  states : `${UPLOAD_BASE_URL}/RSSL Sample Data - states.csv`,
+  taxcodes : `${UPLOAD_BASE_URL}/RSSL Sample Data - taxcodes.csv`,
+}
+  

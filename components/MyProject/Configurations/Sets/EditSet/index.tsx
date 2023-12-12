@@ -44,7 +44,7 @@ function EditSet() {
     const backendFormat = {
       name: data.setname,
       description: data.description,
-      isActive: activeStatus === "active" ? true : false,
+      isActive: activeStatus,
       code: data.setcode,
       clientID,
       projectID
