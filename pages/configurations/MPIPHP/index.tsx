@@ -1,9 +1,10 @@
-import MPIPHP from "components/MyProject/Configurations/MPIPHP";
+import MPIPHPCodes from "../../../components/MyProject/Configurations/MPIPHP";
+import React from "react";
 
 function index() {
   return (
     <div>
-      <MPIPHP />
+      <MPIPHPCodes />
     </div>
   );
 }
