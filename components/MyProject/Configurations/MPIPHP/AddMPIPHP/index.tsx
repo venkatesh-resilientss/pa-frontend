@@ -166,29 +166,6 @@ function AddMPIPHPCodes() {
                   )}
                 </div>
               </Col>
-              <Col><div className="d-flex flex-column mt-1">
-                <Label className="form-lable-font">Status </Label>
-                <div className="d-flex gap-1">
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      id="ex1-active"
-                      checked={true}
-                      name="ex1"
-                    />
-                    <div>Active</div>
-                  </div>
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      name="ex1"
-                      id="ex1-inactive"
-                    />
-                    <div>In-Active</div>
-                  </div>
-                </div>
-              </div>
-              </Col>
             </Row>
             <Row style={{ marginTop: '20px' }}>
               <Col>
