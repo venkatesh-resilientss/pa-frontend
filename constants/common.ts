@@ -248,6 +248,10 @@ export const sidebarRoutesMaster = [
         path: "/departments",
       },
       {
+        name: "Legislative Types",
+        path: "/legislative-type",
+      },
+      {
         name: "Employee Types",
         path: "/employee-type",
       },
@@ -399,6 +403,10 @@ export const sidebarRoutesProduction = [
         path: "/locations",
       },
       {
+        name: "Legislative Types",
+        path: "/legislative-type",
+      },
+      {
         name: "Periods",
         path: "/periods",
       },
@@ -477,7 +485,11 @@ export const sidebarRoutesNonStaff = [
       {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      }
+      },
+      {
+        name: "Legislative Types",
+        path: "/legislative-type",
+      },
     ],
   },
   {
