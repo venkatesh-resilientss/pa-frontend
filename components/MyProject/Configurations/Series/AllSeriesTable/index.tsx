@@ -12,7 +12,6 @@ import {
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import deleteIcon from "assets/myIcons/delete.svg";
 import { useRouter } from "next/router";
 import { SeriesService } from "services";
 import moment from "moment";
@@ -20,7 +19,6 @@ import moment from "moment";
 import { useDispatch } from "react-redux";
 import {
   openBulkUploadSeriesPopup,
-  openDeleteSeriesPopup,
 } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 // import { useState } from "react";
@@ -45,11 +43,7 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasDeactivateConfiguration = hasPermission(
-    "configuration_management",
-    "deactivate_configuration"
-  );
-
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
   const seriesService = new SeriesService();
 
   // const { data: seriesData, isLoading: seriesLoading } = useSWR(
@@ -142,21 +136,7 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
                 />
               </DropdownItem>
             )}
-            {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100"
-                onClick={(e) => e.preventDefault()}
-              >
-                <Action
-                  icon={deleteIcon}
-                  name={"Delete"}
-                  action={() => {
-                    dispatch(openDeleteSeriesPopup(props.data?.ID));
-                  }}
-                />
-              </DropdownItem>
-            )}
+            
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -273,8 +253,8 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
                 />
-
-                <Button
+                {
+                  hasUploadConfigurationPermission && <Button
                   onClick={() => dispatch(openBulkUploadSeriesPopup("upload"))}
                   style={{
                     height: "38px",
@@ -292,6 +272,8 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
                   />{" "}
                   Bulk Upload
                 </Button>
+                }
+                
 
                 {/* <Button
                   onClick={() => router.push(`/configurations/add-series`)}

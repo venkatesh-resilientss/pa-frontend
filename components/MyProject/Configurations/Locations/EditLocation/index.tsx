@@ -65,12 +65,12 @@ function EditLocation() {
       .then(() => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());
-        router.back();
+        router.push('/configurations/locations');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Location');
       });
   };
 

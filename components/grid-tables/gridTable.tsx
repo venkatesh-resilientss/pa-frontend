@@ -34,9 +34,9 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText, pageNumber, setP
     // initPagination();
   }, []);
 
-  // const sizeColumnsToFit = useCallback(() => {
-  //   gridRef.current.api.sizeColumnsToFit();
-  // }, []);
+  const sizeColumnsToFit = useCallback(() => {
+    gridRef.current.api.sizeColumnsToFit();
+  }, []);
 
   const rowStyles = {
     rowHeight: 68,
@@ -71,7 +71,7 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText, pageNumber, setP
         columnDefs={columnDefs}
         domLayout="autoHeight"
         onGridReady={gridReady}
-        // onFirstDataRendered={sizeColumnsToFit}
+        onFirstDataRendered={sizeColumnsToFit}
         // suppressPaginationPanel={true}
         {...rowStyles}
       />

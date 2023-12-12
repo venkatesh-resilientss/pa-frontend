@@ -15,7 +15,7 @@ import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { VendorsAddressTypes } from "@/constants/common";
+import { VendorsAddressTypes,PaymentOptions } from "@/constants/common";
 
 function VendorAccordion() {
   const { reset } = useForm();
@@ -44,17 +44,11 @@ function VendorAccordion() {
     () => fetchVendorData(id)
   );
   const [activeStatus, setActiveStatus] = useState(vendorData?.IsActive);
-  const paymentTypes = [
-    { value: "cheque", label: "Cheque" },
-    { value: "wireTransfer", label: "Wire Transfer" },
-    { value: "manualCheque", label: "Manual Cheque" },
-    { value: "eft", label: "EFT" },
-  ];
   const setBasicInformation = (data) => {
     data.Name && setValue("vendorName", data.Name);
     data.Code && setValue("vendorCode", data.Code);
 
-    const paymentType = paymentTypes.find(type => type.value === data.PaymentType);
+    const paymentType = PaymentOptions.find(type => type.value === data.PaymentType);
     data.PaymentType && setValue("paymentType", paymentType); //
 
     data.LegalName && setValue("legalName", data.LegalName);
@@ -88,7 +82,7 @@ function VendorAccordion() {
     data.PayeeName && setValue("payeeName", data.PayeeName);
     if (data.PrimaryContact) {
       const primaryContactData = data.PrimaryContact;
-      setValue("contactName", primaryContactData.FullName);
+      setValue("contactName", primaryContactData.FirstName);
       setValue("contactNumber", primaryContactData.CellPhone);
       setValue("vendorEmail", primaryContactData.EmailID);
     }
@@ -210,7 +204,7 @@ function VendorAccordion() {
       MailingAddress: mailingAddressPaylaod,
       BillingAddress: billingAddressPaylaod,
       PrimaryContact: {
-        FullName: data.contactName,
+        FirstName: data.contactName,
         CellPhone: data.contactNumber,
         EmailID: data.vendorEmail
       }
@@ -218,7 +212,7 @@ function VendorAccordion() {
     vendorService.editVendor(id, vendorsPayload).then(() => {
       toast.success("Vendor Edited successfully");
       reset();
-      router.back();
+      router.push('/configurations/vendors');
     }).catch(error => {
       toast.error(error.Message || error.error || 'Unable to edit vendor');
     });

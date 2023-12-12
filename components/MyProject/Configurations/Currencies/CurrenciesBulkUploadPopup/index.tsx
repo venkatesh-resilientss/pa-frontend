@@ -9,6 +9,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CurrencyService } from "services";
+import { UploadSampleFiles } from "@/constants/common";
 
 const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/Currency_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.currencies);
   };
 
   return (
@@ -140,7 +140,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx,  .xlsa and .csv file types are allowed
+                  All .xlsx,  .xls and .csv file types are allowed
                 </div>
               </div>
             )}

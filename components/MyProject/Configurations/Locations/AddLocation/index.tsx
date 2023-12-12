@@ -37,7 +37,7 @@ function AddLocation() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add Location');
       });
   };
 

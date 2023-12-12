@@ -20,7 +20,7 @@ import moment from "moment";
 import { openBulkUploadDepartmentPopup } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import CustomBadge from "components/Generic/CustomBadge";
-
+import { getSessionVariables } from "@/constants/function";
 import Image from "next/image";
 import NoDataPage from "components/NoDataPage";
 
@@ -52,10 +52,10 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
 
   // const dataSource = departmentsData && departmentsData.result;
   const fetchData = async (pageNumber) => {
-    const clientId = parseInt(sessionStorage.getItem("clientId")) || 0;
+    const {clientID} = getSessionVariables();
     try {
       const response = await departmentsService.getDepartments(
-        { clientId: clientId },
+        { clientId: clientID },
         {
           search: searchText,
           pageLimit: recordsPerPage,

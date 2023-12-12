@@ -12,6 +12,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -73,8 +74,7 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/Department_Samples.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.departments);
   };
   return (
     <Modal
@@ -151,7 +151,7 @@ const DepartmentBulkUploadPopup = ({ setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx,  .xlsa and .csv file types are allowed
+                  All .xlsx,  .xls and .csv file types are allowed
                 </div>
               </div>
             )}

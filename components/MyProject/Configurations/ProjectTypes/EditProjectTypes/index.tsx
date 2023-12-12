@@ -71,7 +71,7 @@ function EditProjectType() {
       })
       .catch((error) => {
         setIsSaving(false)
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Project Type');
       });
   };
  

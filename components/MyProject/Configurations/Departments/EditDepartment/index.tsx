@@ -57,12 +57,12 @@ function EditDepartment() {
       .editDepartment(id, backendFormat)
       .then(() => {
         toast.success("Department Edited successfully");
-        router.back();
+        router.push('/configurations/departments');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Department');
       });
   };
 

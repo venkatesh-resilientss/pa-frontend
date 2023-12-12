@@ -63,12 +63,12 @@ function EditCurrency() {
       .then(() => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());
-        router.back();
+        router.push('/configurations/currencies');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Currency');
       });
   };
 

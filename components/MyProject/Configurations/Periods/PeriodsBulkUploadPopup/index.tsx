@@ -10,6 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { PeriodsService } from "services";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const PeriodsBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -65,8 +66,7 @@ const PeriodsBulkUploadPopup = ({setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/Periods_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.periods);
   };
   return (
     <Modal
@@ -143,7 +143,7 @@ const PeriodsBulkUploadPopup = ({setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx,  .xlsa and .csv file types are allowed
+                  All .xlsx,  .xls and .csv file types are allowed
                 </div>
               </div>
             )}

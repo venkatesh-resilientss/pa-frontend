@@ -169,16 +169,6 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Description",
-      field: "Description",
-      sortable: true,
-      unSortIcon: true,
-      resizable: true,
-      cellStyle: { fontSize: "14px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-    },
-
-    {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
