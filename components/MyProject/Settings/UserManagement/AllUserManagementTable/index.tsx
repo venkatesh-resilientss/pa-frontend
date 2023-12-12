@@ -21,6 +21,8 @@ import router from "next/router";
 import { hasPermission } from "commonFunctions/functions";
 import NoDataPage from "@/components/NoDataPage";
 import { useEffect, useState } from "react";
+import { AuthService } from "services";
+const authService = new AuthService();
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -28,6 +30,7 @@ const AllRoleTable = () => {
   const [tableData, setTableData] = useState() as any
   const [loading, setLoading] = useState() as any
   const [pageNumber, setPageNumber] = useState(1) as any
+  const [userDetails, setUserDetails] = useState() as any
   const [pageLimit] = useState(10) as any
 
   const hasCreateUseerPermission = hasPermission(
@@ -40,25 +43,41 @@ const AllRoleTable = () => {
   );
 
 
+  useEffect(() => {
+    authService.getUserDetails().then((response) => {
+      setUserDetails(response?.data)
+    })
+  }, [])
+
+
 
   useEffect(() => {
-    setLoading(true)
-    // const pageNumber = 1
-    const offfset = (pageNumber - 1) * pageLimit
-    const queryParams = {
-      search: searchText,
-      pageLimit: pageLimit,
-      offset: offfset,
-    };
-    userService.getUsers(queryParams).then((response) => {
-      setTableData(response)
-      setLoading(false)
+    if (userDetails) {
+      setLoading(true)
+      const offfset = (pageNumber - 1) * pageLimit
+      const queryParams = {
+        search: searchText,
+        limit: pageLimit,
+        offset: offfset,
+      };
+      if (userDetails?.IsStaffUser) {
+        userService.getUsers(queryParams).then((response) => {
+          setTableData(response)
+          setLoading(false)
+        }).catch((e) => {
+          console.error(e)
+        })
+      } else {
+        userService.getClientUsers(userDetails.client_id, queryParams).then((response) => {
+          setTableData(response)
+          setLoading(false)
+        }).catch((e) => {
+          console.error(e)
+        })
+      }
+    }
 
-    }).catch((e) => {
-      console.error(e)
-    })
-
-  }, [searchText, pageNumber])
+  }, [searchText, pageNumber, userDetails])
 
 
   const toggleDeleteModal = () => {
