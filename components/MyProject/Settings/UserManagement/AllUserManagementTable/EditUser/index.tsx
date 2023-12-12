@@ -36,45 +36,6 @@ function EditUser() {
   ]);
 
 
-  // useEffect(() => {
-  //   if (userDetails) {
-  //     if (!userDetails.IsStaffUser) {
-  //       setClientProductionsList([
-  //         {
-  //           client: "client_1",
-  //           production: "production_1",
-  //           client_id: userDetails.Client.ID,
-  //           production_id: [],
-  //           productionOptions: [],
-  //           disabledClient: true,
-  //         },
-  //       ]);
-  //       setInitialClientOptions([
-  //         { label: userDetails.Client.Name, value: userDetails.Client.ID },
-  //       ]);
-  //       usersService
-  //         .getProductionsByClient(userDetails.Client.ID)
-  //         .then((res) => {
-  //           const productions = res.map((pr) => {
-  //             return {
-  //               label: pr.Name,
-  //               value: pr.ID,
-  //             };
-  //           });
-  //           setClientProductionsList([
-  //             {
-  //               client: "client_1",
-  //               production: "production_1",
-  //               client_id: userDetails.Client.ID,
-  //               production_id: [],
-  //               productionOptions: [...productions],
-  //               disabledClient: true,
-  //             },
-  //           ]);
-  //         });
-  //     }
-  //   }
-  // }, [userDetails]);
 
   const fetchInitialClients = async () => {
     try {

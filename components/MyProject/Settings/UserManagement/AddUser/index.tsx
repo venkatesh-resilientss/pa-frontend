@@ -80,42 +80,6 @@ function AddUser() {
     }
   }, [userData]);
 
-  // useEffect(() => {
-  //   if (userDetails) {
-  //     if (!userDetails.IsStaffUser && userDetails?.Client?.ID) {
-  //       setInitialClientOptions([
-  //         {
-  //           label: userDetails?.Client?.Name,
-  //           value: userDetails?.Client?.ID,
-  //           field: userDetails?.Client?.tenant_id,
-  //         },
-  //       ]);
-  //       usersService
-  //         .getProductionsByClient(userDetails.Client.ID)
-  //         .then((res) => {
-  //           const productions = (res || [])
-  //             ?.filter((e) => e?.IsActive)
-  //             .map((pr) => {
-  //               setClientProductionsList([
-  //                 {
-  //                   client: "client_1",
-  //                   production: "production_1",
-  //                   client_id: 0,
-  //                   production_id: [],
-  //                   productionOptions: [...productions],
-  //                   tenant_id: pr.Client.tenant_id,
-  //                 },
-  //               ]);
-  //               return {
-  //                 label: pr.Name,
-  //                 value: pr.ID,
-  //                 tenant_id: pr.tenant_id,
-  //               };
-  //             });
-  //         });
-  //     }
-  //   }
-  // }, [userDetails]);
 
   useEffect(() => {
     const fetchInitialClients = async () => {
