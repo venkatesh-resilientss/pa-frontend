@@ -247,7 +247,10 @@ export const sidebarRoutesMaster = [
         name: "Departments",
         path: "/departments",
       },
-
+      {
+        name: "Employee Types",
+        path: "/employee-type",
+      },
 
       {
         name: "States",
@@ -357,6 +360,10 @@ export const sidebarRoutesProduction = [
         name: "Chart of Accounts (COA)",
         path: "/coaaccounts",
       },
+      {
+        name: "Employee Types",
+        path: "/employee-type",
+      },
 
       {
         name: "Countries",
@@ -370,6 +377,8 @@ export const sidebarRoutesProduction = [
         name: "Departments",
         path: "/departments",
       },
+
+
       {
         name: "Locations",
         path: "/locations",
@@ -441,6 +450,10 @@ export const sidebarRoutesNonStaff = [
       {
         name: "Departments",
         path: "/departments",
+      },
+      {
+        name: "Employee Types",
+        path: "/employee-type",
       },
       {
         name: "Occupation Codes",
@@ -554,7 +567,7 @@ const PHONE_MAX_LENGTH = 30;
 
 const contactValidationRules = {
   fullName: {
-    required : "Name is required",
+    required: "Name is required",
     maxLength: {
       value: FULL_NAME_MAX_LENGTH,
       message: `Name must not contain more than ${FULL_NAME_MAX_LENGTH} characters`,
@@ -575,7 +588,7 @@ const contactValidationRules = {
     },
   },
   officePhone: {
-    required : "Phone Number is required",
+    required: "Phone Number is required",
     maxLength: {
       value: PHONE_MAX_LENGTH,
       message: `Phone Number cannot contain more than ${PHONE_MAX_LENGTH} characters`,
@@ -990,7 +1003,7 @@ export const formValidationRules = {
       },
     },
     city: {
-      
+
     },
     state: {
 
@@ -1075,8 +1088,8 @@ export const formValidationRules = {
     defaultAddress: {
       required: "Default Address is required",
     },
-    country : {
-      required : "Country is required"
+    country: {
+      required: "Country is required"
     },
     workState: {
       required: "Work State is required",
