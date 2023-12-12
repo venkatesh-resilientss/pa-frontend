@@ -47,11 +47,11 @@ function AddUser() {
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-              ?.filter((e) => e?.IsActive)
-              .map((role) => ({
-                value: role.ID,
-                label: role.RoleName,
-              }))
+            ?.filter((e) => e?.IsActive)
+            .map((role) => ({
+              value: role.ID,
+              label: role.RoleName,
+            }))
           : [];
         setRoleOptions(temproleOptions);
       });
@@ -103,10 +103,15 @@ function AddUser() {
       try {
         // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
         const res = await clientService.getClients({
-          search: "",
-          limit: 25,
-          offset: 0,
           is_active: true,
+          dateStart: "",
+          dateEnd: "",
+          clients: [],
+          softwares: [],
+          limit: 10,
+          offset: 0,
+          search: "",
+          status: "true"
         });
         const options = (res || [])
           ?.filter((e) => e?.IsActive)
@@ -363,7 +368,7 @@ function AddUser() {
                     )} */}
                   </>
                 )}
-                // rules={{ required: "Middle Name is required" }}
+              // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -541,9 +546,8 @@ function AddUser() {
                           options={CPlist.productionOptions}
                           onChange={(e) => {
                             const temp = e.map((ele) => ele.value);
-                            const productionToUpdate = `production_${
-                              index + 1
-                            }`;
+                            const productionToUpdate = `production_${index + 1
+                              }`;
                             setClientProductionsList((prevList) => {
                               return prevList.map((item: any) => {
                                 if (item.production == productionToUpdate) {
