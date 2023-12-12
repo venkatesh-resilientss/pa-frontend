@@ -14,7 +14,6 @@ import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import moment from "moment";
 import { hasPermission } from "commonFunctions/functions";
-import { useDispatch } from "react-redux";
 import Image from "next/image";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusWhiteIcon from "assets/myIcons/plus.svg";

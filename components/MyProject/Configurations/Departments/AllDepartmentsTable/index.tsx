@@ -152,6 +152,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
       sortable: true,
       resizable: true,
       unSortIcon: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -160,6 +161,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
       sortable: true,
       resizable: true,
       unSortIcon: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -168,6 +170,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
       sortable: true,
       resizable: true,
       unSortIcon: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
@@ -184,6 +187,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
       },
       sortable: true,
       unSortIcon: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       resizable: true,
       headerClass: "custom-header-class",
     },

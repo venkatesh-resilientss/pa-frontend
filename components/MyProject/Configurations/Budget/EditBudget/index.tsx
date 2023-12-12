@@ -186,13 +186,13 @@ function EditBudget() {
     control,
     handleSubmit,
     reset,
-    setValue,
+    // setValue,
     formState: { errors },
   } = useForm();
   const [budgetFile,setBudgetFile] = useState(null);
 
   useEffect(()=>{
-    console.log(budgetData1);
+    // console.log(budgetData1);
   },[budgetData1])
   const onSubmit = (data) => {
     const { clientID, projectID } = getSessionVariables();
