@@ -16,6 +16,8 @@ export default function ProductionDashboard() {
   const [projectDetails, setProjectDetails] = useState(null);
   const [dashboardCards, setDashboardCards] = useState(null);
   const [error, setError] = useState(null);
+ 
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,12 +116,12 @@ export default function ProductionDashboard() {
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
             <div className="row">
               <div className="col-md-6 text-nowrap">
-                <h6 className="text-center">Purchase Order</h6>
-                <p className="text-center font-size-16">{dashboardCards?.PendingApprovalItems?.PettyCash || '-'}</p>
+                <h6 className="text-center ">Purchase Order</h6>
+                <p className="text-center font-size-16 ">{dashboardCards?.PendingApprovalItems?.PettyCash || '-'}</p>
               </div>
               <div className="col-md-6">
-                <h6 className="text-center">Account Payable</h6>
-                <p className="text-center">{dashboardCards?.PendingApprovalItems?.AccountPayable || '-'}</p>
+                <h6 className="text-center ">Account Payable</h6>
+                <p className="text-center ">{dashboardCards?.PendingApprovalItems?.AccountPayable || '-'}</p>
               </div>
             </div>
           ))}
@@ -144,7 +146,7 @@ export default function ProductionDashboard() {
                 style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}
                 onClick={() => {
                   if (production_id) {
-                    router.push(`/edit-production/${production_id}`);
+                    router.push(`/production/${production_id}`);
                   }
                 }}
               >
@@ -176,7 +178,7 @@ export default function ProductionDashboard() {
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-between mt-4">
+              <div className="d-flex justify-content-between mt-3">
                 <div>
                   <div>
                     <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
@@ -204,7 +206,7 @@ export default function ProductionDashboard() {
               </div>
             </div>
             <div className="mt-2">
-              <p><img src="software_subscribed.svg" alt="" /> Softwares Subscribed</p>
+              <p><img src="/software_subscribed.svg" alt="" /> Softwares Subscribed</p>
             </div>
             <div className="d-flex mt-3">
               <p className="mr-4 productionBorder">-</p>
