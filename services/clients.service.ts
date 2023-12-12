@@ -13,6 +13,7 @@ import {
   UPLOAD_FILE_S3,
   GET_ALL_USERS,
   GET_CLIENT_USERS,
+  GET_CLIENTS_LIST,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
@@ -92,9 +93,16 @@ class ClientsService extends APIService {
   //     });
   // }
   getClients(data): Promise<any> {
-    return this.post(
-      `${GET_CLIENTS}`,data
-    )
+    return this.post(`${GET_CLIENTS}`, data)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getClientsList(data): Promise<any> {
+    return this.post(`${GET_CLIENTS_LIST}`, data)
       .then((res) => {
         return res?.data;
       })

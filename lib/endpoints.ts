@@ -42,9 +42,11 @@ export const GET_DASHBOARD_STATS = `${tenantIdEndpoint}/overview`; //Dashboard S
 export const GET_RECENT_PRODUCTIONS = `${tenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${tenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
 export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
-export const ON_BOARDED_PROJECTS = (id: any) => `${tenantIdEndpoint}/onboarded-projects?id=${id}`; //onboarded projects with id
+export const ON_BOARDED_PROJECTS = (id: any) =>
+  `${tenantIdEndpoint}/onboarded-projects?id=${id}`; //onboarded projects with id
 export const ALL_PRODUCTIONS = `${tenantIdEndpoint}/onboarded-projects`; //onboarded projects
-export const PRODUCTION_DASHBOARD_CARDS = (id: any) => `${tenantIdEndpoint}/production-overview?id=${id}`; //production overview
+export const PRODUCTION_DASHBOARD_CARDS = (id: any) =>
+  `${tenantIdEndpoint}/production-overview?id=${id}`; //production overview
 export const ALL_PRODUCTION_CARDS = `${tenantIdEndpoint}/production-overview`; //production overview
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
@@ -134,7 +136,8 @@ export const STATES_DETAIL_ENDPOINT = (id: any) =>
 export const GET_TAXCODES = `${withoutTenantIdEndpoint}/taxcodes/`; //TaxCodes
 export const DELETE_TAXCODES = (id: any) =>
   `${withoutTenantIdEndpoint}/taxcodes/${id}`; //DELETE taxcodes
-export const EDIT_TAXCODES = (id: any) => `${withoutTenantIdEndpoint}/taxcodes/${id}`; //EDIT Taxcodes
+export const EDIT_TAXCODES = (id: any) =>
+  `${withoutTenantIdEndpoint}/taxcodes/${id}`; //EDIT Taxcodes
 export const CREATE_TAXCODES = `${withoutTenantIdEndpoint}/taxcodes/`; // Create TaxCodes
 export const TAXCODES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/taxcodes/${id}`; //Tax Codes Details
@@ -216,12 +219,6 @@ export const UPLOAD_FILE_S3 = `/s3-upload`;
 export const getProductionByClint = (id) =>
   `${withoutTenantIdEndpoint}/projects/clientprojects/${id}`;
 
-export const CREATE_PRODUCTION = (id: any) =>
-  `${withoutTenantIdEndpoint}/${id}/projects/`; //Create projects
-
-export const CREATE_PRODUCTION_APPROVER = (id: any) =>
-  `${withoutTenantIdEndpoint}/${id}/approvers/`; //Create projects
-
 export const PROJECT_DETAILS = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`;
 
@@ -259,3 +256,11 @@ export const GET_CLIENT_TYPES = `${withoutTenantIdEndpoint}/clienttypes/`;
 export const GET_CLIENT_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`;
 export const GET_STATES_BY_COUNTRY = (id) =>
   `${withoutTenantIdEndpoint}/countries/${id}/states`;
+
+export const GET_ALL_PROJECTS_LIST = `${withoutTenantIdEndpoint}/projects/search`; //Projects
+export const CREATE_PRODUCTION = `${withoutTenantIdEndpoint}/projects/`; //Create projects
+
+export const CREATE_PRODUCTION_APPROVER = `${withoutTenantIdEndpoint}/approvers/`; //Create projects
+
+export const GET_CLIENTS_LIST = `${withoutTenantIdEndpoint}/clients/search`; //Clients
+export const GET_CLIENTS_FILTERS = `${withoutTenantIdEndpoint}/clients/clientfilters`; //Clients

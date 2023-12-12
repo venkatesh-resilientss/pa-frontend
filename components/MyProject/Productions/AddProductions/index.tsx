@@ -29,16 +29,26 @@ function AddProductions() {
   const [loading, setLoading] = useState<any>(false);
   const [client, setClient] = useState<any>(null);
   const [pAUser, setPAUser] = useState<any>(null);
-  const [tenantId, setTenantId] = useState<any>("");
   const [poValues, setPoValues] = useState<any>([null, null]);
   const [apValues, setApValues] = useState<any>([null, null]);
 
   const handleAddPurchaseOrderField = () => setPoValues([...poValues, null]);
   const handleAddAccountPayableField = () => setApValues([...apValues, null]);
 
-  const { data: clients } = useSWR("Clients", () =>
-    productionService.getClients("")
+  const { data: clientsData } = useSWR("Clients", () =>
+    productionService.getClients({
+      dateStart: "",
+      dateEnd: "",
+      clients: [],
+      softwares: [],
+      limit: 10,
+      offset: 0,
+      search: "",
+      status: "true",
+      pageNumber: 1,
+    })
   );
+  const clients: any = clientsData?.data || [];
   const { data: users, mutate } = useSWR("Users", () =>
     client ? productionService.getClientUsers(client?.value, ``) : null
   );
@@ -52,7 +62,6 @@ function AddProductions() {
           return;
         }
         const tenant = await authService.checkTenant({ name });
-        if (Number(tenant?.ID)) setTenantId(Number(tenant?.ID));
         if (Number(tenant?.clientId))
           setClient({
             name: tenant?.ClientName,
@@ -100,7 +109,7 @@ function AddProductions() {
         ProjectAccountantID: pAUser?.value || 0,
         clientID: client?.value,
       };
-      const resp = await productionService.createProject(tenantId, payload);
+      const resp = await productionService.createProject(payload);
       if (poVal) {
         for (const idx in poValues) {
           const index = Number(idx);
@@ -111,7 +120,7 @@ function AddProductions() {
             UserID: user_id,
             projectID: resp?.ID,
           };
-          await productionService.createProjectApprover(tenantId, pyld);
+          await productionService.createProjectApprover(pyld);
         }
       }
       if (apVal) {
@@ -124,7 +133,7 @@ function AddProductions() {
             UserID: user_id,
             projectID: resp?.ID,
           };
-          await productionService.createProjectApprover(tenantId, pyld);
+          await productionService.createProjectApprover(pyld);
         }
       }
       router.replace(`/production/${resp?.ID}`);
@@ -180,11 +189,23 @@ function AddProductions() {
   };
   const loadOptions: any = (value, lb) => {
     if (lb === "clients") {
-      return productionService.getClients(`?search=${value}&is_active=true`).then((res) => {
-        return [...res].map((e) => {
-          return { label: e.Name, value: e.ID, field: e.tenant_id };
+      return productionService
+        .getClients({
+          dateStart: "",
+          dateEnd: "",
+          clients: [],
+          softwares: [],
+          limit: 10,
+          offset: 0,
+          search: value,
+          status: "true",
+          pageNumber: 1,
+        })
+        .then((res) => {
+          return [...(res?.data || [])].map((e) => {
+            return { label: e.Name, value: e.ID, field: e.tenant_id };
+          });
         });
-      });
     } else if (lb === "users" && client) {
       return productionService
         .getClientUsers(client?.value, `?search=${value}&is_active=true`)
@@ -295,11 +316,10 @@ function AddProductions() {
                   value={client}
                   onChange={(e) => {
                     setClient(e);
-                    setTenantId(e.field);
                     setApValues([null, null]);
                     setPoValues([null, null]);
                   }}
-                // isDisabled={disabled || false}
+                  // isDisabled={disabled || false}
                 />
                 {err && !client && (
                   <span className="text-danger f-12">Select Client</span>
@@ -371,7 +391,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setPoValues(tempArr);
                     }}
-                  // isDisabled={disabled || false}
+                    // isDisabled={disabled || false}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -447,7 +467,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setApValues(tempArr);
                     }}
-                  // isDisabled={disabled || false}
+                    // isDisabled={disabled || false}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -481,7 +501,7 @@ function AddProductions() {
             loadOptions={(value) => loadOptions(value, "users")}
             value={pAUser}
             onChange={(e) => setPAUser(e)}
-          // isDisabled={disabled || false}
+            // isDisabled={disabled || false}
           />
         </div>
       </div>

@@ -63,3 +63,12 @@ input[type="number"] {
     height: 40px;
   }
 }
+
+.w-m-100 {
+  max-width: 100%;
+}
+.client-fields {
+  .form-control {
+    font-size: 16px !important;
+  }
+}

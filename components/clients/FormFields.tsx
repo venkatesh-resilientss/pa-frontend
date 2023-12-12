@@ -130,7 +130,7 @@ export default function FormFields(props: any) {
         const payload = { ...clientData };
 
         payload["ClientSoftwares"] = clientData.Softwares.map((e) => ({
-          SoftwareID: e.ID,
+          SoftwareID: e,
         }));
         if (clientData.clientType)
           payload["ClientTypeID"] = clientData.clientType.value;
@@ -159,8 +159,9 @@ export default function FormFields(props: any) {
         payload["PhysicalAddress"]["Zipcode"] =
           Number(clientData.PhysicalAddress.Zipcode) || 0;
 
-        const resp = await clientService.createClient(payload);
-        router.push(`/clients/edit-client/${resp.ID}`);
+        await clientService.createClient(payload);
+        router.push(`/clients`);
+        toast.success("Client created successfully");
         setLoading(false);
       } catch (e) {
         toast.error(e?.error || "Error");
@@ -172,7 +173,7 @@ export default function FormFields(props: any) {
   const back = () => {
     if (step != 1 && step > 1) {
       setStep(step - 1);
-    }
+    } else if (step === 1) router.replace("/clients");
   };
 
   return (

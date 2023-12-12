@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 import { Image } from "react-bootstrap";
 import { BasicInformation } from "@/components/clients";
 import { Address, ContactInformation } from "@/components/clients";
@@ -14,8 +13,8 @@ const steps = [
 ];
 
 export default function CreateClient(props) {
-  const { clientData, setClientData } = props;
-  const router = useRouter();
+  const { router, clientData, setClientData } = props;
+
   const [step, setStep] = useState(1);
 
   const back = () => {
@@ -23,7 +22,7 @@ export default function CreateClient(props) {
     else router.push("/clients");
   };
 
-  const tabProps = { clientData, setClientData, back, step, setStep };
+  const tabProps = { router, clientData, setClientData, back, step, setStep };
   return (
     <div className="p-4">
       <div className="text-black fw-600">All Clients</div>
@@ -56,11 +55,13 @@ export default function CreateClient(props) {
         ))}
       </div>
 
-      <BasicInformation {...tabProps} />
-      <Address {...tabProps} />
-      <ContactInformation {...tabProps} />
-      <Documents {...tabProps} />
-      <WorkSpaceDetails {...tabProps} {...{ router }} hideUsers={true} />
+      <div className="client-fields">
+        <BasicInformation {...tabProps} />
+        <Address {...tabProps} />
+        <ContactInformation {...tabProps} />
+        <Documents {...tabProps} />
+        <WorkSpaceDetails {...tabProps} {...{ router }} hideUsers={true} />
+      </div>
     </div>
   );
 }

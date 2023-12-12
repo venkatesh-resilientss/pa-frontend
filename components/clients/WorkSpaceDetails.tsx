@@ -43,8 +43,11 @@ export default function WorkSpaceDetails(props) {
   ];
 
   const { data: users } = useSWR("Users", () =>
-    clientData
-      ? clientService.getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active:true`)
+    clientData?.ID
+      ? clientService.getClientUsers(
+          clientData?.ID,
+          `?limit=50&offset=0&is_active:true`
+        )
       : null
   );
   const { data: supportUsers } = useSWR("Support Users", () =>
@@ -72,11 +75,13 @@ export default function WorkSpaceDetails(props) {
           });
         });
     else
-      return clientService.getUsers(`?limit=50&offset=0&is_active:true`).then((res) => {
-        return [...(res?.data || [])].map((e) => {
-          return { label: e?.adminName, value: e.id };
+      return clientService
+        .getUsers(`?limit=50&offset=0&is_active:true`)
+        .then((res) => {
+          return [...(res?.data || [])].map((e) => {
+            return { label: e?.adminName, value: e.id };
+          });
         });
-      });
     // return new Promise((resolve) => setTimeout(() => resolve([]), 500));
   };
 
