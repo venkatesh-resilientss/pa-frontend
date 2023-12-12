@@ -77,12 +77,12 @@ function EditState() {
       .editState(id, backendFormat)
       .then(() => {
         toast.success("State Edited successfully");
-        router.back();
+        router.push('/configurations/states');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
 

@@ -142,39 +142,7 @@ function AddBudget() {
     callBack(setsSelectFormat);
   };
 
-  const statsService = new DashboardService();
-
-  const { data: statsData } = useSWR("GET_RECENET", () =>
-    statsService.getRecentProductions()
-  );
-
-  const productionSelectFormat = statsData?.data.map((b) => {
-    return {
-      value: b.id,
-      label: b.project_name,
-    };
-  }); 
-
-  const loadProductionOptions = (values, callBack) => {
-    callBack(productionSelectFormat);
-  };
-
   const budgetService = new BudgetService();
-
-  const { data: budgetData } = useSWR("LIST_COMPANY", () =>
-    budgetService.getCompany()
-  );
-
-  const companySelectFormat = budgetData?.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const loadCompanyOptions = (values, callBack) => {
-    callBack(companySelectFormat);
-  };
 
   const {
     control,
@@ -188,8 +156,6 @@ function AddBudget() {
     const backendFormat = {
       Code: data?.code,
       Name: data?.name,
-      CompanyID: parseInt(data?.company?.value),
-      ProjectID: parseInt(data?.production?.value),
       CurrencyID: parseInt(data?.currency?.value),
       SeriesID: parseInt(data?.series?.value),
       SetID: parseInt(data?.set?.value),
@@ -209,7 +175,7 @@ function AddBudget() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
   return (
@@ -302,64 +268,6 @@ function AddBudget() {
             {errors.code && (
               <span className="text-danger">
                 {errors.code.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col xl="4" className="mt-2">
-            <Label className="form-lable-font">
-              Company <span className="required">*</span>
-            </Label>
-            <Controller
-              name="company"
-              control={control}
-              rules={budgetValidationRules.company}
-              render={({ field }) => (
-                <AsyncSelect
-                  {...field}
-                  isClearable={true}
-                  className="react-select"
-                  classNamePrefix="select"
-                  loadOptions={loadCompanyOptions}
-                  placeholder="Select Company"
-                  defaultOptions={companySelectFormat}
-                />
-              )}
-            />
-            {errors.company && (
-              <span
-                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
-              >
-                {" "}
-                {errors.company.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col xl="4" className="mt-2">
-            <Label className="form-lable-font">
-              Production <span className="required">*</span>
-            </Label>
-            <Controller
-              name={"production"}
-              rules={budgetValidationRules.production}
-              control={control}
-              render={({ field }) => (
-                <AsyncSelect
-                  {...field}
-                  isClearable={true}
-                  className="react-select"
-                  classNamePrefix="select"
-                  loadOptions={loadProductionOptions}
-                  placeholder="Select Productions"
-                  defaultOptions={productionSelectFormat}
-                />
-              )}
-            />
-            {errors.production && (
-              <span
-                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
-              >
-                {" "}
-                {errors.production.message as React.ReactNode}
               </span>
             )}
           </Col>

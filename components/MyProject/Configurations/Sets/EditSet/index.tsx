@@ -54,7 +54,7 @@ function EditSet() {
       .editSet(id, backendFormat)
       .then(() => {
         toast.success("Set Edited successfully");
-        router.back();
+        router.push('/configurations/sets');
 
         reset();
       })

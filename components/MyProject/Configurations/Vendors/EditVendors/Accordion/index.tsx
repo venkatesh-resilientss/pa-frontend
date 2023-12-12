@@ -218,7 +218,7 @@ function VendorAccordion() {
     vendorService.editVendor(id, vendorsPayload).then(() => {
       toast.success("Vendor Edited successfully");
       reset();
-      router.back();
+      router.push('/configurations/vendors');
     }).catch(error => {
       toast.error(error.Message || error.error || 'Unable to edit vendor');
     });

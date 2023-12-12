@@ -60,12 +60,12 @@ function EditSeries() {
       .then(() => {
         toast.success("Series Edited successfully");
         mutate(countryMutate());
-        router.back();
+        router.push('/configurations/series');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
 

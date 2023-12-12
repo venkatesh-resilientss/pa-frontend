@@ -572,6 +572,7 @@ export const VendorsAddressTypes = [
 
 /**Form Validation Rules */
 const ALPHA_NUMERIC = /^[A-Za-z0-9_ ]+$/i;
+const ADDRESS_LINE = /^[A-Za-z0-9_ ,-;'#]+$/i;
 const CODE_PATTERN = /^[A-Za-z0-9]+$/i;
 const NUMERIC = /^[0-9.]+[ ]*$/i;
 const EMAIL_PATTERN = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
@@ -1019,7 +1020,7 @@ export const formValidationRules = {
         message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: ALPHA_NUMERIC,
+        value: ADDRESS_LINE,
         message: "Special characters are not allowed",
       },
     },
@@ -1027,6 +1028,10 @@ export const formValidationRules = {
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
         message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
       },
     },
     city: {

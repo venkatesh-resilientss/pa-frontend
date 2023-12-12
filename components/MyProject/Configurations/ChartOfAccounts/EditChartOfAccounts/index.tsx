@@ -129,7 +129,7 @@ function EditChartOfAccounts() {
       .editCOA(id, backendFormat)
       .then(() => {
         toast.success("COA Edited successfully");
-        router.back();
+        router.push('/configurations/coaaccounts');
         setLoader(false);
         reset();
       })

@@ -79,12 +79,12 @@ function EditTaxCode() {
       .then(() => {
         toast.success("TaxCode Edited successfully");
         mutate(taxCodeMutate());
-        router.back();
+        router.push('/configurations/taxcodes');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
 

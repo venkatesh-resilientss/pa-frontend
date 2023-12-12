@@ -81,12 +81,12 @@ function EditPeriod() {
       .editPeriod(id, backendFormat)
       .then(() => {
         toast.success("Period Edited successfully");
-        router.back();
+        router.push('/configurations/periods');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
 

@@ -142,7 +142,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx,  .xlsa and .csv file types are allowed
+                  All .xlsx,  .xls and .csv file types are allowed
                 </div>
               </div>
             )}

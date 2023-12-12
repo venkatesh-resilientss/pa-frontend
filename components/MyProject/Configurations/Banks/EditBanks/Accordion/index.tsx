@@ -147,7 +147,7 @@ function BankAccordion() {
         router.back()
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to add state');
       });
   };
   const {
@@ -192,7 +192,7 @@ function BankAccordion() {
           });
         })
         .catch((error) => {
-          toast.error(error?.error);
+          toast.error(error?.error || error?.Message || 'Unable to add state');
         });
     }
   }, [router.query]);
