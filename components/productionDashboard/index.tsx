@@ -36,7 +36,6 @@ export default function ProductionDashboard() {
         const result = await productionService.getAllProductionCards();
         // Set dashboardCards state
         setProductionCards(result);
-        console.log(result)
       } catch (error) {
         console.error('Error fetching production data:', error);
         setError(error.response?.data?.error || 'Unknown error occurred');
@@ -92,10 +91,6 @@ export default function ProductionDashboard() {
     },
   ];
 
-  // Log production data to console (for testing)
-  console.log(productionsData);
-
-  // Return your JSX (UI) structure
   return (
     <>
       
