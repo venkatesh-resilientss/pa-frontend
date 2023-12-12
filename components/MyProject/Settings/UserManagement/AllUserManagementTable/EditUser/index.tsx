@@ -95,6 +95,7 @@ function EditUser() {
       search: "",
       limit: 25,
       offset: 0,
+      is_active: true,
     }
     roleservice.getRoles(params).then((response) => {
 

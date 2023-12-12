@@ -44,7 +44,7 @@ function AddUser() {
 
   useEffect(() => {
     roleservice
-      .getRoles({ search: "", pageLimit: 50, offset: 0, is_active: true })
+      .getRoles({ search: "", limit: 50, offset: 0, is_active: true })
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
