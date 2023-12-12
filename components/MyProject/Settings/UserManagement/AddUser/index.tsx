@@ -446,21 +446,16 @@ function AddUser() {
               <Controller
                 name="role"
                 control={control}
-                rules={{
-                  required: "Select Role",
-                }}
+                // rules={{
+                //   required: "Select Role",
+                // }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={roleOptions}
-                    // value={selectedRole}
-                    // onChange={(selectedOption) => {
-                    //   setSelectedRole(selectedOption);
-                    //   // setValue("role", selectedOption.value);
-                    // }}
                     styles={roleSelectStyles}
                     onChange={(e) => {
-                      setSelectedRole(e.label)
+                      setSelectedRole(e.label);
                     }}
                   />
                 )}
