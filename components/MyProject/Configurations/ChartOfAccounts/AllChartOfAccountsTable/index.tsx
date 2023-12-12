@@ -43,10 +43,8 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
 
-  const hasUploadConfigurationPermission = hasPermission(
-    "",
-    "bulk_upload"
-  )
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
+  
   const fetchData = async (pageNumber) => {
     const {clientID,projectID} = getSessionVariables()
     try {

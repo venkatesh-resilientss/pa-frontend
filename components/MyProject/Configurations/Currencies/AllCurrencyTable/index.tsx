@@ -35,7 +35,7 @@ const AllCurrencyTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
   // const hasDeactivateConfiguration = hasPermission(
   //   "configuration_management",
   //   "deactivate_configuration"

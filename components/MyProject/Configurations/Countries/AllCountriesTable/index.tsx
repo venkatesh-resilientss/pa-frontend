@@ -37,8 +37,8 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload");
-
+  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
+  
   const dispatch = useDispatch();
 
   const fetchData = async (pageNumber) => {
