@@ -1,18 +1,26 @@
 // ** Third Party Components
-import { AiFillCaretRight, AiOutlineProfile } from "react-icons/ai";
+import { AiFillCaretRight } from "react-icons/ai";
 import budget from "assets/DashboardIcons/budget.svg";
 import budgetSpend from "assets/DashboardIcons/budget_spend.svg";
 import Image from "next/image";
+import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
+
 
 
 // ** Reactstrap Imports
 import { Card, CardBody } from "reactstrap";
+import router from "next/router";
 
 const ProjectCard = ({ data }) => {
   const formatDate = () => {
     const res = new Date(data.payrolldate).toDateString().slice(4);
     return res;
   };
+
+  const handleViewDetailsClick = () => {
+    router.push(`/edit-production/${data.id}`);
+  };
+  
   return (
     <Card className="text-black px-1 h-100">
       <CardBody>
@@ -29,9 +37,10 @@ const ProjectCard = ({ data }) => {
                     fontSize: "14px",
                     gap: "3px",
                   }}
+                  onClick={handleViewDetailsClick}
                 >
                   <div>
-                    <AiOutlineProfile className="font-size-14" style={{ marginBottom: "1px",}} />
+                    <Image src={carbonDecumentView} style={{ height: "11px", width: "11px" }} alt={""}/>
                   </div>
                   <div>View Details</div>
                   <div>

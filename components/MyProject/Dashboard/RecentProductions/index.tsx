@@ -33,7 +33,7 @@ function RecentProductions() {
       <div className="d-flex justify-content-between">
         <div
           className="my-1 mt-2 mb-2"
-          style={{ fontSize: "18px", fontWeight: "600", color: "#030229" }}
+          style={{ fontSize: "18px", fontWeight: "600", color: "#030229" }} 
         >
           Recent Productions
         </div>
@@ -50,7 +50,7 @@ function RecentProductions() {
             />
           </Form>
           {hasCreateProductionPermission && (
-            <Button color="primary" className="py-1 px-3">
+            <Button color="primary" className="py-1 px-3" onClick={() => router.push(`/productions`)}>
               <BsCameraVideo style={{ color: "#FFFFFF" }} />
               <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
                 {" "}

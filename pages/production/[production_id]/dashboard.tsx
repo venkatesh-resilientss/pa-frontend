@@ -108,7 +108,7 @@ export default function ProductionDashboard() {
     <>
       <div className="rounded mt-3">
         <Row noGutters className="d-flex gap-2">
-          {createCard("Total Active Productions", "/total_budget.svg", null, <h4>{dashboardCards?.TotalActiveProductions || '-'}</h4>)}
+          {createCard("Total Active Productions", "/active_productions.png", null, <h4>{dashboardCards?.TotalActiveProductions || '-'}</h4>)}
           {createCard("Total Budget Vs Actual Spending", "/total_budget.svg", "The Lost Heirloom", <p>{dashboardCards?.TotalBudget || '-'}</p>)}
           {createCard("Remaining Budget Allocation", "/remaining_budget.svg", "The Lost Heirloom", <p>{dashboardCards?.RemainingBudgetAllocation || '-'}</p>)}
           {createCard("Pending Approval Items", "/pending_approval.svg", null, (
@@ -139,12 +139,17 @@ export default function ProductionDashboard() {
                 <div>
                   <h4 className="text-nowrap fw-bold">{projectDetails?.name || '-'}</h4>
                 </div>
-                <div
-                  className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
-                  style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}
-                >
+               <div
+                className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
+                style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}
+                onClick={() => {
+                  if (production_id) {
+                    router.push(`/edit-production/${production_id}`);
+                  }
+                }}
+              >
                   <div>
-                    <img src="/view_details.svg" style={{ height: "11px", width: "11px" }} alt="" />
+                    <img src="/view_details.svg" alt="" />
                   </div>{" "}
                   <p style={{ fontSize: "14px" }}>View Details</p>
                 </div>
@@ -155,7 +160,7 @@ export default function ProductionDashboard() {
                 </div>
                 <div>
                   <div>
-                    <span style={{ fontSize: "10px" }}><img src="/calender.svg" style={{ height: "11px", width: "11px" }} alt="" /> {projectDetails?.created_date || '-'}</span>
+                    <span style={{ fontSize: "10px" }}><img src="/calender.svg" alt="" /> {projectDetails?.created_date || '-'}</span>
                   </div>
                 </div>
               </div>

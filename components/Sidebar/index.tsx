@@ -86,6 +86,7 @@ const Sidebar = ({ props }) => {
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
+    
 
     if (routeNames[0] === "production") {
       const lastRoute = routeNames[routeNames.length - 1];
