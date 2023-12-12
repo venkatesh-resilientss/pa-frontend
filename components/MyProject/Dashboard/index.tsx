@@ -4,13 +4,13 @@ import Clients from "./Clients";
 import RecentProductions from "./RecentProductions";
 import HelpCenter from "./HelpCenter";
 
-function Dashboard() {
+function Dashboard({ router, user }) {
   return (
     <div>
       <Stats />
       <Row className="match-height my-4">
         <Col xl="12">
-          <Clients />
+          <Clients {...{ router, user }} />
         </Col>
       </Row>
       <RecentProductions />

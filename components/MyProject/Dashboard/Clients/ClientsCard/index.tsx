@@ -1,12 +1,8 @@
 // ** Third Party Components
-import { AiFillCaretRight } from "react-icons/ai";
-
 // ** Reactstrap Imports
 import { Card } from "reactstrap";
-import { Mail } from "react-feather";
 import Image from "next/image";
-import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
-import user from "assets/DashboardIcons/person.svg";
+
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
 import router from "next/router";
 const ClientsCard = ({ data }) => {

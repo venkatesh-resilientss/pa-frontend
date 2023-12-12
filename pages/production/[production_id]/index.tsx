@@ -28,22 +28,32 @@ function Production() {
   //   const [loading, setLoading] = useState<any>(false);
   const [client, setClient] = useState<any>(null);
   const [pAUser, setPAUser] = useState<any>(null);
-  const [tenantId, setTenantId] = useState<any>("");
   const [poValues, setPoValues] = useState<any>([null, null]);
   const [apValues, setApValues] = useState<any>([null, null]);
 
   const handleAddPurchaseOrderField = () => setPoValues([...poValues, null]);
   const handleAddAccountPayableField = () => setApValues([...apValues, null]);
 
-  const { data: clients } = useSWR("Clients", () =>
-    productionService.getClients("")
+  const { data: clientsData } = useSWR("Clients", () =>
+    productionService.getClients({
+      dateStart: "",
+      dateEnd: "",
+      clients: [],
+      softwares: [],
+      limit: 10,
+      offset: 0,
+      search: "",
+      status: "true",
+      pageNumber: 1,
+    })
   );
+  const clients: any = clientsData?.data || [];
   const { data: users, mutate } = useSWR("Users", () =>
     client ? productionService.getClientUsers(client?.value, ``) : null
   );
 
   useEffect(() => {
-    const getTenantDetails = async () => {
+    const getDetails = async () => {
       try {
         const resp = await productionService.getProjectDetails(
           Number(router.query.production_id)
@@ -51,21 +61,21 @@ function Production() {
         const name = window.location.hostname.split(".")[0];
         if (name === "app") setStaffUser(true);
         setClient({
-          label: resp?.projects?.Client?.Name,
-          value: resp?.projects?.Client?.ID,
-          field: resp?.projects?.Client?.tenant_id,
+          label: resp?.Client?.Name,
+          value: resp?.Client?.ID,
+          field: resp?.Client?.tenant_id,
         });
-        setValue("productionCode", resp?.projects?.Code);
-        setValue("productionName", resp?.projects?.Name);
+        setValue("productionCode", resp?.Code);
+        setValue("productionName", resp?.Name);
         setPAUser(
-          resp?.projects?.ProjectAccountantID
+          resp?.ProjectAccountantID
             ? {
-              label:
-                (resp?.projects?.ProjectAccountant?.first_name || "") +
-                " " +
-                (resp?.projects?.ProjectAccountant?.last_name || ""),
-              value: resp?.projects?.ProjectAccountantID,
-            }
+                label:
+                  (resp?.ProjectAccountant?.first_name || "") +
+                  " " +
+                  (resp?.ProjectAccountant?.last_name || ""),
+                value: resp?.ProjectAccountantID,
+              }
             : null
         );
         const po = resp?.po_approvers.map((e) => ({
@@ -86,7 +96,7 @@ function Production() {
         toast.error(e?.error || e || "Error");
       }
     };
-    if (Number(router.query.production_id)) getTenantDetails();
+    if (Number(router.query.production_id)) getDetails();
   }, [router.query.production_id]);
 
   useEffect(() => {
@@ -123,7 +133,7 @@ function Production() {
         ProjectAccountantID: pAUser?.value || 0,
         clientID: client?.value,
       };
-      const resp = await productionService.createProject(tenantId, payload);
+      const resp = await productionService.createProject(payload);
       for (const idx in poValues) {
         const index = Number(idx);
         const user_id = poValues[index]?.value;
@@ -133,7 +143,7 @@ function Production() {
           user_id,
           projectID: resp?.ID,
         };
-        await productionService.createProjectApprover(tenantId, pyld);
+        await productionService.createProjectApprover(pyld);
       }
       for (const idx in apValues) {
         const index = Number(idx);
@@ -144,7 +154,7 @@ function Production() {
           UserID: user_id,
           projectID: resp?.ID,
         };
-        await productionService.createProjectApprover(tenantId, pyld);
+        await productionService.createProjectApprover(pyld);
       }
       router.push(`/productions/${resp?.ID}`);
     } catch (e) {
@@ -199,11 +209,23 @@ function Production() {
   };
   const loadOptions: any = (value, lb) => {
     if (lb === "clients") {
-      return productionService.getClients(`?search=${value}&is_active:true`).then((res) => {
-        return [...res].map((e) => {
-          return { label: e.Name, value: e.ID, field: e.tenant_id };
+      return productionService
+        .getClients({
+          dateStart: "",
+          dateEnd: "",
+          clients: [],
+          softwares: [],
+          limit: 10,
+          offset: 0,
+          search: value,
+          status: "true",
+          pageNumber: 1,
+        })
+        .then((res) => {
+          return [...res].map((e) => {
+            return { label: e.Name, value: e.ID, field: e.tenant_id };
+          });
         });
-      });
     } else if (lb === "users" && client) {
       return productionService
         .getClientUsers(client?.value, `?search=${value}&is_active:true`)
@@ -316,7 +338,6 @@ function Production() {
                   value={client}
                   onChange={(e) => {
                     setClient(e);
-                    setTenantId(e.field);
                     setApValues([null, null]);
                     setPoValues([null, null]);
                   }}

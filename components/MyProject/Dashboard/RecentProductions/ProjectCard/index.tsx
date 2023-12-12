@@ -12,10 +12,7 @@ import { Card, CardBody } from "reactstrap";
 import router from "next/router";
 
 const ProjectCard = ({ data }) => {
-  const formatDate = () => {
-    const res = new Date(data.payrolldate).toDateString().slice(4);
-    return res;
-  };
+ 
 
   const handleViewDetailsClick = () => {
     router.push(`/edit-production/${data.id}`);

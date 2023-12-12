@@ -1,37 +1,25 @@
-import { Plus, Users } from "react-feather";
 import { Button, Col, Row } from "reactstrap";
 import ClientsCard from "./ClientsCard";
-import { useRouter } from "next/router";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
-import { hasPermission } from "commonFunctions/functions";
+import { CreateClientButton } from "@/components/clients";
+import { Plus } from "react-feather";
 
-
-
-function Clients() {
-  const router = useRouter();
+function Clients({ router, user }) {
   const dashboardService = new DashboardService();
 
-
-
   const [clientsData, setClientsData] = useState([]);
-  const hasCreateClientPermission = hasPermission(
-    "client_management",
-    "create_client"
-  );
 
   useEffect(() => {
-    const getTenant = async () => {
+    const getClients = async () => {
       dashboardService.getOnBoardedClients().then((res) => {
         if (res.data) {
-           setClientsData(res.data.slice(0, 3));
+          setClientsData(res.data.slice(0, 3));
         }
       });
     };
-    getTenant();
+    getClients();
   }, []);
-
-  
 
   return (
   <div className="h-100 d-flex gap-2 flex-column">
@@ -41,18 +29,8 @@ function Clients() {
         Newly Onboarded Clients
       </div>
 
-      <div className="d-flex gap-1">
-        {hasCreateClientPermission && (
-          <Button
-            size="sm"
-            className="py-2 px-3 btn-primary"
-            onClick={() => router.push(`/clients/create-client`)}
-          >
-            <Users size={12} /> Create Client
-          </Button>
-        )}
+        <CreateClientButton {...{ router, user }} cls="" />
       </div>
-    </div>
 
     <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
       {clientsData && clientsData.length > 0 ? (
