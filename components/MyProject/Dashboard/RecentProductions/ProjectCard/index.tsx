@@ -7,12 +7,19 @@ import Image from "next/image";
 
 // ** Reactstrap Imports
 import { Card, CardBody } from "reactstrap";
+import router from "next/router";
 
 const ProjectCard = ({ data }) => {
   const formatDate = () => {
     const res = new Date(data.payrolldate).toDateString().slice(4);
     return res;
   };
+
+   const handleViewDetailsClick = () => {
+    // Use the router.push() method to navigate to the desired URL
+    router.push(`/edit-production/${data.id}`);
+  };
+  
   return (
     <Card className="text-black px-1 h-100">
       <CardBody>
@@ -29,6 +36,7 @@ const ProjectCard = ({ data }) => {
                     fontSize: "14px",
                     gap: "3px",
                   }}
+                  onClick={handleViewDetailsClick} // Call the new function on click
                 >
                   <div>
                     <AiOutlineProfile className="font-size-14" style={{ marginBottom: "1px",}} />

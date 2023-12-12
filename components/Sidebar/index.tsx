@@ -85,6 +85,7 @@ const Sidebar = ({ props }) => {
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
+    
 
     setParentRoute(`/${routeNames[0]}`);
     if (routeNames[1]) {
