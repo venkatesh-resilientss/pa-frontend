@@ -361,8 +361,8 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
           pageSize={perPage}
           noDataPage={() => (
             <NoDataPage
-              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-              buttonLink={"/configurations/add-set"}
+              buttonName={hasCreateConfiguration ? "Create Location" : "No button"}
+              buttonLink={"/configurations/add-location"}
             />
           )}
         />

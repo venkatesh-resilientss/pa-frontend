@@ -515,44 +515,40 @@ export const COAAccountyTypeOptions = [
   },
   {
     label: "Asset: Inventory",
-    value: "asset_inventroy",
+    value: "Asset: Inventory",
   },
   {
     label: "Cost Of Goods",
-    value: "cost_of_goods",
+    value: "Cost Of Goods",
   },
   {
     label: "Expense: Other",
-    value: "expense_other",
+    value: "Expense: Other",
   },
   {
     label: "Expense: ATL",
-    value: "expense_atl",
+    value: "Expense: ATL",
   },
   {
     label: "Expense: BTL",
-    value: "expense_btl",
+    value: "Expense: BTL",
   },
   {
     label: "Expense: Post",
-    value: "expense_post",
+    value: "Expense: Post",
   },
   {
     label: "Liability",
-    value: "liability",
+    value: "Liability",
   },
   {
     label: "Income",
-    value: "income",
+    value: "Income",
   },
   {
     label: "Capital",
-    value: "capital",
-  },
-  {
-    label: "Header - Separate Table",
-    value: "header_seperate_table",
-  },
+    value: "Capital",
+  }
 ];
 
 /**Payment Options */
@@ -572,6 +568,7 @@ export const VendorsAddressTypes = [
 
 /**Form Validation Rules */
 const ALPHA_NUMERIC = /^[A-Za-z0-9_ ]+$/i;
+const ADDRESS_LINE = /^[A-Za-z0-9_ ,-;'#]+$/i;
 const CODE_PATTERN = /^[A-Za-z0-9]+$/i;
 const NUMERIC = /^[0-9.]+[ ]*$/i;
 const EMAIL_PATTERN = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
@@ -1019,7 +1016,7 @@ export const formValidationRules = {
         message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: ALPHA_NUMERIC,
+        value: ADDRESS_LINE,
         message: "Special characters are not allowed",
       },
     },
@@ -1027,6 +1024,10 @@ export const formValidationRules = {
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
         message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
       },
     },
     city: {
@@ -1241,3 +1242,18 @@ export const formValidationRules = {
     contactName: contactValidationRules.fullName,
   },
 };
+
+const UPLOAD_BASE_URL  = '/upload-sample-files'
+export const UploadSampleFiles = {
+  countries : `${UPLOAD_BASE_URL}/RSSL Sample Data - countries.csv`,
+  coa : `${UPLOAD_BASE_URL}/RSSL Sample Data - coa.csv`,
+  currencies : `${UPLOAD_BASE_URL}/RSSL Sample Data - currencies.csv`,
+  departments : `${UPLOAD_BASE_URL}/RSSL Sample Data - departments.csv`,
+  locations : `${UPLOAD_BASE_URL}/RSSL Sample Data - locations.csv`,
+  periods : `${UPLOAD_BASE_URL}/RSSL Sample Data - periods.csv`,
+  series : `${UPLOAD_BASE_URL}/RSSL Sample Data - series.csv`,
+  sets : `${UPLOAD_BASE_URL}/RSSL Sample Data - sets.csv`,
+  states : `${UPLOAD_BASE_URL}/RSSL Sample Data - states.csv`,
+  taxcodes : `${UPLOAD_BASE_URL}/RSSL Sample Data - taxcodes.csv`,
+}
+  

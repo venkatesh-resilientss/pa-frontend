@@ -10,7 +10,6 @@ import {
 
 class SetsService extends APIService {
   getSets(params, data): Promise<any> {
-    console.log(params,data,'services')
     return this.post(`${GET_SETS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,data)
       .then((res) => {
         return res?.data;

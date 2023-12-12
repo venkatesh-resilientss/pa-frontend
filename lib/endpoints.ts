@@ -37,7 +37,7 @@ export const DELETE_TRANSACTION_LINES = (id: any) =>
   `${tenantIdEndpoint}/transactionlines/${id}`; //DELETE transactionlines
 export const CREATE_TRANSACTION_LINES = `${tenantIdEndpoint}/transactionlines/`; //Create transactionlines
 
-export const CREATE_PROJECT = `${tenantIdEndpoint}/projects/`; //Create projects
+export const CREATE_PROJECT = `${withoutTenantIdEndpoint}/projects/`; //Create projects
 export const GET_DASHBOARD_STATS = `${withoutTenantIdEndpoint}/overview`; //Dashboard Stats
 export const GET_RECENT_PRODUCTIONS = `${withoutTenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${withoutTenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
@@ -58,12 +58,12 @@ export const BANKS_DETAIL_ENDPOINT = (id: any) =>
 
 export const GET_ROLES = `${withoutTenantIdEndpoint}/roles/`; //Users
 
-export const GET_SERIES = `${tenantIdEndpoint}/series/search`; //Series
-export const CREATE_SERIES = `${tenantIdEndpoint}/series/`; //Create Series
-export const DELETE_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //DELETE series
-export const EDIT_SERIES = (id: any) => `${tenantIdEndpoint}/series/${id}`; //EDIT series
+export const GET_SERIES = `${withoutTenantIdEndpoint}/series/search`; //Series
+export const CREATE_SERIES = `${withoutTenantIdEndpoint}/series/`; //Create Series
+export const DELETE_SERIES = (id: any) => `${withoutTenantIdEndpoint}/series/${id}`; //DELETE series
+export const EDIT_SERIES = (id: any) => `${withoutTenantIdEndpoint}/series/${id}`; //EDIT series
 export const SERIES_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/series/${id}`; //Series Details
+  `${withoutTenantIdEndpoint}/series/${id}`; //Series Details
 
 export const GET_ENTITIES = `${withoutTenantIdEndpoint}/entitytypes/`; // Entities
 export const CREATE_ENTITIES = `${withoutTenantIdEndpoint}/entitytypes`; // Entity Types
@@ -81,13 +81,13 @@ export const EDIT_CURRENCIES = (id: any) =>
 export const CURRENCY_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/currencies/${id}`; //currencies Details
 
-export const GET_BUDGETS = `${tenantIdEndpoint}/budgets/search`; //budgets
-export const CREATE_BUDGET = `${tenantIdEndpoint}/budgets/`; //Create Currencies
+export const GET_BUDGETS = `${withoutTenantIdEndpoint}/budgets/search`; //budgets
+export const CREATE_BUDGET = `${withoutTenantIdEndpoint}/budgets/`; //Create Currencies
 
-export const DELETE_BUDGET = (id: any) => `${tenantIdEndpoint}/budgets/${id}`; //DELETE budgets
-export const EDIT_BUDGET = (id: any) => `${tenantIdEndpoint}/budgets/${id}`; //EDIT budgets
+export const DELETE_BUDGET = (id: any) => `${withoutTenantIdEndpoint}/budgets/${id}`; //DELETE budgets
+export const EDIT_BUDGET = (id: any) => `${withoutTenantIdEndpoint}/budgets/${id}`; //EDIT budgets
 export const BUDGETS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/budgets/${id}`; // budgets Details
+  `${withoutTenantIdEndpoint}/budgets/${id}`; // budgets Details
 
 export const GET_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`; //Countries
 export const CREATE_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`; //Create Countries
@@ -98,21 +98,21 @@ export const EDIT_COUNTRIES = (id: any) =>
 export const COUNTRIES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/countries/${id}`; //countries Details
 
-export const GET_DEPARTMENTS = `${tenantIdEndpoint}/departments/search`; //Departments
-export const CREATE_DEPARTMENTS = `${tenantIdEndpoint}/departments/`; //Create Departments
+export const GET_DEPARTMENTS = `${withoutTenantIdEndpoint}/departments/search`; //Departments
+export const CREATE_DEPARTMENTS = `${withoutTenantIdEndpoint}/departments/`; //Create Departments
 export const DELETE_DEPARTMENTS = (id: any) =>
-  `${tenantIdEndpoint}/departments/${id}`; //DELETE Departments
+  `${withoutTenantIdEndpoint}/departments/${id}`; //DELETE Departments
 export const EDIT_DEPARTMENTS = (id: any) =>
-  `${tenantIdEndpoint}/departments/${id}`; //EDIT Departments
+  `${withoutTenantIdEndpoint}/departments/${id}`; //EDIT Departments
 export const DEPARTMENT_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/departments/${id}`;
+  `${withoutTenantIdEndpoint}/departments/${id}`;
 
-export const GET_SETS = `${tenantIdEndpoint}/sets/search`; //Sets
-export const DELETE_SETS = (id: any) => `${tenantIdEndpoint}/sets/${id}`; //DELETE Sets
-export const EDIT_SETS = (id: any) => `${tenantIdEndpoint}/sets/${id}`; //EDIT Sets
-export const CREATE_SETS = `${tenantIdEndpoint}/sets/`; //Create Sets
+export const GET_SETS = `${withoutTenantIdEndpoint}/sets/search`; //Sets
+export const DELETE_SETS = (id: any) => `${withoutTenantIdEndpoint}/sets/${id}`; //DELETE Sets
+export const EDIT_SETS = (id: any) => `${withoutTenantIdEndpoint}/sets/${id}`; //EDIT Sets
+export const CREATE_SETS = `${withoutTenantIdEndpoint}/sets/`; //Create Sets
 export const SETS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/sets/${id}`; //Sets Details
+  `${withoutTenantIdEndpoint}/sets/${id}`; //Sets Details
 
 export const GET_VENDORS = `${tenantIdEndpoint}/vendors/search`; //Vendors
 export const CREATE_VENDORS = `${tenantIdEndpoint}/vendors/`; //Create vendors
@@ -140,22 +140,22 @@ export const CREATE_TAXCODES = `${withoutTenantIdEndpoint}/taxcodes/`; // Create
 export const TAXCODES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/taxcodes/${id}`; //Tax Codes Details
 
-export const GET_LOCATIONS = `${tenantIdEndpoint}/locations/search`; //Locations
-export const CREATE_LOCATIONS = `${tenantIdEndpoint}/locations/`; //Create Locations
+export const GET_LOCATIONS = `${withoutTenantIdEndpoint}/locations/search`; //Locations
+export const CREATE_LOCATIONS = `${withoutTenantIdEndpoint}/locations/`; //Create Locations
 export const DELETE_LOCATION = (id: any) =>
-  `${tenantIdEndpoint}/locations/${id}`; //DELETE Locations
-export const EDIT_LOCATION = (id: any) => `${tenantIdEndpoint}/locations/${id}`; //EDIT Locations
+  `${withoutTenantIdEndpoint}/locations/${id}`; //DELETE Locations
+export const EDIT_LOCATION = (id: any) => `${withoutTenantIdEndpoint}/locations/${id}`; //EDIT Locations
 export const LOCATION_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/locations/${id}`; //Location Details
+  `${withoutTenantIdEndpoint}/locations/${id}`; //Location Details
 
-export const CREATE_COAACCOUNTS = `${tenantIdEndpoint}/coaaccounts/`;
-export const GET_COAACCOUNTS = `${tenantIdEndpoint}/coaaccounts/search`; //COA(ACCOUNTS)
+export const CREATE_COAACCOUNTS = `${withoutTenantIdEndpoint}/coaaccounts/`;
+export const GET_COAACCOUNTS = `${withoutTenantIdEndpoint}/coaaccounts/search`; //COA(ACCOUNTS)
 export const DELETE_COAACCOUNTS = (id: any) =>
-  `${tenantIdEndpoint}/coaaccounts/${id}`; //DELETE coaaccounts
+  `${withoutTenantIdEndpoint}/coaaccounts/${id}`; //DELETE coaaccounts
 export const EDIT_COAACCOUNTS = (id: any) =>
-  `${tenantIdEndpoint}/coaaccounts/${id}`; //EDIT coaaccounts
+  `${withoutTenantIdEndpoint}/coaaccounts/${id}`; //EDIT coaaccounts
 export const COAACCOUNTS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/coaaccounts/${id}`; //coa Accounts Details
+  `${withoutTenantIdEndpoint}/coaaccounts/${id}`; //coa Accounts Details
 
 export const GET_CLIENTS = `${withoutTenantIdEndpoint}/clients/search`; //Clients
 export const DELETE_CLIENTS = (id: any) =>
@@ -166,12 +166,12 @@ export const CREATE_CLIENT = `${withoutTenantIdEndpoint}/clients/`; //CREATE cli
 export const CLIENTS_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}`; //clients Details
 
-export const GET_PERIODS = `${tenantIdEndpoint}/periods/search`; //periods
-export const CREATE_PERIOD = `${tenantIdEndpoint}/periods/`;
-export const DELETE_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //DELETE periods
-export const EDIT_PERIODS = (id: any) => `${tenantIdEndpoint}/periods/${id}`; //EDIT periods
+export const GET_PERIODS = `${withoutTenantIdEndpoint}/periods/search`; //periods
+export const CREATE_PERIOD = `${withoutTenantIdEndpoint}/periods/`;
+export const DELETE_PERIODS = (id: any) => `${withoutTenantIdEndpoint}/periods/${id}`; //DELETE periods
+export const EDIT_PERIODS = (id: any) => `${withoutTenantIdEndpoint}/periods/${id}`; //EDIT periods
 export const PERIODS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/periods/${id}`; //periods Details
+  `${withoutTenantIdEndpoint}/periods/${id}`; //periods Details
 
 export const GET_USERS = `${withoutTenantIdEndpoint}/users/`; //Users
 export const RESEND_RESET_PASSWORD_LINK = `${withoutTenantIdEndpoint}/resendPasswordLink/`; //Users
@@ -186,19 +186,19 @@ export const GET_USER_FROM_TOKEN = `${withoutTenantIdEndpoint}/users/me`;
 export const GET_USER_DETAILS = `${withoutTenantIdEndpoint}/users/me`; //GET USER FROM TOKEN
 
 //bulupload api's
-export const UPLOAD_DEPARTMENT_LIST = `${tenantIdEndpoint}/departments/upload`;
-export const UPLOAD_SET_LIST = `${tenantIdEndpoint}/sets/upload`;
-export const UPLOAD_LOCATION_LIST = `${tenantIdEndpoint}/locations/upload`;
+export const UPLOAD_DEPARTMENT_LIST = `${withoutTenantIdEndpoint}/departments/upload`;
+export const UPLOAD_SET_LIST = `${withoutTenantIdEndpoint}/sets/upload`;
+export const UPLOAD_LOCATION_LIST = `${withoutTenantIdEndpoint}/locations/upload`;
 export const UPLOAD_CURRENCIES_LIST = `${withoutTenantIdEndpoint}/currencies/upload`;
 export const UPLOAD_TAX_CODE_LIST = `${withoutTenantIdEndpoint}/taxcodes/upload`;
 export const UPLOAD_BANK_LIST = `${tenantIdEndpoint}/banks/upload`;
-export const UPLOAD_PERIODS_LIST = `${tenantIdEndpoint}/periods/upload`;
+export const UPLOAD_PERIODS_LIST = `${withoutTenantIdEndpoint}/periods/upload`;
 export const UPLOAD_COUNTRIES_LIST = `${withoutTenantIdEndpoint}/countries/upload`;
 export const UPLOAD_STATES_LIST = `${withoutTenantIdEndpoint}/states/upload`;
-export const UPLOAD_SERIES_LIST = `${tenantIdEndpoint}/series/upload`;
+export const UPLOAD_SERIES_LIST = `${withoutTenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
-export const UPLOAD_COA_LIST = `${tenantIdEndpoint}/coaaccounts/upload`;
+export const UPLOAD_COA_LIST = `${withoutTenantIdEndpoint}/coaaccounts/upload`;
 export const UPLOAD_PROJECTTYPE_LIST = `${tenantIdEndpoint}/projecttypes/upload`;
 
 //addresss

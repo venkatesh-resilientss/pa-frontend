@@ -10,6 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { SeriesService } from "services";
 import { getSessionVariables } from "@/constants/function";
+import { UploadSampleFiles } from "@/constants/common";
 
 const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
       });
   };
   const handleDownload = () => {
-    const url = "/upload-sample-files/Series_Sample.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.series);
   };
   return (
     <Modal
@@ -139,7 +139,7 @@ const SeriesBulkUploadPopup = ({ setRerender, rerender }) => {
                     color: "#A0A1AB",
                   }}
                 >
-                  All .xlsx,  .xlsa and .csv file types are allowed
+                  All .xlsx,  .xls and .csv file types are allowed
                 </div>
               </div>
             )}

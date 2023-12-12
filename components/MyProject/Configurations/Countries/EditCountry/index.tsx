@@ -55,12 +55,12 @@ function EditCountry() {
       .then(() => {
         toast.success("Country Edited successfully");
         mutate(countryMutate());
-        router.back();
+        router.push('/configurations/countries');
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Country');
       });
   };
 

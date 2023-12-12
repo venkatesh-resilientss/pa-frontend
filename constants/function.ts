@@ -20,8 +20,8 @@ export const appTenant = () => {
 };
 
 export const getSessionVariables = () => {
-  const clientID = parseInt(sessionStorage.getItem("clientid")) || 0;
-  const projectID = parseInt(sessionStorage.getItem("projectid")) || 0;
+  const clientID = parseInt(sessionStorage.getItem("clientid")) || null;
+  const projectID = parseInt(sessionStorage.getItem("projectid")) || null;
   return {
     clientID,
     projectID,

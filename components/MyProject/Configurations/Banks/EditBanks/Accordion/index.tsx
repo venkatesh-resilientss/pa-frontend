@@ -155,7 +155,7 @@ function BankAccordion() {
         router.back()
       })
       .catch((error) => {
-        toast.error(error?.error);
+        toast.error(error?.error || error?.Message || 'Unable to edit Bank');
       });
   };
   const {
@@ -200,7 +200,7 @@ function BankAccordion() {
           });
         })
         .catch((error) => {
-          toast.error(error?.error);
+          toast.error(error?.error || error?.Message || 'Unable to get data');
         });
     }
   }, [router.query]);

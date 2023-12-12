@@ -266,29 +266,6 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                {hasUploadConfigurationPermission && (
-                  <Button
-                    onClick={() =>
-                      dispatch(openBulkUploadPeriodsPopup("upload"))
-                    }
-                    style={{
-                      height: "38px",
-                      backgroundColor: "#E7EFFF",
-                      color: "#4C4C61",
-                      fontSize: "14px",
-                      fontWeight: "600",
-                      borderColor: "#4C4C61",
-                    }}
-                  >
-                    <Image
-                      style={{ width: "14px", height: " 14px" }}
-                      src={plusIcon}
-                      alt="plus-icon"
-                    />{" "}
-                    Bulk Upload
-                  </Button>
-                )}
-
                 {/* <Button
                   style={{
                     height: "38px",

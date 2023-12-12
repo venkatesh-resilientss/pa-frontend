@@ -44,7 +44,7 @@ function EditSet() {
     const backendFormat = {
       name: data.setname,
       description: data.description,
-      isActive: activeStatus === "active" ? true : false,
+      isActive: activeStatus,
       code: data.setcode,
       clientID,
       projectID
@@ -54,7 +54,7 @@ function EditSet() {
       .editSet(id, backendFormat)
       .then(() => {
         toast.success("Set Edited successfully");
-        router.back();
+        router.push('/configurations/sets');
 
         reset();
       })
