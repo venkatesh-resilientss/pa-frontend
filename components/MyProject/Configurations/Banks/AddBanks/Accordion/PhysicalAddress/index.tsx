@@ -27,8 +27,9 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
       try {
         const res = await stateService.getStates({
           search: "",
-          pageLimit: 25,
+          limit: 25,
           offset: 0,
+          is_active: true
         });
         const options = res?.data.map((item) => ({
           value: item.ID,
@@ -48,8 +49,9 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
     try {
       const res = await stateService.getStates({
         search: inputValue.toString(),
-        pageLimit: 25,
+        limit: 25,
         offset: 0,
+        is_active: true
       });
 
       const options = res?.data.map((item) => ({

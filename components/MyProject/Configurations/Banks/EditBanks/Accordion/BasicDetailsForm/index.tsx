@@ -14,7 +14,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
   useEffect(() => {
     const fetchInitialCurrencyOptions = async () => {
       try {
-        const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
+        const res = await currencyService.getCurrencies({ search: "", limit: 25, offset: 0, is_active: true });
         const options = res?.result.map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -30,7 +30,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
 
   const loadCurrencyOptions: any = async (inputValue, callback) => {
     try {
-      const res = await currencyService.getCurrencies({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const res = await currencyService.getCurrencies({ search: inputValue.toString(), limit: 25, offset: 0, is_active: true });
       const options = res?.result.map((item) => ({
         value: item.ID,
         label: item.Name,

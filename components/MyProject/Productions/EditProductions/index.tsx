@@ -23,7 +23,7 @@ function EditProductions() {
   const clientService = new UsersService();
 
   const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-    clientService.getUsers({ search: "", pageLimit: 25, offset: 0 })
+    clientService.getUsers({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const userSelectFormat = clientData?.data.map((b) => {

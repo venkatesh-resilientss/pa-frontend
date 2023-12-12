@@ -3,7 +3,9 @@ import {CREATE_STATES, DELETE_STATES, EDIT_STATES, GET_STATES, STATES_DETAIL_END
 
 class StatesService extends APIService {
   getStates(params): Promise<any> {
-    return this.get(`${GET_STATES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+    const queryParams = new URLSearchParams(params).toString();
+    return this.get(`${GET_STATES}?${queryParams}`)
+    // return this.get(`${GET_STATES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}&is_active=${params.is_active}`)
       .then((res) => {
         return res?.data;
       })

@@ -20,31 +20,33 @@ function AddTaxCode() {
   const taxCodeService = new TaxCodesService();
   const countryService = new CountryService();
 
-  const [initialCountryOptions,setInitialCountryOptions] = useState([]);
-  useEffect(()=>{
+  const [initialCountryOptions, setInitialCountryOptions] = useState([]);
+  useEffect(() => {
     const fetchInitialCountryOptions = async () => {
       try {
-        const res = await countryService.getCountries();
-        const options = res?.data.map(item=>({
-          value : item.ID,
-          label : `${item.Code} - ${item.Name}`
+        const res = await countryService.getCountries({
+          search: "", limit: 25, offset: 0, is_active: true
+        });
+        const options = res?.data.map(item => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`
         }))
         setInitialCountryOptions(options);
-      }catch(error){
-        toast.error(error?.Message || error?.error ||'Error while fetching countries')
+      } catch (error) {
+        toast.error(error?.Message || error?.error || 'Error while fetching countries')
       }
     }
     fetchInitialCountryOptions();
-  },[]);
-  const loadCountryOptions = (callback=>{
+  }, []);
+  const loadCountryOptions = (callback => {
     callback(initialCountryOptions);
   })
   const onSubmit = (data) => {
     const backendFormat = {
-      name : data.taxcodename,
+      name: data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      countryID : parseInt(data.country.value)
+      countryID: parseInt(data.country.value)
     };
     taxCodeService
       .createTaxCode(backendFormat)
@@ -155,32 +157,32 @@ function AddTaxCode() {
           </div>
         </Col>
         <Col xl="4">
-            <div className="mb-1">
-              <Label className="form-lable-font">Country <span className="required">*</span></Label>
-              <Controller
-                name="country"
-                control={control}
-                rules={taxCodeValidationRules.country}
-                render={({ field }) => (
-                  <AsyncSelect
-                    {...field}
-                    isClearable={true}
-                    className="react-select"
-                    classNamePrefix="select"
-                    placeholder="Select Country"
-                    loadOptions={loadCountryOptions}
-                    defaultOptions={initialCountryOptions}
-                    styles={selectStyles}
-                  />
-                )}
-              />
-              {errors.country && (
-                <span style={{ color: "red" }}>
-                  {errors.country.message as React.ReactNode}
-                </span>
+          <div className="mb-1">
+            <Label className="form-lable-font">Country <span className="required">*</span></Label>
+            <Controller
+              name="country"
+              control={control}
+              rules={taxCodeValidationRules.country}
+              render={({ field }) => (
+                <AsyncSelect
+                  {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  placeholder="Select Country"
+                  loadOptions={loadCountryOptions}
+                  defaultOptions={initialCountryOptions}
+                  styles={selectStyles}
+                />
               )}
-            </div>
-          </Col>
+            />
+            {errors.country && (
+              <span style={{ color: "red" }}>
+                {errors.country.message as React.ReactNode}
+              </span>
+            )}
+          </div>
+        </Col>
         <Col xl="4">
           <div className="mb-1">
             <Label className="form-lable-font" f>

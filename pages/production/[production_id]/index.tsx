@@ -39,7 +39,7 @@ function Production() {
     productionService.getClients("")
   );
   const { data: users, mutate } = useSWR("Users", () =>
-    productionService.getClientUsers(`?client_id=${client?.value || ""}`)
+    client ? productionService.getClientUsers(client?.value, ``) : null
   );
 
   useEffect(() => {
@@ -60,12 +60,12 @@ function Production() {
         setPAUser(
           resp?.projects?.ProjectAccountantID
             ? {
-                label:
-                  (resp?.projects?.ProjectAccountant?.first_name || "") +
-                  " " +
-                  (resp?.projects?.ProjectAccountant?.last_name || ""),
-                value: resp?.projects?.ProjectAccountantID,
-              }
+              label:
+                (resp?.projects?.ProjectAccountant?.first_name || "") +
+                " " +
+                (resp?.projects?.ProjectAccountant?.last_name || ""),
+              value: resp?.projects?.ProjectAccountantID,
+            }
             : null
         );
         const po = resp?.po_approvers.map((e) => ({
@@ -199,14 +199,14 @@ function Production() {
   };
   const loadOptions: any = (value, lb) => {
     if (lb === "clients") {
-      return productionService.getClients(`?search=${value}`).then((res) => {
+      return productionService.getClients(`?search=${value}&is_active:true`).then((res) => {
         return [...res].map((e) => {
           return { label: e.Name, value: e.ID, field: e.tenant_id };
         });
       });
     } else if (lb === "users" && client) {
       return productionService
-        .getClientUsers(`?client_id=${client?.value || ""}&search=${value}`)
+        .getClientUsers(client?.value, `?search=${value}&is_active:true`)
         .then((res) => {
           return [...(res?.data || [])].map((e) => {
             return { label: e.Name, value: e.ID };

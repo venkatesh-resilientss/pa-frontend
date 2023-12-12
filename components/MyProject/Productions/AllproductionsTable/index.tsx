@@ -1,4 +1,3 @@
-import GridTable from "components/grid-tables/gridTable";
 import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 
@@ -19,17 +18,28 @@ import {
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { ProjectService } from "services";
-import useSWR from "swr";
 import moment from "moment";
+import NoDataPage from "components/NoDataPage";
+import AGGridTable from "@/components/dataTable/gridTable";
+
+const projectService = new ProjectService();
 
 const AllProductionsTable = () => {
   const dispatch = useDispatch();
+  const recordsPerPage = 10;
 
-  const projectService = new ProjectService();
-
-  const { data: projectsData } = useSWR(["LIST_PROJECTS", ""], () =>
-    projectService.getProjectsList("?limit=50&offset=0")
-  );
+  const fetchData = async (pageNumber) => {
+    try {
+      const response = await projectService.getProjectsList(
+        `?limit=50&offset=${pageNumber}`
+      );
+      const data = response || []; // Adjust based on the actual structure of the response
+      const totalRecords = response.length || 0; // Adjust based on the actual structure of the response
+      return { data, totalRecords };
+    } catch (error) {
+      return { data: null, totalRecords: 0 };
+    }
+  };
 
   const router = useRouter();
 
@@ -297,17 +307,34 @@ const AllProductionsTable = () => {
           </div>
         </Col>
       </Row>
-      <GridTable
+      <div className="mt-3">
+        <AGGridTable
+          rerender={false}
+          columnDefs={columnDefs}
+          searchText={""}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={"Create Production"}
+              buttonLink={"/create-production"}
+            />
+          )}
+        />
+      </div>
+      {/* <GridTable
         rowData={{
-          data: projectsData,
-          limit: 10,
+          data: projectsData || [],
+          limit: 50,
           offset: 0,
-          total_records: 25,
+          total_records: projectsData?.length,
         }}
+        
         columnDefs={columnDefs}
         pageSize={10}
         searchText={undefined}
-      />
+      /> */}
     </div>
   );
 };

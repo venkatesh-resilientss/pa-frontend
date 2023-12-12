@@ -12,7 +12,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
   useEffect(() => {
     const fetchInitialStates = async () => {
       try {
-        const res = await stateService.getStates({ search: "", pageLimit: 25, offset: 0 });
+        const res = await stateService.getStates({ search: "", limit: 25, offset: 0, is_active: true });
         const options = res?.data.map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -29,7 +29,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
 
   const loadStateOptions: any = async (inputValue, callback) => {
     try {
-      const res = await stateService.getStates({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
+      const res = await stateService.getStates({ search: inputValue.toString(), limit: 25, offset: 0, is_active: true });
 
       const options = res?.data.map((item) => ({
         value: item.ID,

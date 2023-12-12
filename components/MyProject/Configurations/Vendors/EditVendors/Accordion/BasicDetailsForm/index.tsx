@@ -4,7 +4,7 @@ import Select from "react-select";
 import useSWR from "swr";
 import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
-import { COAAccountsService,EntitiesService } from "services";
+import { COAAccountsService, EntitiesService } from "services";
 import {
   formValidationRules,
   PaymentOptions,
@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStatus }) {
+function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveStatus }) {
   const {
     // control,
     handleSubmit,
@@ -74,9 +74,9 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
     }
   };
 
-  const [initialEntityOptions,setInitialEntityOptions] = useState([]);
+  const [initialEntityOptions, setInitialEntityOptions] = useState([]);
   const entityServices = new EntitiesService();
-  useEffect(()=>{
+  useEffect(() => {
     const fetchInitialEntityOptions = async () => {
       try {
         const res = await entityServices.getEntities(
@@ -97,7 +97,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
     };
 
     fetchInitialEntityOptions();
-  },[])
+  }, [])
 
   const loadEntityOptions: any = async (inputValue, callback) => {
     try {
@@ -119,7 +119,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
     }
   };
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
+    statesService.getStates({ search: "", limit: 25, offset: 0, is_active: true })
   );
   const stateSelectOptions = statesData?.data.filter(item => item.IsActive).map((b) => {
     return {
@@ -128,7 +128,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
     };
   });
 
-  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const { data: countryData } = useSWR("LIST_COUNTRIES", () => countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true }));
   const countrySelectOptions = countryData?.data.filter(item => item.IsActive).map((item) => {
     return {
       value: item.ID,
@@ -231,7 +231,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Vendor Legal Name 
+              Vendor Legal Name
             </Label>
             <Controller
               name="legalName"
@@ -508,7 +508,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Payee Name 
+              Payee Name
             </Label>
             <Controller
               name="payeeName"
@@ -638,7 +638,7 @@ function BasicDetailsForm({ control, onSubmit, errors,activeStatus,setActiveStat
           </Col>
         </Row>
         <Row>
-        <div className="d-flex flex-column mt-1">
+          <div className="d-flex flex-column mt-1">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}

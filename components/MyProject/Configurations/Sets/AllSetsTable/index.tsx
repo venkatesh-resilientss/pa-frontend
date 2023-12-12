@@ -23,15 +23,21 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
-import { getSessionVariables } from "@/constants/function";
+
+import GridTable from "@/components/grid-tables/gridTable";
+import { useEffect, useRef, useState } from "react";
 const setsService = new SetsService();
 
-const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
+const AllSetsTable = ({ searchText, setSearchText }) => {
   // const setsService = new SetsService();
   const router = useRouter();
-  const perPage = 10;
   // const [searchText, setSearchText] = useState("");
+
+  const [tableData, setTableData] = useState() as any
+  const [loading, setLoading] = useState() as any
+  const [pageNumber, setPageNumber] = useState(1) as any
+  const [pageLimit] = useState(10) as any
+  const [sessionData, setSessionData] = useState() as any;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -43,29 +49,61 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
   );
   const dispatch = useDispatch();
 
-  // const { data: setsData, isLoading: setsLoading } = useSWR(
-  //   ["LIST_SETS", searchText],
-  //   () => setsService.getSets()
-  // );
-  // const dataSource = setsData?.result;
 
-  const fetchData1 = async (pageNumber) => {
-    try {
-      const { clientID, projectID } = getSessionVariables();
+  const intervalIdRef = useRef(null);
+  const attemptsCountRef = useRef(0);
+  const maxAttempts = 10;
+
+  useEffect(() => {
+    const retrieveSessionData = () => {
+      // Retrieve data from sessionStorage
+      const clientID = parseInt(sessionStorage.getItem("clientid"));
+      const projectID = parseInt(sessionStorage.getItem("projectid"));
+
+      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
+        clearInterval(intervalIdRef.current);
+        if (clientID && projectID) {
+          setSessionData({ clientID: clientID, projectID: projectID });
+        }
+      }
+
+      // Increment the attempts count
+      attemptsCountRef.current += 1;
+    };
+
+    // Retrieve session data initially
+    retrieveSessionData();
+
+    // Set up interval to check for session data every 1 second
+    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalIdRef.current);
+  }, []);
+
+
+  useEffect(() => {
+    if (sessionData) {
+      setLoading(true)
+      // const pageNumber = 1
+      const offfset = (pageNumber - 1) * pageLimit
       const queryParams = {
         search: searchText,
-        pageLimit: perPage,
-        offset: pageNumber,
+        pageLimit: pageLimit,
+        offset: offfset,
       };
-      const payload = { clientId: clientID, projectId: projectID };
-      const response = await setsService.getSets(queryParams, payload);
-      const data = response.result; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
+      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
+      setsService.getSets(queryParams, payload).then((response) => {
+        setTableData(response)
+        setLoading(false)
+
+      }).catch((e) => {
+        console.error(e)
+      })
     }
-  };
+
+  }, [sessionData, searchText, pageNumber])
+
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -301,24 +339,30 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      {/* {setsLoading ? (
+      {loading ? (
         <div className="mt-3">
           <GridTable
-            rowData={dataSource}
+            rowData={{}}
             columnDefs={columnDefs}
-            pageSize={10}
+            pageSize={pageLimit}
             searchText={searchText}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            setLoading={setLoading}
           />
         </div>
       ) : (
         <>
-          {setsData?.result.length > 0 ? (
+          {tableData?.result?.length > 0 ? (
             <div className="mt-3">
               <GridTable
-                rowData={dataSource}
+                rowData={tableData}
                 columnDefs={columnDefs}
-                pageSize={10}
+                pageSize={pageLimit}
                 searchText={searchText}
+                pageNumber={pageNumber}
+                setPageNumber={setPageNumber}
+                setLoading={setLoading}
               />
             </div>
           ) : (
@@ -331,22 +375,20 @@ const AllSetsTable = ({ rerender, searchText, setSearchText }) => {
             </div>
           )}
         </>
-      )} */}
-      <div className="mt-3">
-      <AGGridTable
+      )}
+      {/* <AGGridTable
         rerender={rerender}
         columnDefs={columnDefs}
         searchText={searchText}
         fetchData={fetchData1}
-        pageSize={perPage}
+        pageSize={pageLimit}
         noDataPage={() => (
           <NoDataPage
             buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
             buttonLink={"/configurations/add-set"}
           />
         )}
-      />
-      </div>
+      /> */}
     </div>
   );
 };

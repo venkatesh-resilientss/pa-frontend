@@ -46,7 +46,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
       const response = await countryService.getCountries(
         {
           search: searchText,
-          pageLimit: recordsPerPage,
+          limit: recordsPerPage,
           offset: pageNumber,
         }
       );

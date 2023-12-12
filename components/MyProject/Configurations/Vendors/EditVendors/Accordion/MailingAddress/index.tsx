@@ -10,7 +10,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
   const statesService = new StatesService();
   const addressValidationRules = formValidationRules.address;
   const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates({ search: "", pageLimit: 25, offset: 0 })
+    statesService.getStates({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const stateSelectOptions = statesData?.data.map((b) => {
@@ -22,7 +22,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
   });
 
   const countryService = new CountryService();
-  const {data:countryData} = useSWR("LIST_COUNTRIES", ()=> countryService.getCountries());
+  const { data: countryData } = useSWR("LIST_COUNTRIES", () => countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true }));
   const countrySelectOptions = countryData?.data.map((b) => {
     return {
       value: b.ID,
@@ -41,7 +41,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Address Line 1 
+              Address Line 1
             </Label>
             <Controller
               name="mailingAddress1"
@@ -91,7 +91,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             )}
           </Col>
 
-          
+
 
           <Col xl="4" className="mt-2">
             <Label
@@ -125,7 +125,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Country 
+              Country
             </Label>
             <Controller
               name="mailingAddressCountry"
@@ -152,7 +152,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              State 
+              State
             </Label>
             <Controller
               name="mailingAddressState"

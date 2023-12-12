@@ -20,12 +20,12 @@ export default function Profile() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
+
   const [editMode, setEditMode] = useState(false);
 
   const toggleEditMode = () => {
     setEditMode((prevMode) => !prevMode);
-    
+
     // If transitioning from edit to save, submit the form
     if (editMode) {
       handleSubmit(onSubmit)();
@@ -34,7 +34,7 @@ export default function Profile() {
 
   const onSubmit = async () => {
 
-    
+
     // After successfully saving, switch back to edit mode
     setEditMode(false);
   };
@@ -48,7 +48,7 @@ export default function Profile() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRIES", () =>
-    countryService.getCountries()
+    countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -74,70 +74,70 @@ export default function Profile() {
     usersData?.phone && setPhoneNumber(usersData?.phone);
     usersData?.Address.Zipcode &&
       setValue("zipCode", usersData?.Address.Zipcode);
-    }),
+  }),
     [usersData];
 
 
 
   return (
 
-  <>
+    <>
 
-  <Card
+      <Card
         style={{
           backgroundColor: "#E7EFFF",
           boxShadow: "0px 2.53521px 10.14085px 0px rgba(0, 0, 0, 0.25)",
         }}
       >
-         <CardBody>
-            <div className="d-flex justify-content-between">
-              <div>
-                <div
-                  className="m-2"
-                  style={{ fontSize: "16px", fontWeight: "600" }}
-                >
-                  My Profile
-                </div>
-              </div>
-
+        <CardBody>
+          <div className="d-flex justify-content-between">
+            <div>
               <div
-                className="d-flex align-items-center"
-                style={{ gap: "10px" }}
+                className="m-2"
+                style={{ fontSize: "16px", fontWeight: "600" }}
               >
-                <Button
-                  onClick={toggleEditMode}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  {editMode ? "Save" : "Edit"}
-                </Button>
+                My Profile
               </div>
             </div>
-          </CardBody>
+
+            <div
+              className="d-flex align-items-center"
+              style={{ gap: "10px" }}
+            >
+              <Button
+                onClick={toggleEditMode}
+                style={{
+                  height: "38px",
+                  backgroundColor: "#00AEEF",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  border: "none",
+                }}
+              >
+                {editMode ? "Save" : "Edit"}
+              </Button>
+            </div>
+          </div>
+        </CardBody>
       </Card>
-    <Card className="mt-4">
-      <CardBody className="d-flex flex-column" style={{ gap: "10px" }}>
-        <div style={{ fontSize: "19px", fontWeight: "600",fontFamily: "Segoe UI Semibold" }}>Profile</div>
-        <div>
-          <img
-            alt="profile-img"
-            src="/default.svg"
-            style={{ width: "60px", height: "60px" }}
-            className="rounded-circle"
-          />
-        </div>
-        <Form
+      <Card className="mt-4">
+        <CardBody className="d-flex flex-column" style={{ gap: "10px" }}>
+          <div style={{ fontSize: "19px", fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>Profile</div>
+          <div>
+            <img
+              alt="profile-img"
+              src="/default.svg"
+              style={{ width: "60px", height: "60px" }}
+              className="rounded-circle"
+            />
+          </div>
+          <Form
             onSubmit={handleSubmit(onSubmit)}
             className="d-flex flex-column"
             style={{ fontSize: "12px", fontWeight: "400", gap: "8px" }}
-          > 
-          <Row>
-           <Col xl="4">
+          >
+            <Row>
+              <Col xl="4">
                 <div className="mb-1 mt-1">
                   <Label>First Name</Label>
                   <Controller
@@ -159,9 +159,9 @@ export default function Profile() {
                   />
                 </div>
               </Col>
-            
 
-           <Col xl="4">
+
+              <Col xl="4">
                 <div className="mb-1 mt-1">
                   <Label className="">Last Name</Label>
                   <Controller
@@ -184,7 +184,7 @@ export default function Profile() {
                   />
                 </div>
               </Col>
-          <Col xl="4">
+              <Col xl="4">
                 <Label className="text-black">Contact Number</Label>
                 <PhoneInput
                   inputClass="react-tel-input w-100"
@@ -195,10 +195,10 @@ export default function Profile() {
                   disabled={!editMode} // Disable/enable based on edit mode
                 />
               </Col>
-          </Row>
+            </Row>
 
-          <Row>
-           <Col xl="4">
+            <Row>
+              <Col xl="4">
                 <div className="mb-1 mt-1">
                   <Label>Email</Label>
                   <Controller
@@ -223,7 +223,7 @@ export default function Profile() {
                 </div>
               </Col>
 
-             <Col xl="4">
+              <Col xl="4">
                 <div className="mb-1 mt-1">
                   <Label>Address</Label>
                   <Controller
@@ -246,7 +246,7 @@ export default function Profile() {
                 </div>
               </Col>
 
-             <Col xl="4">
+              <Col xl="4">
                 <Label className="">City</Label>
                 <Controller
                   name={"city"}
@@ -263,10 +263,10 @@ export default function Profile() {
                   )}
                 />
               </Col>
-          </Row>
+            </Row>
 
-          <Row>
-             <Col xl="4">
+            <Row>
+              <Col xl="4">
                 <div className="mb-1 mt-1">
                   <Label>Zip Code</Label>
                   <Controller
@@ -289,7 +289,7 @@ export default function Profile() {
                 </div>
               </Col>
 
-            <Col xl="4">
+              <Col xl="4">
                 <Label className="">Country</Label>
                 <Controller
                   name={"country"}
@@ -312,24 +312,24 @@ export default function Profile() {
                   )}
                 />
               </Col>
-            
-          </Row>
-        </Form>
 
-        <div style={{ fontSize: "12px", fontWeight: "400" }}>
-          <Label>Productions</Label>
-          <div className="d-flex" style={{ gap: "8px" }}>
-            <CustomBadge title={"Production 1"} />
-            <CustomBadge title={"Production 2"} />
-            <CustomBadge title={"Production 3"} />
+            </Row>
+          </Form>
+
+          <div style={{ fontSize: "12px", fontWeight: "400" }}>
+            <Label>Productions</Label>
+            <div className="d-flex" style={{ gap: "8px" }}>
+              <CustomBadge title={"Production 1"} />
+              <CustomBadge title={"Production 2"} />
+              <CustomBadge title={"Production 3"} />
+            </div>
           </div>
-        </div>
-      </CardBody>
-    </Card>
-    
+        </CardBody>
+      </Card>
+
     </>
-    
-    
+
+
   );
 }
 

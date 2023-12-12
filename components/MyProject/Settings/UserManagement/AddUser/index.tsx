@@ -43,7 +43,7 @@ function AddUser() {
 
   useEffect(() => {
     roleservice
-      .getRoles({ search: "", pageLimit: 50, offset: 0 })
+      .getRoles({ search: "", pageLimit: 50, offset: 0, is_active: true })
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
@@ -104,8 +104,9 @@ function AddUser() {
         // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
         const res = await clientService.getClients({
           search: "",
-          pageLimit: 25,
+          limit: 25,
           offset: 0,
+          is_active: true,
         });
         const options = (res || [])
           ?.filter((e) => e?.IsActive)
@@ -127,8 +128,9 @@ function AddUser() {
     try {
       const res = await clientService.getClients({
         search: inputValue.toString(),
-        pageLimit: 25,
+        limit: 25,
         offset: 0,
+        is_active: true,
       });
       const options = res?.data.map((item) => ({
         value: item.ID,
@@ -228,12 +230,6 @@ function AddUser() {
           : clientDetails?.value
         : userDetails.Client.ID,
       roleID: data?.role?.value,
-      tenant_id: userDetails?.IsStaffUser
-        ? isCheckedStaffUser
-          ? 0
-          : clientDetails?.field
-        : userDetails.Client.tenant_id,
-      // tenant_id: userDetails.tenant_id,
       IsStaffUser: isCheckedStaffUser,
       Meta: {
         userCPReference: [],
