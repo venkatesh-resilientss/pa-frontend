@@ -50,7 +50,7 @@ function AddProductions() {
   );
   const clients: any = clientsData?.data || [];
   const { data: users, mutate } = useSWR("Users", () =>
-    client ? productionService.getClientUsers(client?.value, ``) : null
+    client ? productionService.getClientUsers(client?.value, `?is_active=true`) : null
   );
 
   useEffect(() => {
