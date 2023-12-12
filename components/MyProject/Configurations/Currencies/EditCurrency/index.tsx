@@ -54,7 +54,8 @@ function EditCurrency() {
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
       description: data.description,
-      BaseCurrency: data.BaseCurrency
+      BaseCurrency: data.BaseCurrency,
+      isActive: activeStatus,
     };
 
     currencyService
