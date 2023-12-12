@@ -14,14 +14,16 @@ import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
 import { formValidationRules } from "constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { useEffect, useRef, useState } from "react";
 function AddBudget() {
   const router = useRouter();
   const budgetValidationRules = formValidationRules.budgets;
-
+  const [sessionData, setSessionData] = useState() as any;
+  const [setsData, setSetsData] = useState() as any;
   const currencyService = new CurrencyService();
 
   const { data: currencyData } = useSWR("LIST_CURRENCIES", () =>
-    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
+    currencyService.getCurrencies({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const currenciesSelectFormat = currencyData?.result.map((b) => {
@@ -71,9 +73,63 @@ function AddBudget() {
 
   const setsService = new SetsService();
 
-  const { data: setsData } = useSWR("LIST_SETS", () =>
-    setsService.getSets({ search: "", pageLimit: 25, offset: 0 })
-  );
+  // const { data: setsData } = useSWR("LIST_SETS", () =>
+  //   setsService.getSets({ search: "", limit: 25, offset: 0 })
+  // );
+
+
+
+  const intervalIdRef = useRef(null);
+  const attemptsCountRef = useRef(0);
+  const maxAttempts = 10;
+
+  useEffect(() => {
+    const retrieveSessionData = () => {
+      // Retrieve data from sessionStorage
+      const clientID = parseInt(sessionStorage.getItem("clientid"));
+      const projectID = parseInt(sessionStorage.getItem("projectid"));
+
+      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
+        clearInterval(intervalIdRef.current);
+        if (clientID && projectID) {
+          setSessionData({ clientID: clientID, projectID: projectID });
+        }
+      }
+
+      // Increment the attempts count
+      attemptsCountRef.current += 1;
+    };
+
+    // Retrieve session data initially
+    retrieveSessionData();
+
+    // Set up interval to check for session data every 1 second
+    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalIdRef.current);
+  }, []);
+
+
+  useEffect(() => {
+    if (sessionData) {
+      const queryParams = {
+        search: "",
+        pageLimit: 25,
+        offset: 0,
+        is_active: true
+      };
+      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
+      setsService.getSets(queryParams, payload).then((response) => {
+        setSetsData(response)
+      }).catch((e) => {
+        console.error(e)
+      })
+    }
+
+  }, [sessionData])
+
+
 
   const setsSelectFormat = setsData?.result.map((b) => {
     return {

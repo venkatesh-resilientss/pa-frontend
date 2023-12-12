@@ -180,14 +180,14 @@ function AddProductions() {
   };
   const loadOptions: any = (value, lb) => {
     if (lb === "clients") {
-      return productionService.getClients(`?search=${value}`).then((res) => {
+      return productionService.getClients(`?search=${value}&is_active=true`).then((res) => {
         return [...res].map((e) => {
           return { label: e.Name, value: e.ID, field: e.tenant_id };
         });
       });
     } else if (lb === "users" && client) {
       return productionService
-        .getClientUsers(client?.value, `?search=${value}`)
+        .getClientUsers(client?.value, `?search=${value}&is_active=true`)
         .then((res) => {
           return [...(res?.data || [])].map((e) => {
             return { label: e.Name, value: e.ID };
@@ -299,7 +299,7 @@ function AddProductions() {
                     setApValues([null, null]);
                     setPoValues([null, null]);
                   }}
-                  // isDisabled={disabled || false}
+                // isDisabled={disabled || false}
                 />
                 {err && !client && (
                   <span className="text-danger f-12">Select Client</span>
@@ -371,7 +371,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setPoValues(tempArr);
                     }}
-                    // isDisabled={disabled || false}
+                  // isDisabled={disabled || false}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -447,7 +447,7 @@ function AddProductions() {
                       tempArr[index] = e;
                       setApValues(tempArr);
                     }}
-                    // isDisabled={disabled || false}
+                  // isDisabled={disabled || false}
                   />
                   {err && !val && (
                     <span className="text-danger f-12">Select User</span>
@@ -481,7 +481,7 @@ function AddProductions() {
             loadOptions={(value) => loadOptions(value, "users")}
             value={pAUser}
             onChange={(e) => setPAUser(e)}
-            // isDisabled={disabled || false}
+          // isDisabled={disabled || false}
           />
         </div>
       </div>

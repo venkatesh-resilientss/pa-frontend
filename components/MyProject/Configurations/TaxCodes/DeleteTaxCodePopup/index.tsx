@@ -13,7 +13,7 @@ const DeleteTaxCodePopup = () => {
   const taxCodeService = new TaxCodesService();
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes()
+    taxCodeService.getTaxCodes({ search: "", limit: 25, offset: 0, is_active: true })
   );
 
   const popupStatus = useSelector(

@@ -3,7 +3,8 @@
 
   class CurrencyService extends APIService {
     getCurrencies(params?): Promise<any> {
-      return this.get(`${GET_CURRENCIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`)
+      const queryParams = new URLSearchParams(params).toString();
+      return this.get(`${GET_CURRENCIES}?${queryParams}`)
         .then((res) => {
           return res?.data;
         })

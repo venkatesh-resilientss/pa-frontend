@@ -9,10 +9,8 @@ import {
   Modal,
   ModalBody,
 } from "reactstrap";
-import { useState } from "react";
 import Image from "next/image";
 import { UsersService } from "services";
-import useSWR from "swr";
 import moment from "moment";
 import { Plus } from "react-feather";
 import GridTable from "components/dataTable/table";
@@ -21,10 +19,16 @@ import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
 import router from "next/router";
 import { hasPermission } from "commonFunctions/functions";
+import NoDataPage from "@/components/NoDataPage";
+import { useEffect, useState } from "react";
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [tableData, setTableData] = useState() as any
+  const [loading, setLoading] = useState() as any
+  const [pageNumber, setPageNumber] = useState(1) as any
+  const [pageLimit] = useState(10) as any
 
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
@@ -34,6 +38,28 @@ const AllRoleTable = () => {
     "user_and_role_management",
     "edit_user"
   );
+
+
+
+  useEffect(() => {
+    setLoading(true)
+    // const pageNumber = 1
+    const offfset = (pageNumber - 1) * pageLimit
+    const queryParams = {
+      search: searchText,
+      pageLimit: pageLimit,
+      offset: offfset,
+    };
+    userService.getUsers(queryParams).then((response) => {
+      setTableData(response)
+      setLoading(false)
+
+    }).catch((e) => {
+      console.error(e)
+    })
+
+  }, [searchText, pageNumber])
+
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
@@ -85,9 +111,9 @@ const AllRoleTable = () => {
 
   const userService = new UsersService();
 
-  const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
-    userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
-  );
+  // const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
+  //   userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
+  // );
 
   const StateBadge = (props) => {
     const stateDir = {
@@ -285,14 +311,52 @@ const AllRoleTable = () => {
         </div>
       </div>
 
-      <div className="mt-3">
+      {loading ? (
+        <div className="mt-3">
+          <GridTable
+            rowData={{}}
+            columnDefs={columnDefs}
+            pageSize={pageLimit}
+            searchText={searchText}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            setLoading={setLoading}
+          />
+        </div>
+      ) : (
+        <>
+          {tableData?.data?.length > 0 ? (
+            <div className="mt-3">
+              <GridTable
+                rowData={tableData}
+                columnDefs={columnDefs}
+                pageSize={pageLimit}
+                searchText={searchText}
+                pageNumber={pageNumber}
+                setPageNumber={setPageNumber}
+                setLoading={setLoading}
+              />
+            </div>
+          ) : (
+            <div>
+              <NoDataPage
+                // buttonName={"Create Set"}
+                buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
+                buttonLink={"/settings/add-user"}
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {/* <div className="mt-3">
         <GridTable
           rowData={clientData}
           columnDefs={columnDefs}
           pageSize={10}
           searchText={searchText}
         />
-      </div>
+      </div> */}
 
       <DeleteModal />
     </>

@@ -158,7 +158,7 @@ const ClientsListTable = () => {
     try {
       const response = await clientService.getClients({
         search: "",
-        pageLimit: recordsPerPage,
+        limit: recordsPerPage,
         offset: pageNumber,
       });
       const data = response || []; // Adjust based on the actual structure of the response
@@ -218,12 +218,12 @@ const ClientsListTable = () => {
 
             <DropdownItem
               tag="a"
-              className="w-100"
+              className="w-100 cursor-pointer"
               onClick={() =>
-                router.push(`/configurations/edit-country/${props.data?.ID}`)
+                router.push(`/clients/edit-client/${props.data?.ID}`)
               }
             >
-              <Action icon={editIocn} name={"Edit"} />
+              <Action icon={editIocn} name={"View/Edit Clients"} />
             </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>

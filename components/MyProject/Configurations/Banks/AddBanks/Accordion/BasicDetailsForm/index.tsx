@@ -17,8 +17,9 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
       try {
         const res = await currencyService.getCurrencies({
           search: "",
-          pageLimit: 25,
+          limit: 25,
           offset: 0,
+          is_active: true
         });
         const options = res?.result.map((item) => ({
           value: item.ID,
@@ -37,8 +38,9 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
     try {
       const res = await currencyService.getCurrencies({
         search: inputValue.toString(),
-        pageLimit: 25,
+        limit: 25,
         offset: 0,
+        is_active: true
       });
       const options = res?.result.map((item) => ({
         value: item.ID,
@@ -163,7 +165,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                  // type="textarea"
+                // type="textarea"
                 />
               )}
             />

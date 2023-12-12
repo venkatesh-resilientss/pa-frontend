@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { Button, Modal, ModalBody } from "reactstrap";
 import infoImage from "assets/MyImages/info 1.svg";
-import useSWR, { mutate } from "swr";
 import { closeDeleteCurrencyPopup } from "redux/slices/mySlices/configurations";
 import { CurrencyService } from "services";
 import Image from "next/image";
@@ -11,10 +10,6 @@ const DeleteCurrencyPopup = () => {
   const dispatch = useDispatch();
 
   const currencyService = new CurrencyService();
-
-  const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
-    currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
-  );
 
   const popupStatus = useSelector(
     (state: any) => state.configurations.currency.deleteCurrencyPopup.status
@@ -29,7 +24,6 @@ const DeleteCurrencyPopup = () => {
       await currencyService.deleteCurrency(helperData);
       toast.success("Currency Deleted Successfully");
       dispatch(closeDeleteCurrencyPopup("close"));
-      mutate(currencyMutate());
     } catch (error) {
       console.error("Error deleting Currency:", error);
     }

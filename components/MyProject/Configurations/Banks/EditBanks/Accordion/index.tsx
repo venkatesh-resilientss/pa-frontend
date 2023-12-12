@@ -281,7 +281,7 @@ function BankAccordion() {
           setValue("PPdataFormat", ach.DataFormat);
           setValue("PPcertificate", ach.Certificate);
           setValue("PPport", ach.Port);
-
+          setPositivePay(true)
         } else if (ach.Type === "ACH") {
           setValue("ACHhost", ach.Host);
           setValue("ACHuserName", ach.Username);
@@ -289,6 +289,7 @@ function BankAccordion() {
           setValue("ACHoutboundPath", ach.OutboundPath);
           setValue("ACHdataFormat", ach.DataFormat);
           setValue("ACHcertificate", ach.Certificate);
+          setACHExport(true)
         }
       })
 

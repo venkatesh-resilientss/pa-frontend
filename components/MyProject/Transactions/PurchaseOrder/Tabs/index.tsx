@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 
 import AllPurchaseOrdersTable from "./AllPurchaseOrderTable";
-import AwatingOrderTable from "./AwaitingOrderTable";
+// import AwatingOrderTable from "./AwaitingOrderTable";
 
 function Tabs() {
   const [active, setActive] = useState("1");
@@ -71,7 +71,7 @@ function Tabs() {
         </TabPane>
         <TabPane tabId="2">
           <Col>
-            <AwatingOrderTable />
+            {/* <AwatingOrderTable /> */}
           </Col>{" "}
         </TabPane>
       </TabContent>
