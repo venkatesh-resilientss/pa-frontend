@@ -1,29 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Card, UncontrolledDropdown } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { UncontrolledDropdown } from "reactstrap";
 import moment from "moment";
-import { useDispatch } from "react-redux";
 
-import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
-import editIocn from "assets/myIcons/edit_square.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
+import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
-import { ProjectService } from "services";
 import GridTable from "@/components/dataTable/GridWithPagination";
-import CreateProductionButton from "@/components/productions/CreateProductionButton";
-import NoProductionPage from "@/components/productions/NoProductionPage";
 
-const projectService = new ProjectService();
-
-export default function Productions({ router, user }) {
-  const dispatch = useDispatch();
-  const [tableData, setTableData] = useState({
-    data: [],
-    total_records: 0,
-  }) as any;
+export default function Productions(props) {
+  const { router, clientData } = props;
 
   const [filters, setFilters] = useState<any>({
     dateStart: "",
@@ -36,24 +24,6 @@ export default function Productions({ router, user }) {
     status: "",
     pageNumber: 1,
   });
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const offset = (filters.pageNumber - 1) * filters.limit;
-        const payload = { ...filters, offset };
-        const response = await projectService.getAllProjectsList(payload);
-        setTableData({
-          data: response.data || [],
-          total_records: response.total_records || 0,
-        });
-        /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
-      } catch (e) {
-        //
-      }
-    };
-    getData();
-  }, [filters]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -98,7 +68,7 @@ export default function Productions({ router, user }) {
               onClick={() => router.push(`/production/${props.data.ID}`)}
             >
               <Action
-                icon={editIocn}
+                icon={detailsIocn}
                 name={"View Details"}
                 action={() => {
                   //
@@ -106,13 +76,15 @@ export default function Productions({ router, user }) {
               />
             </DropdownItem>
 
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
-                action={() => dispatch(openAssignRSSLPopup(props.data))}
+                action={() => {
+                  dispatch(openAssignRSSLPopup(props.data));
+                }}
               />
-            </DropdownItem>
+            </DropdownItem> */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -144,14 +116,12 @@ export default function Productions({ router, user }) {
       suppressSizeToFit: true,
       flex: 1,
     },
-    {
-      headerName: "Client",
-      field: "Client.Name",
-      sortable: true,
-      resizable: true,
-      suppressSizeToFit: true,
-      flex: 2,
-    },
+    // {
+    //   headerName: "Client",
+    //   field: "Client.Name",
+    //   sortable: true,
+    //   resizable: true,
+    // },
     {
       headerName: "Last Payroll Date",
       field: "LastPayrollDate",
@@ -214,30 +184,34 @@ export default function Productions({ router, user }) {
       flex: 1,
     },
   ];
+
   return (
-    <div className="py-4">
-      <Card className="w-100 p-3 client-card-bg my-3">
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="f-18 fw-600 clr-dblack">All Productions</div>
-
-          <CreateProductionButton {...{ user }} cls="" />
-        </div>
-      </Card>
-
-      <div className="mt-3">
-        {tableData.data.length === 0 ? (
-          <NoProductionPage {...{ user }} />
-        ) : (
-          <GridTable
-            rowData={tableData}
-            columnDefs={columnDefs}
-            pageSize={filters.limit}
-            searchText={filters.search}
-            pageNumber={filters.pageNumber}
-            setPageNumber={setFilters}
+    <div className="mt-3">
+      {clientData?.Projects?.length > 0 ? (
+        <GridTable
+          rowData={{
+            data: clientData?.Projects || [],
+            total_records: clientData?.Projects?.length || 0,
+          }}
+          columnDefs={columnDefs}
+          pageSize={filters.limit}
+          searchText={filters.search}
+          pageNumber={filters.pageNumber}
+          setPageNumber={setFilters}
+        />
+      ) : (
+        <div className="text-center nodataAvailable">
+          <img
+            src="/no_client_data_available.svg"
+            alt="No clients available"
+            className="w-m-100"
           />
-        )}
-      </div>
+          <p className="nodataAvailable">No Data available.</p>
+          {/* <h6 className="text-sm">
+            Please create your first production to be able to work.
+          </h6> */}
+        </div>
+      )}
     </div>
   );
 }

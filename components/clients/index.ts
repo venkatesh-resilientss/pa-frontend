@@ -4,3 +4,6 @@ export { default as ContactInformation } from "./ContactInformation";
 export { default as SoftwaresModal } from "./SoftwaresModal";
 export { default as Documents } from "./Documents";
 export { default as WorkSpaceDetails } from "./WorkSpaceDetails";
+export { default as CreateClientButton } from "./CreateClientButton";
+export { default as Productions } from "./Productions";
+export { default as ClientControl } from "./ClientControl";
