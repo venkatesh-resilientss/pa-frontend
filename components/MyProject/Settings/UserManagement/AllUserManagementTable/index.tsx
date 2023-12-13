@@ -61,6 +61,7 @@ const AllRoleTable = () => {
         search: searchText,
         limit: pageLimit,
         offset: offfset,
+        name: 'asc'
       };
       userService
         .getUsers(queryParams)
@@ -231,7 +232,9 @@ const AllRoleTable = () => {
   const columnDefs = [
     {
       headerName: "Member",
-      field: "user.profile_image",
+      field: "adminName",
+      sortable: true,
+      unSortIcon: true,
       cellRenderer: MemberRenderer,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -284,11 +287,10 @@ const AllRoleTable = () => {
         } else {
           const firstClientName = clientNames[0] || "";
 
-          displayContent = `${
-            firstClientName.length > maxLength
-              ? `${firstClientName.substring(0, maxLength)}...`
-              : firstClientName
-          } + ${arrayLength - 1}`;
+          displayContent = `${firstClientName.length > maxLength
+            ? `${firstClientName.substring(0, maxLength)}...`
+            : firstClientName
+            } + ${arrayLength - 1}`;
         }
 
         return (
