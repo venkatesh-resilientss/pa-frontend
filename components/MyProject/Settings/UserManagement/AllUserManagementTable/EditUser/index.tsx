@@ -13,6 +13,12 @@ function EditUser() {
   const router = useRouter();
   const roleservice = new RoleService();
   const { id } = router.query;
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+    reset, getValues
+  } = useForm();
 
   const getUserdetails = (id) => usersService.getuserbyid(id);
 
@@ -23,7 +29,6 @@ function EditUser() {
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
-  const [selectedRole, setSelectedRole] = useState(null) as any
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -63,32 +68,11 @@ function EditUser() {
     }
   };
 
-  // const loadClientOptions: any = async (inputValue, callback) => {
-  //   try {
-  //     const res = await clientService.getClients({ search: inputValue.toString(), pageLimit: 25, offset: 0 });
-  //     const options = res?.data.map((item) => ({
-  //       value: item.ID,
-  //       label: item.Name,
-  //       country: item.Country
-  //     }));
 
-  //     callback(options);
-  //   } catch (error) {
-  //     console.error('Error loading options:', error);
-  //   }
-  // };
   const [editMode, setEditMode] = useState(false);
 
   const clientService = new ClientsService();
-  // const { data: clientData } = useSWR("LIST_CLIENTS", () =>
-  //   clientService.getClients()
-  // );
-  // const clientOptions = Array.isArray(clientData)
-  //   ? clientData.map((client) => ({
-  //     value: client.ID,
-  //     label: client.Name,
-  //   }))
-  //   : [];
+
 
   useEffect(() => {
     const params = {
@@ -107,6 +91,8 @@ function EditUser() {
     })
   }, [])
 
+
+
   const [selectedClient, setSelectedClient] = useState(null);
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
@@ -117,13 +103,6 @@ function EditUser() {
     }),
   };
 
-  const {
-    handleSubmit,
-    formState: { errors },
-
-    control,
-    reset,
-  } = useForm();
 
   const [activeStatus, setActiveStatus] = useState(
     eachclicntdata?.IsActive ? "active" : "inactive"
@@ -138,19 +117,19 @@ function EditUser() {
         middlename: eachclicntdata?.middle_name || "",
         email: eachclicntdata?.email || "",
         IsActive: eachclicntdata?.IsActive ? "active" : "inactive",
+        role: {
+          value: eachclicntdata?.Role?.ID || "", // Assuming Role ID is the correct property
+          label: eachclicntdata?.Role?.RoleName || "", // Assuming RollName is the correct property
+        }
         // Add other fields with their default values
-      });
-
-      // Set default values for select boxes
-      setSelectedRole({
-        value: eachclicntdata?.Role?.ID || "", // Assuming Role ID is the correct property
-        label: eachclicntdata?.Role?.RoleName || "", // Assuming RollName is the correct property
       });
 
       setSelectedClient({
         value: eachclicntdata?.Client?.ID || "", // Assuming client_id is the correct property
         label: eachclicntdata?.Client?.Name || "",
       });
+
+
 
       // setSelectedProduction({
       //   value: eachclicntdata?.production || "",
@@ -245,7 +224,7 @@ function EditUser() {
       last_name: data.lastname,
       middle_name: data.middlename,
       email: data.email,
-      roleID: selectedRole?.value,
+      roleID: data?.role?.value,
       // "IsStaffUser": isCheckedStaffUser,
       Meta: {
         userCPReference: [],
@@ -253,7 +232,7 @@ function EditUser() {
       IsActive: activeStatus === "active" ? true : false,
     };
 
-    if (selectedRole === "Client Admin") {
+    if (data.role.value === "Client Admin") {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
@@ -304,7 +283,7 @@ function EditUser() {
   };
 
   return (
-    <div className="overflow-auto text-black mt-4 p-3">
+    <div className="text-black mt-4 p-3">
       <div
         className="text-black"
         style={{
@@ -472,15 +451,12 @@ function EditUser() {
                 <Controller
                   name="role"
                   control={control}
+                  rules={{ required: "Role is required" }}
                   render={({ field }) => (
                     <Select
                       isDisabled={!editMode}
                       {...field}
                       options={roleOptions}
-                      value={selectedRole}
-                      onChange={(selectedOption) =>
-                        setSelectedRole(selectedOption)
-                      }
                       styles={roleSelectStyles}
                     />
                   )}
@@ -562,7 +538,7 @@ function EditUser() {
                 <Col xl="4">
                   <div className="mt-1">
                     <Label>Select Productions</Label>
-                    {selectedClient && selectedRole.label !== "Client Admin" ? (
+                    {selectedClient && getValues("role")?.label !== "Client Admin" ? (
                       <>
                         <Controller
                           name="productions"

@@ -30,7 +30,6 @@ function AddUser() {
   const [clientDetails, setClientDetails] = useState(null) as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
-  const [selectedRole, setSelectedRole] = useState("");
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -190,7 +189,7 @@ function AddUser() {
   const {
     control,
     handleSubmit,
-    reset,
+    reset, getValues,
     formState: { errors },
   } = useForm();
 
@@ -224,7 +223,7 @@ function AddUser() {
       },
     };
 
-    if (selectedRole === "Client Admin") {
+    if (data?.role?.value === "Client Admin") {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
@@ -410,17 +409,17 @@ function AddUser() {
               <Controller
                 name="role"
                 control={control}
-                // rules={{
-                //   required: "Select Role",
-                // }}
+                rules={{
+                  required: "Select Role",
+                }}
                 render={({ field }) => (
                   <Select
                     {...field}
                     options={roleOptions}
                     styles={roleSelectStyles}
-                    onChange={(e) => {
-                      setSelectedRole(e.label);
-                    }}
+                  // onChange={(e) => {
+                  //   setSelectedRole(e.label);
+                  // }}
                   />
                 )}
               />
@@ -530,7 +529,7 @@ function AddUser() {
             <Col xl="4">
               <div className="mt-1">
                 <Label>Select Productions</Label>
-                {selectedClient && selectedRole !== "Client Admin" ? (
+                {selectedClient && getValues("role")?.label !== "Client Admin" ? (
                   <>
                     <Controller
                       name="productions"
