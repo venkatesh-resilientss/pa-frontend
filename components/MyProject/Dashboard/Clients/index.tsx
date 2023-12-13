@@ -31,7 +31,9 @@ function Clients({ router, user }) {
           Newly Onboarded Clients
         </div>
 
-        <CreateClientButton {...{ router, user }} cls="f-14 mx-auto" />
+        <div className="ms-auto">
+          <CreateClientButton {...{ router, user }} cls="f-14 mx-auto" />
+        </div>
       </div>
 
       <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
