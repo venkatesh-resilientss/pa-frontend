@@ -60,14 +60,14 @@ function MyApp({ Component, pageProps, err }) {
       }
     };
     if (router.pathname === "/" && router.query.reset) reset();
-    else {
+    else if (router.isReady) {
       if (publicPages.includes(router.pathname) && loginStatus === "loggedIn")
         getUser();
 
       if (!publicPages.includes(router.pathname) && loginStatus === "loggedOut")
         window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}`;
     }
-  }, [user, loginStatus, router.asPath]);
+  }, [user, loginStatus, router.asPath, router.isReady]);
 
   return (
     <>

@@ -179,9 +179,8 @@ const Sidebar = ({ props }) => {
   const SideBarRoute = ({ route }) => {
     return (
       <div
-        className={`route-button my-2 ${
-          parentRoute === route.path ? "active" : ""
-        }`}
+        className={`route-button my-2 ${parentRoute === route.path ? "active" : ""
+          }`}
       >
         {showSidebar ? (
           <div
@@ -211,8 +210,8 @@ const Sidebar = ({ props }) => {
                   clickedItemIndex
                     ? `/production/${temp1?.ID}/dashboard`
                     : route.children
-                    ? ""
-                    : route.path
+                      ? ""
+                      : route.path
                 }
               >
                 <img
@@ -230,11 +229,10 @@ const Sidebar = ({ props }) => {
                   src="/icons/arrow-left.svg"
                   alt=""
                   style={{
-                    transform: `${
-                      activeDropDown === route.path
-                        ? "rotate(90deg)"
-                        : "rotate(-90deg)"
-                    }`,
+                    transform: `${activeDropDown === route.path
+                      ? "rotate(90deg)"
+                      : "rotate(-90deg)"
+                      }`,
                     transformOrigin: "center center",
                   }}
                 />
@@ -288,9 +286,8 @@ const Sidebar = ({ props }) => {
                     >
                       <Link
                         href={fullPath}
-                        className={` child-route-name ${
-                          child.path === childRoute ? "active" : ""
-                        }`}
+                        className={` child-route-name ${child.path === childRoute ? "active" : ""
+                          }`}
                       >
                         {child.name}
                       </Link>
@@ -308,9 +305,8 @@ const Sidebar = ({ props }) => {
   };
   return (
     <div
-      className={`d-flex flex-column sidebar justify-content-between ${
-        showSidebar ? "" : "minimized"
-      }`}
+      className={`d-flex flex-column sidebar justify-content-between ${showSidebar ? "" : "minimized"
+        }`}
     >
       <div className="">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
@@ -497,16 +493,15 @@ const Sidebar = ({ props }) => {
                 placeholder="Search Production"
                 style={{ height: "38px" }}
               />
-              {productionData ? (
+              {filteredProductionData ? (
                 <>
-                  {productionData?.map((item: any, index: any) => {
+                  {filteredProductionData?.map((item: any, index: any) => {
                     const isClicked = index === clickedItemIndex;
                     return (
                       <div
                         key={index}
-                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
-                          isClicked ? " clicked" : ""
-                        }`}
+                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${isClicked ? " clicked" : ""
+                          }`}
                         onClick={() => {
                           setTemp1(item);
                           setTemp2(index);
@@ -526,9 +521,8 @@ const Sidebar = ({ props }) => {
                         <div className="d-flex flex-column">
                           <div className="d-flex align-items-start">
                             <p
-                              className={`home cursor-pointer mt-1 ms-2 ${
-                                item?.Name.length > 5 ? "ellipsis" : ""
-                              }`}
+                              className={`home cursor-pointer mt-1 ms-2 ${item?.Name.length > 5 ? "ellipsis" : ""
+                                }`}
                             >
                               {item.Name}
                             </p>
@@ -744,7 +738,7 @@ const Sidebar = ({ props }) => {
         backdrop="static"
         keyboard={false}
         centered
-        // dialogClassName="modal-40w"
+      // dialogClassName="modal-40w"
       >
         <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 pt-2 pb-0 ps-4">
           <Modal.Title className="mb-0 fw-bold">Are you sure?</Modal.Title>
