@@ -78,7 +78,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Line 1 
+              Mailing Address Line 1 <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddress1"
@@ -108,13 +108,10 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Line 2
+              Mailing Address Line 2 <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddress2"
-              rules={{
-                required: "  Mailing Address Line 2 is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -137,7 +134,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address City
+              Mailing Address City <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressCity"
@@ -167,7 +164,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address State{" "}
+              Mailing Address State{" "} <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressState"
@@ -199,7 +196,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Postal Code
+              Mailing Address Postal Code <span className="required">*</span>
             </Label>
             <Controller
               name="mailingAddressPostalCode"
@@ -255,7 +252,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Phone
+              Phone <span className="required">*</span>
             </Label>
             <div className="d-flex gap-2">
               <div style={{ width: "20%" }}>
@@ -279,7 +276,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
                 <Controller
                   name="mailingPhoneNumber"
                   rules={{
-                    required: "Email ID is Required",
+                    required: "Phone Number is Required",
                   }}
                   control={control}
                   render={({ field }) => (
@@ -314,9 +311,6 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingFax"
-              rules={{
-                required: "Fax is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input
@@ -339,7 +333,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Email
+              Email <span className="required">*</span>
             </Label>
             <Controller
               name="mailingEmail"

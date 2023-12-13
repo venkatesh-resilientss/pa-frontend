@@ -16,7 +16,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Account Cash
+              Default Account Cash <span className="required">*</span>
             </Label>
             <Controller
               name="defaultAccountCash"
@@ -46,7 +46,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Account Clearing
+              Default Account Clearing <span className="required">*</span>
             </Label>
             <Controller
               name="defaultAccountClearing"
@@ -76,7 +76,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Account Deposit
+              Default Account Deposit <span className="required">*</span>
             </Label>
             <Controller
               name="defaultAccountDeposit"
@@ -106,7 +106,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Default Account Discount
+              Default Account Discount <span className="required">*</span>
             </Label>
             <Controller
               name="defaultAccountDiscount"
