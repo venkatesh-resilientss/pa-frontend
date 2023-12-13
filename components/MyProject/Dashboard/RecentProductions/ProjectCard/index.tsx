@@ -1,4 +1,3 @@
-// ** Third Party Components
 import { AiFillCaretRight } from "react-icons/ai";
 import budget from "assets/DashboardIcons/budget.svg";
 import budgetSpend from "assets/DashboardIcons/budget_spend.svg";

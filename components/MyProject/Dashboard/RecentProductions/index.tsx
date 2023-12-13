@@ -10,6 +10,7 @@ import { Plus } from "react-feather";
 function RecentProductions() {
   const dashboardService = new DashboardService();
   const [recentProductionsData, setRecentProductionsData] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const hasCreateProductionPermission = hasPermission(
     "production_management",
     "create_production"
@@ -21,12 +22,16 @@ function RecentProductions() {
         if (res.data) {
           // setRecentProductionsData(res.data);
           setRecentProductionsData(res.data.slice(0, 3));
-
         }
       });
     };
     getTenant();
   }, []);
+
+  const filteredProductions = recentProductionsData.filter((project) =>
+  (project.project_name ? project.project_name.toLowerCase().includes(searchInput.toLowerCase()) : false)
+);
+
 
   return (
     <>
@@ -38,16 +43,15 @@ function RecentProductions() {
         </div>
 
         <div className="d-flex gap-1">
-          <Form
-            className="faq-search-input"
-            onSubmit={(e) => e.preventDefault()}
-          >
+           <Form  className="faq-search-input"   onSubmit={(e) => e.preventDefault()}>
             <input
               className="search mr-2"
               type="search"
               placeholder="Search..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
-          </Form>
+        </Form>
           {hasCreateProductionPermission && (
             <Button color="primary" className="py-1 px-3" onClick={() => router.push(`/productions`)}>
               <BsCameraVideo />
@@ -60,16 +64,27 @@ function RecentProductions() {
         </div>
       </div>
 
+    
+
       <div className="my-2">
         <div className="row">
-          {recentProductionsData.length > 0 ? (
+          {searchInput === "" ? (
+            // Show when no search input
             recentProductionsData.map((project, i) => (
               <div className="col-md-4 mb-4" key={`recent-project-card-${i}`}>
                 <ProjectCard data={project} />
               </div>
             ))
+          ) : filteredProductions.length > 0 ? (
+            // Show when there's search input and results found
+            filteredProductions.map((project, i) => (
+              <div className="col-md-4 mb-4" key={`recent-project-card-${i}`}>
+                <ProjectCard data={project} />
+              </div>
+            ))
           ) : (
-             <div className="text-center mt-3 nodataAvailable">
+            // Show when there's search input and no results found
+            <div className="text-center mt-3 nodataAvailable">
                 <img
                   src="./no_client_data_available.svg"
                   alt="No clients available"
@@ -93,7 +108,7 @@ function RecentProductions() {
               </div>
           )}
         </div>
-      </div>
+        </div>
     </>
   );
 }

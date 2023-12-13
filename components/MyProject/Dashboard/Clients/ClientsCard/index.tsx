@@ -1,5 +1,3 @@
-// ** Third Party Components
-// ** Reactstrap Imports
 import { Card } from "reactstrap";
 import Image from "next/image";
 
