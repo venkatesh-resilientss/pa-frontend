@@ -84,6 +84,7 @@ const GridTable = (props) => {
               if (pageNumber < rowData?.total_records)
                 setPageNumber((pPN) => ({
                   ...pPN,
+                  offset: pageNumber * pPN.limit,
                   pageNumber: pageNumber + 1,
                 }));
             }}

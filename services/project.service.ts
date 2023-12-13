@@ -13,6 +13,7 @@ import {
   GET_CLIENT_USERS,
   GET_ALL_PROJECTS_LIST,
   GET_CLIENTS_LIST,
+  UPDATE_PRODUCTION,
 } from "../lib/endpoints";
 
 class ProjectService extends APIService {
@@ -123,6 +124,15 @@ class ProjectService extends APIService {
 
   createProject(data: any): Promise<any> {
     return this.post(CREATE_PRODUCTION, data)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        throw error.response.data;
+      });
+  }
+  updateProject(id: any, data: any): Promise<any> {
+    return this.put(UPDATE_PRODUCTION(id), data)
       .then((response) => {
         return response.data;
       })

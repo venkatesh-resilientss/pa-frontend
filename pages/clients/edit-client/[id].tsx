@@ -1,17 +1,18 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "react-bootstrap-button-loader";
 
+import { hasAccess } from "@/commonFunctions/hasAccess";
 import ClientTabs from "@/components/clients/ClientTabs";
 
 import { ClientsService } from "services";
+import { allFields } from "@/commonData";
 
-function Clients() {
-  const router = useRouter();
+function Clients({ router, user }) {
   const clientService = new ClientsService();
   const [isEditing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
 
   const defaultClientData: any = {
     Softwares: [],
@@ -112,36 +113,36 @@ function Clients() {
 
         tempObj.PhysicalAddress.country =
           tempObj?.PhysicalAddress?.CountryID &&
-          tempObj?.PhysicalAddress?.country_name
+          tempObj?.PhysicalAddress?.Country?.Name
             ? {
-                label: tempObj?.PhysicalAddress?.country_name,
+                label: tempObj?.PhysicalAddress?.Country?.Name,
                 value: tempObj?.PhysicalAddress?.CountryID,
               }
             : null;
 
         tempObj.PhysicalAddress.state =
           tempObj?.PhysicalAddress?.StateID &&
-          tempObj?.PhysicalAddress?.state_name
+          tempObj?.PhysicalAddress?.State?.Name
             ? {
                 label: tempObj?.PhysicalAddress?.state_name,
-                value: tempObj?.PhysicalAddress?.StateID,
+                value: tempObj?.PhysicalAddress?.State?.Name,
               }
             : null;
 
         tempObj.MailingAddress.country =
           tempObj?.MailingAddress?.CountryID &&
-          tempObj?.MailingAddress?.country_name
+          tempObj?.MailingAddress?.Country?.Name
             ? {
-                label: tempObj?.MailingAddress?.country_name,
+                label: tempObj?.MailingAddress?.Country?.Name,
                 value: tempObj?.MailingAddress?.CountryID,
               }
             : null;
 
         tempObj.MailingAddress.state =
           tempObj?.MailingAddress?.StateID &&
-          tempObj?.MailingAddress?.state_name
+          tempObj?.MailingAddress?.State?.Name
             ? {
-                label: tempObj?.MailingAddress?.state_name,
+                label: tempObj?.MailingAddress?.State?.Name,
                 value: tempObj?.MailingAddress?.StateID,
               }
             : null;
@@ -157,9 +158,42 @@ function Clients() {
     if (Number(router.query.id)) getClientDetails();
   }, [router.query.id]);
 
+  const hasPermission = hasAccess(user, "client_management", "edit_client");
   const handleEdit = async () => {
     if (isEditing) {
       // form submission
+      let tempErr = false;
+      const getObjectValue = (obj, path) => {
+        const keys = path.split(".");
+
+        return keys.reduce((acc, key) => {
+          return acc ? acc[key] : undefined;
+        }, obj);
+      };
+
+      [...(allFields || [])].map((el) => {
+        if (
+          el.err &&
+          (el.typ === "select"
+            ? !getObjectValue(clientData, el.vl)
+            : (el.vl === "Company.PrimaryContact.EmailID" &&
+                !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
+                  getObjectValue(clientData, el.vl)
+                )) ||
+              (el.vl === "Tenant.Slug" &&
+                !new RegExp(/^[a-z0-9-_]{2,}$/).test(
+                  getObjectValue(clientData, el.vl)
+                )) ||
+              !getObjectValue(clientData, el.vl).toString().trim())
+        )
+          tempErr = true;
+      });
+
+      setErr(tempErr);
+      if (tempErr) {
+        toast.error("Please check for invalid fields");
+        return;
+      }
       setLoading(true);
       try {
         const payload = { ...clientData };
@@ -198,7 +232,8 @@ function Clients() {
         toast.error(e?.error || e || "Error");
       }
     } else {
-      setEditing(true);
+      if (hasPermission) setEditing(true);
+      else toast.error("Access Denied");
     }
   };
 
@@ -255,6 +290,7 @@ function Clients() {
 
           <ClientTabs
             {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
+            errors={err}
           />
         </div>
       )}

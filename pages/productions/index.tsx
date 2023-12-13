@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { Card, UncontrolledDropdown } from "reactstrap";
+import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import moment from "moment";
 import { useDispatch } from "react-redux";
+import DatePicker from "react-datepicker";
+import Select from "react-select";
+import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 
 import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
 import editIocn from "assets/myIcons/edit_square.svg";
@@ -11,37 +15,118 @@ import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
-import { ProjectService } from "services";
 import GridTable from "@/components/dataTable/GridWithPagination";
 import CreateProductionButton from "@/components/productions/CreateProductionButton";
 import NoProductionPage from "@/components/productions/NoProductionPage";
 
+import { ClientsService, ProjectService } from "services";
+
+const clientService = new ClientsService();
 const projectService = new ProjectService();
 
+const steps = [
+  "All Productions",
+  "Pending Productions",
+  "Completed Productions",
+];
+
 export default function Productions({ router, user }) {
+  const [step, setStep] = useState(1);
+
   const dispatch = useDispatch();
   const [tableData, setTableData] = useState({
     data: [],
     total_records: 0,
   }) as any;
-
+  const [clFilters, setClFilters] = useState([]) as any;
+  const defaultLimit = 10;
   const [filters, setFilters] = useState<any>({
     dateStart: "",
     dateEnd: "",
     clients: [],
-    softwares: [],
-    limit: 10,
-    offset: 10,
+    projectTypes: [],
+    limit: defaultLimit,
+    offset: 0,
     search: "",
     status: "",
     pageNumber: 1,
+    isCompleted: "",
   });
+
+  const toggle = (tab) => {
+    setStep(tab);
+    setFilters({
+      ...filters,
+      limit: defaultLimit,
+      offset: 0,
+      status: "",
+      isCompleted: tab === 1 ? "" : tab === 2 ? "true" : "false",
+    });
+  };
+
+  const selectStyle = {
+    control: (base) => ({
+      ...base,
+      background: "#fff",
+      border: "1px solid #dee2e6",
+      borderRadius: "0.375rem",
+      minHeight: "40px",
+      boxShadow: null,
+      ":hover": {
+        borderColor: "#A2CFFE",
+      },
+    }),
+
+    valueContainer: (base) => ({ ...base, padding: "0 6px" }),
+
+    input: (base) => ({ ...base, margin: "0" }),
+
+    placeholder: (base: any) => ({
+      ...base,
+      position: "center",
+      transform: "none",
+      color: "#c9c9c9 !important",
+    }),
+
+    menu: (base: any) => ({ ...base, margin: "0 !important" }),
+    menuList: (base: any) => ({ ...base, padding: "0 !important" }),
+
+    option: (base: any, state: any) => ({
+      ...base,
+      cursor: "pointer",
+      color: "#212529",
+      ":hover": {
+        backgroundColor: "#c9c9c97d",
+      },
+      backgroundColor: state.isSelected ? "#c9c9c97d !important" : "white",
+    }),
+
+    indicatorSeparator: () => ({ display: "none" }),
+  };
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const offset = (filters.pageNumber - 1) * filters.limit;
-        const payload = { ...filters, offset };
+        const clients = await clientService.getClientsFilters();
+        setClFilters(clients.map((e) => ({ label: e.name, value: e.id })));
+
+        /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      } catch (e) {
+        //
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        // const offset = (filters.pageNumber - 1) * filters.limit;
+        const payload = {
+          ...filters,
+          // offset,
+          clients: filters.clients.map((e) => e.value),
+        };
         const response = await projectService.getAllProjectsList(payload);
         setTableData({
           data: response.data || [],
@@ -99,7 +184,7 @@ export default function Productions({ router, user }) {
             >
               <Action
                 icon={editIocn}
-                name={"View Details"}
+                name={"View/Edit Production"}
                 action={() => {
                   //
                 }}
@@ -142,7 +227,7 @@ export default function Productions({ router, user }) {
       sortable: true,
       resizable: true,
       suppressSizeToFit: true,
-      flex: 1,
+      flex: 2,
     },
     {
       headerName: "Client",
@@ -214,6 +299,25 @@ export default function Productions({ router, user }) {
       flex: 1,
     },
   ];
+
+  const CustomDatePicker = forwardRef(({ value, onClick }: any, ref: any) => (
+    <button className="btn border bg-white" onClick={onClick} ref={ref}>
+      <span className="clr-dblack fw-600">Date</span> is{" "}
+      <span className="clr-dblack fw-600">{value || "All"}</span>
+    </button>
+  ));
+
+  const statusOpts = [
+    { label: "All", value: "" },
+    { label: "Active", value: "true" },
+    { label: "In-active", value: "false" },
+  ];
+
+  const completedOpts = [
+    { label: "All", value: "" },
+    { label: "Pending", value: "false" },
+    { label: "Completed", value: "true" },
+  ];
   return (
     <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
@@ -224,20 +328,155 @@ export default function Productions({ router, user }) {
         </div>
       </Card>
 
-      <div className="mt-3">
-        {tableData.data.length === 0 ? (
-          <NoProductionPage {...{ user }} />
-        ) : (
-          <GridTable
-            rowData={tableData}
-            columnDefs={columnDefs}
-            pageSize={filters.limit}
-            searchText={filters.search}
-            pageNumber={filters.pageNumber}
-            setPageNumber={setFilters}
+      <Nav
+        className="bg-white mb-3"
+        style={{ borderBottom: "1px solid", borderColor: "#DBDCDC" }}
+      >
+        {steps.map((e, id) => (
+          <NavItem key={id}>
+            <NavLink
+              className={
+                step === id + 1 ? "client-nav-active" : "client-nav-inactive"
+              }
+              active={step === id + 1}
+              onClick={() => toggle(id + 1)}
+            >
+              {e}
+            </NavLink>
+          </NavItem>
+        ))}
+      </Nav>
+
+      <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
+        <div className="">
+          <DatePicker
+            style={{ fontSize: "12px", fontWeight: "400" }}
+            id="startDatePicker" // Add the id here
+            className="w-100 form-control"
+            placeholderText="Select Start date"
+            startDate={filters.dateStart ? filters.dateStart : null}
+            endDate={filters.dateEnd ? filters.dateEnd : null}
+            dateFormat="yyyy-MM-dd"
+            onChange={(dts) => {
+              const [start, end] = dts;
+              setFilters({
+                ...filters,
+                pageNumber: 1,
+                offset: 0,
+                limit: defaultLimit,
+                dateStart: start,
+                dateEnd: end,
+              });
+            }}
+            selectsRange
+            monthsShown={2}
+            customInput={<CustomDatePicker />}
           />
-        )}
+        </div>
+        <div className="">
+          <ReactMultiSelectCheckboxes
+            className="drop-down"
+            value={filters.clients}
+            placeholderButtonLabel="Client is All"
+            options={[
+              { label: "Select All", value: "s" },
+              { label: "Unselect All", value: "u" },
+              ...clFilters,
+            ]}
+            onChange={(value) => {
+              let clientData = value;
+              const i = value.findIndex((e) => e.value === "s");
+              if (value.length === 0) {
+                //
+              } else if (value[value.length - 1].value === "s") {
+                const _x = [];
+                clientData = _x.concat(clFilters);
+              } else if (value[value.length - 1].value === "u") {
+                clientData = [];
+              } else if (i > -1 && value.length === clFilters.length) {
+                clientData.splice(i, 1);
+              }
+
+              setFilters({
+                ...filters,
+                pageNumber: 1,
+                offset: 0,
+                limit: defaultLimit,
+                clients: clientData,
+              });
+            }}
+          />
+        </div>
+
+        <div className="">
+          <ReactMultiSelectCheckboxes
+            className="drop-down"
+            value={{ label: "Production Type is All", value: "" }}
+            placeholderButtonLabel="Select Production Types"
+            options={[]}
+          />
+        </div>
+
+        <div className="w-m-125">
+          {step !== 1 ? (
+            <Select
+              instanceId={`react-select-status`}
+              styles={selectStyle}
+              placeholder={"Status is All"}
+              options={statusOpts}
+              value={statusOpts.find((e) => e.value === filters.status)}
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  pageNumber: 1,
+                  offset: 0,
+                  limit: defaultLimit,
+                  status: e.value,
+                })
+              }
+            />
+          ) : (
+            <Select
+              instanceId={`react-select-completed`}
+              styles={selectStyle}
+              placeholder={"Status is All"}
+              options={completedOpts}
+              value={completedOpts.find((e) => e.value === filters.isCompleted)}
+              onChange={(e) =>
+                setFilters({
+                  ...filters,
+                  pageNumber: 1,
+                  offset: 0,
+                  limit: defaultLimit,
+                  isCompleted: e.value,
+                })
+              }
+            />
+          )}
+        </div>
       </div>
+
+      <TabContent className="py-3 client-fields" activeTab={step}>
+        {/*  eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+        {[...Array(3)].map((e, id) => (
+          <TabPane tabId={id + 1} key={id}>
+            <div className="mt-3">
+              {tableData.data.length === 0 ? (
+                <NoProductionPage {...{ user }} />
+              ) : (
+                <GridTable
+                  rowData={tableData}
+                  columnDefs={columnDefs}
+                  pageSize={filters.limit}
+                  searchText={filters.search}
+                  pageNumber={filters.pageNumber}
+                  setPageNumber={setFilters}
+                />
+              )}
+            </div>
+          </TabPane>
+        ))}
+      </TabContent>
     </div>
   );
 }
