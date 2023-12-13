@@ -302,6 +302,7 @@ export const sidebarRoutesMaster = [
     ],
   },
 ];
+//for productionview
 export const sidebarRoutesProduction = [
   {
     name: "Dashboard",
