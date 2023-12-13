@@ -208,7 +208,6 @@ function EditDepartment() {
           <div className="d-flex gap-1">
             <div className="d-flex gap-1">
               <input
-                className="custom-radio-input"
                 type="radio"
                 id="ex1-active"
                 name="ex1"

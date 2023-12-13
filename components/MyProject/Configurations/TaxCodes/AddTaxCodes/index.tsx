@@ -46,7 +46,7 @@ function AddTaxCode() {
       name: data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      countryID: parseInt(data.country.value)
+      countryID: parseInt(data.country?.value)
     };
     taxCodeService
       .createTaxCode(backendFormat)

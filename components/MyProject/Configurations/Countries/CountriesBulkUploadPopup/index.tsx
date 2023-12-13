@@ -10,6 +10,7 @@ import { useDropzone } from "react-dropzone";
 import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CountryService } from "services";
+import { UploadSampleFiles } from "@/constants/common";
 
 const CountriesBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
@@ -63,8 +64,7 @@ const CountriesBulkUploadPopup = ({setRerender, rerender }) => {
   };
 
   const handleDownload = () => {
-    const url = "/upload-sample-files/Countries_Samples.xlsx";
-    window.open(url);
+    window.open(UploadSampleFiles.countries);
   };
 
   return (

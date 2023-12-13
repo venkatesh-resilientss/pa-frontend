@@ -37,7 +37,7 @@ function EditChartOfAccounts() {
           .filter(item => item.ID != id)
           .map((item) => ({
             value: item.ID,
-            label: item.Name,
+          label: `${item.Name} - ${item.Code}`,
           }));
         setInitialcoaOptions(options);
       } catch (error) {
@@ -64,7 +64,7 @@ function EditChartOfAccounts() {
         .filter(item => item.ID != id)
         .map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Name} - ${item.Code}`,
         }));
 
       callback(options);
@@ -118,7 +118,7 @@ function EditChartOfAccounts() {
       description: data.Description,
       IsActive: activeStatus,
       code: data.COACode,
-      parentID: parseInt(data.COAParent),
+      parentID: parseInt(data.COAParent.value),
       accountType: data.AccountType.value,
       postable: coaData?.IsActive,
       clientID,
