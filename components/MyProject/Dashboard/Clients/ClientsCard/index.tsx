@@ -6,7 +6,7 @@ import router from "next/router";
 const ClientsCard = ({ data }) => {
   
   const handleViewDetailsClick = () => {
-    router.push(`/configurations/edit-country/${data.id}`)
+    router.push(`/clients/edit-client${data.id}`)
   };
 
   return (
@@ -60,7 +60,7 @@ const ClientsCard = ({ data }) => {
               }}
             >
               <img src="user.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.contact.first_name ? data.contact.first_name : "-"}</p>
+              <p style={{fontSize:"12px"}}>{data.client_admin.name ? data.client_admin.name : "-"}</p>
             </div>
             <div
               style={{
@@ -71,10 +71,10 @@ const ClientsCard = ({ data }) => {
               }}
             >
               No. of Active Productions:{" "}
-              {data.projects_count ? data.projects_count : "-"}
+              {data.projects_count ? data.projects_count : "0"}
             </div>
         </div>
-          <div className="d-flex gap-4 justify-content-between mt-3">
+          <div className="d-flex gap-4 justify-content-between mt-2">
             <div
               className="text-black d-flex align-items-center"
               style={{
@@ -84,7 +84,7 @@ const ClientsCard = ({ data }) => {
               }}
             >
               <img src="mail.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.contact.email_id ? data.contact.email_id : "-"}</p>
+              <p style={{fontSize:"12px"}}>{data.client_admin.email ? data.client_admin.email : "-"}</p>
             </div>
         </div>
 

@@ -14,7 +14,7 @@ const ProjectCard = ({ data }) => {
  
 
   const handleViewDetailsClick = () => {
-    router.push(`/edit-production/${data.id}`);
+    router.push(`/production/${data.id}`);
   };
   
   return (
@@ -123,7 +123,7 @@ const ProjectCard = ({ data }) => {
                         borderRadius: "5%",
                       }}
                     >
-                      {software.name}
+                      {software.software_name}
                     </div>
                   );
                 })}
