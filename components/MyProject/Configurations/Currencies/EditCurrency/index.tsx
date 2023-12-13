@@ -54,7 +54,7 @@ function EditCurrency() {
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
       description: data.description,
-      BaseCurrency: data.BaseCurrency,
+      BaseCurrency: isBaseCurrency,
       isActive: activeStatus,
     };
 
@@ -200,6 +200,10 @@ function EditCurrency() {
                     invalid={errors.isBaseCurrency && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    checked={isBaseCurrency}
+                    onChange={(e)=>{
+                      setIsBaseCurrency(e.target.checked)
+                    }}
                   />
                 )}
               />
@@ -224,10 +228,6 @@ function EditCurrency() {
                     invalid={errors.currentRate && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
-                    checked={isBaseCurrency}
-                    onChange={(e)=>{
-                      setIsBaseCurrency(e.target.checked)
-                    }}
                   />
                 )}
               />
