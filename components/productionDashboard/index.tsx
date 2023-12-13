@@ -1,4 +1,4 @@
-// Import necessary libraries and components
+
 import React, { useEffect, useState } from "react";
 import { Col, Card, Row } from "react-bootstrap";
 import { DashboardService } from "services";
@@ -29,6 +29,8 @@ export default function ProductionDashboard() {
     fetchData();
   }, []);
 
+
+  
   //all production cards
   useEffect(() => {
     const fetchData = async () => {
@@ -48,6 +50,7 @@ export default function ProductionDashboard() {
   const handleViewDetails = (productionId) => {
     router.push(`/edit-production/${productionId}`);
   };
+
 
   // Function to create a card
   const createCard = (title, iconSrc, subTitle, content) => (
@@ -121,9 +124,9 @@ export default function ProductionDashboard() {
            <p>No Data available.</p>
         </div>
         ) : (
-          productionsData && productionsData.data.length > 0 ? (
-            productionsData.data.map((production) => (
-              <Col key={production.id} className="mb-3 mt-3">
+          productionsData && Array.isArray(productionsData) && productionsData.length > 0 ? (
+          productionsData.map((production) => (
+              <Col key={production.id} md={6}  className="mb-3 mt-3">
               <Card style={{borderRadius: "10px" }} className="p-3">
                 <div className="d-flex justify-content-between">
                 <div>

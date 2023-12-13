@@ -1,4 +1,3 @@
-// ** Third Party Components
 import { AiFillCaretRight } from "react-icons/ai";
 import budget from "assets/DashboardIcons/budget.svg";
 import budgetSpend from "assets/DashboardIcons/budget_spend.svg";
@@ -142,7 +141,7 @@ const ProjectCard = ({ data }) => {
               <div className="d-flex gap-2">
                 
                  <div className="d-flex gap-2">
-              <img src="production_type.svg" alt="" />
+              <img src="production_type.svg" alt="custom production" style={{width:"15px"}} />
               Production Type
             </div>
               </div>

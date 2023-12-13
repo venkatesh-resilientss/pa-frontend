@@ -259,25 +259,45 @@ const AllRoleTable = () => {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        const clientNames = params.value;
+        const clientNames: any = params?.data?.clientNames; // Assuming clientNames is an array
         const arrayLength = clientNames ? clientNames.length : 0;
         let tooltipContent;
 
         if (arrayLength === 0) {
-          tooltipContent = "clientNames";
-        } else if (arrayLength > 1) {
-          tooltipContent = `clientNames + ${arrayLength}`;
+          tooltipContent = ""; // Provide a default message if array is empty
         } else {
-          // If arrayLength is exactly 1, just return the single clientName
-          tooltipContent = clientNames[0];
+          tooltipContent = clientNames.join(", ");
         }
+
+        const maxLength = 8; // Adjust the maximum length for ellipsis as needed
+        let displayContent;
+
+        if (arrayLength === 0) {
+          displayContent = "";
+        } else if (arrayLength === 1) {
+          const firstClientName = clientNames[0] || ""; // Use an empty string if firstClientName is undefined or null
+
+          displayContent =
+            firstClientName.length > maxLength
+              ? `${firstClientName.substring(0, maxLength)}...`
+              : firstClientName;
+        } else {
+          const firstClientName = clientNames[0] || "";
+
+          displayContent = `${
+            firstClientName.length > maxLength
+              ? `${firstClientName.substring(0, maxLength)}...`
+              : firstClientName
+          } + ${arrayLength - 1}`;
+        }
+
         return (
           <>
             <OverlayTrigger
               placement="bottom"
               overlay={<Tooltip id="tooltip-engine">{tooltipContent}</Tooltip>}
             >
-              <p>{tooltipContent}</p>
+              <p title={tooltipContent}>{displayContent}</p>
             </OverlayTrigger>
           </>
         );
@@ -294,7 +314,7 @@ const AllRoleTable = () => {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        return params.value
+        return params.value;
       },
     },
     {
@@ -399,7 +419,6 @@ const AllRoleTable = () => {
                 setPageNumber={setPageNumber}
                 setLoading={setLoading}
               />
-
             </div>
           ) : (
             <div>

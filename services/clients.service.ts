@@ -14,6 +14,7 @@ import {
   GET_ALL_USERS,
   GET_CLIENT_USERS,
   GET_CLIENTS_LIST,
+  GET_CLIENTS_FILTERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
@@ -72,7 +73,15 @@ class ClientsService extends APIService {
         throw error?.response?.data;
       });
   }
-
+  getClientsFilters(): Promise<any> {
+    return this.get(`${GET_CLIENTS_FILTERS}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
   s3upload(data: any): Promise<any> {
     return this.postWithMultiPartHeaders(`${UPLOAD_FILE_S3}`, data)
       .then((res) => {

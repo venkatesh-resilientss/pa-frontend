@@ -133,8 +133,9 @@ function EditChartOfAccounts() {
         setLoader(false);
         reset();
       })
-      .catch((error) => {
-        toast.error(error.error || error.Message || "Unable to insert data");
+      .catch(() => {
+        // toast.error(error.error || error.Message || "Unable to insert data");
+        toast.error('Duplicate COA key'); // customize and edit later
         setLoader(false);
       });
   };

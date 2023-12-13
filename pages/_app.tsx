@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
+import cookie from "js-cookie";
 
 import "config/axios.config";
 import "styles/App.scss";
@@ -10,7 +11,6 @@ import { store } from "redux/store";
 
 import MainLayout from "@/layouts";
 import useUser from "@/hooks/useUser";
-import { checkTenant } from "@/constants/function";
 
 import { AuthService } from "services";
 
@@ -18,13 +18,35 @@ const authService = new AuthService();
 
 function MyApp({ Component, pageProps, err }) {
   const router = useRouter();
+  const [clientData, setClient] = useState<any>({
+    staffUser: false,
+    name: "",
+    id: "",
+  });
 
   const { loginStatus, user, mutate } = useUser();
-  const mPageProps = { ...pageProps, loginStatus, user, mutate, router, err };
 
   useEffect(() => {
     const getTenant = async () => {
-      await checkTenant();
+      try {
+        const name = window.location.hostname.split(".")[0];
+        if (name === "app") {
+          cookie.set("tenant_id", "1");
+          setClient({ staffUser: true, name: "", id: "" });
+        } else {
+          const tenant = await authService.checkTenant({ name });
+          if (Number(tenant?.ID)) cookie.set("tenant_id", tenant.ID);
+          if (Number(tenant?.clientId))
+            setClient({
+              staffUser: true,
+              name: tenant?.ClientName,
+              id: Number(tenant?.ClientID),
+            });
+        }
+        //  eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        //
+      }
     };
     getTenant();
   }, []);
@@ -69,6 +91,7 @@ function MyApp({ Component, pageProps, err }) {
     }
   }, [user, loginStatus, router.asPath, router.isReady]);
 
+  const mPageProps = { ...pageProps, loginStatus, user, mutate, router, err };
   return (
     <>
       <Head>
@@ -79,7 +102,7 @@ function MyApp({ Component, pageProps, err }) {
       <Provider store={store}>
         <MainLayout {...{ router, user, mutate }}>
           <ToastContainer />
-          <Component {...mPageProps} />
+          <Component {...mPageProps} {...{ clientData }} />
         </MainLayout>
       </Provider>
     </>

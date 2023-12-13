@@ -11,13 +11,14 @@ function useUser(): any {
     const res = await authService.getUserDetails();
     return res;
   });
-
+  if (data?.data?.ID === 0) cookie.remove("accessToken");
   return {
-    loginStatus: error
-      ? ("loggedOut" as const)
-      : !data
-      ? ("loading" as const)
-      : ("loggedIn" as const),
+    loginStatus:
+      error || data?.data?.ID === 0
+        ? ("loggedOut" as const)
+        : !data
+        ? ("loading" as const)
+        : ("loggedIn" as const),
     error: error?.data?.error || error?.data,
     user: data?.data,
     mutate,

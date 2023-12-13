@@ -28,6 +28,7 @@ function AddBudget() {
 
   /** Load Initial Options */
   useEffect(() => {
+    const { clientID, projectID } = getSessionVariables();
     /**Currencies */
     const fetchInitialCurrencyOptions = async () => {
       try {
@@ -36,7 +37,7 @@ function AddBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result.map((item) => ({
+        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -49,7 +50,6 @@ function AddBudget() {
 
     /** Series */
     const fetchInitalSeriesOptions = async () => {
-      const { clientID, projectID } = getSessionVariables();
       try {
         const res = await seriesService.getSeries(
           {
@@ -62,7 +62,7 @@ function AddBudget() {
             projectId: projectID,
           }
         );
-        const options = res?.data.map((item) => ({
+        const options = res?.data.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -80,8 +80,13 @@ function AddBudget() {
           search: "",
           pageLimit: 25,
           offset: 0,
-        });
-        const options = res?.result.map((item) => ({
+        },
+        {
+          clientId: clientID,
+          projectId: projectID,
+        }
+        );
+        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -106,7 +111,7 @@ function AddBudget() {
           clientId : clientID,
           projectID : projectID
         });
-        const options = res?.data.map((item) => ({
+        const options = res?.data.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -128,7 +133,7 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -154,7 +159,7 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -166,13 +171,19 @@ function AddBudget() {
 
   /** Locations */
   const loadLocationsOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
     try {
       const res = await locationService.getLocations({
         search: inputValue.toString(),
         pageLimit: 25,
         offset: 0,
-      });
-      const options = res?.result.map((item) => ({
+      },
+      {
+        clientId: clientID,
+        projectId: projectID,
+      }
+      );
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -195,7 +206,7 @@ function AddBudget() {
         clientId : clientID,
         projectID : projectID
       });
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
