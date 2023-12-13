@@ -7,6 +7,7 @@ import HelpCenterCard from "@/components/MyProject/Dashboard/HelpCenter/HelpCent
 import { useRouter } from "next/router";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
+import moment from 'moment';
 
 export default function ProductionDashboard() {
   const router = useRouter();
@@ -129,91 +130,91 @@ export default function ProductionDashboard() {
       </div>
 
       <div className="col-md-6 mt-3">
-        {error ? (
-         <div className="text-center nodataAvailable">
-          <img src="/no_client_data_available.svg" alt="Error"/>
-           <p >No Data available.</p>
+  {error || !projectDetails ? (
+    <div className="text-center nodataAvailable">
+      <img src="/no_client_data_available.svg" alt="Error"/>
+      <p>No Data available.</p>
+    </div>
+  ) : (
+    <Card style={{ borderRadius: "10px" }} className="p-3">
+      <Col>
+        <div className="d-flex justify-content-between">
+          <div>
+            <h4 className="text-nowrap fw-bold">{projectDetails?.name || '-'}</h4>
+          </div>
+          <div
+            className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
+            style={{ fontSize: "10px", fontWeight: "400", gap: "3px" }}
+            onClick={() => {
+              if (production_id) {
+                router.push(`/production/${production_id}`);
+              }
+            }}
+          >
+            <div>
+              <img src="/view_details.svg" alt="" />
+            </div>{" "}
+            <p style={{ fontSize: "14px" }}>View Details</p>
+          </div>
         </div>
-        ) : (
-          <Card style={{ borderRadius: "10px" }} className="p-3">
-            <Col>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h4 className="text-nowrap fw-bold">{projectDetails?.name || '-'}</h4>
-                </div>
-               <div
-                className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
-                style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}
-                onClick={() => {
-                  if (production_id) {
-                    router.push(`/production/${production_id}`);
-                  }
-                }}
-              >
-                  <div>
-                    <img src="/view_details.svg" alt="" />
-                  </div>{" "}
-                  <p style={{ fontSize: "14px" }}>View Details</p>
-                </div>
-              </div>
-              <div className="d-flex justify-content-between mt-2">
-                <div>
-                  <p>Payroll Coordinator : {projectDetails?.PayrollCoordinator || '-'}</p>
-                </div>
-                <div>
-                  <div>
-                    <span style={{ fontSize: "10px" }}><img src="/calender.svg" alt="" /> {projectDetails?.created_date || '-'}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex justify-content-between mt-4">
-                <div>
-                  <div>
-                    <span style={{ fontSize: "18px" }}><img src="/budget_allocated.svg" /> Budget Allocated</span>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <span style={{ fontSize: "18px" }}><img src="/budget_spend.svg" alt="" /> Budget Spend</span>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex justify-content-between mt-3">
-                <div>
-                  <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
-                  </div>
-                </div>
-              </div>
-            </Col>
-            <div className="row mt-2">
-              <div className="col-md-4">
-                <h6 className="text-center">Project Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.projectType?.name || '-'}</p>
-              </div>
-              <div className="col-md-4 text-nowrap">
-                <h6 className="text-center">Last Payroll Date</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.LastPayrollDate || '-'}</p>
-              </div>
-              <div className="col-md-4">
-                <h6 className="text-center">Labour Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.LabourType || '-'}</p>
-              </div>
+        <div className="d-flex justify-content-between mt-2">
+          <div>
+            <p>Payroll Coordinator : {projectDetails?.PayrollCoordinator || '-'}</p>
+          </div>
+          <div>
+            <div>
+              <span><img src="/calender.svg" alt="" /> {projectDetails?.created_date ? moment(projectDetails.created_date).format('MMMM D, YYYY') : '-'}</span>
             </div>
-            <div className="mt-2">
-              <p><img src="/software_subscribed.svg" alt="" /> Softwares Subscribed</p>
+          </div>
+        </div>
+        <div className="d-flex justify-content-between mt-4">
+          <div>
+            <div>
+              <span style={{ fontSize: "18px" }}><img src="/budget_allocated.svg" /> Budget Allocated</span>
             </div>
-            <div className="d-flex mt-3">
-              <p className="mr-4 productionBorder">-</p>
+          </div>
+          <div>
+            <div>
+              <span style={{ fontSize: "18px" }}><img src="/budget_spend.svg" alt="" /> Budget Spend</span>
             </div>
-          </Card>
-        )}
+          </div>
+        </div>
+        <div className="d-flex justify-content-between mt-3">
+          <div>
+            <div>
+              <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+            </div>
+          </div>
+        </div>
+      </Col>
+      <div className="row mt-2">
+        <div className="col-md-4">
+          <h6 className="text-center">Project Type</h6>
+          <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.projectType?.name || '-'}</p>
+        </div>
+        <div className="col-md-4 text-nowrap">
+          <h6 className="text-center">Last Payroll Date</h6>
+          <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.LastPayrollDate || '-'}</p>
+        </div>
+        <div className="col-md-4">
+          <h6 className="text-center">Labour Type</h6>
+          <p className="text-center" style={{ fontWeight: "600" }}>{projectDetails?.LabourType || '-'}</p>
+        </div>
       </div>
+      <div className="mt-2">
+        <p><img src="/software_subscribed.svg" alt="" /> Softwares Subscribed</p>
+      </div>
+      <div className="d-flex mt-3">
+        <p className="mr-4 productionBorder">-</p>
+      </div>
+    </Card>
+  )}
+</div>
       <div className="my-1 mt-3 mb-2" style={{ fontSize: '18px', fontWeight: '600', color: '#030229' }}>
         Help Center
       </div>
