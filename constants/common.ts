@@ -350,11 +350,6 @@ export const sidebarRoutesProduction = [
       },
     ],
   },
-  // {
-  //   name: "Reports",
-  //   icon: "/icons/report.svg",
-  //   path: "/reports",
-  // },
   {
     name: "Configurations",
     icon: "/icons/configurationIcon.svg",
@@ -454,40 +449,7 @@ export const sidebarRoutesNonStaff = [
     name: "Reports",
     icon: "/icons/report.svg",
     path: "/reports",
-  },
-  // {
-  //   name: "Configurations",
-  //   icon: "/icons/configurationIcon.svg",
-  //   path: "/configurations",
-  //   children: [
-  //     {
-  //       name: "Banks",
-  //       path: "/banks",
-  //     },
-
-  //     {
-  //       name: "Departments",
-  //       path: "/departments",
-  //     },
-  //     {
-  //       name: "Employee Types",
-  //       path: "/employee-type",
-  //     },
-  //     {
-  //       name: "Occupation Codes",
-  //       path: "/OccupationCodes",
-  //     },
-  //     {
-  //       name: "MPIPHP Production code",
-  //       path: "/MPIPHP",
-  //     },
-  //     {
-  //       name: "Legislative Types",
-  //       path: "/legislative-type",
-  //     },
-  //   ],
-  // },
-  
+  }, 
     {
     name: "Settings",
     icon: "/icons/settingIcon.svg",

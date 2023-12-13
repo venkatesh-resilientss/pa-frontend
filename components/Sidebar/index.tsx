@@ -112,14 +112,6 @@ const Sidebar = ({ props }) => {
     }
   }, [router.pathname]);
 
-  // const filteredProductionData = (productionData || []).filter(
-  //   (item) =>
-  //     item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
-  //     (item.Client.Name &&
-  //       item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
-  //     item.Description.toLowerCase().includes(searchText.toLowerCase())
-  // );
-
   useEffect(() => {
     const filteredData = (productionData || []).filter(
       (item) =>
@@ -505,62 +497,71 @@ const Sidebar = ({ props }) => {
                 placeholder="Search Production"
                 style={{ height: "38px" }}
               />
-
-              {filteredProductionData?.map((item: any, index: any) => {
-                const isClicked = index === clickedItemIndex;
-                return (
-                  <div
-                    key={index}
-                    className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
-                      isClicked ? " clicked" : ""
-                    }`}
-                    onClick={() => {
-                      setTemp1(item);
-                      setTemp2(index);
-                      if (!isClicked) {
-                        setSwitcProduction(!switcProduction);
-                      }
-                    }}
-                  >
-                    <img
-                      className="rounded-circle cursor-pointer me-1 ms-2"
-                      src={item.img || getPlaceholderImage(item.Name)}
-                      width="22"
-                      height="22"
-                      alt="avatar"
-                      key={index}
-                    />
-                    <div className="d-flex flex-column">
-                      <div className="d-flex align-items-start">
-                        <p
-                          className={`home cursor-pointer mt-1 ms-2 ${
-                            item?.Name.length > 5 ? "ellipsis" : ""
-                          }`}
-                        >
-                          {item.Name}
-                        </p>
-                      </div>
-                      <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
-                        <p className="ressl ellipsis">
-                          {item.Client.Name
-                            ? item.Client.Name
-                            : item.Description}
-                        </p>
-                      </div>
-                    </div>
-                    {isClicked && (
-                      <img
+              {productionData ? (
+                <>
+                  {productionData?.map((item: any, index: any) => {
+                    const isClicked = index === clickedItemIndex;
+                    return (
+                      <div
                         key={index}
-                        className="me-2 cursor-pointer"
-                        src="/tick.svg"
-                        alt="tickmark"
-                        width="16"
-                        height="16"
-                      />
-                    )}
+                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
+                          isClicked ? " clicked" : ""
+                        }`}
+                        onClick={() => {
+                          setTemp1(item);
+                          setTemp2(index);
+                          if (!isClicked) {
+                            setSwitcProduction(!switcProduction);
+                          }
+                        }}
+                      >
+                        <img
+                          className="rounded-circle cursor-pointer me-1 ms-2"
+                          src={item.img || getPlaceholderImage(item.Name)}
+                          width="22"
+                          height="22"
+                          alt="avatar"
+                          key={index}
+                        />
+                        <div className="d-flex flex-column">
+                          <div className="d-flex align-items-start">
+                            <p
+                              className={`home cursor-pointer mt-1 ms-2 ${
+                                item?.Name.length > 5 ? "ellipsis" : ""
+                              }`}
+                            >
+                              {item.Name}
+                            </p>
+                          </div>
+                          <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
+                            <p className="ressl ellipsis">
+                              {item.Client.Name
+                                ? item.Client.Name
+                                : item.Description}
+                            </p>
+                          </div>
+                        </div>
+                        {isClicked && (
+                          <img
+                            key={index}
+                            className="me-2 cursor-pointer"
+                            src="/tick.svg"
+                            alt="tickmark"
+                            width="16"
+                            height="16"
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  <div className="d-flex align-items-center mb-2 justify-content-center">
+                    <p className="ressl">No productions found</p>
                   </div>
-                );
-              })}
+                </>
+              )}
             </div>
           </>
         ) : userData?.data?.IsStaffUser ? (
