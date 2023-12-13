@@ -149,8 +149,8 @@ class ClientsService extends APIService {
         throw error?.response?.data;
       });
   }
-  getProductions(): Promise<any> {
-    return this.get(`${GET_PRODUCTIONS}`)
+  getProductions(search): Promise<any> {
+    return this.get(`${GET_PRODUCTIONS(search)}`)
       .then((res) => {
         return res?.data;
       })

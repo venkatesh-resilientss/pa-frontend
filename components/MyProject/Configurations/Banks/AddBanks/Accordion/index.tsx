@@ -53,7 +53,7 @@ function BankAccordion() {
         FullName: data.contactName,
         PhoneCode: parseInt(data.basicInfoCountryCode),
         CellPhone: data.basicInfoContactNumber,
-        EmailID: data.emailIDBasicInfo
+        EmailID: data.emailIDBasicInfo,
       },
       PhysicalAddress: {
         Line1: data?.physicalAddress1,
@@ -141,7 +141,7 @@ function BankAccordion() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Bank');
+        toast.error(error?.error || error?.Message || "Unable to add Bank");
       });
   };
 
@@ -265,7 +265,9 @@ function BankAccordion() {
           </AccordionItem>
 
           <AccordionItem>
-            <AccordionHeader targetId="6">Set/Series/Location Information</AccordionHeader>
+            <AccordionHeader targetId="6">
+              Set/Series/Location Information
+            </AccordionHeader>
             <AccordionBody accordionId="6">
               <OtherDetailsForm
                 control={control}
