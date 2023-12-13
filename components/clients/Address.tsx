@@ -4,102 +4,20 @@ import useSWR from "swr";
 import FormFields from "@/components/clients/FormFields";
 
 import { ClientsService } from "services";
+import { iFields, pFields } from "@/commonData";
 
 const clientService = new ClientsService();
 
 export default function Address(props) {
-  const { step, clientData } = props;
+  const { step, clientData, errors } = props;
   const [err, setErr] = useState(false);
 
-  const physicalFields = [
-    {
-      lb: "Address Line 1",
-      ph: "Enter Address",
-      typ: "text",
-      vl: "PhysicalAddress.Line1",
-      err: "Enter Address",
-    },
-    {
-      lb: "Address Line 2",
-      ph: "Enter Address",
-      typ: "text",
-      vl: "PhysicalAddress.Line2",
-      err: "",
-    },
-    {
-      lb: "City",
-      ph: "Select City",
-      typ: "text",
-      vl: "PhysicalAddress.CityName",
-      err: "Enter City Name",
-    },
-    {
-      lb: "Country",
-      ph: "Select Country",
-      typ: "select",
-      vl: "PhysicalAddress.country",
-      err: "Select Country",
-    },
-    {
-      lb: "State",
-      ph: "Select State",
-      typ: "select",
-      vl: "PhysicalAddress.state",
-      err: "Select State",
-    },
-    {
-      lb: "Zip Code",
-      ph: "Enter Zip Code",
-      typ: "number",
-      vl: "PhysicalAddress.Zipcode",
-      err: "Enter Zip Code",
-    },
-  ];
+  useEffect(() => {
+    if (errors) setErr(errors);
+  }, [errors]);
+  const physicalFields = [...pFields];
 
-  const invoiceFields = [
-    {
-      lb: "Address Line 1",
-      ph: "Enter Address",
-      typ: "text",
-      vl: "MailingAddress.Line1",
-      err: "",
-    },
-    {
-      lb: "Address Line 2",
-      ph: "Enter Address",
-      typ: "text",
-      vl: "MailingAddress.Line2",
-      err: "",
-    },
-    {
-      lb: "City",
-      ph: "Select City",
-      typ: "text",
-      vl: "MailingAddress.CityName",
-      err: "",
-    },
-    {
-      lb: "Country",
-      ph: "Select Country",
-      typ: "select",
-      vl: "MailingAddress.country",
-      err: "",
-    },
-    {
-      lb: "State",
-      ph: "Select State",
-      typ: "select",
-      vl: "MailingAddress.state",
-      err: "",
-    },
-    {
-      lb: "Zip Code",
-      ph: "Enter Zip Code",
-      typ: "number",
-      vl: "MailingAddress.Zipcode",
-      err: "",
-    },
-  ];
+  const invoiceFields = [...iFields];
 
   const getObjectValue = (obj, path) => {
     const keys = path.split(".");

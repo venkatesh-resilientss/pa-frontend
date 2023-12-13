@@ -18,7 +18,7 @@ export default function FormFields(props: any) {
   const selectStyle = {
     control: (base, state) => ({
       ...base,
-      background: "#fff",
+      background: state.isDisabled ? "#e9ecef" : "#fff",
       border: "1px solid #dee2e6",
       borderRadius: "0.375rem",
       minHeight: "40px",

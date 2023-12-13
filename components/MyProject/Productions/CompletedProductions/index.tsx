@@ -22,7 +22,7 @@ const CompletedProductions = () => {
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      background: "#fff",
+      background: state.isDisabled ? "#e9ecef" : "#fff",
       borderColor: "#9e9e9e",
       minHeight: "30px",
       height: "30px",

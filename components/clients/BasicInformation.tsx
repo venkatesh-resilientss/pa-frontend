@@ -1,46 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 import FormFields from "@/components/clients/FormFields";
 
 import { ClientsService } from "services";
+import { bIFields } from "@/commonData";
 
 const clientService = new ClientsService();
 
 export default function BasicInformation(props: any) {
-  const { step, setStep } = props;
+  const { step, setStep, errors } = props;
   const [err, setErr] = useState(false);
 
-  const fields = [
-    {
-      lb: "Client Name",
-      ph: "Enter Client Name",
-      typ: "text",
-      vl: "Name",
-      err: "Enter Client Name",
-    },
-    {
-      lb: "Client Code",
-      ph: "Enter Client Code",
-      typ: "text",
-      vl: "Code",
-      err: "Enter Client Code",
-    },
-    {
-      lb: "Client Legal Name (If different)",
-      ph: "Enter Legal Name",
-      typ: "text",
-      vl: "LegalName",
-      err: "",
-    },
-    {
-      lb: "Client Type",
-      ph: "Select",
-      typ: "select",
-      vl: "clientType",
-      err: "Select Client Type",
-    },
-  ];
+  useEffect(() => {
+    if (errors) setErr(errors);
+  }, [errors]);
+
+  const fields = [...bIFields];
 
   const { data } = useSWR("ClientTypes", () => clientService.getClientTypes());
 
@@ -58,7 +34,10 @@ export default function BasicInformation(props: any) {
     <div>
       <p className="text-black f-20 fw-600">Basic Information</p>
 
-      <FormFields {...props} {...{ fields, data, loadOptions, err, setErr, setStep }} />
+      <FormFields
+        {...props}
+        {...{ fields, data, loadOptions, err, setErr, setStep }}
+      />
     </div>
   );
 }

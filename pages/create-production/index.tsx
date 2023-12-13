@@ -1,9 +1,9 @@
 import AddProductions from "components/MyProject/Productions/AddProductions";
 
-export default function Index() {
+export default function Index({ router, clientData }) {
   return (
     <div>
-      <AddProductions />
+      <AddProductions {...{ router, clientData }} />
     </div>
   );
 }

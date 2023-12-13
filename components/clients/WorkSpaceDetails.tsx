@@ -1,46 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 import FormFields from "@/components/clients/FormFields";
 
 import { ClientsService } from "services";
+import { wFields } from "@/commonData";
 
 const clientService = new ClientsService();
 
 export default function WorkSpaceDetails(props) {
-  const { step, clientData } = props;
+  const { step, clientData, errors } = props;
   const [err, setErr] = useState(false);
 
-  const fields = [
-    {
-      lb: "Logo",
-      ph: "Choose file",
-      typ: "file",
-      vl: "LogoUrl",
-      err: "",
-    },
-    {
-      lb: "Domain",
-      ph: "Enter Client name",
-      typ: "domain",
-      vl: "Tenant.Slug",
-      err: "Enter Client name",
-    },
-    {
-      lb: "Client Admin",
-      ph: "Select Admin",
-      typ: "select",
-      vl: "clientAdmin",
-      err: "",
-    },
-    {
-      lb: "RSSL Support User",
-      ph: "Select Admin",
-      typ: "select",
-      vl: "rsslSupportUser",
-      err: "",
-    },
-  ];
+  useEffect(() => {
+    if (errors) setErr(errors);
+  }, [errors]);
+
+  const fields = [...wFields];
 
   const { data: users } = useSWR("Users", () =>
     clientData?.ID
