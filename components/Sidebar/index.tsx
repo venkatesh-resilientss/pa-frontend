@@ -27,9 +27,10 @@ const Sidebar = ({ props }) => {
       setSelectedProduction();
     }
   };
+  // const { clientID, projectID } = getSessionVariables();
+
   const [switcProduction, setSwitcProduction] = useState(false);
 
-  // const [searchText, setSearchText] = useState("");
   const authService = new AuthService();
   const clientService = new ClientsService();
   const [activeDropDown, setActiveDropDown] = useState(null);
@@ -37,13 +38,12 @@ const Sidebar = ({ props }) => {
   const [childRoute, setChildRoute] = useState(null);
   const [productionList, setProductionList] = useState(false);
   const [selectedProduction, setSelectedProduction] = useState() as any;
-  const [clickedItemIndex, setClickedItemIndex] = useState(null);
+  const [clickedItemIndex, setClickedItemIndex] = useState<number | null>(null);
 
   const [temp1, setTemp1] = useState() as any;
   const [temp2, setTemp2] = useState(null);
   const [searchText, setSearchText] = useState("");
-  const [filteredProductionData, setFilteredProductionData] = useState([]);
-
+  const [productionData, setProductionData] = useState() as any;
   const handleDropDownChange = (path) => {
     setActiveDropDown(path);
   };
@@ -51,9 +51,9 @@ const Sidebar = ({ props }) => {
     authService.getUserDetails()
   );
 
-  const { data: productionData } = useSWR("GET_PRODUCTION_LIST", () =>
-    clientService.getProductions()
-  );
+  // const { data: productionData } = useSWR("GET_PRODUCTION_LIST", () =>
+  //   clientService.getProductions(searchText)
+  // );
 
   const hasViewConfiguration = hasPermission(
     "configuration_management",
@@ -113,15 +113,59 @@ const Sidebar = ({ props }) => {
   }, [router.pathname]);
 
   useEffect(() => {
-    const filteredData = (productionData || []).filter(
-      (item) =>
-        item.Name.toLowerCase().includes(searchText.toLowerCase()) ||
-        (item.Client.Name &&
-          item.Client.Name.toLowerCase().includes(searchText.toLowerCase())) ||
-        item.Description.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredProductionData(filteredData);
-  }, [productionData, searchText]);
+    clientService.getProductions(searchText).then((res) => {
+      setProductionData(res);
+    });
+  }, [searchText]);
+
+  useEffect(() => {
+    const storedIndex = localStorage.getItem("clickedItemIndex");
+    if (storedIndex !== null) {
+      setClickedItemIndex(parseInt(storedIndex, 10));
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedSelectedProduction = localStorage.getItem("selectedProduction");
+    if (storedSelectedProduction) {
+      setSelectedProduction(JSON.parse(storedSelectedProduction));
+    }
+  }, []);
+
+  // Function to handle selection and store in localStorage
+  const handleProductionSelection = (production) => {
+    setSelectedProduction(production);
+
+    // Store the selected production in localStorage
+    localStorage.setItem("selectedProduction", JSON.stringify(production));
+  };
+
+  // Function to clear selection and remove from localStorage
+  const clearProductionSelection = () => {
+    setSelectedProduction(null);
+
+    // Remove the selected production from localStorage
+    localStorage.removeItem("selectedProduction");
+    localStorage.removeItem("clickedItemIndex");
+  };
+  // Function to handle item click
+  const handleItemClick = (item: any, index: any) => {
+    setTemp1(item);
+    setTemp2(index);
+
+    // Toggle clicked state
+    if (index !== clickedItemIndex) {
+      setSwitcProduction(!switcProduction);
+      setClickedItemIndex(index);
+
+      // Store the clicked index in localStorage
+      localStorage.setItem("clickedItemIndex", index.toString());
+    } else {
+      // If the same item is clicked again, remove from localStorage
+      localStorage.removeItem("clickedItemIndex");
+      setClickedItemIndex(null);
+    }
+  };
 
   const getPlaceholderImage = (name) => {
     const firstLetter = name ? name.charAt(0).toUpperCase() : "";
@@ -179,8 +223,9 @@ const Sidebar = ({ props }) => {
   const SideBarRoute = ({ route }) => {
     return (
       <div
-        className={`route-button my-2 ${parentRoute === route.path ? "active" : ""
-          }`}
+        className={`route-button my-2 ${
+          parentRoute === route.path ? "active" : ""
+        }`}
       >
         {showSidebar ? (
           <div
@@ -210,8 +255,8 @@ const Sidebar = ({ props }) => {
                   clickedItemIndex
                     ? `/production/${temp1?.ID}/dashboard`
                     : route.children
-                      ? ""
-                      : route.path
+                    ? ""
+                    : route.path
                 }
               >
                 <img
@@ -229,10 +274,11 @@ const Sidebar = ({ props }) => {
                   src="/icons/arrow-left.svg"
                   alt=""
                   style={{
-                    transform: `${activeDropDown === route.path
-                      ? "rotate(90deg)"
-                      : "rotate(-90deg)"
-                      }`,
+                    transform: `${
+                      activeDropDown === route.path
+                        ? "rotate(90deg)"
+                        : "rotate(-90deg)"
+                    }`,
                     transformOrigin: "center center",
                   }}
                 />
@@ -286,8 +332,9 @@ const Sidebar = ({ props }) => {
                     >
                       <Link
                         href={fullPath}
-                        className={` child-route-name ${child.path === childRoute ? "active" : ""
-                          }`}
+                        className={` child-route-name ${
+                          child.path === childRoute ? "active" : ""
+                        }`}
                       >
                         {child.name}
                       </Link>
@@ -305,8 +352,9 @@ const Sidebar = ({ props }) => {
   };
   return (
     <div
-      className={`d-flex flex-column sidebar justify-content-between ${showSidebar ? "" : "minimized"
-        }`}
+      className={`d-flex flex-column sidebar justify-content-between ${
+        showSidebar ? "" : "minimized"
+      }`}
     >
       <div className="">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
@@ -369,6 +417,7 @@ const Sidebar = ({ props }) => {
                 // setSelectedProduction();
                 // setClickedItemIndex(null);
                 setSearchText("");
+                // clearProductionSelection();
               } else {
                 setProductionList(true);
               }
@@ -379,6 +428,7 @@ const Sidebar = ({ props }) => {
                 className="d-flex align-items-center cursor-pointer flex-row"
                 onClick={() => {
                   setSearchText("");
+                  // clearProductionSelection();
                 }}
               >
                 <div className="d-flex align-items-center justify-content-center">
@@ -455,6 +505,7 @@ const Sidebar = ({ props }) => {
                   setSelectedProduction();
                   setClickedItemIndex(null);
                   setSearchText("");
+                  clearProductionSelection();
                 }}
               >
                 <Image
@@ -473,6 +524,7 @@ const Sidebar = ({ props }) => {
                       setSelectedProduction();
                       setClickedItemIndex(null);
                       setSearchText("");
+                      clearProductionSelection();
                     }}
                   >
                     <div
@@ -493,22 +545,17 @@ const Sidebar = ({ props }) => {
                 placeholder="Search Production"
                 style={{ height: "38px" }}
               />
-              {filteredProductionData ? (
+              {productionData ? (
                 <>
-                  {filteredProductionData?.map((item: any, index: any) => {
+                  {productionData?.map((item: any, index: any) => {
                     const isClicked = index === clickedItemIndex;
                     return (
                       <div
                         key={index}
-                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${isClicked ? " clicked" : ""
-                          }`}
-                        onClick={() => {
-                          setTemp1(item);
-                          setTemp2(index);
-                          if (!isClicked) {
-                            setSwitcProduction(!switcProduction);
-                          }
-                        }}
+                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
+                          isClicked ? " clicked" : ""
+                        }`}
+                        onClick={() => handleItemClick(item, index)}
                       >
                         <img
                           className="rounded-circle cursor-pointer me-1 ms-2"
@@ -521,8 +568,9 @@ const Sidebar = ({ props }) => {
                         <div className="d-flex flex-column">
                           <div className="d-flex align-items-start">
                             <p
-                              className={`home cursor-pointer mt-1 ms-2 ${item?.Name.length > 5 ? "ellipsis" : ""
-                                }`}
+                              className={`home cursor-pointer mt-1 ms-2 ${
+                                item?.Name.length > 5 ? "ellipsis" : ""
+                              }`}
                             >
                               {item.Name}
                             </p>
@@ -738,7 +786,7 @@ const Sidebar = ({ props }) => {
         backdrop="static"
         keyboard={false}
         centered
-      // dialogClassName="modal-40w"
+        // dialogClassName="modal-40w"
       >
         <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 pt-2 pb-0 ps-4">
           <Modal.Title className="mb-0 fw-bold">Are you sure?</Modal.Title>
@@ -768,6 +816,7 @@ const Sidebar = ({ props }) => {
               setProductionList(false);
               setClickedItemIndex(temp2);
               setSelectedProduction(temp1);
+              handleProductionSelection(temp1);
               sessionStorage.setItem("clientid", temp1?.Client?.ID);
               sessionStorage.setItem("projectid", temp1?.ID);
               router.push(`/production/${temp1.ID}/dashboard`);

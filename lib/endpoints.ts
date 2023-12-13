@@ -210,7 +210,7 @@ export const BANK_CONFIG_details = (id) =>
   `${tenantIdEndpoint}/bankconfigs/${id}`;
 export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
 export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;
-export const GET_PRODUCTIONS = `${withoutTenantIdEndpoint}/projects/userprojects`;
+export const GET_PRODUCTIONS=(search) => `${withoutTenantIdEndpoint}/projects/userprojects?search=${search}`;
 
 export const UPLOAD_FILE_S3 = `/s3-upload`;
 
