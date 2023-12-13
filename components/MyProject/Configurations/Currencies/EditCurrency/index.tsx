@@ -67,9 +67,8 @@ function EditCurrency() {
 
         reset();
       })
-      .catch(() => {
-        // toast.error(error?.error || error?.Message || 'Unable to edit Currency');
-        toast.error('Duplicate COA key'); // customize and edit later
+      .catch((error) => {
+        toast.error(error?.error || error?.Message || 'Unable to edit Currency');
       });
   };
 
