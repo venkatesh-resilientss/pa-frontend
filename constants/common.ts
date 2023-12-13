@@ -268,7 +268,11 @@ export const sidebarRoutesMaster = [
       {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      }
+      },
+      {
+        name: "Pay code",
+        path: "/paycode",
+      },
     ],
   },
   {
