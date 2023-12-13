@@ -245,11 +245,11 @@ function EditBudget() {
       label: budgetData?.Set?.Name,
     });
     setValue("location", {
-      value : budgetData?.Location?.ID,
-      label : budgetData?.Location?.Name
+      value: budgetData?.Location?.ID,
+      label: budgetData?.Location?.Name
     })
     setActiveStatus(budgetData?.IsActive);
-    setBudgetFileUrl(budgetData?.budgetFile);
+    setBudgetFileUrl(budgetData?.BudgetFile);
   }, [budgetData]);
 
   const onSubmit = (data) => {
