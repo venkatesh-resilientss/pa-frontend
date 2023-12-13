@@ -114,13 +114,13 @@ export const CREATE_SETS = `${withoutTenantIdEndpoint}/sets/`; //Create Sets
 export const SETS_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdEndpoint}/sets/${id}`; //Sets Details
 
-export const GET_VENDORS = `${tenantIdEndpoint}/vendors/search`; //Vendors
-export const CREATE_VENDORS = `${tenantIdEndpoint}/vendors/`; //Create vendors
+export const GET_VENDORS = `${withoutTenantIdEndpoint}/vendors/search`; //Vendors
+export const CREATE_VENDORS = `${withoutTenantIdEndpoint}/vendors/`; //Create vendors
 
-export const DELETE_VENDORS = (id: any) => `${tenantIdEndpoint}/vendors/${id}`; //DELETE vendors
-export const EDIT_VENDORS = (id: any) => `${tenantIdEndpoint}/vendors/${id}`; //EDIT Vendors
+export const DELETE_VENDORS = (id: any) => `${withoutTenantIdEndpoint}/vendors/${id}`; //DELETE vendors
+export const EDIT_VENDORS = (id: any) => `${withoutTenantIdEndpoint}/vendors/${id}`; //EDIT Vendors
 export const VENDORS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/vendors/${id}`; //Vendors Details
+  `${withoutTenantIdEndpoint}/vendors/${id}`; //Vendors Details
 
 export const GET_STATES = `${withoutTenantIdEndpoint}/states/`; //States
 export const DELETE_STATES = (id: any) =>

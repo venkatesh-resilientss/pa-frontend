@@ -71,7 +71,8 @@ function EditTaxCode() {
       name: data.taxcodename,
       code: data.taxcode,
       description: data.description,
-      countryID: parseInt(data.country)
+      countryID: parseInt(data.country.value),
+      IsActive : activeStatus
     };
 
     taxCodeService

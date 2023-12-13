@@ -42,7 +42,7 @@ function EditBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result.map((item) => ({
+        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -87,7 +87,7 @@ function EditBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result.map((item) => ({
+        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -135,7 +135,7 @@ function EditBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -161,7 +161,7 @@ function EditBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -179,7 +179,7 @@ function EditBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -204,7 +204,7 @@ function EditBudget() {
           projectID: projectID,
         }
       );
-      const options = res?.result.map((item) => ({
+      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -221,7 +221,7 @@ function EditBudget() {
     setValue,
     formState: { errors },
   } = useForm();
-  const [budgetFile, setBudgetFile] = useState(null);
+  // const [budgetFile, setBudgetFile] = useState(null);
 
   const { data: budgetData } = useSWR(id ? ["STATE_DETAILS", id] : null, () =>
     budgetService.budgetDetails(id)
@@ -261,10 +261,10 @@ function EditBudget() {
       SeriesID: parseInt(data?.series?.value),
       SetID: parseInt(data?.set?.value),
       LocationID: parseInt(data?.location?.value),
-      file: budgetFile,
+      // file: budgetFile,
       clientID,
       projectID,
-      isActive: activeStatus,
+      IsActive: activeStatus,
     };
 
     // console.log(backendFormat);
@@ -341,6 +341,8 @@ function EditBudget() {
                   placeholder="Budget Name"
                   invalid={errors.name && true}
                   {...field}
+                  style={{ fontSize : '1rem'}}
+                  disabled={true}
                 />
               )}
             />
@@ -363,6 +365,8 @@ function EditBudget() {
                   placeholder="Budget Code"
                   invalid={errors.code && true}
                   {...field}
+                  style={{ fontSize : '1rem'}}
+                  disabled={true}
                 />
               )}
             />
@@ -389,6 +393,7 @@ function EditBudget() {
                   loadOptions={loadCurrencyOptions}
                   placeholder="Select Currency"
                   defaultOptions={initialCurrencyOptions}
+                  isDisabled={true}
                 />
               )}
             />
@@ -418,6 +423,7 @@ function EditBudget() {
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
                   defaultOptions={initialSeriesOptions}
+                  isDisabled={true}
                 />
               )}
             />
@@ -447,6 +453,7 @@ function EditBudget() {
                   loadOptions={loadLocationsOptions}
                   placeholder="Select Location"
                   defaultOptions={initialLocationOptions}
+                  isDisabled={true}
                 />
               )}
             />
@@ -476,6 +483,7 @@ function EditBudget() {
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
                   defaultOptions={inititalSetOptions}
+                  isDisabled={true}
                 />
               )}
             />
@@ -489,38 +497,17 @@ function EditBudget() {
             )}
           </Col>
           <Col xl="4" className="mt-2">
-            <Label className="form-lable-font">
-              Upload Budget File <span className="required">*</span>
-            </Label>
-            <Controller
-              name="budgetfile"
-              control={control}
-              render={() => (
-                <input
-                  type="file"
-                  accept=".txt"
-                  onChange={(e) => {
-                    setBudgetFile(e.target.files[0]);
-                  }}
-                />
-              )}
-            />
-            <br />
-            {!budgetFile && budgetFileUrl && (
-              <span
-                style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
-              >
-                Budget file is required
-              </span>
-            )}
             {budgetFileUrl ? (
-              <a
-                onClick={() => {
-                  window.open(budgetFileUrl);
-                }}
-              >
+              <>
+              <span>
+                Uploaded Budget file: 
+              </span>
+              <span className="link-primary cursor-pointer text-decoration-underline ps-2" onClick={() => {
+                window.open(budgetFileUrl);
+              }}>
+                
                 Download File
-              </a>
+              </span></>
             ) : (
               <></>
             )}

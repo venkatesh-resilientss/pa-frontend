@@ -32,7 +32,7 @@ function AddChartOfAccounts() {
         );
         const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Name} - ${item.Code}`,
         }));
         setInitialcoaOptions(options);
       } catch (error) {
@@ -56,7 +56,7 @@ function AddChartOfAccounts() {
       );
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Name} - ${item.Code}`,
       }));
 
       callback(options);
