@@ -49,12 +49,12 @@ export const ALL_PRODUCTION_CARDS = `${withoutTenantIdEndpoint}/production-overv
 
 export const DELETE_USER = (id: any) => `${tenantIdEndpoint}/users/${id}`; //Users Details
 
-export const GET_BANKS = `${tenantIdEndpoint}/banks/search`; //Banks
-export const CREATE_BANK = `${tenantIdEndpoint}/banks/`; //Create banks
-export const DELETE_BANKS = (id: any) => `${tenantIdEndpoint}/banks/${id}`; //DELETE banks
-export const EDIT_BANKS = (id: any) => `${tenantIdEndpoint}/banks/${id}`; //EDIT banks
+export const GET_BANKS = `${withoutTenantIdEndpoint}/banks/search`; //Banks
+export const CREATE_BANK = `${withoutTenantIdEndpoint}/banks/`; //Create banks
+export const DELETE_BANKS = (id: any) => `${withoutTenantIdEndpoint}/banks/${id}`; //DELETE banks
+export const EDIT_BANKS = (id: any) => `${withoutTenantIdEndpoint}/banks/${id}`; //EDIT banks
 export const BANKS_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/banks/${id}`; // Bank Details
+  `${withoutTenantIdEndpoint}/banks/${id}`; // Bank Details
 
 export const GET_ROLES = `${withoutTenantIdEndpoint}/roles/`; //Users
 
