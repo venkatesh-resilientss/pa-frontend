@@ -142,7 +142,7 @@ const ProjectCard = ({ data }) => {
               <div className="d-flex gap-2">
                 
                  <div className="d-flex gap-2">
-              <img src="production_type.svg" alt="" />
+              <img src="production_type.svg" alt="custom production" style={{width:"15px"}} />
               Production Type
             </div>
               </div>

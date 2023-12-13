@@ -62,7 +62,7 @@ const ClientsCard = ({ data }) => {
               }}
             >
               <img src="user.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.contact.full_name ? data.contact.full_name : "-"}</p>
+              <p style={{fontSize:"12px"}}>{data.contact.first_name ? data.contact.first_name : "-"}</p>
             </div>
             <div
               style={{
@@ -86,7 +86,7 @@ const ClientsCard = ({ data }) => {
               }}
             >
               <img src="mail.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.contact.full_name ? data.contact.full_name : "-"}</p>
+              <p style={{fontSize:"12px"}}>{data.contact.email_id ? data.contact.email_id : "-"}</p>
             </div>
         </div>
 
