@@ -124,8 +124,8 @@ function Clients({ router, user }) {
           tempObj?.PhysicalAddress?.StateID &&
           tempObj?.PhysicalAddress?.State?.Name
             ? {
-                label: tempObj?.PhysicalAddress?.state_name,
-                value: tempObj?.PhysicalAddress?.State?.Name,
+                label: tempObj?.PhysicalAddress?.State?.Name,
+                value: tempObj?.PhysicalAddress?.StateID,
               }
             : null;
 
