@@ -94,7 +94,7 @@ class BudgetService extends APIService {
       formData.append(key,data[key]);
     })
     return this
-      .post(CREATE_BUDGET, formData,{'Content-Type': 'multipart/form-data',})
+      .put(BUDGETS_DETAIL_ENDPOINT(id), formData,{'Content-Type': 'multipart/form-data',})
       .then((response) => {
         return response.data;
       })
