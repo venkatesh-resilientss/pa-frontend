@@ -23,17 +23,19 @@ import NoDataPage from "@/components/NoDataPage";
 import { useEffect, useState } from "react";
 import { AuthService, ForgotPasswordService } from "services";
 import { toast } from "react-toastify";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+
 const authService = new AuthService();
 const forgotPassword = new ForgotPasswordService();
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [tableData, setTableData] = useState() as any
-  const [loading, setLoading] = useState() as any
-  const [pageNumber, setPageNumber] = useState(1) as any
-  const [userDetails, setUserDetails] = useState() as any
-  const [pageLimit] = useState(10) as any
+  const [tableData, setTableData] = useState() as any;
+  const [loading, setLoading] = useState() as any;
+  const [pageNumber, setPageNumber] = useState(1) as any;
+  const [userDetails, setUserDetails] = useState() as any;
+  const [pageLimit] = useState(10) as any;
 
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
@@ -44,35 +46,32 @@ const AllRoleTable = () => {
     "edit_user"
   );
 
-
   useEffect(() => {
     authService.getUserDetails().then((response) => {
-      setUserDetails(response?.data)
-    })
-  }, [])
-
-
+      setUserDetails(response?.data);
+    });
+  }, []);
 
   useEffect(() => {
     if (userDetails) {
-      setLoading(true)
-      const offfset = (pageNumber - 1) * pageLimit
+      setLoading(true);
+      const offfset = (pageNumber - 1) * pageLimit;
       const queryParams = {
         search: searchText,
         limit: pageLimit,
         offset: offfset,
       };
-      userService.getUsers(queryParams).then((response) => {
-        setTableData(response)
-        setLoading(false)
-      }).catch((e) => {
-        console.error(e)
-      })
-
+      userService
+        .getUsers(queryParams)
+        .then((response) => {
+          setTableData(response);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
-
-  }, [searchText, pageNumber, userDetails])
-
+  }, [searchText, pageNumber, userDetails]);
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
@@ -128,16 +127,18 @@ const AllRoleTable = () => {
   //   userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
   // );
 
-
   const resendPasswordLink = (data) => {
-    const payload = { email: data.email }
-    forgotPassword.forgotPassword(payload).then(() => {
-      toast.success("Password reset link has been sent to registred email.")
-    }).catch((e) => {
-      console.error(e)
-      toast.error("something went wrong")
-    })
-  }
+    const payload = { email: data.email };
+    forgotPassword
+      .forgotPassword(payload)
+      .then(() => {
+        toast.success("Password reset link has been sent to registred email.");
+      })
+      .catch((e) => {
+        console.error(e);
+        toast.error("something went wrong");
+      });
+  };
 
   const StateBadge = (props) => {
     const stateDir = {
@@ -151,7 +152,6 @@ const AllRoleTable = () => {
       />
     );
   };
-
 
   const ActionsButton = (props) => {
     const id = props.value;
@@ -187,7 +187,7 @@ const AllRoleTable = () => {
               tag="a"
               className="w-100 cursor-pointer"
               onClick={() => {
-                resendPasswordLink(props.data)
+                resendPasswordLink(props.data);
               }}
             >
               <Action
@@ -258,10 +258,32 @@ const AllRoleTable = () => {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        return params.value.map((ele) => ele);
+        const clientNames = params.value;
+        const arrayLength = clientNames ? clientNames.length : 0;
+        let tooltipContent;
+
+        if (arrayLength === 0) {
+          tooltipContent = "clientNames";
+        } else if (arrayLength > 1) {
+          tooltipContent = `clientNames + ${arrayLength}`;
+        } else {
+          // If arrayLength is exactly 1, just return the single clientName
+          tooltipContent = clientNames[0];
+        }
+        return (
+          <>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip id="tooltip-engine">{tooltipContent}</Tooltip>}
+            >
+              <p>{tooltipContent}</p>
+            </OverlayTrigger>
+          </>
+        );
       },
       unSortIcon: true,
     },
+
     // {
     //   headerName: "Created By",
     //   field: "createdBy",
@@ -303,7 +325,6 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-
 
   return (
     <>
@@ -382,7 +403,9 @@ const AllRoleTable = () => {
             <div>
               <NoDataPage
                 // buttonName={"Create Set"}
-                buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
+                buttonName={
+                  hasCreateUseerPermission ? "Create User" : "No button"
+                }
                 buttonLink={"/settings/add-user"}
               />
             </div>
