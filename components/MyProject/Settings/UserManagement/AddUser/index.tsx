@@ -227,6 +227,7 @@ function AddUser() {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
+          ProjectIDs: []
         };
       });
       userPayload.Meta.userCPReference = userPreferences;

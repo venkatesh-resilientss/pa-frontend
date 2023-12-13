@@ -13,7 +13,7 @@ import Image from "next/image";
 import { UsersService } from "services";
 import moment from "moment";
 import { Plus } from "react-feather";
-import GridTable from "components/dataTable/table";
+import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { AuthService, ForgotPasswordService } from "services";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+// import GridTable from "@/components/dataTable/GridWithPagination";
 
 const authService = new AuthService();
 const forgotPassword = new ForgotPasswordService();
@@ -192,7 +193,7 @@ const AllRoleTable = () => {
             >
               <Action
                 icon={"/icons/edit_square.svg"}
-                name={"Reset Link"}
+                name={"Resend Password Link"}
                 action={undefined}
               />
             </DropdownItem>
@@ -208,8 +209,8 @@ const AllRoleTable = () => {
         <div className="rounded-circle">
           <img
             src={
-              props.data.profile_image
-                ? props.data.profile_image
+              props.data?.profile_image
+                ? props.data?.profile_image
                 : "/default.svg"
             }
             alt="Profile"
@@ -218,9 +219,9 @@ const AllRoleTable = () => {
           />
         </div>
         <div>
-          <p style={{ fontSize: "14px" }}>{props.data.adminName}</p>
+          <p style={{ fontSize: "14px" }}>{props.data?.adminName}</p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
-            {props.data.email}
+            {props.data?.email}
           </p>
         </div>
       </div>
@@ -236,18 +237,18 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params.data.adminName}${params.data.email}`;
+        const res = `${params.adminName}${params.email}`;
         return res;
       },
     },
     {
       headerName: "Role",
-      field: "rollName",
+      field: "roleName",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params) => params.data.roleName,
+      // cellRenderer: (params) => params.roleName,
       unSortIcon: true,
     },
     {
@@ -284,18 +285,18 @@ const AllRoleTable = () => {
       unSortIcon: true,
     },
 
-    // {
-    //   headerName: "Created By",
-    //   field: "createdBy",
-    //   sortable: true,
-    //   resizable: true,
-    //   unSortIcon: true,
-    //   cellStyle: { fontSize: "16px", fontWeight: "400" },
-    //   headerClass: "custom-header-class",
-    //   cellRenderer: (params) => {
-    //     return params.value.createdBy
-    //   },
-    // },
+    {
+      headerName: "Created By",
+      field: "CreatedBy",
+      sortable: true,
+      resizable: true,
+      unSortIcon: true,
+      cellStyle: { fontSize: "16px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value
+      },
+    },
     {
       headerName: "Created On",
       field: "createdOn",
@@ -398,6 +399,7 @@ const AllRoleTable = () => {
                 setPageNumber={setPageNumber}
                 setLoading={setLoading}
               />
+
             </div>
           ) : (
             <div>

@@ -53,15 +53,15 @@ function BankAccordion() {
         FullName: data.contactName,
         PhoneCode: parseInt(data.basicInfoCountryCode),
         CellPhone: data.basicInfoContactNumber,
-        EmailID: data.emailIDBasicInfo
+        EmailID: data.emailIDBasicInfo,
       },
       PhysicalAddress: {
-        Line1: data.physicalAddress1,
-        Line2: data.physicalAddress2,
-        CityName: data.physicalAddressCity,
-        StateId: parseInt(data.physicalAddressState.value),
-        CountryId: parseInt(data.physicalAddressState.country.ID),
-        Zipcode: parseInt(data.physicalAddressPostalCode),
+        Line1: data?.physicalAddress1,
+        Line2: data?.physicalAddress2,
+        CityName: data?.physicalAddressCity,
+        StateId: parseInt(data?.physicalAddressState?.value),
+        CountryId: parseInt(data?.physicalAddressState?.country?.ID),
+        Zipcode: parseInt(data?.physicalAddressPostalCode),
       },
       MailingAddress: {
         Line1: data.mailingAddress1,
@@ -91,11 +91,11 @@ function BankAccordion() {
           // PositivePayEftCopies: parseInt(data.PPeftCopies),
         },
       },
-      SeriesId: parseInt(data.series.value),
-      SetId: parseInt(data.set.value),
-      LocationId: parseInt(data.location.value),
-      CurrencyId: parseInt(data.currency.value),
-      CountryId: parseInt(data.physicalAddressState.country.ID),
+      SeriesId: parseInt(data.series?.value),
+      SetId: parseInt(data.set?.value),
+      LocationId: parseInt(data.location?.value),
+      CurrencyId: parseInt(data.currency?.value),
+      CountryId: parseInt(data.physicalAddressState?.country?.ID),
       // PrimaryContactId: 1,
       // SecondaryContactId: 1,
       DefaultAmountCash: parseFloat(data.defaultAccountCash),
@@ -141,7 +141,7 @@ function BankAccordion() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Bank');
+        toast.error(error?.error || error?.Message || "Unable to add Bank");
       });
   };
 
@@ -265,7 +265,9 @@ function BankAccordion() {
           </AccordionItem>
 
           <AccordionItem>
-            <AccordionHeader targetId="6">Set/Series/Location Information</AccordionHeader>
+            <AccordionHeader targetId="6">
+              Set/Series/Location Information
+            </AccordionHeader>
             <AccordionBody accordionId="6">
               <OtherDetailsForm
                 control={control}
