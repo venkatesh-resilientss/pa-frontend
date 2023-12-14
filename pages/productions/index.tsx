@@ -209,6 +209,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Code?.charAt(0).toUpperCase() +
+          params?.data?.Code?.slice(1)
+        );
+      },
     },
     {
       headerName: "Production Name",
@@ -217,6 +223,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Name?.charAt(0).toUpperCase() +
+          params?.data?.Name?.slice(1)
+        );
+      },
     },
     {
       headerName: "Production Type",
@@ -225,6 +237,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.ProjectType?.Name?.charAt(0).toUpperCase() +
+          params?.data?.ProjectType?.Name?.slice(1)
+        );
+      },
     },
     {
       headerName: "Client",
@@ -233,6 +251,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Client?.Name.charAt(0).toUpperCase() +
+          params?.data?.Client?.Name.slice(1)
+        );
+      },
     },
     {
       headerName: "Last Payroll Date",
@@ -250,6 +274,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
+      // cellRenderer: (params) => {
+      //   return (
+      //     params?.data?.LabourType.charAt(0).toUpperCase() +
+      //     params?.data?.LabourType.slice(1)
+      //   );
+      // },
     },
     {
       headerName: "Created By",
@@ -257,9 +287,11 @@ export default function Productions({ router, user }) {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },

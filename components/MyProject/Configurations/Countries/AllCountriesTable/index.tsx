@@ -37,19 +37,18 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
-  
+  const hasUploadConfigurationPermission =
+    hasPermission("", "bulk_upload") && hasCreateConfiguration;
+
   const dispatch = useDispatch();
 
   const fetchData = async (pageNumber) => {
     try {
-      const response = await countryService.getCountries(
-        {
-          search: searchText,
-          limit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
+      const response = await countryService.getCountries({
+        search: searchText,
+        limit: recordsPerPage,
+        offset: pageNumber,
+      });
       const data = response.data; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
@@ -128,6 +127,18 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "Country Name",
@@ -136,6 +147,12 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Name.charAt(0).toUpperCase() +
+          params?.data?.Name.slice(1)
+        );
+      },
     },
 
     {
@@ -144,9 +161,11 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },
@@ -250,7 +269,6 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
                   </Button>
                 )}
 
-               
                 {hasCreateConfiguration && (
                   <Button
                     style={{

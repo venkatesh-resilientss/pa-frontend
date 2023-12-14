@@ -178,15 +178,23 @@ export default function Clients({ router, user }) {
               />
             ) : (
               <div className="img-div-30">
-                {(params?.data?.Name || "").charAt(0).toUpperCase()}
+                {(params?.data?.Name || "").charAt(0).toUpperCase() +
+                  params?.data?.Name?.slice(1)}
               </div>
             )}
             <div className="d-flex flex-column" style={{ gap: "3px" }}>
               <div className="m-auto fw-bolder">
                 {params?.data?.Company.name}
               </div>
-              <div className="">{params?.data?.Name}</div>
-              <div className="">{params?.data?.ClientAdmin?.email} &nbsp; </div>
+              <div className="">
+                {params?.data?.Name.charAt(0).toUpperCase() +
+                  params?.data?.Name?.slice(1)}
+              </div>
+              <div className="">
+                {params?.data?.ClientAdmin?.email.charAt(0).toUpperCase() +
+                  params?.data?.ClientAdmin?.email?.slice(1)}
+                &nbsp;{" "}
+              </div>
             </div>
           </div>
         );
@@ -215,9 +223,11 @@ export default function Clients({ router, user }) {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.first_name?.slice(1) || "")}
           </div>
         );
       },

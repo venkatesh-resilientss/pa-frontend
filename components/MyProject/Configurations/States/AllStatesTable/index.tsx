@@ -59,6 +59,19 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
     }
   };
 
+  function myComparator(value1, value2) {
+    if (value1 === null && value2 === null) {
+      return 0;
+    }
+    if (value1 === null) {
+      return -1;
+    }
+    if (value2 === null) {
+      return 1;
+    }
+    return value1 - value2;
+  }
+
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -149,6 +162,18 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "State Name",
@@ -158,6 +183,11 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      comparator: myComparator,
+
+      valueFormatter: (params) =>
+        params?.data?.Name?.charAt(0).toUpperCase() +
+        params?.data?.Name?.slice(1),
     },
     {
       headerName: "Country",
@@ -167,6 +197,16 @@ const AllStatesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      comparator: myComparator,
+
+      cellRenderer: (params: any) => {
+        return (
+          <>
+            {params?.data?.Country?.Name.charAt(0).toUpperCase() +
+              params?.data?.Country?.Name.slice(1)}
+          </>
+        );
+      },
     },
     {
       headerName: "Created By",
