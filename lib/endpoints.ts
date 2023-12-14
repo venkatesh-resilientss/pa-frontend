@@ -121,12 +121,12 @@ export const EDIT_VENDORS = (id: any) => `${tenantIdEndpoint}/vendors/${id}`; //
 export const VENDORS_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/vendors/${id}`; //Vendors Details
 
-export const GET_STATES = `${tenantIdEndpoint}/states/`; //States
-export const DELETE_STATES = (id: any) => `${tenantIdEndpoint}/states/${id}`; //DELETE states
-export const EDIT_STATES = (id: any) => `${tenantIdEndpoint}/states/${id}`; //EDIT States
-export const CREATE_STATES = `${tenantIdEndpoint}/states/`; //Create States
+export const GET_STATES = `${withoutTenantIdEndpoint}/states/`; //States
+export const DELETE_STATES = (id: any) => `${withoutTenantIdEndpoint}/states/${id}`; //DELETE states
+export const EDIT_STATES = (id: any) => `${withoutTenantIdEndpoint}/states/${id}`; //EDIT States
+export const CREATE_STATES = `${withoutTenantIdEndpoint}/states/`; //Create States
 export const STATES_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/states/${id}`; //States Details
+  `${withoutTenantIdEndpoint}/states/${id}`; //States Details
 
 export const GET_TAXCODES = `${tenantIdEndpoint}/taxcodes/`; //TaxCodes
 export const DELETE_TAXCODES = (id: any) =>
@@ -193,6 +193,9 @@ export const UPLOAD_SERIES_LIST = `${tenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 export const UPLOAD_COA_LIST = `${tenantIdEndpoint}/coaaccounts/upload`;
+export const UPLOAD_OCCUPATIONCODES_LIST = `${tenantIdEndpoint}/occupationCode/upload`;
+export const UPLOAD_EMPLOYEETYPE_LIST = `${tenantIdEndpoint}/employeetypes/upload`;
+export const UPLOAD_WCCLASSCODES_LIST = `${tenantIdEndpoint}/wc-class-code/upload`;
 
 export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
@@ -242,3 +245,31 @@ export const PROJECT_DETAILS = (id: any) =>
 export const GET_ALL_USERS = `${withoutTenantIdEndpoint}/users/`; //get Users
 
 export const GET_ALL_PROJECTS = `${withoutTenantIdEndpoint}/projects/`; //Projects
+
+//EMPLOYEETYPES ENDPOINTS
+export const GET_EMPLOYEETYPES = `${tenantIdEndpoint}/employee-type/?limit=${100}&offset=0`; //Employeetypes
+export const CREATE_EMPLOYEETYPE = `${tenantIdEndpoint}/employee-type/`; //Create Employeetypes
+export const DELETE_EMPLOYEETYPE = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`; //DELETE Employeetypes
+export const EDIT_EMPLOYEETYPE = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`; //EDIT Employeetypes
+export const EMPLOYEETYPES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`;
+
+//OCCUPATIONCODES ENDPOINTS
+export const GET_OCCUPATIONCODES = `${tenantIdEndpoint}/occupationCode/?limit=${100}&offset=0`; //occupationCode
+export const CREATE_OCCUPATIONCODE = `${tenantIdEndpoint}/occupationCode/`; //Create occupationCode
+export const DELETE_OCCUPATIONCODE = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`; //DELETE occupationCode
+export const EDIT_OCCUPATIONCODE = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`; //EDIT occupationCode
+export const OCCUPATIONCODES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`;
+
+//WCCLASSCODES ENDPOINTS
+export const GET_WCCLASS = `${tenantIdEndpoint}/wc-class/?limit=${100}&offset=0`; //wc-class-code
+export const CREATE_WCCLASS = `${tenantIdEndpoint}/wc-class/`; //Create wc-class-code
+export const DELETE_WCCLASS = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`; //DELETE wc-class-code
+export const EDIT_WCCLASS = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`; //EDIT wc-class-code
+export const WCCLASS_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`;
+
+//WCCODES ENDPOINTS
+export const GET_WCCLASSCODES = `${tenantIdEndpoint}/wc-class-code/?limit=${100}&offset=0`; //wc-code
+export const CREATE_WCCLASSCODE = `${tenantIdEndpoint}/wc-class-code/`; //Create wc-code
+export const DELETE_WCCLASSCODE = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`; //DELETE wc-code
+export const EDIT_WCCLASSCODE = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`; //EDIT wc-code
+export const WCCLASSCODES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`;

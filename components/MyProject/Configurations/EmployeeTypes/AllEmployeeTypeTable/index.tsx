@@ -7,35 +7,36 @@ import {
 import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import React, {useState} from "react";
-import { OccupationcodeService } from "services";
+import { EmployeetypesService } from "services";
 import useSWR from "swr";
 import CustomBadge from "components/Generic/CustomBadge";
 
-const AllOccupationCodesTable = () => {
+const AllEmployeeTypeTable = () => {
   const router = useRouter();
-  const occupationcodeService = new OccupationcodeService();
   const [searchText, setSearchText] = useState("");
+  const employeeTypesService = new EmployeetypesService();
 
   const { data: rowData } = useSWR(
-    ["LIST_OCCUPATIONCODES", searchText],
-    () => occupationcodeService.getOccupationcodes()
+    ["LIST_EMPLOYEETYPES", searchText],
+    () => employeeTypesService.getEmployeetypes()
   );
- 
+
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-        <div
-          onClick={() => router.push(`/configurations/edit-occupation-codes/${props.data?.ID}`)}
-          className="cursor-pointer occupation-edit"
-        >
-          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} className="occpation-edit-img" />
-        </div>
+          <div
+           onClick={() =>router.push(`/configurations/edit-employee-list/${props.data?.ID}`)}
+            className="cursor-pointer"
+            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
+          >
+            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
+          </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-        {/* <div
+          {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -46,6 +47,7 @@ const AllOccupationCodesTable = () => {
       </div>
     );
   };
+
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -60,48 +62,18 @@ const AllOccupationCodesTable = () => {
   };
   const columnDefs = [
     {
-      headerName: "OCC Code",
+      headerName: "Employee Type",
       field: "Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Description",
+      headerName: "Employee Description",
       field: "Description",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
-    },
-    {
-      headerName: "WC Class",
-      field: "wcClassID",
-      sortable: true,
-      resizable: true,
-      headerClass: "custom-header-class",
-    },
-
-    {
-      headerName: "Employee Type",
-      field: "EmployeeType.Code",
-      sortable: true,
-      resizable: true,
-      headerClass: "custom-header-class",
-    },
-
-    {
-      headerName: "OFF Production",
-      field: "offProduction",
-      sortable: true,
-      resizable: true,
-      headerClass: "custom-header-class",
-      cellRenderer: (params) => {
-        return params.value ? (
-          <span style={{ color: '#0A9B58' }}>&#10004;</span>
-        ) : (
-          <span style={{ color: 'red' }}>&#10008;</span>
-        );
-      }
     },
     {
       headerName: "Status",
@@ -120,39 +92,41 @@ const AllOccupationCodesTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  
+
   return (
     <div>
       <div className="section mt-4">
         <Card
-          className="mt-2 occupation-list"
+          className="mt-2 agents-list"
         >
           <CardBody>
             <div className="d-flex justify-content-between">
               <div>
                 <div
-                  className="m-2 occupation-list-header"
+                  className="m-2 agents-header"
                 >
-                  All Occupation Codes
+                  Employee Type List
                 </div>
               </div>
 
               <div
-                className="d-flex align-items-center gap-10"
+                className="d-flex align-items-center"
+                style={{ gap: "10px" }}
               >
+
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
-                  className="searchConfig occupation-search"
+                  className="searchConfig agents-search"
                   placeholder="Search..."
                 />
 
                 <Button
-                  onClick={() => router.push(`/configurations/add-occupation-codes`)}
-                  className="occupation-add-button"
+                  onClick={() => router.push(`/configurations/add-employee-type`)}
+                  className="agents-new-button"
                 >
                   <Image
-                    className="occupation-plus-icon"
+                    className="agents-plus-image"
                     src={plusWhiteIcon}
                     alt="plus-icon"
                   />{" "}
@@ -163,7 +137,7 @@ const AllOccupationCodesTable = () => {
                   "create_configuration"
                 ) && (
                   <Button
-                    onClick={() => router.push(`/configurations/add-occupation-codes`)}
+                    onClick={() => router.push(`/configurations/add-series`)}
                     style={{
                       height: "38px",
                       backgroundColor: "#00AEEF",
@@ -185,19 +159,21 @@ const AllOccupationCodesTable = () => {
           </CardBody>
         </Card>
       </div>
-
-      <div className="mt-3">
-      <GridTable
-          rowData={rowData}
-          columnDefs={columnDefs}
-          pageSize={10}
-          searchText={searchText}
-        />
-      </div>
-
-
+      
+        <div className="mt-2">
+          <GridTable
+            rowData={rowData}
+            columnDefs={columnDefs}
+            pageSize={7}
+            searchText={searchText}
+            pagination={true}
+            paginationPageSize={1}
+          />
+        </div>
+     
+       
     </div>
   );
 };
 
-export default AllOccupationCodesTable;
+export default AllEmployeeTypeTable;

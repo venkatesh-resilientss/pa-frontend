@@ -247,8 +247,6 @@ export const sidebarRoutesMaster = [
         name: "Departments",
         path: "/departments",
       },
-
-
       {
         name: "States",
         path: "/states",
@@ -260,10 +258,19 @@ export const sidebarRoutesMaster = [
       {
         name: "Occupation Codes",
         path: "/OccupationCodes",
+      },
+      {
+        name: "WC Class",
+        path: "/wcclass",
+      },
+      {
+        name: "Employee Types",
+        path: "/employee-type",
+      },
+      {
+        name: "WC Class Codes",
+        path: "/wcclasscodes",
       }
-
-
-
     ],
   },
   {
@@ -437,7 +444,19 @@ export const sidebarRoutesNonStaff = [
       {
         name: "Occupation Codes",
         path: "/OccupationCodes",
-      }
+      },
+      {
+        name: "Employee Types",
+        path: "/employee-type",
+      },
+      {
+        name: "WC Class",
+        path: "/wcclass",
+      },
+      {
+        name: "WC Class Codes",
+        path: "/wcclasscodes",
+      },
 
     ],
   },

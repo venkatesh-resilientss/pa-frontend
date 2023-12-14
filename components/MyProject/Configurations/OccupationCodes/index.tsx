@@ -1,10 +1,9 @@
 // import React from "react";
 import AllOccupationCodesTable from "./AllOccupationCodesTable";
-
 function OccupationCodes() {
   return (
     <div>
-      <AllOccupationCodesTable />
+      <AllOccupationCodesTable/>
     </div>
   );
 }
