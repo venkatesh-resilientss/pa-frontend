@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "reactstrap";
 import Image from "next/image";
 import { AiFillCaretRight } from "react-icons/ai";
+import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
 import { getLabel } from "@/commonFunctions/common";
@@ -10,7 +11,7 @@ const ClientsCard = ({ data }) => {
   return (
     <Card
       style={{ padding: "10px", borderRadius: "10px", gap: "4px" }}
-      className="p-3"
+      className="p-4"
     >
       <div className="d-flex">
         <div className={` rounded-circle  ${"bg-light-secondary"}`}>
@@ -31,10 +32,18 @@ const ClientsCard = ({ data }) => {
               {getLabel(data.name || "-")}
             </div>
             <Link href={`/clients/${data.id}`}>
-              <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 f-10 py-1 px-2">
-                <img src="/view_details.svg" alt="view" />
-                <p className="f-14">View Details</p>
-                <AiFillCaretRight style={{ marginBottom: "1px" }} />
+              <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
+                <div>
+                  <Image
+                    src={carbonDecumentView}
+                    style={{ height: "11px", width: "11px" }}
+                    alt={"view details"}
+                  />
+                </div>
+                <div>View Details</div>
+                <div>
+                  <AiFillCaretRight style={{ marginBottom: "1px" }} />
+                </div>
               </div>
             </Link>
           </div>
@@ -46,14 +55,16 @@ const ClientsCard = ({ data }) => {
                 alt="user"
                 style={{ marginRight: "5px", width: "15px" }}
               />
-              <p className="f-12">{getLabel(data.client_admin.name || "-")}</p>
+              <p className="f-12 f-clamp-2">
+                {getLabel(data.client_admin.name || "-")}
+              </p>
             </div>
-            <div className="f-14 clr-dblack" style={{ marginLeft: "90px" }}>
+            <div className="f-14 clr-dblack">
               No. of Active Productions:{" "}
               {data.projects_count ? data.projects_count : "0"}
             </div>
           </div>
-          <div className="d-flex gap-4 justify-content-between mt-2">
+          <div className="d-flex gap-4 justify-content-between mt-1">
             <div
               className="text-black d-flex align-items-center"
               style={{
