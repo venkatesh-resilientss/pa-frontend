@@ -14,6 +14,7 @@ import {
   GET_ALL_PROJECTS_LIST,
   GET_CLIENTS_LIST,
   UPDATE_PRODUCTION,
+  GET_ALL_USERS,
 } from "../lib/endpoints";
 
 class ProjectService extends APIService {
@@ -28,6 +29,15 @@ class ProjectService extends APIService {
   }
   getClientUsers(id: any, queries: any): Promise<any> {
     return this.get(`${GET_CLIENT_USERS(id)}${queries}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((error: any) => {
+        throw error?.response?.data;
+      });
+  }
+  getUsers(queries: any): Promise<any> {
+    return this.get(`${GET_ALL_USERS}${queries}`)
       .then((res) => {
         return res?.data;
       })

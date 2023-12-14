@@ -12,7 +12,7 @@ import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { CreateClientButton } from "@/components/clients";
 import NoClientPage from "@/components/clients/NoClientPage";
-import GridTable from "@/components/dataTable/GridWithPagination";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
 
@@ -25,13 +25,13 @@ export default function Clients({ router, user }) {
   }) as any;
   const [clFilters, setClFilters] = useState([]) as any;
   const [swFilters, setSwFilters] = useState([]) as any;
-  const defaultLimit = 10;
+
   const [filters, setFilters] = useState<any>({
     dateStart: "",
     dateEnd: "",
     clients: [],
     softwares: [],
-    limit: defaultLimit,
+    limit: 10,
     offset: 0,
     search: "",
     status: "",
@@ -95,10 +95,8 @@ export default function Clients({ router, user }) {
   useEffect(() => {
     const getData = async () => {
       try {
-        // const offset = (filters.pageNumber - 1) * filters.limit;
         const payload = {
           ...filters,
-          // offset,
           clients: filters.clients.map((e) => e.value),
           softwares: filters.softwares.map((e) => e.value),
         };
@@ -312,7 +310,6 @@ export default function Clients({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 dateStart: start,
                 dateEnd: end,
               });
@@ -350,7 +347,6 @@ export default function Clients({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 clients: clientData,
               });
             }}
@@ -384,7 +380,6 @@ export default function Clients({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 softwares: softwareData,
               });
             }}
@@ -402,7 +397,6 @@ export default function Clients({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 status: e.value,
               })
             }
@@ -414,11 +408,10 @@ export default function Clients({ router, user }) {
         {tableData.data.length === 0 ? (
           <NoClientPage {...{ router, user }} />
         ) : (
-          <GridTable
+          <GridWithPagination
             rowData={tableData}
             columnDefs={columnDefs}
-            pageSize={filters.limit}
-            searchText={filters.search}
+            limit={filters.limit}
             pageNumber={filters.pageNumber}
             setPageNumber={setFilters}
           />

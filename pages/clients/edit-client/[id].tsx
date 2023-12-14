@@ -246,8 +246,8 @@ function Clients({ router, user }) {
               {clientData?.LogoUrl ? (
                 <img
                   src={clientData?.LogoUrl || "/endamol.svg"}
-                  width={50}
-                  height={50}
+                  width={48}
+                  height={48}
                   className="rounded-circle"
                 />
               ) : (
@@ -274,7 +274,6 @@ function Clients({ router, user }) {
               </button>
               <Button
                 size="sm"
-                color="info"
                 onClick={handleEdit}
                 loading={loading}
                 disabled={loading}

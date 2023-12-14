@@ -8,7 +8,7 @@ import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
-import GridTable from "@/components/dataTable/GridWithPagination";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 export default function Productions(props) {
   const { router, clientData } = props;
@@ -188,14 +188,13 @@ export default function Productions(props) {
   return (
     <div className="mt-3">
       {clientData?.Projects?.length > 0 ? (
-        <GridTable
+        <GridWithPagination
           rowData={{
             data: clientData?.Projects || [],
             total_records: clientData?.Projects?.length || 0,
           }}
           columnDefs={columnDefs}
-          pageSize={filters.limit}
-          searchText={filters.search}
+          limit={filters.limit}
           pageNumber={filters.pageNumber}
           setPageNumber={setFilters}
         />

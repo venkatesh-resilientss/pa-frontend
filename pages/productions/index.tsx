@@ -15,7 +15,7 @@ import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
-import GridTable from "@/components/dataTable/GridWithPagination";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 import CreateProductionButton from "@/components/productions/CreateProductionButton";
 import NoProductionPage from "@/components/productions/NoProductionPage";
 
@@ -39,13 +39,13 @@ export default function Productions({ router, user }) {
     total_records: 0,
   }) as any;
   const [clFilters, setClFilters] = useState([]) as any;
-  const defaultLimit = 10;
+
   const [filters, setFilters] = useState<any>({
     dateStart: "",
     dateEnd: "",
     clients: [],
     projectTypes: [],
-    limit: defaultLimit,
+    limit: 10,
     offset: 0,
     search: "",
     status: "",
@@ -57,7 +57,6 @@ export default function Productions({ router, user }) {
     setStep(tab);
     setFilters({
       ...filters,
-      limit: defaultLimit,
       offset: 0,
       status: "",
       isCompleted: tab === 1 ? "" : tab === 2 ? "true" : "false",
@@ -121,10 +120,8 @@ export default function Productions({ router, user }) {
   useEffect(() => {
     const getData = async () => {
       try {
-        // const offset = (filters.pageNumber - 1) * filters.limit;
         const payload = {
           ...filters,
-          // offset,
           clients: filters.clients.map((e) => e.value),
         };
         const response = await projectService.getAllProjectsList(payload);
@@ -363,7 +360,6 @@ export default function Productions({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 dateStart: start,
                 dateEnd: end,
               });
@@ -401,7 +397,6 @@ export default function Productions({ router, user }) {
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                limit: defaultLimit,
                 clients: clientData,
               });
             }}
@@ -430,7 +425,6 @@ export default function Productions({ router, user }) {
                   ...filters,
                   pageNumber: 1,
                   offset: 0,
-                  limit: defaultLimit,
                   status: e.value,
                 })
               }
@@ -447,7 +441,6 @@ export default function Productions({ router, user }) {
                   ...filters,
                   pageNumber: 1,
                   offset: 0,
-                  limit: defaultLimit,
                   isCompleted: e.value,
                 })
               }
@@ -464,11 +457,10 @@ export default function Productions({ router, user }) {
               {tableData.data.length === 0 ? (
                 <NoProductionPage {...{ user }} />
               ) : (
-                <GridTable
+                <GridWithPagination
                   rowData={tableData}
                   columnDefs={columnDefs}
-                  pageSize={filters.limit}
-                  searchText={filters.search}
+                  limit={filters.limit}
                   pageNumber={filters.pageNumber}
                   setPageNumber={setFilters}
                 />

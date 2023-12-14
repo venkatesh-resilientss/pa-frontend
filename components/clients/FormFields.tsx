@@ -10,7 +10,7 @@ const clientService = new ClientsService();
 
 export default function FormFields(props: any) {
   const { fields, clientData, setClientData, step, setStep, hideUsers } = props;
-  const { data, pStates, iStates, sUsers, loadOptions, hideBtns } = props;
+  const { data, pStates, iStates, staffUsers, loadOptions, hideBtns } = props;
   const { err, setErr, validate, disabled, cls, router, isEditing } = props;
 
   const [loading, setLoading] = useState(false);
@@ -71,7 +71,7 @@ export default function FormFields(props: any) {
           ? pStates
           : iStates
         : lb === "RSSL Support User"
-        ? sUsers
+        ? staffUsers
         : data) || [];
     const getName = (e) =>
       !e?.Name

@@ -65,6 +65,8 @@ function EditProductions({ router, clientData, user }) {
           id: resp?.data?.ID,
           name: resp?.data?.Name,
           code: resp?.data?.Code,
+          IsActive: resp?.data?.IsActive,
+          IsCompleted: resp?.data?.IsCompleted,
           client: resp?.data?.Client?.Name
             ? { label: resp?.data?.Client?.Name, value: resp?.data?.Client?.ID }
             : null,
@@ -94,7 +96,6 @@ function EditProductions({ router, clientData, user }) {
           .map((e) => ({
             label: getApproverName(e.UserID),
             value: e.UserID,
-            field: "",
           }));
 
         setPoValues(po);
@@ -105,7 +106,6 @@ function EditProductions({ router, clientData, user }) {
           .map((e) => ({
             label: getApproverName(e.UserID),
             value: e.UserID,
-            field: "",
           }));
 
         setApValues(ap);
@@ -125,9 +125,7 @@ function EditProductions({ router, clientData, user }) {
 
     if (lb === "users" && !payld.client) return [];
     const tempArr: any = lb === "clients" ? clients : users?.data || [];
-    return (tempArr || []).map((e) => {
-      return { label: getName(e), value: e.ID, field: e.tenant_id };
-    });
+    return (tempArr || []).map((e) => ({ label: getName(e), value: e.ID }));
   };
 
   const hasPermission = hasAccess(
@@ -179,6 +177,8 @@ function EditProductions({ router, clientData, user }) {
           ProjectAccountantID: pAUser?.value || 0,
           clientID: payld.client?.value,
           meta: { approvers, data },
+          IsCompleted: payld.IsCompleted || false,
+          IsActive: payld.IsActive || false,
         };
         await productionService.updateProject(payld.id, payload);
 
@@ -256,9 +256,10 @@ function EditProductions({ router, clientData, user }) {
           pageNumber: 1,
         })
         .then((res) => {
-          return [...(res?.data || [])].map((e) => {
-            return { label: e.Name, value: e.ID, field: e.tenant_id };
-          });
+          return [...(res?.data || [])].map((e) => ({
+            label: e.Name,
+            value: e.ID,
+          }));
         });
     } else if (lb === "users" && payld.client) {
       return productionService
@@ -286,8 +287,8 @@ function EditProductions({ router, clientData, user }) {
     <div className="p-4">
       <div className="d-flex justify-content-between">
         <div>
-          <div className="text-black fw-600">All Productions</div>
-          <div className="f-32 fw-600">Create New Production</div>
+          <div className="f-12">All Productions</div>
+          <div className="fw-bold f-20">Create New Production</div>
         </div>
 
         <div className="my-auto">
@@ -299,6 +300,7 @@ function EditProductions({ router, clientData, user }) {
             Dismiss
           </button>
           <Button
+            size="sm"
             type="submit"
             loading={loading}
             disabled={loading}
@@ -422,7 +424,9 @@ function EditProductions({ router, clientData, user }) {
                 <label className="form-label d-flex justify-content-between">
                   Level {index + 1} Approver
                   <span
-                    className="f-12 text-danger ms-auto cursor-pointer"
+                    className={
+                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
+                    }
                     onClick={() => {
                       const tempArr = [...poValues];
                       tempArr.splice(index, 1);
@@ -457,7 +461,7 @@ function EditProductions({ router, clientData, user }) {
             ))}
             <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
               <RButton
-                className="f-14 py-2"
+                className={isEditing ? "f-14 py-2" : "d-none"}
                 color="white"
                 onClick={handleAddPurchaseOrderField}
               >
@@ -491,7 +495,9 @@ function EditProductions({ router, clientData, user }) {
                 <label className="form-label d-flex justify-content-between">
                   Level {index + 1} Approver
                   <span
-                    className="f-12 text-danger ms-auto cursor-pointer"
+                    className={
+                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
+                    }
                     onClick={() => {
                       const tempArr = [...apValues];
                       tempArr.splice(index, 1);
@@ -527,7 +533,7 @@ function EditProductions({ router, clientData, user }) {
 
             <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
               <RButton
-                className="f-14 py-2"
+                className={isEditing ? "f-14 py-2" : "d-none"}
                 color="white"
                 onClick={handleAddAccountPayableField}
               >
@@ -538,19 +544,18 @@ function EditProductions({ router, clientData, user }) {
         )}
       </div>
 
-      <hr style={{ height: "2px" }} />
-
       {staffUser && (
         <>
+          <hr />
           <div className="fw-600">Production Accountant</div>
-          <div className="col-12 col-md-4 px-4 pt">
+          <div className="col-12 col-md-4 px-4 py-2">
             <label className="form-label">User</label>
             <AsyncSelect
               instanceId={`react-select-user`}
               styles={selectStyle}
               placeholder={"Select User"}
-              defaultOptions={getOptions("users")}
-              loadOptions={(value) => loadOptions(value, "users", [])}
+              defaultOptions={getOptions("sers")}
+              loadOptions={(value) => loadOptions(value, "sers", [])}
               value={pAUser}
               onChange={(e) => setPAUser(e)}
               isDisabled={!isEditing || false}
@@ -558,6 +563,43 @@ function EditProductions({ router, clientData, user }) {
           </div>
         </>
       )}
+
+      <hr />
+      <div className="fw-600">Production Control</div>
+      <div className="col-12 col-md-4 px-4 py-2">
+        <label className="form-label text-black f-12">Status</label>
+
+        <div className="">
+          {["Active", "In-active"].map((e, idx) => (
+            <label className="flex-center d-inline-flex gap-1 m-2" key={idx}>
+              <input
+                name="IsActive"
+                type="radio"
+                className=""
+                checked={!idx ? payld?.IsActive : !payld?.IsActive}
+                onChange={() =>
+                  setPayld({ ...payld, IsActive: idx ? false : true })
+                }
+                disabled={!isEditing || false}
+              />
+              <p className="text-nowrap cursor-pointer m-0">{e}</p>
+            </label>
+          ))}
+        </div>
+        <label className="flex-center d-inline-flex gap-1 m-2">
+          <input
+            name="IsCompleted"
+            type="checkbox"
+            className=""
+            checked={payld?.IsCompleted || false}
+            onChange={(e) =>
+              setPayld({ ...payld, IsCompleted: e.target.checked })
+            }
+            disabled={!isEditing || false}
+          />
+          <p className="text-nowrap cursor-pointer m-0">Mark as Completed</p>
+        </label>
+      </div>
     </div>
   );
 }
