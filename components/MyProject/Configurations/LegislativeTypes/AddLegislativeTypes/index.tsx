@@ -2,24 +2,44 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
+import React, { useState, useEffect } from "react";
+import { LegislativesService } from "services";
+import AsyncSelect from "react-select/async";
+import { selectStyles } from "constants/common";
 function AddLegislativeType() {
   const router = useRouter();
-  const onSubmit = async () => {
+  const [isSaving, setIsSaving] = useState(false);
+  const legislativesService = new LegislativesService();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    if(isSaving) return
+    setIsSaving(true)
     try {
-      // Your logic to save the form data
-      toast.success("Legislative Type added successfully");
-      router.push("/configurations/legislative-type");
+      legislativesService
+      .createlegislatives(data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Legislative Type added successfully");
+        router.push("/configurations/legislative-type");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        toast.error(error?.error);
+      });
     } catch (error) {
       toast.error("Error adding Legislative Type");
       console.error(error);
     }
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+
   return (
     <>
       <div className="section mt-4">
@@ -36,7 +56,7 @@ function AddLegislativeType() {
             >
               Add New Legislative Type
             </div>
-            {/* <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <div className="d-flex me-2 " style={{ gap: "10px" }}>
               <Button
                 onClick={() => router.back()}
                 style={{
@@ -61,7 +81,7 @@ function AddLegislativeType() {
               >
                 Save
               </Button>
-            </div> */}
+            </div>
           </div>
 
           <hr style={{ height: "2px" }} />
@@ -74,21 +94,21 @@ function AddLegislativeType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Legislative Code<span className="text-danger">*</span></Label>
                   <Controller
-                    name="LegislativeCode"
+                    name="code"
                     rules={{ required: "Legislative Code is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="Legislative Code"
-                        invalid={errors.LegislativeCode && true}
+                        invalid={errors.code && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.LegislativeCode && (
+                  {errors.code && (
                     <span className="text-danger">
-                      {errors.LegislativeCode.message as React.ReactNode}
+                      {errors.code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -98,21 +118,21 @@ function AddLegislativeType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Legislative Name<span className="text-danger">*</span></Label>
                   <Controller
-                    name="LegislativeName"
+                    name="name"
                     rules={{ required: "Legislative Name is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="Legislative Name"
-                        invalid={errors.LegislativeName && true}
+                        invalid={errors.name && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.LegislativeName && (
+                  {errors.name && (
                     <span className="text-danger">
-                      {errors.LegislativeName.message as React.ReactNode}
+                      {errors.name.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -134,23 +154,6 @@ function AddLegislativeType() {
                 </div>
               </Col>
 
-            </Row>
-            <Row style={{ marginTop: '20px' }}>
-              <Col>
-                <div className="d-flex me-2 " style={{ gap: "20px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    className="buttonStyle edit-buttons"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    className="buttonStyle1 edit-buttons"
-                  >
-                    Save
-                  </Button>
-                </div></Col>
             </Row>
           </Form>
         </div>
