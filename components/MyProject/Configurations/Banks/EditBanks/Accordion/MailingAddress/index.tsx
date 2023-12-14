@@ -234,13 +234,10 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Fax <span className="required">*</span>
+              Fax
             </Label>
             <Controller
               name="mailingFax"
-              rules={{
-                required: "Fax is required",
-              }}
               control={control}
               render={({ field }) => (
                 <Input

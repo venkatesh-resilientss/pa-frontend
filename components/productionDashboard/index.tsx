@@ -7,6 +7,7 @@ import helpcenter1 from 'assets/DashboardIcons/helpcenter1.svg'
 import helpcenter2 from 'assets/DashboardIcons/helpcenter2.svg'
 import helpcenter3 from 'assets/DashboardIcons/helpcenter3.svg'
 import router from "next/router";
+import moment from 'moment';
 
 // Define your component
 export default function ProductionDashboard() {
@@ -149,7 +150,7 @@ export default function ProductionDashboard() {
                     </div>
                     <div>
                         <div>
-                            <span style={{fontSize:"10px"}}><img src="/calender.svg" alt="" /> {production.created_date}</span>
+                          <span style={{fontSize:"10px"}}><img src="/calender.svg" alt="" />  <img src="/calender.svg" alt="" /> {production?.created_date ? moment(production.created_date).format('MMMM D, YYYY') : '-'}</span>
                         </div>
                     </div>
                  </div>

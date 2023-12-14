@@ -37,7 +37,7 @@ function RecentProductions() {
     <>
       <div className="d-flex justify-content-between">
         <div
-          className="my-1 mt-2 mb-2 fw-600" style={{color:"#030229"}}
+          className="my-1 mt-1 mb-2 fw-600" style={{color:"#030229"}}
         >
           Recent Productions
         </div>
@@ -47,7 +47,7 @@ function RecentProductions() {
             <input
               className="search mr-2"
               type="search"
-              placeholder="Search..."
+              placeholder="Search by Production Name"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
