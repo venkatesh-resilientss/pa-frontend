@@ -59,6 +59,20 @@ textarea:focus {
 .cursor-pointer:hover {
   cursor: pointer;
 }
+
+.cr-p {
+  cursor: pointer;
+}
+.cr-d {
+  cursor: not-allowed;
+}
+.op-5 {
+  opacity: 0.5;
+}
+.rot-180 {
+  transform: rotate(180deg);
+}
+
 .tenantteamforgotpass {
   color: #030229;
   font-weight: 400 !important;
@@ -389,26 +403,26 @@ input::placeholder {
   font-size: 16px;
 }
 
-.configuration-table{
-  .title{
+.configuration-table {
+  .title {
     font-weight: 600;
     font-family: "Segoe UI Semibold";
   }
 }
 
-.configuration-add{
-  .title-head{
+.configuration-add {
+  .title-head {
     font-weight: 600;
     font-family: "Segoe UI";
     font-size: 1rem;
   }
-  .title{
+  .title {
     font-weight: 600;
     font-family: "Segoe UI";
     font-size: 2rem;
   }
 }
-.radio-text{
+.radio-text {
   font-size: 15px;
   margin-right: 20px;
 }

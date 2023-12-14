@@ -8,7 +8,7 @@ import { ProjectService } from "services";
 
 const productionService = new ProjectService();
 
-function AddProductions({ router, clientData }) {
+export default function CreateProduction({ router, clientData }) {
   const [poVal, setPOVal] = useState(false);
   const [apVal, setAPVal] = useState(false);
 
@@ -118,7 +118,7 @@ function AddProductions({ router, clientData }) {
       };
       const resp = await productionService.createProject(payload);
 
-      router.replace(`/production/${resp?.ID}`);
+      router.replace(`/productions/${resp?.ID}`);
     } catch (e) {
       setLoading(false);
       toast.error(e?.error || e || "Error");
@@ -486,5 +486,3 @@ function AddProductions({ router, clientData }) {
     </div>
   );
 }
-
-export default AddProductions;

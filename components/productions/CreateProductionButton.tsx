@@ -13,7 +13,7 @@ export default function CreateProductionButton({ user, cls }) {
   return (
     <>
       {hasPermission && (
-        <Link href="/create-production">
+        <Link href="/productions/create-production">
           <button
             className={
               "btn btn-primary d-flex justify-content-between align-items-center gap-2 " +

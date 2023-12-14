@@ -33,13 +33,22 @@ export default function WorkSpaceDetails(props) {
   const data = [...(users?.data || [])]?.filter(
     (e) => e?.Role?.Code === "CLIENT_ADMIN"
   );
-  const sUsers = [...(supportUsers?.data || [])]
+  const staffUsers = [...(supportUsers?.data || [])]
     ?.filter((e) => e.IsStaffUser)
     .map((e) => ({ Name: e.adminName, ID: e.id }));
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
     if (vl === "rsslSupportUser")
+      return clientService
+        .getUsers(`?limit=50&offset=0&is_active=true&search=${value}`)
+        .then((res) => {
+          return [...(res?.data || [])]
+            .filter((e) => e.IsStaffUser)
+            .map((e) => {
+              return { label: e?.adminName, value: e.id };
+            });
+        });
+    else
       return clientService
         .getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active=true`)
         .then((res) => {
@@ -50,18 +59,10 @@ export default function WorkSpaceDetails(props) {
             return { label: getName(e), value: e.ID };
           });
         });
-    else
-      return clientService
-        .getUsers(`?limit=50&offset=0&is_active=true`)
-        .then((res) => {
-          return [...(res?.data || [])].map((e) => {
-            return { label: e?.adminName, value: e.id };
-          });
-        });
     // return new Promise((resolve) => setTimeout(() => resolve([]), 500));
   };
 
-  const workSpaceProps = { ...props, data, sUsers, loadOptions };
+  const workSpaceProps = { ...props, data, staffUsers, loadOptions };
 
   if (step !== 5) return <></>;
   return (
