@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { hasPermission } from "commonFunctions/functions";
 import router from "next/router";
 import { Plus } from "react-feather";
+import Link from "next/link";
 
 function RecentProductions() {
   const dashboardService = new DashboardService();
@@ -55,14 +56,12 @@ function RecentProductions() {
             />
           </Form>
           {hasCreateProductionPermission && (
-            <Button
-              color="primary"
-              className="py-1 px-3"
-              onClick={() => router.push(`/productions`)}
-            >
-              <BsCameraVideo />
-              <span style={{ fontSize: "14px" }}> New Production</span>
-            </Button>
+            <Link href={`/productions/create-production`}>
+              <button className="btn btn-primary d-flex justify-content-between align-items-center gap-2 ">
+                <BsCameraVideo />
+                <span className="f-14"> Create Production</span>
+              </button>
+            </Link>
           )}
         </div>
       </div>
