@@ -3,9 +3,14 @@ import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
+import { formValidationRules } from "@/constants/common";
+
+
 
 const stateService = new StatesService();
 function MailingAddressForm({ onSubmit, control, errors }) {
+  const bankValidationRules = formValidationRules.banks;
+
   const { handleSubmit } = useForm();
   const [initialStateOptions, setInitialStateOptions] = useState([])
 
@@ -60,9 +65,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddress1"
-              rules={{
-                required: "Mailing Address Line 1 is required",
-              }}
+              rules={bankValidationRules.mailingAddressLine1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -91,6 +94,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             <Controller
               name="mailingAddress2"
               control={control}
+              rules={bankValidationRules.mailingAddressLine2}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -116,9 +120,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressCity"
-              rules={{
-                required: "City is required",
-              }}
+              rules={bankValidationRules.mailingAddressCity}
               control={control}
               render={({ field }) => (
                 <Input
@@ -146,9 +148,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressState"
-              rules={{
-                required: " State is required",
-              }}
+              rules={bankValidationRules.mailingAddressState}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -178,9 +178,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressPostalCode"
-              rules={{
-                required: " Postal Code is required",
-              }}
+              rules={bankValidationRules.mailingAddressPostalCode}
               control={control}
               render={({ field }) => (
                 <Input
@@ -207,26 +205,48 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             >
               Phone <span className="required">*</span>
             </Label>
-            <Controller
-              name="mailingPhoneNumber"
-              rules={{
-                required: " Phone Number is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Phone Number"
-                  invalid={errors.mailingPhoneNumber && true}
-                  {...field}
+            <div className="d-flex gap-2">
+              <div style={{ width: "20%" }}>
+                <Controller
+                  name="mailingCountryCode"
+                  rules={bankValidationRules.mailingAddressCountryCode}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="00"
+                      invalid={errors.mailingCountryCode && true}
+                      {...field}
+                    />
+                  )}
                 />
-              )}
-            />
-            {errors.mailingPhoneNumber && (
+              </div>
+              <div style={{ width: "80%" }}>
+                <Controller
+                  name="mailingPhoneNumber"
+                  rules={bankValidationRules.mailingAddressPhoneNumber}
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      style={{ fontSize: "12px", fontWeight: "400" }}
+                      placeholder="Enter Phone Number"
+                      invalid={errors.mailingPhoneNumber && true}
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {errors.mailingCountryCode ? (
+              <span className="text-danger">
+                {errors.mailingCountryCode.message as React.ReactNode}
+              </span>
+            ) : errors.mailingPhoneNumber ? (
               <span className="text-danger">
                 {errors.mailingPhoneNumber.message as React.ReactNode}
               </span>
-            )}
+            ) : null}
           </Col>
 
           <Col xl="4" className="my-2">
@@ -254,6 +274,32 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               </span>
             )}
           </Col>
+          <Col xl="4" className="my-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "12px", fontWeight: "400" }}
+            >
+              Fax
+            </Label>
+            <Controller
+              rules={bankValidationRules.mailingAddressFax}
+              name="mailingFax"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  style={{ fontSize: "12px", fontWeight: "400" }}
+                  placeholder="Enter Fax"
+                  invalid={errors.mailingFax && true}
+                  {...field}
+                />
+              )}
+            />
+            {errors.mailingFax && (
+              <span className="text-danger">
+                {errors.mailingFax.message as React.ReactNode}
+              </span>
+            )}
+          </Col>
 
           <Col xl="4" className="my-2">
             <Label
@@ -264,9 +310,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingEmail"
-              rules={{
-                required: "Email is required",
-              }}
+              rules={bankValidationRules.mailingEmail}
               control={control}
               render={({ field }) => (
                 <Input

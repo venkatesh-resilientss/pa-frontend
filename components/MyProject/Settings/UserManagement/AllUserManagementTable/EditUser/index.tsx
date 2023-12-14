@@ -1,24 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import { Button as RButton, Col, Form, Input, Label, Row } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { UsersService } from "services";
 import Select from "react-select";
-import { ClientsService, RoleService } from "services";
+import { ClientsService, RoleService, AuthService } from "services";
 import useSWR from "swr";
 import AsyncSelect from "react-select/async";
+import Button from "react-bootstrap-button-loader";
 
 function EditUser() {
   const router = useRouter();
   const roleservice = new RoleService();
+  const authService = new AuthService();
   const { id } = router.query;
   const {
     handleSubmit,
     formState: { errors },
     control,
-    reset, getValues
+    reset, watch
   } = useForm();
+
+  const watchRole = watch('role', '');
+  const [showStaffUser, setShowStaffUser] = useState(true) as any;
+  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
+    authService.getUserDetails()
+  );
+  const [userDetails, setUserDetails] = useState() as any;
+
+  useEffect(() => {
+    setUserDetails(userData?.data);
+  }, [userData]);
+
+
+
+  useEffect(() => {
+    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
+      setIsCheckedStaffUser(false);
+      setShowStaffUser(false);
+    } else setShowStaffUser(true);
+  }, [watchRole])
+
 
   const getUserdetails = (id) => usersService.getuserbyid(id);
 
@@ -29,6 +52,7 @@ function EditUser() {
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
+  const [loading, setLoading] = useState<any>(false);
   const [clientProductionsList, setClientProductionsList] = useState([
     {
       client: "client_1",
@@ -92,8 +116,7 @@ function EditUser() {
   }, [])
 
 
-
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [clientDetails, setClientDetails] = useState(null) as any;
   // const [selectedProduction, setSelectedProduction] = useState(null);
 
   const roleSelectStyles = {
@@ -122,11 +145,6 @@ function EditUser() {
           label: eachclicntdata?.Role?.RoleName || "", // Assuming RollName is the correct property
         }
         // Add other fields with their default values
-      });
-
-      setSelectedClient({
-        value: eachclicntdata?.Client?.ID || "", // Assuming client_id is the correct property
-        label: eachclicntdata?.Client?.Name || "",
       });
 
 
@@ -225,6 +243,11 @@ function EditUser() {
       middle_name: data.middlename,
       email: data.email,
       roleID: data?.role?.value,
+      client_id: userDetails?.IsStaffUser
+        ? isCheckedStaffUser
+          ? 0
+          : clientDetails?.value
+        : userDetails.Client.ID,
       // "IsStaffUser": isCheckedStaffUser,
       Meta: {
         userCPReference: [],
@@ -257,16 +280,20 @@ function EditUser() {
     //   };
     // });
     // userPayload.Meta.userCPReference = userPreferences;
-
+    setLoading(true)
     usersService
       .editUser(id, userPayload)
       .then(() => {
         router.push("/settings/usermanagement");
         toast.success("User Updated successfully");
         reset();
+        setLoading(false)
+
       })
       .catch((error) => {
         toast.error(error?.error);
+        setLoading(false)
+
       });
   };
 
@@ -279,7 +306,7 @@ function EditUser() {
   const handleSaveClick = () => {
     setSaveClicked(true);
 
-    // Call the onSubmit function when the "Save" button is clicked
+    // Call the onSubmit function when the "Save" Button as Rbutton is clicked
     handleSubmit(onSubmit)();
   };
 
@@ -308,16 +335,20 @@ function EditUser() {
           Edit User
         </div>
         <div className="d-flex gap-1">
-          <Button onClick={() => router.back()} color="white">
+          <RButton onClick={() => router.back()} color="white">
             Dismiss
-          </Button>
+          </RButton>
           <Button
+            type="submit"
+            loading={loading}
+            disabled={loading}
+            className="px-3 py-2"
+            spinColor="#ffffff"
             onClick={editMode ? handleSaveClick : handleToggleEditMode}
-            color="primary"
-            className="px-4"
           >
             {editMode && !saveClicked ? "Save" : "Edit"}
           </Button>
+
         </div>
       </div>
 
@@ -464,25 +495,25 @@ function EditUser() {
                 />
               </div>
             </Col>
-            {/* {userDetails?.IsStaffUser && ( */}
-            <Col xl="4">
-              <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
-                <input
-                  disabled
-                  type="checkbox"
-                  name="customSwitch"
-                  id="exampleCustomSwitch"
-                  className="mb-1"
-                  checked={isCheckedStaffUser}
-                // onChange={(e) => {
-                //   setIsCheckedStaffUser(e.target.checked)
-                // }}
-                />
+            {userDetails?.IsStaffUser && showStaffUser && (
+              <Col xl="4">
+                <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
+                  <input
+                    disabled
+                    type="checkbox"
+                    name="customSwitch"
+                    id="exampleCustomSwitch"
+                    className="mb-1"
+                    checked={isCheckedStaffUser}
+                  // onChange={(e) => {
+                  //   setIsCheckedStaffUser(e.target.checked)
+                  // }}
+                  />
 
-                <Label className="mb-0">Is Staff User</Label>
-              </div>
-            </Col>
-            {/* )} */}
+                  <Label className="mb-0">Is Staff User</Label>
+                </div>
+              </Col>
+            )}
           </Row>
           <Row className="mt-4 mb-2">
             <label> {"Assign Client(s) & Production(s)"}</label>
@@ -520,6 +551,7 @@ function EditUser() {
                               initialClientOptions.filter(
                                 (ele) => ele.value !== client.value
                               );
+                            if (index === 0) setClientDetails(client);
                             setInitialClientOptions([...updatedCLientOptions]);
                             const clientToUpdate = `client_${index + 1}`;
                             getProductionOptions(clientToUpdate, client.value);
@@ -539,7 +571,7 @@ function EditUser() {
                 <Col xl="4">
                   <div className="mt-1">
                     <Label>Select Productions</Label>
-                    {selectedClient && getValues("role")?.label !== "Client Admin" ? (
+                    {watchRole?.label !== "Client Admin" ? (
                       <>
                         <Controller
                           name="productions"

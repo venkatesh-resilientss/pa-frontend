@@ -4,9 +4,11 @@ import AsyncSelect from "react-select/async";
 import { CurrencyService } from "services";
 import { useEffect, useState } from "react";
 import { selectStyles } from "constants/common";
+import { formValidationRules } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const { handleSubmit } = useForm();
+  const bankValidationRules = formValidationRules.banks;
   const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([])
 
   const currencyService = new CurrencyService();
@@ -58,7 +60,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="bankName"
-              rules={{ required: "Bank Name  is required" }}
+              rules={bankValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -86,7 +88,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="bankCode"
-              rules={{ required: "Bank Code  is required" }}
+              rules={bankValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -114,9 +116,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="accountNumber"
-              rules={{
-                required: "Account Number is required",
-              }}
+              rules={bankValidationRules.accountNumber}
               control={control}
               render={({ field }) => (
                 <Input
@@ -145,6 +145,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             <Controller
               name="description"
               control={control}
+              rules={bankValidationRules.description}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -171,9 +172,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="routingNumber"
-              rules={{
-                required: "Routing Number is required",
-              }}
+              rules={bankValidationRules.routingNumber}
               control={control}
               render={({ field }) => (
                 <Input
@@ -200,9 +199,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="accountFraction"
-              rules={{
-                required: "Account Fraction is required",
-              }}
+              rules={bankValidationRules.accountFraction}
               control={control}
               render={({ field }) => (
                 <Input
@@ -229,7 +226,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name={"currency"}
-              rules={{ required: "Currency is required" }}
+              rules={bankValidationRules.currency}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -259,11 +256,12 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Name
+              Contact Name <span className="required">*</span>
             </Label>
             <Controller
               name="contactName"
               control={control}
+              rules={bankValidationRules.contactName}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -289,6 +287,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="branchNumber"
+              rules={bankValidationRules.branchNumber}
               control={control}
               render={({ field }) => (
                 <Input
@@ -314,9 +313,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="emailIDBasicInfo"
-              rules={{
-                required: "Email ID is Required",
-              }}
+              rules={bankValidationRules.email}
               control={control}
               render={({ field }) => (
                 <Input
@@ -344,15 +341,12 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               <div style={{ width: "20%" }}>
                 <Controller
                   name="basicInfoCountryCode"
-                  rules={{
-                    required: "Country Code is Required",
-                  }}
+                  rules={bankValidationRules.countryCode}
                   control={control}
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
                       placeholder="00"
-                      invalid={errors.emailIDBasicInfo && true}
                       {...field}
                     />
                   )}
@@ -362,11 +356,11 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 <Controller
                   name="basicInfoContactNumber"
                   control={control}
+                  rules={bankValidationRules.phoneNumber}
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
                       placeholder=" Enter Contact Number"
-                      invalid={errors.emailIDBasicInfo && true}
                       {...field}
                     />
                   )}

@@ -551,6 +551,18 @@ const ACCOUNT_NUMBER_MAX_LENGTH = 12;
 const ROUTING_NUMBER_MAX_LENGTH = 9;
 const EMAIL_MAX_LENGTH = 30;
 const PHONE_MAX_LENGTH = 30;
+const COUNTRY_CODE = 3
+const PHONE_NUMBER = 10
+const FAX_MAX_LENGTH = 10
+const CHECK_RANGE_START_END_COPIES_MAXLENGTH = 10
+const cityMaxLength = 20;
+const EFT_HOST_MAX_LENGTH = 30;
+const EFT_USERNAME_MAX_LENGTH = 50;
+const EFT_PASSWORD_MAX_LENGTH = 30;
+const EFT_CERTIFCATE_MAX_LENGTH = 4096;
+const EFT_PATHS_MAX_LENGTH = 250;
+const EFT_PORT_MAX_LENGTH = 12;
+const DEFAULT_AMOUNTS_MAX_LENGTH = 12;
 
 const contactValidationRules = {
   fullName: {
@@ -1187,8 +1199,29 @@ export const formValidationRules = {
     currency: {
       required: "Currency is required",
     },
+    countryCode: {
+      required: false,
+      maxLength: {
+        value: COUNTRY_CODE,
+        message: `Country Code must contain less than ${COUNTRY_CODE} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Country Code must contain only numbers",
+      },
+    },
+    phoneNumber: {
+      maxLength: {
+        value: PHONE_NUMBER,
+        message: `Phone Number must contain less than ${PHONE_NUMBER} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Phone Number must contain only numbers",
+      },
+    },
     branchNumber: {
-      required: "Branch Number is required",
+      // required: "Branch Number is required",
       pattern: {
         value: NUMERIC,
         message: "Branch Number must contain only numbers",
@@ -1203,6 +1236,228 @@ export const formValidationRules = {
     },
     email: contactValidationRules.email,
     contactName: contactValidationRules.fullName,
+    physicalAddressLine1 :  {
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
+      },
+    },
+    physicalAddressLine2 :  {
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
+      },
+    },
+    physicalAddressCity :  {
+      maxLength: {
+        value: cityMaxLength,
+        message: `city cannot have more than ${cityMaxLength} characters`,
+      },
+      pattern: {
+        value: ALPHA_NUMERIC,
+        message: "Special characters are not allowed",
+      },
+    },
+    physicalAddressPostalCode :  {
+      maxLength: {
+        value: ZIP_CODE_MAX_LENGTH,
+        message: `Postal Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`,
+      },
+      pattern: {
+        value: ZIP_CODE_PATTERN,
+        message: "POstal Code cannot contain special characters",
+      },
+    },
+    mailingAddressLine1: {
+      required: "Line 1 is required",
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
+      },
+    },
+    mailingAddressLine2: {
+      maxLength: {
+        value: ADDRESS_LINE_MAX_LENGTH,
+        message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ADDRESS_LINE,
+        message: "Special characters are not allowed",
+      },
+    },
+    mailingAddressCity: {
+       required: "City is required",
+      maxLength: {
+        value: cityMaxLength,
+        message: `city cannot have more than ${cityMaxLength} characters`,
+      },
+      pattern: {
+        value: ALPHA_NUMERIC,
+        message: "Special characters are not allowed",
+      },
+    },
+    mailingAddressState: {
+       required: "City is required",
+    },
+    mailingAddressPostalCode: {
+       required: "Postal Code is required",
+      maxLength: {
+        value: ZIP_CODE_MAX_LENGTH,
+        message: `Postal Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`,
+      },
+      pattern: {
+        value: ZIP_CODE_PATTERN,
+        message: "POstal Code cannot contain special characters",
+      },
+    },
+    mailingAddressCountryCode: {
+       required: "Country Code is required",
+       maxLength: {
+        value: COUNTRY_CODE,
+        message: `Country Code must contain less than ${COUNTRY_CODE} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Phone Number must contain only numbers",
+      },
+    },
+    mailingAddressPhoneNumber: {
+       required: "Phone Number is required",
+      maxLength: {
+        value: PHONE_NUMBER,
+        message: `Phone Number must contain less than ${PHONE_NUMBER} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Phone Number must contain only numbers",
+      },
+    },
+    mailingAddressFax: {
+      maxLength: {
+        value: FAX_MAX_LENGTH,
+        message: `Fax must contain less than ${FAX_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Fax must contain only numbers",
+      },
+    },
+    mailingEmail: contactValidationRules.email,
+    rangeStart: {
+      maxLength: {
+        value: CHECK_RANGE_START_END_COPIES_MAXLENGTH,
+        message: `Range Start must contain less than ${CHECK_RANGE_START_END_COPIES_MAXLENGTH} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Range Start must contain only numbers",
+      },
+    },
+    rangeEnd: {
+      maxLength: {
+        value: CHECK_RANGE_START_END_COPIES_MAXLENGTH,
+        message: `Range End must contain less than ${CHECK_RANGE_START_END_COPIES_MAXLENGTH} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Range End must contain only numbers",
+      },
+    },
+    rangeCopies: {
+      maxLength: {
+        value: CHECK_RANGE_START_END_COPIES_MAXLENGTH,
+        message: `Range Copies must contain less than ${CHECK_RANGE_START_END_COPIES_MAXLENGTH} characters`,
+      },
+      pattern: {
+        value: NUMERIC,
+        message: "Range Copies must contain only numbers",
+      },
+    },
+    eftHost: {
+      maxLength: {
+        value: EFT_HOST_MAX_LENGTH,
+        message: `Host must contain less than ${EFT_HOST_MAX_LENGTH} characters`,
+      }
+    },
+    eftUserName: {
+      maxLength: {
+        value: EFT_USERNAME_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_USERNAME_MAX_LENGTH} characters`,
+      }
+    },
+    eftPassword: {
+      maxLength: {
+        value: EFT_PASSWORD_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_PASSWORD_MAX_LENGTH} characters`,
+      }
+    },
+    eftInboundPath: {
+      maxLength: {
+        value: EFT_PATHS_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_PATHS_MAX_LENGTH} characters`,
+      }
+    },
+    eftOutboundPath: {
+      maxLength: {
+        value: EFT_PATHS_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_PATHS_MAX_LENGTH} characters`,
+      }
+    },
+    eftCertificate: {
+      maxLength: {
+        value: EFT_CERTIFCATE_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_CERTIFCATE_MAX_LENGTH} characters`,
+      }
+    },
+    eftPort: {
+      maxLength: {
+        value: EFT_PORT_MAX_LENGTH,
+        message: `User Name must contain less than ${EFT_PORT_MAX_LENGTH} characters`,
+      }
+    },
+    defaultAmountCash: {
+      required: "Default Amount Cash is required",
+      maxLength: {
+        value: DEFAULT_AMOUNTS_MAX_LENGTH,
+        message: `Default Amount Cash must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
+      }
+    },
+    defaultAmountClearing: {
+      required: "Default Amount Clearing is required",
+      maxLength: {
+        value: DEFAULT_AMOUNTS_MAX_LENGTH,
+        message: `Default Amount Clearing must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
+      }
+    },
+    defaultAccountDeposit: {
+      required: "Default Account Deposit is required",
+      maxLength: {
+        value: DEFAULT_AMOUNTS_MAX_LENGTH,
+        message: `Default Account Deposit must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
+      }
+    },
+    defaultAccountDiscount: {
+      required: "Default Account Discount is required",
+      maxLength: {
+        value: DEFAULT_AMOUNTS_MAX_LENGTH,
+        message: `Default Account Discount must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
+      }
+    },
+
+
+
   },
 };
 

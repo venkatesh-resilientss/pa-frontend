@@ -5,9 +5,11 @@ import { CurrencyService } from "services";
 // import useSWR from "swr";
 import { useEffect, useState } from "react";
 import { selectStyles } from "constants/common";
+import { formValidationRules } from "constants/common";
 
 function BasicDetailsForm({ control, onSubmit, errors }) {
   const { handleSubmit } = useForm();
+  const bankValidationRules = formValidationRules.banks;
   const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
 
   const currencyService = new CurrencyService();
@@ -69,7 +71,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="bankName"
-              rules={{ required: "Bank Name  is required" }}
+              rules={bankValidationRules.name}
               control={control}
               render={({ field }) => (
                 <Input
@@ -97,7 +99,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="bankCode"
-              rules={{ required: "Bank Code  is required" }}
+              rules={bankValidationRules.code}
               control={control}
               render={({ field }) => (
                 <Input
@@ -125,9 +127,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="accountNumber"
-              rules={{
-                required: "Account Number is required",
-              }}
+              rules={bankValidationRules.accountNumber}
               control={control}
               render={({ field }) => (
                 <Input
@@ -155,9 +155,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="description"
-              rules={{
-                required: "Description is required",
-              }}
+              rules={bankValidationRules.description}
               control={control}
               render={({ field }) => (
                 <Input
@@ -185,9 +183,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="routingNumber"
-              rules={{
-                required: "Routing Number is required",
-              }}
+              rules={bankValidationRules.routingNumber}
               control={control}
               render={({ field }) => (
                 <Input
@@ -214,9 +210,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="accountFraction"
-              rules={{
-                required: "Account Fraction is required",
-              }}
+              rules={bankValidationRules.accountFraction}
               control={control}
               render={({ field }) => (
                 <Input
@@ -243,7 +237,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name={"currency"}
-              rules={{ required: "Currency is required" }}
+              rules={bankValidationRules.currency}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -273,13 +267,11 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Contact Name
+              Contact Name <span className="required">*</span>
             </Label>
             <Controller
               name="contactName"
-              rules={{
-                required: "Contact Name is required",
-              }}
+              rules={bankValidationRules.contactName}
               control={control}
               render={({ field }) => (
                 <Input
@@ -307,6 +299,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             <Controller
               name="branchNumber"
               control={control}
+              rules={bankValidationRules.branchNumber}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -326,9 +319,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             </Label>
             <Controller
               name="emailIDBasicInfo"
-              rules={{
-                required: "Email ID is Required",
-              }}
+              rules={bankValidationRules.email}
               control={control}
               render={({ field }) => (
                 <Input
@@ -352,19 +343,30 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             >
               Contact Number
             </Label>
+            {/* <Controller
+              name="basicInfoContactNumber"
+              rules={bankValidationRules.phoneNumber}
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  inputClass="react-tel-input w-100"
+                  country={"us"}
+                  placeholder="Enter Mobile Number"
+                  {...field}
+                />
+              )}
+            /> */}
             <div className="d-flex gap-2">
               <div style={{ width: "20%" }}>
                 <Controller
                   name="basicInfoCountryCode"
-                  rules={{
-                    required: "Country Code is Required",
-                  }}
+                  rules={bankValidationRules.countryCode}
                   control={control}
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
                       placeholder="00"
-                      invalid={errors.emailIDBasicInfo && true}
+                      // invalid={errors.emailIDBasicInfo && true}
                       {...field}
                     />
                   )}
@@ -373,12 +375,13 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               <div style={{ width: "80%" }}>
                 <Controller
                   name="basicInfoContactNumber"
+                  rules={bankValidationRules.phoneNumber}
                   control={control}
                   render={({ field }) => (
                     <Input
                       style={{ fontSize: "12px", fontWeight: "400" }}
                       placeholder=" Enter Contact Number"
-                      invalid={errors.emailIDBasicInfo && true}
+                      // invalid={errors.emailIDBasicInfo && true}
                       {...field}
                     />
                   )}

@@ -4,8 +4,10 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
+import { formValidationRules } from "@/constants/common";
 
 function MailingAddressForm({ onSubmit, control, errors }) {
+  const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
   const [initialStateOptions, setInitialStateOptions] = useState([]);
 
@@ -82,9 +84,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddress1"
-              rules={{
-                required: "Mailing Address Line 1 is required",
-              }}
+              rules={bankValidationRules.mailingAddressLine1}
               control={control}
               render={({ field }) => (
                 <Input
@@ -112,6 +112,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddress2"
+              rules={bankValidationRules.mailingAddressLine2}
               control={control}
               render={({ field }) => (
                 <Input
@@ -138,9 +139,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressCity"
-              rules={{
-                required: "  City is required",
-              }}
+              rules={bankValidationRules.mailingAddressCity}
               control={control}
               render={({ field }) => (
                 <Input
@@ -168,9 +167,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressState"
-              rules={{
-                required: " State is required",
-              }}
+              rules={bankValidationRules.mailingAddressState}
               control={control}
               render={({ field }) => (
                 <AsyncSelect
@@ -200,6 +197,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingAddressPostalCode"
+              rules={bankValidationRules.mailingAddressPostalCode}
               control={control}
               render={({ field }) => (
                 <Input
@@ -258,9 +256,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               <div style={{ width: "20%" }}>
                 <Controller
                   name="mailingCountryCode"
-                  rules={{
-                    required: "Country Code is Required",
-                  }}
+                  rules={bankValidationRules.mailingAddressCountryCode}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -275,9 +271,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               <div style={{ width: "80%" }}>
                 <Controller
                   name="mailingPhoneNumber"
-                  rules={{
-                    required: "Phone Number is Required",
-                  }}
+                  rules={bankValidationRules.mailingAddressPhoneNumber}
                   control={control}
                   render={({ field }) => (
                     <Input
@@ -310,6 +304,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               Fax
             </Label>
             <Controller
+              rules={bankValidationRules.mailingAddressFax}
               name="mailingFax"
               control={control}
               render={({ field }) => (
@@ -337,9 +332,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="mailingEmail"
-              rules={{
-                required: "Email is required",
-              }}
+              rules={bankValidationRules.mailingEmail}
               control={control}
               render={({ field }) => (
                 <Input

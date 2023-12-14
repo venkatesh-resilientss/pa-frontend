@@ -212,7 +212,7 @@ function BankAccordion() {
       setValue("accountNumber", bankDetails?.AccountNumber);
       setValue("description", bankDetails?.Description);
       setValue("routingNumber", bankDetails?.RoutingNumber);
-      setValue("accountFraction", bankDetails?.accountFraction);
+      setValue("accountFraction", bankDetails?.AccountFraction);
       const currency = {
         label: bankDetails.Currency.Name,
         value: bankDetails.Currency.ID,

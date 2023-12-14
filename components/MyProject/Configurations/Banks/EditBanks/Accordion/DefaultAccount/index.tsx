@@ -1,7 +1,9 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import { formValidationRules } from "@/constants/common";
 
 function DefaultAccountForm({ onSubmit, control, errors }) {
+  const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
 
   return (
@@ -21,6 +23,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             <Controller
               name="defaultAccountCash"
               rules={{
+                ...bankValidationRules.defaultAmountCash,
                 required: "Default Account Cash is required",
               }}
               control={control}
@@ -51,6 +54,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             <Controller
               name="defaultAccountClearing"
               rules={{
+                ...bankValidationRules.defaultAmountClearing,
                 required: "Default Account Clearing",
               }}
               control={control}
@@ -81,6 +85,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             <Controller
               name="defaultAccountDeposit"
               rules={{
+                ...bankValidationRules.defaultAccountDeposit,
                 required: "Default Account Deposit is required",
               }}
               control={control}
@@ -111,6 +116,7 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
             <Controller
               name="defaultAccountDiscount"
               rules={{
+                ...bankValidationRules.defaultAccountDiscount,
                 required: "Default Account Discount is required",
               }}
               control={control}
