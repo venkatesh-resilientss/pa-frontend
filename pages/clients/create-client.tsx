@@ -7,7 +7,7 @@ import { ClientsService } from "services";
 
 const clientService = new ClientsService();
 
-function Index({ router }) {
+export default function CreateClientPage({ router }) {
   const { isReady, query } = router;
   const defaultClientData: any = {
     Softwares: [],
@@ -109,5 +109,3 @@ function Index({ router }) {
     </div>
   );
 }
-
-export default Index;

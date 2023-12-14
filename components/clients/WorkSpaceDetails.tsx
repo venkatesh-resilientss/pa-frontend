@@ -38,7 +38,17 @@ export default function WorkSpaceDetails(props) {
     .map((e) => ({ Name: e.adminName, ID: e.id }));
 
   const loadOptions = (value, vl) => {
-    if (vl !== "rsslSupportUser")
+    if (vl === "rsslSupportUser")
+      return clientService
+        .getUsers(`?limit=50&offset=0&is_active=true&search=${value}`)
+        .then((res) => {
+          return [...(res?.data || [])]
+            .filter((e) => e.IsStaffUser)
+            .map((e) => {
+              return { label: e?.adminName, value: e.id };
+            });
+        });
+    else
       return clientService
         .getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active=true`)
         .then((res) => {
@@ -48,16 +58,6 @@ export default function WorkSpaceDetails(props) {
           return [...(res?.data || [])].map((e) => {
             return { label: getName(e), value: e.ID };
           });
-        });
-    else
-      return clientService
-        .getUsers(`?limit=50&offset=0&is_active=true&search=${value}`)
-        .then((res) => {
-          return [...(res?.data || [])]
-            .filter((e) => e.IsStaffUser)
-            .map((e) => {
-              return { label: e?.adminName, value: e.id };
-            });
         });
     // return new Promise((resolve) => setTimeout(() => resolve([]), 500));
   };

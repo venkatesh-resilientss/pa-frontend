@@ -15,6 +15,7 @@ import NoClientPage from "@/components/clients/NoClientPage";
 import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
+import Link from "next/link";
 
 const clientService = new ClientsService();
 
@@ -139,7 +140,7 @@ export default function Clients({ router, user }) {
     };
 
     return (
-      <div className="cursor-pointer">
+      <div className="cr-p">
         <UncontrolledDropdown>
           <DropdownToggle tag="span">
             <Image
@@ -151,15 +152,11 @@ export default function Clients({ router, user }) {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem
-              tag="a"
-              className="w-100 cursor-pointer"
-              onClick={() =>
-                router.push(`/clients/edit-client/${props.data?.ID}`)
-              }
-            >
-              <Action icon={editIocn} name={"View/Edit Clients"} />
-            </DropdownItem>
+            <Link href={`/clients/${props.data?.ID}`}>
+              <DropdownItem tag="span" className="w-100 cr-p">
+                <Action icon={editIocn} name={"View/Edit Clients"} />
+              </DropdownItem>
+            </Link>
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

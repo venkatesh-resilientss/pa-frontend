@@ -5,12 +5,10 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 import Button from "react-bootstrap-button-loader";
 import { ProjectService } from "services";
-import { hasAccess } from "@/commonFunctions/hasAccess";
 
 const productionService = new ProjectService();
 
-function EditProductions({ router, clientData, user }) {
-  const [isEditing, setEditing] = useState(false);
+export default function CreateProduction({ router, clientData }) {
   const [poVal, setPOVal] = useState(false);
   const [apVal, setAPVal] = useState(false);
 
@@ -46,76 +44,20 @@ function EditProductions({ router, clientData, user }) {
   );
 
   useEffect(() => {
+    setPayld({
+      ...payld,
+      client: payld.client
+        ? payld.client
+        : clientData?.id
+        ? { label: clientData?.name, value: clientData?.id }
+        : null,
+    });
     setStaffUser(clientData?.staffUser);
   }, [clientData]);
 
   useEffect(() => {
     mutate();
   }, [payld.client]);
-
-  useEffect(() => {
-    const getDetails = async () => {
-      try {
-        const resp = await productionService.getProjectDetails(
-          Number(router.query.production_id)
-        );
-
-        setPayld({
-          ...payld,
-          id: resp?.data?.ID,
-          name: resp?.data?.Name,
-          code: resp?.data?.Code,
-          IsActive: resp?.data?.IsActive,
-          IsCompleted: resp?.data?.IsCompleted,
-          client: resp?.data?.Client?.Name
-            ? { label: resp?.data?.Client?.Name, value: resp?.data?.Client?.ID }
-            : null,
-        });
-
-        setPAUser(
-          resp?.data?.ProjectAccountantID
-            ? {
-                label:
-                  (resp?.data?.ProjectAccountant?.first_name || "") +
-                  " " +
-                  (resp?.data?.ProjectAccountant?.last_name || ""),
-                value: resp?.data?.ProjectAccountantID,
-              }
-            : null
-        );
-        const getApproverName = (id) => {
-          const txt = (resp?.data?.Meta?.data || []).find((e) => {
-            return e?.UserID?.value === id;
-          })?.UserID?.label;
-
-          return txt;
-        };
-
-        const po = resp?.approvers?.approvers
-          .filter((e) => e.TransactionType === "PO")
-          .map((e) => ({
-            label: getApproverName(e.UserID),
-            value: e.UserID,
-          }));
-
-        setPoValues(po);
-        setPOVal(po.length > 0 ? true : false);
-
-        const ap = resp?.approvers?.approvers
-          .filter((e) => e.TransactionType === "AP")
-          .map((e) => ({
-            label: getApproverName(e.UserID),
-            value: e.UserID,
-          }));
-
-        setApValues(ap);
-        setAPVal(ap.length > 0 ? true : false);
-      } catch (e) {
-        toast.error(e?.error || e || "Error");
-      }
-    };
-    if (Number(router.query.production_id)) getDetails();
-  }, [router.query.production_id]);
 
   const getOptions = (lb) => {
     const getName = (e) =>
@@ -125,73 +67,61 @@ function EditProductions({ router, clientData, user }) {
 
     if (lb === "users" && !payld.client) return [];
     const tempArr: any = lb === "clients" ? clients : users?.data || [];
-    return (tempArr || []).map((e) => ({ label: getName(e), value: e.ID }));
+    return (tempArr || []).map((e) => {
+      return { label: getName(e), value: e.ID, field: e.tenant_id };
+    });
   };
 
-  const hasPermission = hasAccess(
-    user,
-    "production_management",
-    "edit_production"
-  );
   const onSubmit = async () => {
-    if (isEditing) {
-      if (
-        !payld.name ||
-        !payld.code ||
-        !payld.client ||
-        (poVal && poValues.filter((e) => !e).length > 0) ||
-        (apVal && apValues.filter((e) => !e).length > 0)
-      ) {
-        setErr(true);
-        return;
+    if (
+      !payld.name ||
+      !payld.code ||
+      !payld.client ||
+      (poVal && poValues.filter((e) => !e).length > 0) ||
+      (apVal && apValues.filter((e) => !e).length > 0)
+    ) {
+      setErr(true);
+      return;
+    }
+    try {
+      setLoading(true);
+      const approvers: any = [];
+      const data: any = [];
+      if (poVal) {
+        poValues.map((e, id) => {
+          const pyld: any = {
+            approverType: id + 1,
+            TransactionType: "PO",
+            UserID: e.value,
+          };
+          approvers.push(pyld);
+          data.push({ ...pyld, UserID: e });
+        });
       }
-      try {
-        setLoading(true);
-        const approvers: any = [];
-        const data: any = [];
-        if (poVal) {
-          poValues.map((e, id) => {
-            const pyld: any = {
-              approverType: id + 1,
-              TransactionType: "PO",
-              UserID: e.value,
-            };
-            approvers.push(pyld);
-            data.push({ ...pyld, UserID: e });
-          });
-        }
-        if (apVal) {
-          apValues.map((e, id) => {
-            const pyld: any = {
-              approverType: id + 1,
-              TransactionType: "AP",
-              UserID: e.value,
-            };
-            approvers.push(pyld);
-            data.push({ ...pyld, UserID: e });
-          });
-        }
-        const payload = {
-          code: payld.code || "",
-          name: payld.name || "",
-          ProjectAccountantID: pAUser?.value || 0,
-          clientID: payld.client?.value,
-          meta: { approvers, data },
-          IsCompleted: payld.IsCompleted || false,
-          IsActive: payld.IsActive || false,
-        };
-        await productionService.updateProject(payld.id, payload);
+      if (apVal) {
+        apValues.map((e, id) => {
+          const pyld: any = {
+            approverType: id + 1,
+            TransactionType: "AP",
+            UserID: e.value,
+          };
+          approvers.push(pyld);
+          data.push({ ...pyld, UserID: e });
+        });
+      }
+      const payload = {
+        code: payld.code || "",
+        name: payld.name || "",
+        ProjectAccountantID: pAUser?.value || 0,
+        clientID: payld.client?.value,
+        meta: { approvers, data },
+      };
+      const resp = await productionService.createProject(payload);
 
-        setEditing(false);
-        setLoading(false);
-        toast.success("Production Updated Successfully");
-      } catch (e) {
-        setLoading(false);
-        toast.error(e?.error || e || "Error");
-      }
-    } else {
-      if (hasPermission) setEditing(true);
-      else toast.error("Access Denied");
+      router.replace(`/productions/${resp?.ID}`);
+    } catch (e) {
+      setLoading(false);
+      toast.error(e?.error || e || "Error");
     }
   };
 
@@ -256,10 +186,9 @@ function EditProductions({ router, clientData, user }) {
           pageNumber: 1,
         })
         .then((res) => {
-          return [...(res?.data || [])].map((e) => ({
-            label: e.Name,
-            value: e.ID,
-          }));
+          return [...(res?.data || [])].map((e) => {
+            return { label: e.Name, value: e.ID, field: e.tenant_id };
+          });
         });
     } else if (lb === "users" && payld.client) {
       return productionService
@@ -287,8 +216,8 @@ function EditProductions({ router, clientData, user }) {
     <div className="p-4">
       <div className="d-flex justify-content-between">
         <div>
-          <div className="f-12">All Productions</div>
-          <div className="fw-bold f-20">Create New Production</div>
+          <div className="text-black fw-600">All Productions</div>
+          <div className="f-32 fw-600">Create New Production</div>
         </div>
 
         <div className="my-auto">
@@ -300,7 +229,6 @@ function EditProductions({ router, clientData, user }) {
             Dismiss
           </button>
           <Button
-            size="sm"
             type="submit"
             loading={loading}
             disabled={loading}
@@ -308,7 +236,7 @@ function EditProductions({ router, clientData, user }) {
             spinColor="#ffffff"
             onClick={onSubmit}
           >
-            {isEditing ? "Save" : "Edit"}
+            Save
           </Button>
         </div>
       </div>
@@ -332,7 +260,6 @@ function EditProductions({ router, clientData, user }) {
               }
               value={payld.code}
               onChange={(e) => setPayld({ ...payld, code: e.target.value })}
-              disabled
             />
 
             {err && !payld.code && (
@@ -357,7 +284,6 @@ function EditProductions({ router, clientData, user }) {
               }
               value={payld.name}
               onChange={(e) => setPayld({ ...payld, name: e.target.value })}
-              disabled={!isEditing || false}
             />
 
             {err && !payld.name && (
@@ -383,7 +309,6 @@ function EditProductions({ router, clientData, user }) {
                   setApValues([null, null]);
                   setPoValues([null, null]);
                 }}
-                isDisabled={!isEditing || false}
               />
               {err && !payld?.client && (
                 <span className="text-danger f-12">
@@ -410,7 +335,6 @@ function EditProductions({ router, clientData, user }) {
               setPOVal(e.target.checked);
               if (!e.target.checked) setPoValues([null, null]);
             }}
-            disabled={!isEditing || false}
           />
           <label htmlFor={"Purchase Order"} className="ms-1">
             {"Purchase Order"}
@@ -424,9 +348,7 @@ function EditProductions({ router, clientData, user }) {
                 <label className="form-label d-flex justify-content-between">
                   Level {index + 1} Approver
                   <span
-                    className={
-                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
-                    }
+                    className="f-12 text-danger ms-auto cursor-pointer"
                     onClick={() => {
                       const tempArr = [...poValues];
                       tempArr.splice(index, 1);
@@ -452,7 +374,7 @@ function EditProductions({ router, clientData, user }) {
                     tempArr[index] = e;
                     setPoValues(tempArr);
                   }}
-                  isDisabled={!isEditing || false}
+                  // isDisabled={disabled || false}
                 />
                 {err && !val && (
                   <span className="text-danger f-12">Select User</span>
@@ -461,7 +383,7 @@ function EditProductions({ router, clientData, user }) {
             ))}
             <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
               <RButton
-                className={isEditing ? "f-14 py-2" : "d-none"}
+                className="f-14 py-2"
                 color="white"
                 onClick={handleAddPurchaseOrderField}
               >
@@ -481,7 +403,6 @@ function EditProductions({ router, clientData, user }) {
               setAPVal(e.target.checked);
               if (!e.target.checked) setApValues([null, null]);
             }}
-            disabled={!isEditing || false}
           />
           <label htmlFor={"Account Payable"} className="ms-1">
             {"Account Payable"}
@@ -495,9 +416,7 @@ function EditProductions({ router, clientData, user }) {
                 <label className="form-label d-flex justify-content-between">
                   Level {index + 1} Approver
                   <span
-                    className={
-                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
-                    }
+                    className="f-12 text-danger ms-auto cursor-pointer"
                     onClick={() => {
                       const tempArr = [...apValues];
                       tempArr.splice(index, 1);
@@ -523,7 +442,7 @@ function EditProductions({ router, clientData, user }) {
                     tempArr[index] = e;
                     setApValues(tempArr);
                   }}
-                  isDisabled={!isEditing || false}
+                  // isDisabled={disabled || false}
                 />
                 {err && !val && (
                   <span className="text-danger f-12">Select User</span>
@@ -533,7 +452,7 @@ function EditProductions({ router, clientData, user }) {
 
             <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
               <RButton
-                className={isEditing ? "f-14 py-2" : "d-none"}
+                className="f-14 py-2"
                 color="white"
                 onClick={handleAddAccountPayableField}
               >
@@ -544,64 +463,26 @@ function EditProductions({ router, clientData, user }) {
         )}
       </div>
 
+      <hr style={{ height: "2px" }} />
+
       {staffUser && (
         <>
-          <hr />
           <div className="fw-600">Production Accountant</div>
-          <div className="col-12 col-md-4 px-4 py-2">
+          <div className="col-12 col-md-4 px-4 pt">
             <label className="form-label">User</label>
             <AsyncSelect
               instanceId={`react-select-user`}
               styles={selectStyle}
               placeholder={"Select User"}
-              defaultOptions={getOptions("sers")}
-              loadOptions={(value) => loadOptions(value, "sers", [])}
+              defaultOptions={getOptions("users")}
+              loadOptions={(value) => loadOptions(value, "users", [])}
               value={pAUser}
               onChange={(e) => setPAUser(e)}
-              isDisabled={!isEditing || false}
+              // isDisabled={disabled || false}
             />
           </div>
         </>
       )}
-
-      <hr />
-      <div className="fw-600">Production Control</div>
-      <div className="col-12 col-md-4 px-4 py-2">
-        <label className="form-label text-black f-12">Status</label>
-
-        <div className="">
-          {["Active", "In-active"].map((e, idx) => (
-            <label className="flex-center d-inline-flex gap-1 m-2" key={idx}>
-              <input
-                name="IsActive"
-                type="radio"
-                className=""
-                checked={!idx ? payld?.IsActive : !payld?.IsActive}
-                onChange={() =>
-                  setPayld({ ...payld, IsActive: idx ? false : true })
-                }
-                disabled={!isEditing || false}
-              />
-              <p className="text-nowrap cursor-pointer m-0">{e}</p>
-            </label>
-          ))}
-        </div>
-        <label className="flex-center d-inline-flex gap-1 m-2">
-          <input
-            name="IsCompleted"
-            type="checkbox"
-            className=""
-            checked={payld?.IsCompleted || false}
-            onChange={(e) =>
-              setPayld({ ...payld, IsCompleted: e.target.checked })
-            }
-            disabled={!isEditing || false}
-          />
-          <p className="text-nowrap cursor-pointer m-0">Mark as Completed</p>
-        </label>
-      </div>
     </div>
   );
 }
-
-export default EditProductions;

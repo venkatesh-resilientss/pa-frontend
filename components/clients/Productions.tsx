@@ -65,7 +65,7 @@ export default function Productions(props) {
           <DropdownMenu end container="body">
             <DropdownItem
               className="w-100"
-              onClick={() => router.push(`/production/${props.data.ID}`)}
+              onClick={() => router.push(`/productions/${props.data.ID}`)}
             >
               <Action
                 icon={detailsIocn}

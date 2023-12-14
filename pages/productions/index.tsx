@@ -177,7 +177,7 @@ export default function Productions({ router, user }) {
           <DropdownMenu end container="body">
             <DropdownItem
               className="w-100"
-              onClick={() => router.push(`/production/${props.data.ID}`)}
+              onClick={() => router.push(`/productions/${props.data.ID}`)}
             >
               <Action
                 icon={editIocn}

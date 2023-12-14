@@ -1,14 +1,12 @@
+import Link from "next/link";
 import { Card } from "reactstrap";
 import Image from "next/image";
+import { AiFillCaretRight } from "react-icons/ai";
 
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
-import router from "next/router";
-const ClientsCard = ({ data }) => {
-  
-  const handleViewDetailsClick = () => {
-    router.push(`/clients/edit-client${data.id}`)
-  };
+import { getLabel } from "@/commonFunctions/common";
 
+const ClientsCard = ({ data }) => {
   return (
     <Card
       style={{ padding: "10px", borderRadius: "10px", gap: "4px" }}
@@ -17,11 +15,7 @@ const ClientsCard = ({ data }) => {
       <div className="d-flex">
         <div className={` rounded-circle  ${"bg-light-secondary"}`}>
           <img
-            src={
-              data.clientLogo == undefined
-                ? "/default.svg"
-                : data.clientLogo
-            }
+            src={data.logo_url || "/default.svg"}
             alt="logo"
             style={{
               height: "37px",
@@ -31,49 +25,34 @@ const ClientsCard = ({ data }) => {
             }}
           />
         </div>
-        <div className="w-100 " style={{ marginLeft: "10px" }}>
+        <div className="w-100 ms-2">
           <div className="d-flex justify-content-between">
-            <div
-              style={{ fontSize: "18px", fontWeight: "700", color: "#030229" }}
-            >
-                {data.name ? data.name.charAt(0).toUpperCase() + data.name.slice(1) : "-"}
-
+            <div className="f-18 fw-bold clr-dblack">
+              {getLabel(data.name || "-")}
             </div>
-            <div
-                className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
-                style={{ fontSize: "10px", fontWeight: "400", gap: "3px", }}  onClick={handleViewDetailsClick}              
-              >
-                  <div>
-                    <img src="/view_details.svg" alt="" />
-                  </div>{" "}
-                  <p style={{ fontSize: "14px" }}>View Details</p>
-                </div>
+            <Link href={`/clients/${data.id}`}>
+              <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 f-10 py-1 px-2">
+                <img src="/view_details.svg" alt="view" />
+                <p className="f-14">View Details</p>
+                <AiFillCaretRight style={{ marginBottom: "1px" }} />
+              </div>
+            </Link>
           </div>
 
           <div className="d-flex gap-4 justify-content-between mt-3">
-            <div
-              className="text-black d-flex align-items-center"
-              style={{
-                fontSize: "10px",
-                fontWeight: "400",
-                marginBottom: "4px",
-              }}
-            >
-              <img src="user.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.client_admin.name ? data.client_admin.name : "-"}</p>
+            <div className="text-black d-flex align-items-center f-10 mb-1">
+              <img
+                src="user.svg"
+                alt="user"
+                style={{ marginRight: "5px", width: "15px" }}
+              />
+              <p className="f-12">{getLabel(data.client_admin.name || "-")}</p>
             </div>
-            <div
-              style={{
-                fontSize: "14px",
-                fontWeight: "400",
-                color: "#030229",
-                marginLeft: "90px",
-              }}
-            >
+            <div className="f-14 clr-dblack" style={{ marginLeft: "90px" }}>
               No. of Active Productions:{" "}
               {data.projects_count ? data.projects_count : "0"}
             </div>
-        </div>
+          </div>
           <div className="d-flex gap-4 justify-content-between mt-2">
             <div
               className="text-black d-flex align-items-center"
@@ -83,36 +62,69 @@ const ClientsCard = ({ data }) => {
                 marginBottom: "4px",
               }}
             >
-              <img src="mail.svg" alt="user" style={{ marginRight: "5px", width:"15px"}} />
-              <p style={{fontSize:"12px"}}>{data.client_admin.email ? data.client_admin.email : "-"}</p>
+              <img
+                src="mail.svg"
+                alt="user"
+                style={{ marginRight: "5px", width: "15px" }}
+              />
+              <p style={{ fontSize: "12px" }}>
+                {data.client_admin.email ? data.client_admin.email : "-"}
+              </p>
             </div>
-        </div>
+          </div>
 
-          
-         <div className="d-flex mt-2">
-          <p style={{ fontSize: "14px" }} className="d-flex align-items-center">
-            <img src="psa.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
-            PSA
-          </p>
-          <p style={{ fontSize: "14px" }} className="d-flex align-items-center ms-2">
-            <img src="psa.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
-            Software Requirement
-          </p>
-          <p style={{ fontSize: "14px" }} className="d-flex align-items-center ms-2">
-            <img src="work_order.svg" style={{ width: "17px", marginRight: "5px" }} alt="" />
-            Work Order
-          </p>
-        </div>
-
-
+          <div className="d-flex mt-2">
+            <p
+              style={{ fontSize: "14px" }}
+              className="d-flex align-items-center"
+            >
+              <img
+                src="psa.svg"
+                style={{ width: "17px", marginRight: "5px" }}
+                alt=""
+              />
+              PSA
+            </p>
+            <p
+              style={{ fontSize: "14px" }}
+              className="d-flex align-items-center ms-2"
+            >
+              <img
+                src="psa.svg"
+                style={{ width: "17px", marginRight: "5px" }}
+                alt=""
+              />
+              Software Requirement
+            </p>
+            <p
+              style={{ fontSize: "14px" }}
+              className="d-flex align-items-center ms-2"
+            >
+              <img
+                src="work_order.svg"
+                style={{ width: "17px", marginRight: "5px" }}
+                alt=""
+              />
+              Work Order
+            </p>
+          </div>
         </div>
       </div>
 
       <hr className="mt-2" />
-      
-      <div className="text-black d-flex align-items-center" style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}>
-        <Image src={fluentEmoji} style={{ height: "18px", width: "18px" }} alt={""} />
-        <span className="m-2" style={{ fontSize: "14px" }}>Subscribed Softwares</span>
+
+      <div
+        className="text-black d-flex align-items-center"
+        style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}
+      >
+        <Image
+          src={fluentEmoji}
+          style={{ height: "18px", width: "18px" }}
+          alt={""}
+        />
+        <span className="m-2" style={{ fontSize: "14px" }}>
+          Subscribed Softwares
+        </span>
       </div>
 
       <div className="d-flex gap-1 mt-2">
@@ -129,7 +141,7 @@ const ClientsCard = ({ data }) => {
               borderRadius: "5%",
             }}
           >
-            {software.software_name}
+            {software.software_name || "-"}
           </div>
         ))}
       </div>

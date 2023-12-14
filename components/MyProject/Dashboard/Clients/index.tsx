@@ -39,7 +39,7 @@ function Clients({ router, user }) {
       <div className="mt-2 d-flex h-100 gap-3 justify-content-between flex-column">
         {clientsData && clientsData.length > 0 ? (
           <Row className="mt-2">
-            {clientsData.map((client, i) => (
+            {clientsData.slice(0, 3).map((client, i) => (
               <Col key={`new-onboarded-client-${i}`} md="4" className="mb-3">
                 <ClientsCard data={client} />
               </Col>
