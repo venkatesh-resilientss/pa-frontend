@@ -2,9 +2,13 @@ import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import { formValidationRules } from "@/constants/common";
+
 
 function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, setPositivePay, ACHExport, setACHExport, check, setCheck, wireTransfer, setWireTransfer }) {
   const { handleSubmit } = useForm();
+  const bankValidationRules = formValidationRules.banks;
+
   const PPDataFormat = [
     { label: "JSON", value: "json" },
     { label: "XML", value: "xml" },
@@ -61,9 +65,10 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
               Check Range Start <span className="required">*</span>
             </Label>
             <Controller disabled={!check}
-              
+
               name="checkRangeStart"
               rules={{
+                ...bankValidationRules.rangeStart,
                 required: check ? "Check Range Start is required" : false,
               }}
               control={control}
@@ -92,6 +97,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!check}
               name="checkRangeEnd"
               rules={{
+                ...bankValidationRules.rangeEnd,
                 required: check ? "Check Range End is required" : false,
               }}
               control={control}
@@ -120,6 +126,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!check}
               name="checkCopies"
               rules={{
+                ...bankValidationRules.rangeCopies,
                 required: check ? "Check Copies is required" : false,
               }}
               control={control}
@@ -161,6 +168,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!eft}
               name="ACHeftRangeStart"
               rules={{
+                ...bankValidationRules.rangeStart,
                 required: eft ? "EFT Range Start is required" : false,
               }}
               control={control}
@@ -189,6 +197,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!eft}
               name="ACHeftRangeEnd"
               rules={{
+                ...bankValidationRules.rangeEnd,
                 required: eft ? "EFT Range End is required" : false,
               }}
               control={control}
@@ -217,6 +226,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!eft}
               name="ACHeftCopies"
               rules={{
+                ...bankValidationRules.rangeCopies,
                 required: eft ? "EFT Copies is required" : false,
               }}
               control={control}
@@ -260,6 +270,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHhost"
               rules={{
+                ...bankValidationRules.eftHost,
                 required: ACHExport ? "Host is required" : false,
               }}
               control={control}
@@ -288,6 +299,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHuserName"
               rules={{
+                ...bankValidationRules.eftUserName,
                 required: ACHExport ? "User Name is required" : false,
               }}
               control={control}
@@ -316,6 +328,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHpassword"
               rules={{
+                ...bankValidationRules.eftPassword,
                 required: ACHExport ? " Password is required" : false,
               }}
               control={control}
@@ -344,6 +357,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHinboundPath"
               rules={{
+                ...bankValidationRules.eftInboundPath,
                 required: ACHExport ? "Inbound Path is required" : false,
               }}
               control={control}
@@ -372,6 +386,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHoutboundPath"
               rules={{
+                ...bankValidationRules.eftOutboundPath,
                 required: ACHExport ? "Outbound Path is required" : false,
               }}
               control={control}
@@ -440,6 +455,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!ACHExport}
               name="ACHcertificate"
               rules={{
+                ...bankValidationRules.eftCertificate,
                 required: ACHExport ? "Certificate is required" : false,
               }}
               control={control}
@@ -473,90 +489,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
               <div>Positive Pay</div>
             </div>
           </div>
-          {/* <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              EFT Range Start
-            </Label>
-            <Controller disabled={!positivePay}
-              name="PPeftRangeStart"
-              rules={{
-                required: "EFT Range Start is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter EFT Range Start"
-                  invalid={errors.PPeftRangeStart && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.PPeftRangeStart && (
-              <span className="text-danger">
-                {errors.PPeftRangeStart.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              EFT Range End
-            </Label>
-            <Controller disabled={!positivePay}
-              name="PPeftRangeEnd"
-              rules={{
-                required: "EFT Range End is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter EFT Range End"
-                  invalid={errors.PPeftRangeEnd && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.PPeftRangeEnd && (
-              <span className="text-danger">
-                {errors.PPeftRangeEnd.message as React.ReactNode}
-              </span>
-            )}
-          </Col>
-          <Col xl="4">
-            <Label
-              className="text-black"
-              style={{ fontSize: "12px", fontWeight: "400" }}
-            >
-              EFT Copies
-            </Label>
-            <Controller disabled={!positivePay}
-              name="PPeftCopies"
-              rules={{
-                required: "EFT Copies is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter EFT Copies"
-                  invalid={errors.PPeftCopies && true}
-                  {...field}
-                />
-              )}
-            />
-            {errors.PPeftCopies && (
-              <span className="text-danger">
-                {errors.PPeftCopies.message as React.ReactNode}
-              </span>
-            )}
-          </Col> */}
+
           <Col xl="4" className="my-2">
             {" "}
             <Label
@@ -568,6 +501,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPhost"
               rules={{
+                ...bankValidationRules.eftHost,
                 required: positivePay ? "Host is required" : false,
               }}
               control={control}
@@ -597,6 +531,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPport"
               rules={{
+                ...bankValidationRules.eftPort,
                 required: positivePay ? "Port is required" : false,
               }}
               control={control}
@@ -625,6 +560,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPuserName"
               rules={{
+                ...bankValidationRules.eftUserName,
                 required: positivePay ? "User Name is required" : false,
               }}
               control={control}
@@ -653,11 +589,13 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPpassword"
               rules={{
+                ...bankValidationRules.eftPassword,
                 required: positivePay ? "Password is required" : false,
               }}
               control={control}
               render={({ field }) => (
                 <Input
+                  type="password"
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   placeholder="Enter Password"
                   invalid={errors.PPpassword && true}
@@ -682,6 +620,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPoutboundPath"
               rules={{
+                ...bankValidationRules.eftOutboundPath,
                 required: positivePay ? "Outbound Path is required" : false,
               }}
               control={control}
@@ -742,6 +681,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!positivePay}
               name="PPcertificate"
               rules={{
+                ...bankValidationRules.eftCertificate,
                 required: positivePay ? "Certificate is required" : false,
               }}
               control={control}
@@ -784,6 +724,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!wireTransfer}
               name="wireTransaferRangeStart"
               rules={{
+                ...bankValidationRules.rangeStart,
                 required: wireTransfer ? "Wire Transafer Range Start is required" : false,
               }}
               control={control}
@@ -812,6 +753,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!wireTransfer}
               name="wireTransaferRangeEnd"
               rules={{
+                ...bankValidationRules.rangeEnd,
                 required: wireTransfer ? " Wire Transfer Range End is required" : false,
               }}
               control={control}
@@ -840,6 +782,7 @@ function CheckEFTForm({ onSubmit, control, errors, eft, setEft, positivePay, set
             <Controller disabled={!wireTransfer}
               name="wireTransferCopies"
               rules={{
+                ...bankValidationRules.rangeCopies,
                 required: wireTransfer ? "Wire Transfer Copies is required" : false,
               }}
               control={control}

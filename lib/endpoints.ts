@@ -219,9 +219,10 @@ export const EDIT_ADDRESSES = (id: any) =>
   `${tenantIdEndpoint}/addresses/${id}`;
 export const BANK_CONFIG = `${tenantIdEndpoint}/bankconfigs/`;
 export const BANK_CONFIG_details = (id) =>
-  `${tenantIdEndpoint}/bankconfigs/${id}`;
+  `${withoutTenantIdEndpoint}/bankconfigs/${id}`;
 export const BANK_ACHES = `${tenantIdEndpoint}/bankaches/`;
-export const BANK_ACH_DETAILS = (id) => `${tenantIdEndpoint}/bankaches/${id}`;
+export const BANK_ACH_DETAILS = (id) =>
+  `${withoutTenantIdEndpoint}/bankaches/${id}`;
 export const GET_PRODUCTIONS = (search) =>
   `${withoutTenantIdEndpoint}/projects/userprojects?search=${search}`;
 

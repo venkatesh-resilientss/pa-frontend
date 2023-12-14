@@ -3,10 +3,12 @@ import AsyncSelect from "react-select/async";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService } from "services";
 import { useEffect, useState } from "react";
+import { formValidationRules } from "@/constants/common";
 
 const stateService = new StatesService();
 function PhysicalAddressForm({ onSubmit, control, errors }) {
   const { handleSubmit } = useForm();
+  const bankValidationRules = formValidationRules.banks;
   const [initialStateOptions, setInitialStateOptions] = useState([])
 
   useEffect(() => {
@@ -59,6 +61,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             <Controller
               name="physicalAddress1"
               control={control}
+              rules={bankValidationRules.physicalAddressLine1}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -85,6 +88,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddress2"
+              rules={bankValidationRules.physicalAddressLine2}
               control={control}
               render={({ field }) => (
                 <Input
@@ -111,6 +115,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddressCity"
+              rules={bankValidationRules.physicalAddressCity}
               control={control}
               render={({ field }) => (
                 <Input
@@ -167,6 +172,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddressPostalCode"
+              rules={bankValidationRules.physicalAddressPostalCode}
               control={control}
               render={({ field }) => (
                 <Input

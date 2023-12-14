@@ -304,7 +304,7 @@ function OtherDetailsForm({ onSubmit, control, errors, activeStatus, setActiveSt
 
         <div className="d-flex flex-column mt-1">
           <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
+          <div className="d-flex gap-4">
             <div className="d-flex gap-1">
               <input
                 type="radio"

@@ -4,8 +4,10 @@ import AsyncSelect from "react-select/async";
 import { StatesService } from "services";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { formValidationRules } from "@/constants/common";
 
 function PhysicalAddressForm({ onSubmit, control, errors }) {
+  const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
   const [initialStateOptions, setInitialStateOptions] = useState([]);
 
@@ -81,6 +83,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               Physical Address Line 1
             </Label>
             <Controller
+              rules={bankValidationRules.physicalAddressLine1}
               name="physicalAddress1"
               control={control}
               render={({ field }) => (
@@ -109,6 +112,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
             </Label>
             <Controller
               name="physicalAddress2"
+              rules={bankValidationRules.physicalAddressLine2}
               control={control}
               render={({ field }) => (
                 <Input
@@ -134,6 +138,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               Physical Address City
             </Label>
             <Controller
+              rules={bankValidationRules.physicalAddressCity}
               name="physicalAddressCity"
               control={control}
               render={({ field }) => (
@@ -190,6 +195,7 @@ function PhysicalAddressForm({ onSubmit, control, errors }) {
               Physical Address Postal Code
             </Label>
             <Controller
+              rules={bankValidationRules.physicalAddressPostalCode}
               name="physicalAddressPostalCode"
               control={control}
               render={({ field }) => (
