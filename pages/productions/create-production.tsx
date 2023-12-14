@@ -217,7 +217,7 @@ export default function CreateProduction({ router, clientData }) {
       <div className="d-flex justify-content-between">
         <div>
           <div className="text-black fw-600">All Productions</div>
-          <div className="f-32 fw-600">Create New Production</div>
+          <div className="f-32 fw-600">Create Production</div>
         </div>
 
         <div className="my-auto">

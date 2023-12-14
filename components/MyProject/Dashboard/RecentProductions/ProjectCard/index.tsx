@@ -44,22 +44,16 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
 
-            <div className="mt-2 font-size-14">
+            <div className="mt-2 f-12">
               Payroll Coordinator :{" "}
               {data.payroll_coordinator ? data.payroll_coordinator : "-"}
             </div>
           </div>
         </div>
 
-        <div className="d-flex justify-content-between mt-3 font-size-14">
+        <div className="d-flex justify-content-between mt-3 f-12">
           <div className="d-flex gap-2">
-            <Image
-              src={budget}
-              alt=""
-              style={{
-                width: "15px",
-              }}
-            />
+            <Image src={budget} alt="" style={{ width: "15px" }} />
             <div>
               <span>Budget Allocated</span>
               <div className="fw-bold font-size-14">{data.budget || 0}</div>
@@ -83,7 +77,7 @@ const ProjectCard = ({ data }) => {
 
         <div className="d-flex justify-content-between mt-3">
           <div>
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 f-12">
               <img src="software_subscribed.svg" alt="" />
               Subscribed Softwares
             </div>
@@ -112,10 +106,7 @@ const ProjectCard = ({ data }) => {
             </div>
           </div>
           <div>
-            <div
-              className="d-flex justify-content-between"
-              style={{ fontSize: "14px" }}
-            >
+            <div className="d-flex justify-content-between f-12">
               <div className="d-flex gap-2">
                 <div></div>
               </div>
@@ -131,7 +122,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
             <div>
-              <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+              <div className="f-12 fw-bold">
                 <p>Custom Design</p>
               </div>
             </div>

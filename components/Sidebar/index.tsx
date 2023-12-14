@@ -763,7 +763,7 @@ const Sidebar = ({ props }) => {
               width="32"
               height="32"
             />
-            <p className={showSidebar ? "" : "d-none"}>
+            <p className={showSidebar ? "f-ellipsis" : "d-none"}>
               {userData?.data?.first_name || ""}&nbsp;
               {userData?.data?.last_name || ""}
             </p>

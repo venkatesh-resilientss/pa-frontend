@@ -11,7 +11,7 @@ const ClientsCard = ({ data }) => {
   return (
     <Card
       style={{ padding: "10px", borderRadius: "10px", gap: "4px" }}
-      className="p-4"
+      className="p-3"
     >
       <div className="d-flex">
         <div className={` rounded-circle  ${"bg-light-secondary"}`}>
@@ -59,7 +59,7 @@ const ClientsCard = ({ data }) => {
                 {getLabel(data.client_admin.name || "-")}
               </p>
             </div>
-            <div className="f-14 clr-dblack">
+            <div className="f-12 clr-dblack">
               No. of Active Productions:{" "}
               {data.projects_count ? data.projects_count : "0"}
             </div>
@@ -78,17 +78,14 @@ const ClientsCard = ({ data }) => {
                 alt="user"
                 style={{ marginRight: "5px", width: "15px" }}
               />
-              <p style={{ fontSize: "12px" }}>
+              <p className="f-12">
                 {data.client_admin.email ? data.client_admin.email : "-"}
               </p>
             </div>
           </div>
 
           <div className="d-flex mt-2">
-            <p
-              style={{ fontSize: "14px" }}
-              className="d-flex align-items-center"
-            >
+            <p className="d-flex align-items-center f-12">
               <img
                 src="psa.svg"
                 style={{ width: "17px", marginRight: "5px" }}
@@ -96,10 +93,7 @@ const ClientsCard = ({ data }) => {
               />
               PSA
             </p>
-            <p
-              style={{ fontSize: "14px" }}
-              className="d-flex align-items-center ms-2"
-            >
+            <p className="d-flex align-items-center ms-2 f-12">
               <img
                 src="psa.svg"
                 style={{ width: "17px", marginRight: "5px" }}
@@ -107,10 +101,7 @@ const ClientsCard = ({ data }) => {
               />
               Software Requirement
             </p>
-            <p
-              style={{ fontSize: "14px" }}
-              className="d-flex align-items-center ms-2"
-            >
+            <p className="d-flex align-items-center ms-2 f-12">
               <img
                 src="work_order.svg"
                 style={{ width: "17px", marginRight: "5px" }}
@@ -122,7 +113,7 @@ const ClientsCard = ({ data }) => {
         </div>
       </div>
 
-      <hr className="mt-2" />
+      <hr className="mt-2 mb-0" />
 
       <div
         className="text-black d-flex align-items-center"
@@ -133,12 +124,10 @@ const ClientsCard = ({ data }) => {
           style={{ height: "18px", width: "18px" }}
           alt={""}
         />
-        <span className="m-2" style={{ fontSize: "14px" }}>
-          Subscribed Softwares
-        </span>
+        <span className="m-2 f-12">Subscribed Softwares</span>
       </div>
 
-      <div className="d-flex gap-1 mt-2">
+      <div className="d-flex gap-1">
         {data.softwares.map((software, i) => (
           <div
             key={i}

@@ -32,7 +32,7 @@ function Clients({ router, user }) {
         </div>
 
         <div className="ms-auto">
-          <CreateClientButton {...{ router, user }} cls="f-14 mx-auto" />
+          <CreateClientButton {...{ router, user }} cls="" />
         </div>
       </div>
 
