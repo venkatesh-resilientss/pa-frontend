@@ -9,11 +9,38 @@ import { DashboardService } from "services";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { AiFillCaretRight } from "react-icons/ai";
+import { Line } from 'react-chartjs-2';
+import { Chart, LinearScale, CategoryScale, PointElement, LineElement, BarElement, ArcElement } from 'chart.js';
+
+
+Chart.register(LinearScale, CategoryScale, PointElement, LineElement, BarElement, ArcElement);
+
 
 
 export default function ProductionDashboard() {
 
   
+  const data = {
+    labels: ['January 23', 'February 23', 'March 23', 'April 23', 'May 23', 'June 23', 'July 23'],
+    datasets: [
+      {
+        label: 'Example Line Chart',
+        data: [0, 29, 42, 44, 82, 101, 120],
+        fill: true,
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   const router = useRouter();
   const { production_id } = router.query;
   const productionService = new DashboardService();
@@ -157,8 +184,8 @@ export default function ProductionDashboard() {
           )}
         </Row>
       </div>
-
-      <div className="col-md-6 mt-3">
+      <Row>
+        <div className="col-md-6 mt-3">
         {error || !projectDetails ? (
           <div className="text-center nodataAvailable">
             <img src="/no_client_data_available.svg" alt="Error" />
@@ -292,6 +319,17 @@ export default function ProductionDashboard() {
           </Card>
         )}
       </div>
+
+      <div className="col-md-6 mt-3">
+          
+        <Card>
+          <div className="px-4 pb-5" style={{ height: '361px', width:"100%" }}>
+            <h6 className="productionDashboardCard p-1">Expense Trends Over Time</h6>
+                <Line data={data} options={options} />
+              </div>
+        </Card>
+      </div>
+      </Row>
       
       <div
         className="my-1 mt-3 mb-2"
