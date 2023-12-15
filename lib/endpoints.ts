@@ -278,3 +278,13 @@ export const GET_CLIENTS_LIST = `${withoutTenantIdEndpoint}/clients/search`; //C
 export const GET_CLIENTS_FILTERS = `${withoutTenantIdEndpoint}/clients/filters`; //Clients
 export const UPDATE_PRODUCTION = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`; //Create projects
+  //LEGISLATIVES ENDPOINTS
+
+export const GET_LEGISLATIVES = `${tenantIdEndpoint}/legislatives/?limit=${100}&offset=0`; //legislatives
+export const CREATE_LEGISLATIVE = `${tenantIdEndpoint}/legislatives/`; //Create legislatives
+export const DELETE_LEGISLATIVE = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`; //DELETE legislatives
+export const EDIT_LEGISLATIVE = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`; //EDIT legislatives
+export const LEGISLATIVE_DETAIL_ENDPOINT = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`;

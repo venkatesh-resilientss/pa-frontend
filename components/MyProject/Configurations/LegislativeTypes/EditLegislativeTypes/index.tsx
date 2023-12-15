@@ -2,25 +2,64 @@ import { Button, Col, Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { LegislativesService } from "services";
+import useSWR, { mutate } from "swr";
+import { useEffect, useState } from "react";
 
 function EditLegislativeType() {
   const router = useRouter();
-  const onSubmit = async () => {
-    // Handle form submission logic here
-    try {
-      // Your logic to save the form data
-      toast.success("Legislative Type Updated successfully");
-      router.push("/configurations/legislative-type");
-    } catch (error) {
-      toast.error("Error adding Legislative Type");
-      console.error(error);
-    }
-  };
+  const { id } = router.query;
+
+  const legislativesService = new LegislativesService();
+
+  const fetchlegislativesDetails = (id) => legislativesService.legislativesDetails(id);
+
+  const { data: legislative } = useSWR(
+    id ? ["LEGISLATIVE_DETAILS", id] : null,
+    () => fetchlegislativesDetails(id)
+  );
   const {
     handleSubmit,
     formState: { errors },
+    setValue,
     control,
+    reset,
   } = useForm();
+
+  const [activeStatus, setActiveStatus] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const { mutate: legislativeMutate } = useSWR("LIST_LEGISLATIVES", () =>
+  legislativesService.getlegislatives({ search: "", pageLimit: 25, offset: 0 })
+  );
+
+  useEffect(() => {
+    if (!legislative) return;
+    legislative?.Code && setValue("code", legislative?.Code);
+    legislative?.Description && setValue("description", legislative?.Description);
+    legislative?.Name && setValue("name", legislative?.Name);
+    setActiveStatus(legislative?.IsActive);
+  }, [legislative]);
+
+  const onSubmit = (data) => {
+    if (isSaving) return
+    data.IsActive = activeStatus
+    setIsSaving(true)
+    legislativesService
+      .editlegislatives(id, data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Legislative Edited successfully");
+        mutate(legislativeMutate());
+        router.push("/configurations/legislative-type");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        toast.error(error?.error);
+      });
+  };
+ 
   return (
     <>
       <div className="section mt-4">
@@ -37,7 +76,7 @@ function EditLegislativeType() {
             >
               Edit Legislative Type
             </div>
-            {/* <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <div className="d-flex me-2 " style={{ gap: "10px" }}>
               <Button
                 onClick={() => router.back()}
                 style={{
@@ -62,7 +101,7 @@ function EditLegislativeType() {
               >
                 Save
               </Button>
-            </div> */}
+            </div>
           </div>
 
           <hr style={{ height: "2px" }} />
@@ -75,21 +114,21 @@ function EditLegislativeType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Legislative Code<span className="text-danger">*</span></Label>
                   <Controller
-                    name="LegislativeCode"
+                    name="code"
                     rules={{ required: "Legislative Code is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="Legislative Code"
-                        invalid={errors.LegislativeCode && true}
+                        invalid={errors.code && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.LegislativeCode && (
+                  {errors.code && (
                     <span className="text-danger">
-                      {errors.LegislativeCode.message as React.ReactNode}
+                      {errors.code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -99,21 +138,21 @@ function EditLegislativeType() {
                 <div className="mb-1">
                   <Label className="form-lable-font">Legislative Name<span className="text-danger">*</span></Label>
                   <Controller
-                    name="LegislativeName"
+                    name="name"
                     rules={{ required: "Legislative Name is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="Legislative Name"
-                        invalid={errors.LegislativeName && true}
+                        invalid={errors.name && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.LegislativeName && (
+                  {errors.name && (
                     <span className="text-danger">
-                      {errors.LegislativeName.message as React.ReactNode}
+                      {errors.name.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -137,54 +176,39 @@ function EditLegislativeType() {
 
             </Row>
             <Row>
-              <Col xl="4">
-                <div className="d-flex flex-column mt-2">
-                  <Label
-                    className="text-black"
-                    style={{ fontSize: "16px", fontWeight: "400" }}
-                  >
-                    Status
-                  </Label>
+              <Col>
+                <div className="d-flex flex-column mt-1">
+                  <Label className="form-lable-font">Status </Label>
                   <div className="d-flex gap-1">
                     <div className="d-flex gap-1">
                       <input
+                        className="custom-radio-input"
                         type="radio"
                         id="ex1-active"
                         name="ex1"
-                        value="active"
-                        checked={true}
+                        checked={activeStatus}
+                        onChange={() => {
+                          setActiveStatus(true);
+                        }}
                       />
-                      <div>Active</div>
+                      <div className="radio-text">Active</div>
                     </div>
                     <div className="d-flex gap-1">
                       <input
                         type="radio"
+                        className="custom-radio-input"
                         name="ex1"
                         id="ex1-inactive"
-                        value="inactive"
+                        checked={!activeStatus}
+                        onChange={() => {
+                          setActiveStatus(false);
+                        }}
                       />
-                      <div>Inactive</div>
+                      <div className="radio-text">In-Active</div>
                     </div>
                   </div>
                 </div>
               </Col>
-            </Row>
-            <Row style={{ marginTop: '20px' }}>
-              <Col>
-                <div className="d-flex me-2 " style={{ gap: "20px" }}>
-                  <Button
-                    onClick={() => router.back()}
-                    className="buttonStyle edit-buttons"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    className="buttonStyle1 edit-buttons"
-                  >
-                    Save
-                  </Button>
-                </div></Col>
             </Row>
           </Form>
         </div>
