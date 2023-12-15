@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { DepartmentsService } from "services";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
@@ -15,7 +14,6 @@ import { LoaderButton } from "@/components/Loaders";
 function EditDepartment() {
   const router = useRouter();
   const departmentValidationRules = formValidationRules.department;
-  const departmentsService = new DepartmentsService();
   const {
     handleSubmit,
     formState: { errors },
