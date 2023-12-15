@@ -113,13 +113,11 @@ function EditCurrency() {
                 buttonText={editMode ? "Save" : "Edit"}
                 isLoading={isLoading}
                 handleClick={() => {
-                  if (hasEditConfigurationPermission) {
+                  if (!editMode) {
                     setEditMode(true);
                     return;
-                  } else {
-                    return;
                   }
-                  handleSubmit(onSubmit);
+                  handleSubmit(onSubmit)();
                 }}
               />
             )}
@@ -243,13 +241,13 @@ function EditCurrency() {
                 name="currentRate"
                 rules={currencyValidationRules.currentRate}
                 control={control}
-                disabled={!editMode}
                 render={({ field }) => (
                   <Input
                     placeholder="Enter Value"
                     invalid={errors.currentRate && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -267,7 +265,6 @@ function EditCurrency() {
                 name="description"
                 control={control}
                 rules={currencyValidationRules.description}
-                disabled={!editMode}
                 render={({ field }) => (
                   <Input
                     type="textarea"
@@ -279,6 +276,7 @@ function EditCurrency() {
                     placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
