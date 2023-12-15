@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal, ModalBody,Spinner } from "reactstrap";
+import { Button, Modal, ModalBody } from "reactstrap";
 import { closeBulkUploadCurrenciesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
 import downloadIcon from "assets/myIcons/download.svg";
@@ -10,7 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { CurrencyService } from "services";
 import { UploadSampleFiles } from "@/constants/common";
-
+import {LoaderButton} from "@/components/Loaders";
 const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
   const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
       toast.error("Please select a file to upload.");
       return;
     }
-
+    setLoader(true);
     const fileName = uploadedFiles[0];
 
     // Call the uploadbanklist function from your service with only the file name
@@ -54,6 +54,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
         dispatch(closeBulkUploadCurrenciesPopup("close"));
         setRerender(!rerender)
         setLoader(false);
+        setUploadedFiles([]);
       })
       .catch((error) => {
         toast.error(error.Message || error.error || "Failed to insert data.");
@@ -174,7 +175,10 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
 
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
-            onClick={() => dispatch(closeBulkUploadCurrenciesPopup("close"))}
+            onClick={() => {
+              dispatch(closeBulkUploadCurrenciesPopup("close"));
+              setUploadedFiles([])
+            }}
             color="white"
             style={{
               fontSize: "14px",
@@ -183,22 +187,7 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
           >
             Cancel
           </Button>
-          <Button
-            onClick={handleUpload}
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              backgroundColor: "#00AEEF",
-              border: "none",
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Spinner animation="border" role="status" size="sm" />
-            ) : (
-              "Upload"
-            )}
-          </Button>
+          <LoaderButton buttonText={'Upload'} isLoading={isLoading} handleClick={handleUpload}/>
         </div>
       </ModalBody>
     </Modal>
