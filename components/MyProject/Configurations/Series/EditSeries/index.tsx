@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { SeriesService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 function EditSeries() {
   const router = useRouter();
   const seriesValidationRules = formValidationRules.series;
@@ -45,14 +46,14 @@ function EditSeries() {
   const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.seriesname,
+      name: getLabel(data.seriesname),
       description: data.description,
       isActive: activeStatus,
       code: data.Seriescode,
       clientID,
-      projectID
+      projectID,
     };
 
     seriesService
@@ -60,12 +61,12 @@ function EditSeries() {
       .then(() => {
         toast.success("Series Edited successfully");
         mutate(countryMutate());
-        router.push('/configurations/series');
+        router.push("/configurations/series");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit Series');
+        toast.error(error?.error || error?.Message || "Unable to edit Series");
       });
   };
 

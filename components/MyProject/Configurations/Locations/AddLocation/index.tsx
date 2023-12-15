@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 
 function AddLocation() {
   const router = useRouter();
@@ -19,14 +20,14 @@ function AddLocation() {
   } = useForm();
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.locationname,
+      name: getLabel(data.locationname),
       code: data.locationcode,
       description: data.description,
       IsActive: false,
       clientID,
-      projectID
+      projectID,
     };
 
     locationService
@@ -37,25 +38,16 @@ function AddLocation() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Location');
+        toast.error(error?.error || error?.Message || "Unable to add Location");
       });
   };
 
   return (
     <div className="overflow-auto mt-4 configuration-add">
-      <div
-        className="title-head"
-        
-      >
-        All Locations
-      </div>
+      <div className="title-head">All Locations</div>
 
       <div className="d-flex justify-content-between">
-        <div
-          className="title"
-        >
-          Add New Location
-        </div>
+        <div className="title">Add New Location</div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
@@ -92,7 +84,9 @@ function AddLocation() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Location Name<span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Location Name<span className="required">*</span>
+            </Label>
             <Controller
               name="locationname"
               rules={locationValidationRules.name}
@@ -116,7 +110,9 @@ function AddLocation() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Location Code<span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Location Code<span className="required">*</span>
+            </Label>
             <Controller
               name="locationcode"
               rules={locationValidationRules.code}

@@ -8,6 +8,7 @@ import { CountryService } from "services";
 import { selectStyles } from "@/constants/common";
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
+import { getLabel } from "@/commonFunctions/common";
 function AddTaxCode() {
   const {
     control,
@@ -25,28 +26,33 @@ function AddTaxCode() {
     const fetchInitialCountryOptions = async () => {
       try {
         const res = await countryService.getCountries({
-          search: "", limit: 25, offset: 0, is_active: true
+          search: "",
+          limit: 25,
+          offset: 0,
+          is_active: true,
         });
-        const options = res?.data.map(item => ({
+        const options = res?.data.map((item) => ({
           value: item.ID,
-          label: `${item.Code} - ${item.Name}`
-        }))
+          label: `${item.Code} - ${item.Name}`,
+        }));
         setInitialCountryOptions(options);
       } catch (error) {
-        toast.error(error?.Message || error?.error || 'Error while fetching countries')
+        toast.error(
+          error?.Message || error?.error || "Error while fetching countries"
+        );
       }
-    }
+    };
     fetchInitialCountryOptions();
   }, []);
-  const loadCountryOptions = (callback => {
+  const loadCountryOptions = (callback) => {
     callback(initialCountryOptions);
-  })
+  };
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.taxcodename,
+      name: getLabel(data.taxcodename),
       code: data.taxcode,
       description: data.description,
-      countryID: parseInt(data.country?.value)
+      countryID: parseInt(data.country?.value),
     };
     taxCodeService
       .createTaxCode(backendFormat)
@@ -56,7 +62,7 @@ function AddTaxCode() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add TaxCode');
+        toast.error(error?.error || error?.Message || "Unable to add TaxCode");
       });
   };
   return (
@@ -112,7 +118,9 @@ function AddTaxCode() {
       >
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code<span className="required">*</span> </Label>
+            <Label className="form-lable-font">
+              Tax Code<span className="required">*</span>{" "}
+            </Label>
             <Controller
               name="taxcode"
               rules={taxCodeValidationRules.code}
@@ -135,7 +143,9 @@ function AddTaxCode() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code Name<span className="required">*</span> </Label>
+            <Label className="form-lable-font">
+              Tax Code Name<span className="required">*</span>{" "}
+            </Label>
             <Controller
               name="taxcodename"
               rules={taxCodeValidationRules.name}
@@ -158,7 +168,9 @@ function AddTaxCode() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Country <span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Country <span className="required">*</span>
+            </Label>
             <Controller
               name="country"
               control={control}

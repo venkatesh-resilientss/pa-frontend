@@ -7,6 +7,7 @@ import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 
 function EditLocation() {
   const router = useRouter();
@@ -50,14 +51,14 @@ function EditLocation() {
   const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.locationname,
+      name: getLabel(data.locationname),
       description: data.description,
       isActive: activeStatus,
       code: data.locationcode,
       clientID,
-      projectID
+      projectID,
     };
 
     locationsService
@@ -65,12 +66,14 @@ function EditLocation() {
       .then(() => {
         toast.success("Location Edited successfully");
         mutate(locationMutate());
-        router.push('/configurations/locations');
+        router.push("/configurations/locations");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit Location');
+        toast.error(
+          error?.error || error?.Message || "Unable to edit Location"
+        );
       });
   };
 

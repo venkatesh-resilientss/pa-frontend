@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { CurrencyService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
 function AddCurrency() {
   const currencyService = new CurrencyService();
   const currencyValidationRules = formValidationRules.currencies;
@@ -17,12 +18,12 @@ function AddCurrency() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.currencyname,
+      name: getLabel(data.currencyname),
       code: data.currencycode,
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
       description: data.description,
-      BaseCurrency: data.BaseCurrency
+      BaseCurrency: data.BaseCurrency,
     };
 
     currencyService
@@ -33,7 +34,7 @@ function AddCurrency() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Currency');
+        toast.error(error?.error || error?.Message || "Unable to add Currency");
       });
   };
 
@@ -68,7 +69,7 @@ function AddCurrency() {
             >
               Save
             </Button>
-          </div>  
+          </div>
         </div>
         <hr style={{ height: "2px" }} />
         <Form
@@ -166,9 +167,7 @@ function AddCurrency() {
                   />
                 )}
               />
-              <Label className="form-lable-font mb-0">
-                Is Base Currency
-              </Label>
+              <Label className="form-lable-font mb-0">Is Base Currency</Label>
             </div>
           </Col>
           <Col xl="5">

@@ -20,6 +20,7 @@ import CreateProductionButton from "@/components/productions/CreateProductionBut
 import NoProductionPage from "@/components/productions/NoProductionPage";
 
 import { ClientsService, ProjectService } from "services";
+import { getLabel } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const projectService = new ProjectService();
@@ -210,10 +211,7 @@ export default function Productions({ router, user }) {
       suppressSizeToFit: true,
       flex: 1,
       cellRenderer: (params) => {
-        return (
-          params?.data?.Code?.charAt(0).toUpperCase() +
-          params?.data?.Code?.slice(1)
-        );
+        return getLabel(params?.data?.Code);
       },
     },
     {
@@ -224,10 +222,7 @@ export default function Productions({ router, user }) {
       suppressSizeToFit: true,
       flex: 2,
       cellRenderer: (params) => {
-        return (
-          params?.data?.Name?.charAt(0).toUpperCase() +
-          params?.data?.Name?.slice(1)
-        );
+        return getLabel(params?.data?.Name);
       },
     },
     {
@@ -238,10 +233,7 @@ export default function Productions({ router, user }) {
       suppressSizeToFit: true,
       flex: 2,
       cellRenderer: (params) => {
-        return (
-          params?.data?.ProjectType?.Name?.charAt(0).toUpperCase() +
-          params?.data?.ProjectType?.Name?.slice(1)
-        );
+        return getLabel(params?.data?.ProjectType?.Name);
       },
     },
     {
@@ -287,11 +279,9 @@ export default function Productions({ router, user }) {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
-              params?.data?.Created?.first_name?.slice(1) || "") +
+            {getLabel(params?.data?.Created?.first_name || "") +
               " " +
-              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
-                params?.data?.Created?.last_name?.slice(1) || "")}
+              getLabel(params?.data?.Created?.last_name || "")}
           </div>
         );
       },

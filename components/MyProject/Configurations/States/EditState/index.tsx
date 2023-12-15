@@ -8,6 +8,7 @@ import { CountryService, StatesService } from "services";
 import AsyncSelect from "react-select/async";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
+import { getLabel } from "@/commonFunctions/common";
 function EditState() {
   const router = useRouter();
   const { id } = router.query;
@@ -43,14 +44,12 @@ function EditState() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries(
-      {
-        search: "",
-        limit: 25,
-        offset: 0,
-        is_active: true
-      }
-    )
+    countryService.getCountries({
+      search: "",
+      limit: 25,
+      offset: 0,
+      is_active: true,
+    })
   );
 
   const countrySelectOptions = countryData?.data.map((b) => {
@@ -60,13 +59,11 @@ function EditState() {
     };
   });
 
-
-
   const [activeStatus, setActiveStatus] = useState(stateData?.IsActive);
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.Statename,
+      name: getLabel(data.Statename),
       description: data.description,
       isActive: activeStatus,
       code: data.Statecode,
@@ -77,12 +74,12 @@ function EditState() {
       .editState(id, backendFormat)
       .then(() => {
         toast.success("State Edited successfully");
-        router.push('/configurations/states');
+        router.push("/configurations/states");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit State');
+        toast.error(error?.error || error?.Message || "Unable to edit State");
       });
   };
 

@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { CurrencyService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
 function EditCurrency() {
   const router = useRouter();
   const currencyValidationRules = formValidationRules.currencies;
   const { id } = router.query;
   const currencyService = new CurrencyService();
-  const [isBaseCurrency,setIsBaseCurrency] = useState(false);
+  const [isBaseCurrency, setIsBaseCurrency] = useState(false);
   const fetchCurrencyDetails = (id) => currencyService.currencyDetails(id);
 
   const { data: currencyData } = useSWR(
@@ -32,8 +33,10 @@ function EditCurrency() {
 
     currencyData?.Name && setValue("currencyname", currencyData?.Name);
     currencyData?.Code && setValue("currencycode", currencyData?.Code);
-    currencyData?.CurrencySymbol && setValue("currencysymbol", currencyData?.CurrencySymbol);
-    currencyData?.CurrentRate && setValue("currentRate",currencyData?.CurrentRate)
+    currencyData?.CurrencySymbol &&
+      setValue("currencysymbol", currencyData?.CurrencySymbol);
+    currencyData?.CurrentRate &&
+      setValue("currentRate", currencyData?.CurrentRate);
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
 
@@ -49,7 +52,7 @@ function EditCurrency() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.currencyname,
+      name: getLabel(data.currencyname),
       code: data.currencycode,
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
@@ -63,12 +66,14 @@ function EditCurrency() {
       .then(() => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());
-        router.push('/configurations/currencies');
+        router.push("/configurations/currencies");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit Currency');
+        toast.error(
+          error?.error || error?.Message || "Unable to edit Currency"
+        );
       });
   };
 
@@ -201,15 +206,13 @@ function EditCurrency() {
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
                     checked={isBaseCurrency}
-                    onChange={(e)=>{
-                      setIsBaseCurrency(e.target.checked)
+                    onChange={(e) => {
+                      setIsBaseCurrency(e.target.checked);
                     }}
                   />
                 )}
               />
-              <Label className="form-lable-font mb-0">
-                Is Base Currency
-              </Label>
+              <Label className="form-lable-font mb-0">Is Base Currency</Label>
             </div>
           </Col>
           <Col xl="5">

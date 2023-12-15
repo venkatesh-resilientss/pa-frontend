@@ -258,7 +258,7 @@ const Sidebar = ({ props }) => {
                 className="d-flex gap-2"
                 href={
                   clickedItemIndex
-                    ? `/production/${temp1?.ID}/dashboard`
+                    ? `/productions/${temp1?.ID}/dashboard`
                     : route.children
                     ? ""
                     : route.path
@@ -840,7 +840,7 @@ const Sidebar = ({ props }) => {
               handleProductionSelection(temp1);
               sessionStorage.setItem("clientid", temp1?.Client?.ID);
               sessionStorage.setItem("projectid", temp1?.ID);
-              router.push(`/production/${temp1.ID}/dashboard`);
+              router.push(`/productions/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
             }}
             style={{ width: 150 }}
