@@ -252,7 +252,6 @@ export const sidebarRoutesMaster = [
         name: "Employee Types",
         path: "/employee-type",
       },
-
       {
         name: "States",
         path: "/states",
@@ -266,28 +265,17 @@ export const sidebarRoutesMaster = [
         path: "/OccupationCodes",
       },
       {
-        name: "MPIPHP Production code",
-        path: "/MPIPHP",
+        name: "WC Class",
+        path: "/wcclass",
       },
       {
-        name: "Pay code",
-        path: "/paycode",
-      },
-    ],
-  },
-  {
-    name: "Payroll",
-    icon: "/icons/list.svg",
-    path: "/payroll",
-    children: [
-      {
-        name: "Projects",
-        path: "/projects",
+        name: "Project Types",
+        path: "/project-type",
       },
       {
-        name: "Employees",
-        path: "/employees",
-      },
+        name: "WC Class Codes",
+        path: "/wcclasscodes",
+      }
     ],
   },
   {
@@ -454,8 +442,41 @@ export const sidebarRoutesNonStaff = [
     name: "Reports",
     icon: "/icons/report.svg",
     path: "/reports",
-  }, 
-    {
+  },
+  {
+    name: "Configurations",
+    icon: "/icons/configurationIcon.svg",
+    path: "/configurations",
+    children: [
+      {
+        name: "Banks",
+        path: "/banks",
+      },
+
+      {
+        name: "Departments",
+        path: "/departments",
+      },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
+      {
+        name: "Employee Types",
+        path: "/employee-type",
+      },
+      {
+        name: "WC Class",
+        path: "/wcclass",
+      },
+      {
+        name: "WC Class Codes",
+        path: "/wcclasscodes",
+      },
+
+    ],
+  },
+  {
     name: "Settings",
     icon: "/icons/settingIcon.svg",
     path: "/settings",

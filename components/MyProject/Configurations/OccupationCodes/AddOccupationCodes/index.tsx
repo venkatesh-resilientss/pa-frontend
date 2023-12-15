@@ -2,8 +2,11 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import React, { useState } from "react";
-import ExtendedMultiSelect from "@/components/ExtendedMultiSelect";
+import React, { useState, useEffect } from "react";
+import { OccupationcodeService, WcclassService, EmployeetypesService } from "services";
+import AsyncSelect from "react-select/async";
+import { selectStyles } from "constants/common";
+
 export type Option = {
   value: number | string;
   label: string;
@@ -11,32 +14,122 @@ export type Option = {
 function AddOccupationCodes() {
 
   const router = useRouter();
-  const options = [
-    { value: 0, label: "Goranboy" },
-    { value: 1, label: "Safikurd" },
-    { value: 2, label: "Baku" },
-    { value: 3, label: "Ganja" },
-  ];
-  const [optionSelected, setSelected] = useState<Option[] | null>();
-  const handleChange = (selected: Option[]) => {
-    setSelected(selected);
-  };
-  const onSubmit = async () => {
-    // Handle form submission logic here
-    try {
-      // Your logic to save the form data
-      toast.success("Company added successfully");
-      router.push("/configurations/company");
-    } catch (error) {
-      toast.error("Error adding company");
-      console.error(error);
-    }
-  };
+
+  const occupationcodeService = new OccupationcodeService();
+  
+  const wcclassService = new WcclassService();
+  const employeetypesService = new EmployeetypesService();
+
+  const [wcclassOptions, setwcclassOptions] = useState([]);
+  const [employeetypesOptions, setemployeetypesOptions] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+
+  const onSubmit = async (data) => {
+    if(isSaving) return
+    setIsSaving(true)
+    data.employeeTypeID = data.employeeTypeID.value
+    data.wcClassID = data.wcClassID.value
+    try {
+      occupationcodeService
+      .createOccupationCode(data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Occupation Codes added successfully");
+        router.push("/configurations/OccupationCodes");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        toast.error(error?.error);
+      });
+    } catch (error) {
+      toast.error("Error adding Occupation Codes");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchInitialEmpt = async () => {
+      try {
+        const res = await employeetypesService.getEmployeetypes({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Code,
+        }));
+        setemployeetypesOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+    fetchInitialEmpt();
+  }, []);
+
+  const loademployeeTypeOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await employeetypesService.getEmployeetypes({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Code,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchInitialwc = async () => {
+      try {
+        const res = await wcclassService.getWcclass({
+          search: "",
+          pageLimit: 25,
+          offset: 0,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: item.Code,
+        }));
+        setwcclassOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+    fetchInitialwc();
+  }, []);
+
+  const loadwcOptions: any = async (inputValue, callback) => {
+    try {
+      const res = await wcclassService.getWcclass({
+        search: inputValue.toString(),
+        pageLimit: 25,
+        offset: 0,
+      });
+      const options = res?.data.map((item) => ({
+        value: item.ID,
+        label: item.Code,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  }
   return (
     <>
       <div className="section mt-4 occupation-codes">
@@ -53,33 +146,60 @@ function AddOccupationCodes() {
             >
               Add Occupation Code
             </div>
+            <div className="d-flex me-2 " style={{ gap: "10px" }}>
+              <Button
+                onClick={() => router.back()}
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "400",
+                  height: "34px",
+                  backgroundColor: "transparent",
+                  color: "#2D2C2C",
+                  border: "none",
+                }}
+              >
+                Dismiss
+              </Button>
+              <Button
+                onClick={handleSubmit(onSubmit)}
+                color="primary"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  height: "34px",
+                }}
+              >
+                Save
+              </Button>
+            </div>
+
           </div>
 
           <hr className="occupation-hr" />
           <Form
             className=" mt-2 d-flex flex-column occupation-form"
-            onClick={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <Row>
               <Col xl="4">
                 <div className="mb-1">
                   <Label className="form-lable-font">OCC Code<span className="text-danger">*</span></Label>
                   <Controller
-                    name="OCCCode"
+                    name="Code"
                     rules={{ required: "OCC Code is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="OCC Code"
-                        invalid={errors.OCCCode && true}
+                        invalid={errors.Code && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.OCCCode && (
+                  {errors.Code && (
                     <span className="text-danger">
-                      {errors.OCCCode.message as React.ReactNode}
+                      {errors.Code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -113,74 +233,62 @@ function AddOccupationCodes() {
                 <div className="mb-1">
                   <Label className="form-lable-font">WC Class<span className="text-danger">*</span></Label>
                   <Controller
-                    name="WCClass"
+                    name="wcClassID"
                     rules={{ required: "WC Class is required" }}
                     control={control}
                     render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Series Code"
-                        invalid={errors.WCClass && true}
+                      <AsyncSelect
                         {...field}
+                        isClearable={true}
+                        className="react-select"
+                        classNamePrefix="select"
+                        loadOptions={loadwcOptions}
+                        placeholder="Select Wc Class"
+                        defaultOptions={wcclassOptions}
+                        styles={selectStyles}
                       />
                     )}
                   />
-                  {errors.WCClass && (
+                  {errors.wcClassID && (
                     <span className="text-danger">
-                      {errors.WCClass.message as React.ReactNode}
+                      {errors.wcClassID.message as React.ReactNode}
                     </span>
                   )}
                 </div>
               </Col>
             </Row>
             <Row>
-              <Col xl="4">
+            <Col xl="4">
                 <div className="mb-1">
                   <Label className="form-lable-font">Employee Type<span className="text-danger">*</span></Label>
                   <Controller
-                    name="EmployeeType"
+                    name="employeeTypeID"
                     rules={{ required: "Employee Type is required" }}
                     control={control}
-                    render={() => (
-                      <ExtendedMultiSelect
-                        key="example_id"
-                        options={options}
-                        onChange={handleChange}
-                        value={optionSelected}
-                        isSelectAll={true}
-                        menuPlacement={"top"}
+                    render={({ field }) => (
+                      <AsyncSelect
+                        {...field}
+                        isClearable={true}
+                        className="react-select"
+                        classNamePrefix="select"
+                        loadOptions={loademployeeTypeOptions}
+                        placeholder="Select Wc Class"
+                        defaultOptions={employeetypesOptions}
+                        styles={selectStyles}
                       />
                     )}
                   />
+                  {errors.employeeTypeID && (
+                    <span className="text-danger">
+                      {errors.employeeTypeID.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
-              </Col>
-              <Col><div className="d-flex flex-column mt-1">
-                <Label className="form-lable-font">Status </Label>
-                <div className="d-flex gap-1">
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      id="ex1-active"
-                      checked={true}
-                      name="ex1"
-                    />
-                    <div>Active</div>
-                  </div>
-                  <div className="d-flex gap-1">
-                    <input
-                      type="radio"
-                      name="ex1"
-                      id="ex1-inactive"
-                    />
-                    <div>In-Active</div>
-                  </div>
-                </div>
-              </div>
               </Col>
               <Col xl="4">
                 <div className="mb-1">
                   <Controller
-                    name="OFFProduction"
+                    name="offProduction"
                     control={control}
                     render={({ field }) => (
                       <Input
@@ -195,24 +303,6 @@ function AddOccupationCodes() {
                 </div>
               </Col>
 
-            </Row>
-
-            <Row className="occupation-button-header">
-              <Col>
-                <div className="d-flex me-2 gap-20">
-                  <Button
-                    onClick={() => router.back()}
-                    className="buttonStyle"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    className="buttonStyle1"
-                  >
-                    Save
-                  </Button>
-                </div></Col>
             </Row>
           </Form>
         </div>

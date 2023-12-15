@@ -1,4 +1,4 @@
-import EmployeeType from "@/components/MyProject/Configurations/EmployeeType";
+import EmployeeType from "@/components/MyProject/Configurations/EmployeeTypes";
 
 function index() {
   return (

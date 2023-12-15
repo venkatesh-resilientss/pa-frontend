@@ -1,4 +1,4 @@
-import EditEmployeeType from "components/MyProject/Configurations/EmployeeType/EditEmployeeType";
+import EditEmployeeType from "@/components/MyProject/Configurations/EmployeeTypes/EditEmployeeType";
 
 export default function index(){
 

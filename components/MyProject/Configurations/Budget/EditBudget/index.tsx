@@ -267,7 +267,6 @@ function EditBudget() {
       IsActive: activeStatus,
     };
 
-    // console.log(backendFormat);
 
     budgetService
       .editBudget(id, backendFormat)
