@@ -83,28 +83,21 @@ export default function EditProductions({ router, clientData, user }) {
               }
             : null
         );
-        const getApproverName = (id) => {
-          const txt = (resp?.data?.Meta?.data || []).find((e) => {
-            return e?.UserID?.value === id;
-          })?.UserID?.label;
 
-          return txt;
-        };
-
-        const po = resp?.approvers?.approvers
+        const po = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "PO")
           .map((e) => ({
-            label: getApproverName(e.UserID),
+            label: e.name,
             value: e.UserID,
           }));
 
         setPoValues(po);
         setPOVal(po.length > 0 ? true : false);
 
-        const ap = resp?.approvers?.approvers
+        const ap = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "AP")
           .map((e) => ({
-            label: getApproverName(e.UserID),
+            label: e.name,
             value: e.UserID,
           }));
 
@@ -384,6 +377,7 @@ export default function EditProductions({ router, clientData, user }) {
                   setPayld({ ...payld, client: e });
                   setApValues([null, null]);
                   setPoValues([null, null]);
+                  setPAUser(null);
                 }}
                 isDisabled={!isEditing || false}
               />
@@ -556,8 +550,8 @@ export default function EditProductions({ router, clientData, user }) {
               instanceId={`react-select-user`}
               styles={selectStyle}
               placeholder={"Select User"}
-              defaultOptions={getOptions("sers")}
-              loadOptions={(value) => loadOptions(value, "sers", [])}
+              defaultOptions={getOptions("users")}
+              loadOptions={(value) => loadOptions(value, "users", [])}
               value={pAUser}
               onChange={(e) => setPAUser(e)}
               isDisabled={!isEditing || false}

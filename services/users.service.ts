@@ -7,7 +7,8 @@ import {
   GET_CLIENT_USERS,
   GET_USERS,
   USERS_DETAIL_ENDPOINT,
-  getProductionByClint,RESEND_RESET_PASSWORD_LINK
+  getProductionByClint,
+  RESEND_RESET_PASSWORD_LINK,
 } from "../lib/endpoints";
 
 class UsersService extends APIService {
@@ -23,7 +24,7 @@ class UsersService extends APIService {
   }
 
   resendResetPasswordLink(data): Promise<any> {
-    return this.post(`${RESEND_RESET_PASSWORD_LINK}`,data)
+    return this.post(`${RESEND_RESET_PASSWORD_LINK}`, data)
       .then((res) => {
         return res?.data;
       })

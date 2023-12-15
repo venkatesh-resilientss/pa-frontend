@@ -16,7 +16,7 @@ import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
 import Link from "next/link";
-import { getLabel } from "@/commonFunctions/common";
+import { getLabel, objectsAreEqual } from "@/commonFunctions/common";
 import { dateFormat } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
@@ -29,7 +29,7 @@ export default function Clients({ router, user }) {
   const [clFilters, setClFilters] = useState<any>([]);
   const [swFilters, setSwFilters] = useState<any>([]);
 
-  const [filters, setFilters] = useState<any>({
+  const defaultFilters: any = {
     dateStart: "",
     dateEnd: "",
     clients: [],
@@ -39,7 +39,9 @@ export default function Clients({ router, user }) {
     search: "",
     status: "",
     pageNumber: 1,
-  });
+  };
+
+  const [filters, setFilters] = useState<any>(defaultFilters);
 
   const selectStyle = {
     control: (base) => ({
@@ -291,7 +293,7 @@ export default function Clients({ router, user }) {
   ));
 
   const statusOpts = [
-    { label: "All", value: "" },
+    { label: "All", value: "all" },
     { label: "Active", value: "true" },
     { label: "In-active", value: "false" },
   ];
@@ -416,13 +418,20 @@ export default function Clients({ router, user }) {
             instanceId={`react-select-status`}
             styles={selectStyle}
             options={statusOpts}
+            placeholder={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Status</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
             value={statusOpts.find((e) => e.value === filters.status)}
             onChange={(e) =>
               setFilters({
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                status: e.value,
+                status: e.value === "all" ? "" : e.value,
               })
             }
           />
@@ -439,7 +448,8 @@ export default function Clients({ router, user }) {
       </div>
 
       <div className="mt-3">
-        {tableData.data.length === 0 ? (
+        {tableData.data.length === 0 &&
+        objectsAreEqual(defaultFilters, filters) ? (
           <NoClientPage {...{ router, user }} />
         ) : (
           <GridWithPagination
