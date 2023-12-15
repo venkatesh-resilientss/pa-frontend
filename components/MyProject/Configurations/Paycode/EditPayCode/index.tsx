@@ -1,4 +1,4 @@
-import { Button, Col,Row, Form, Input, Label } from "reactstrap";
+import { Button, Col, Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -74,7 +74,7 @@ function EditpayCodes() {
   const [activeAddToPremOffCalc, setActiveAddToPremOffCalc] = useState(false);
 
   const { mutate: paycodeMutate } = useSWR("LIST_PAYCODES", () =>
-  paycodesService.getPaycodes({ search: "", pageLimit: 25, offset: 0 })
+    paycodesService.getPaycodes({ search: "", pageLimit: 25, offset: 0 })
   );
   useEffect(() => {
     if (!paycode) return;
@@ -138,42 +138,42 @@ function EditpayCodes() {
             Edit Paycode
           </div>
           <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
-            onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
-          >
-            Dismiss
-          </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
-        </div>
-          
+            <Button
+              onClick={() => router.back()}
+              style={{
+                fontSize: "14px",
+                fontWeight: "400",
+                height: "34px",
+                backgroundColor: "transparent",
+                color: "#2D2C2C",
+                border: "none",
+              }}
+            >
+              Dismiss
+            </Button>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              color="primary"
+              style={{
+                fontSize: "14px",
+                fontWeight: "600",
+                height: "34px",
+              }}
+            >
+              Save
+            </Button>
+          </div>
+
         </div>
 
         <hr style={{ height: "2px" }} />
 
         <Form
-            style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-            className=" mt-2 d-flex flex-column"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Row>
+          style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
+          className=" mt-2 d-flex flex-column"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Row>
             <Col xl="3">
               <div className="mb-1">
                 <Label className="form-lable-font">Code<span style={{ color: 'red' }}>*</span></Label>
@@ -183,7 +183,7 @@ function EditpayCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Code"
                       invalid={errors.Code && true}
                       {...field}
@@ -206,7 +206,7 @@ function EditpayCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Description"
                       invalid={errors.Description && true}
                       {...field}
@@ -229,7 +229,7 @@ function EditpayCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Short Description"
                       invalid={errors.shortName && true}
                       {...field}
@@ -253,7 +253,7 @@ function EditpayCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="Factor"
                       invalid={errors.Factor && true}
                       {...field}
@@ -267,8 +267,8 @@ function EditpayCodes() {
                 )}
               </div>
             </Col>
-            </Row>
-            <Row>
+          </Row>
+          <Row>
             <Col xl="3">
               <div className="mb-1">
                 <Label className="form-lable-font">H/N/U/S<span style={{ color: 'red' }}>*</span></Label>
@@ -298,312 +298,312 @@ function EditpayCodes() {
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-                <div className="d-flex gap-1 m-auto">
+              <div className="d-flex gap-1 m-auto">
                 <Controller
-                    name="hnw"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeHnw}
-                        onChange={() => {
-                          setActiveHnw(!activeHnw);
-                        }}
-                      />
-                    )}
-                  />
-                  <Label
-                    className="form-lable-font"
-                  >
-                    HNW
-                  </Label>
-                </div>
-              </Col>
+                  name="hnw"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeHnw}
+                      onChange={() => {
+                        setActiveHnw(!activeHnw);
+                      }}
+                    />
+                  )}
+                />
+                <Label
+                  className="form-lable-font"
+                >
+                  HNW
+                </Label>
+              </div>
+            </Col>
             <Col xl="3" className="m-auto">
-                <div className="d-flex gap-1 m-auto">
+              <div className="d-flex gap-1 m-auto">
                 <Controller
-                    name="taxable"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeTaxable}
-                        onChange={() => {
-                          setActiveTaxable(!activeTaxable);
-                        }}
-                      />
-                    )}
-                  />
-                  <Label
-                    className="form-lable-font"
-                  >
-                    Taxable
-                  </Label>
-                </div>
-              </Col>
+                  name="taxable"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeTaxable}
+                      onChange={() => {
+                        setActiveTaxable(!activeTaxable);
+                      }}
+                    />
+                  )}
+                />
+                <Label
+                  className="form-lable-font"
+                >
+                  Taxable
+                </Label>
+              </div>
+            </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="workTime"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeWorkTime}
-                        onChange={() => {
-                          setActiveWorkTime(!activeWorkTime);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="workTime"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeWorkTime}
+                      onChange={() => {
+                        setActiveWorkTime(!activeWorkTime);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Work Time</Label>
               </div>
             </Col>
-            
-            </Row>
-            <Row className="m-2">
+
+          </Row>
+          <Row className="m-2">
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="overTime"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeOverTime}
-                        onChange={() => {
-                          setActiveOverTime(!activeOverTime);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="overTime"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeOverTime}
+                      onChange={() => {
+                        setActiveOverTime(!activeOverTime);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Over Time</Label>
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="subjectToWc"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeSubjectToWc}
-                        onChange={() => {
-                          setActiveSubjectToWc(!activeSubjectToWc);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="subjectToWc"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeSubjectToWc}
+                      onChange={() => {
+                        setActiveSubjectToWc(!activeSubjectToWc);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Subject To Wc</Label>
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="subjectToPhw"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeSubjectToPhw}
-                        onChange={() => {
-                          setActiveSubjectToPhw(!activeSubjectToPhw);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="subjectToPhw"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeSubjectToPhw}
+                      onChange={() => {
+                        setActiveSubjectToPhw(!activeSubjectToPhw);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Subject To Phw</Label>
               </div>
             </Col>
 
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="straightTime"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeStraightTime}
-                        onChange={() => {
-                          setActiveStraightTime(!activeStraightTime);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="straightTime"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeStraightTime}
+                      onChange={() => {
+                        setActiveStraightTime(!activeStraightTime);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Straight Time</Label>
               </div>
             </Col>
-            </Row>
-            <Row className="m-2">
+          </Row>
+          <Row className="m-2">
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="allowance"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeAllowance}
-                        onChange={() => {
-                          setActiveAllowance(!activeAllowance);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="allowance"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeAllowance}
+                      onChange={() => {
+                        setActiveAllowance(!activeAllowance);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Allowance</Label>
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="sickAccrual"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeSickAccrual}
-                        onChange={() => {
-                          setActiveSickAccrual(!activeSickAccrual);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="sickAccrual"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeSickAccrual}
+                      onChange={() => {
+                        setActiveSickAccrual(!activeSickAccrual);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Sick Accrual</Label>
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="sickWorked"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeSickWorked}
-                        onChange={() => {
-                          setActiveSickWorked(!activeSickWorked);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="sickWorked"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeSickWorked}
+                      onChange={() => {
+                        setActiveSickWorked(!activeSickWorked);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Sick Time Worked</Label>
               </div>
             </Col>
 
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="vacationAccrual"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeVacationAccrual}
-                        onChange={() => {
-                          setActiveVacationAccrual(!activeVacationAccrual);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="vacationAccrual"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeVacationAccrual}
+                      onChange={() => {
+                        setActiveVacationAccrual(!activeVacationAccrual);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Vacation Accrual</Label>
               </div>
             </Col>
-            </Row>
-            <Row className="m-2">
+          </Row>
+          <Row className="m-2">
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="vacationWorked"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeVacationWorked}
-                        onChange={() => {
-                          setActiveVacationWorked(!activeVacationWorked);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="vacationWorked"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeVacationWorked}
+                      onChange={() => {
+                        setActiveVacationWorked(!activeVacationWorked);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Vacation Pay</Label>
               </div>
             </Col>
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="holAccrual"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeHolAccrual}
-                        onChange={() => {
-                          setActiveHolAccrual(!activeHolAccrual);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="holAccrual"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeHolAccrual}
+                      onChange={() => {
+                        setActiveHolAccrual(!activeHolAccrual);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Hol Accrual</Label>
               </div>
             </Col>
-            
+
 
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="holWorked"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeHolWorked}
-                        onChange={() => {
-                          setActiveHolWorked(!activeHolWorked);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="holWorked"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeHolWorked}
+                      onChange={() => {
+                        setActiveHolWorked(!activeHolWorked);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Hol Worked</Label>
               </div>
             </Col>
 
             <Col xl="3" className="m-auto">
-            <div className="d-flex gap-1 m-auto">
-              <Controller
-                    name="addToPremOffCalc"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        type="checkbox"
-                        {...field}
-                        checked={activeAddToPremOffCalc}
-                        onChange={() => {
-                          setActiveAddToPremOffCalc(!activeAddToPremOffCalc);
-                        }}
-                      />
-                    )}
-                  />
+              <div className="d-flex gap-1 m-auto">
+                <Controller
+                  name="addToPremOffCalc"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      type="checkbox"
+                      {...field}
+                      checked={activeAddToPremOffCalc}
+                      onChange={() => {
+                        setActiveAddToPremOffCalc(!activeAddToPremOffCalc);
+                      }}
+                    />
+                  )}
+                />
                 <Label className="form-lable-font">Add To OT Calc</Label>
               </div>
             </Col>
-            </Row>
-            <Row className="m-2">
+          </Row>
+          <Row className="m-2">
             <Col xl="3">
               <div className="mb-1">
                 <Label className="form-lable-font">Category</Label>
@@ -635,7 +635,7 @@ function EditpayCodes() {
                   control={control}
                   render={({ field }) => (
                     <Input
-                    className="inputFeild"
+                      className="inputFeild"
                       placeholder="GL Code"
                       {...field}
                     />
@@ -644,40 +644,40 @@ function EditpayCodes() {
               </div>
             </Col>
             <Col>
-                <div className="d-flex flex-column mt-1">
-                  <Label className="form-lable-font">Status </Label>
+              <div className="d-flex flex-column mt-1">
+                <Label className="form-lable-font">Status </Label>
+                <div className="d-flex gap-1">
                   <div className="d-flex gap-1">
-                    <div className="d-flex gap-1">
-                      <input
-                        className="custom-radio-input"
-                        type="radio"
-                        id="ex1-active"
-                        name="ex1"
-                        checked={activeStatus}
-                        onChange={() => {
-                          setActiveStatus(true);
-                        }}
-                      />
-                      <div className="radio-text">Active</div>
-                    </div>
-                    <div className="d-flex gap-1">
-                      <input
-                        type="radio"
-                        className="custom-radio-input"
-                        name="ex1"
-                        id="ex1-inactive"
-                        checked={!activeStatus}
-                        onChange={() => {
-                          setActiveStatus(false);
-                        }}
-                      />
-                      <div className="radio-text">In-Active</div>
-                    </div>
+                    <input
+                      className="custom-radio-input"
+                      type="radio"
+                      id="ex1-active"
+                      name="ex1"
+                      checked={activeStatus}
+                      onChange={() => {
+                        setActiveStatus(true);
+                      }}
+                    />
+                    <div className="radio-text">Active</div>
+                  </div>
+                  <div className="d-flex gap-1">
+                    <input
+                      type="radio"
+                      className="custom-radio-input"
+                      name="ex1"
+                      id="ex1-inactive"
+                      checked={!activeStatus}
+                      onChange={() => {
+                        setActiveStatus(false);
+                      }}
+                    />
+                    <div className="radio-text">In-Active</div>
                   </div>
                 </div>
-              </Col>
-            </Row>
-          </Form>
+              </div>
+            </Col>
+          </Row>
+        </Form>
       </div>
     </>
   );

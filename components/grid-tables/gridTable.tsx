@@ -67,7 +67,7 @@ const GridTable = ({ rowData, columnDefs, pageSize, searchText, pageNumber, setP
       <AgGridReact
         ref={gridRef}
         gridOptions={gridOptions} // Pass the grid options
-        rowData={rowData.data || [null]}
+        rowData={rowData?.data || [null]}
         columnDefs={columnDefs}
         domLayout="autoHeight"
         onGridReady={gridReady}

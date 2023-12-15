@@ -20,7 +20,8 @@ function RecentProductions() {
     const getTenant = async () => {
       dashboardService.getRecentProductions().then((res) => {
         if (res.data) {
-          setRecentProductionsData(res.data.slice(0, 3));
+          // setRecentProductionsData(res.data);
+          setRecentProductionsData(res.data.slice(0, 6));
         }
       });
     };

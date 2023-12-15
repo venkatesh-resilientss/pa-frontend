@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import React, { useState } from "react";
 import { LegislativesService } from "services";
+
+
 function AddLegislativeType() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
@@ -16,21 +18,21 @@ function AddLegislativeType() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    if(isSaving) return
+    if (isSaving) return
     setIsSaving(true)
     try {
       legislativesService
-      .createlegislatives(data)
-      .then(() => {
-        setIsSaving(false)
-        toast.success("Legislative Type added successfully");
-        router.push("/configurations/legislative-type");
-        reset();
-      })
-      .catch((error) => {
-        setIsSaving(false)
-        toast.error(error?.error);
-      });
+        .createlegislatives(data)
+        .then(() => {
+          setIsSaving(false)
+          toast.success("Legislative Type added successfully");
+          router.push("/configurations/legislative-type");
+          reset();
+        })
+        .catch((error) => {
+          setIsSaving(false)
+          toast.error(error?.error);
+        });
     } catch (error) {
       toast.error("Error adding Legislative Type");
       console.error(error);
