@@ -425,7 +425,7 @@ export default function Clients({ router, user }) {
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }
-            value={statusOpts.find((e) => e.value === filters.status)}
+            value={statusOpts.find((e) => e.value === filters.status) || null}
             onChange={(e) =>
               setFilters({
                 ...filters,

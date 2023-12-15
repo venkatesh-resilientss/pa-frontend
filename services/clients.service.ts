@@ -11,7 +11,7 @@ import {
   GET_CLIENT_COUNTRIES,
   GET_STATES_BY_COUNTRY,
   UPLOAD_FILE_S3,
-  GET_ALL_USERS,
+  GET_STAFF_USERS,
   GET_CLIENT_USERS,
   GET_CLIENTS_LIST,
   GET_CLIENTS_FILTERS,
@@ -19,7 +19,7 @@ import {
 
 class ClientsService extends APIService {
   getUsers(queries: any): Promise<any> {
-    return this.get(`${GET_ALL_USERS}${queries}`)
+    return this.get(`${GET_STAFF_USERS}${queries}`)
       .then((res) => {
         return res?.data;
       })
