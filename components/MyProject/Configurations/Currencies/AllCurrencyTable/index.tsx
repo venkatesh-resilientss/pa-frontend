@@ -154,18 +154,6 @@ const AllCurrencyTable = ({ rerender }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (row: any) => {
-        if (typeof row.value === "number") {
-          // If it's a number, just display it as is
-          return <>{row.value}</>;
-        } else if (typeof row.value === "string") {
-          // If it's a string, display the uppercase version
-          return getLabel(row.value);
-        } else {
-          // Handle other types if needed
-          return null;
-        }
-      },
     },
     {
       headerName: "Currencies Name",
@@ -185,8 +173,8 @@ const AllCurrencyTable = ({ rerender }) => {
       cellRenderer: (params) => {
         return getLabel(
           params?.data?.Created?.first_name +
-            " " +
-            params?.data?.Created?.first_name
+          " " +
+          params?.data?.Created?.first_name
         );
       },
       sortable: true,
@@ -254,7 +242,7 @@ const AllCurrencyTable = ({ rerender }) => {
                   </div>
 
                   <Input
-                    onChange={debounce(handleSearch,200)}
+                    onChange={debounce(handleSearch, 200)}
                     type="search"
                     className="searchConfig"
                     placeholder="Search..."

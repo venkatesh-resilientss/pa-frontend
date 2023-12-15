@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Card, UncontrolledDropdown } from "reactstrap";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
-import moment from "moment";
 import { useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -505,13 +504,13 @@ export default function Productions({ router, user }) {
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
               {tableData.data.length === 0 &&
-              objectsAreEqual(
-                {
-                  ...defaultFilters,
-                  isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
-                },
-                filters
-              ) ? (
+                objectsAreEqual(
+                  {
+                    ...defaultFilters,
+                    isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
+                  },
+                  filters
+                ) ? (
                 <NoProductionPage {...{ user }} />
               ) : (
                 <GridWithPagination
