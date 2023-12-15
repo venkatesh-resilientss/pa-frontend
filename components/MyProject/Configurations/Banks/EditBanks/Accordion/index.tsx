@@ -4,7 +4,6 @@ import {
   AccordionBody,
   AccordionHeader,
   AccordionItem,
-  Button,
 } from "reactstrap";
 import BasicDetailsForm from "./BasicDetailsForm";
 import MailingAddressForm from "./MailingAddress";
@@ -18,6 +17,9 @@ import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
 import { SeriesService, LocationsService } from "services";
 import { SetsService } from "services";
+import { COAAccountsService } from "services";
+import Button from "react-bootstrap-button-loader";
+const coaAccountsService = new COAAccountsService();
 
 const seriesService = new SeriesService();
 const setService = new SetsService();
@@ -30,16 +32,21 @@ function BankAccordion() {
   const [wireTransfer, setWireTransfer] = useState(false);
   const [check, setCheck] = useState(false)
 
+  const DataFormatOptions = [
+    { label: "JSON", value: "json" },
+    { label: "XML", value: "xml" },
+    { label: "CSV", value: "csv" },
+  ]
+
+
   const { reset } = useForm();
   const BankId = router.query.id;
 
   const [open, setOpen] = useState("1");
   const [bankDetails, setBankDetails]: any = useState();
-  const [selectedSeries, setSelectedSeries]: any = useState();
-  const [selectedLocation, setSelectedLocation]: any = useState();
-  const [selectedSets, setSelectedSets]: any = useState();
   const [bankConfigDetails, setBankConfigDetails]: any = useState();
   const [bankAchDetails, setBankAchDetails]: any = useState();
+  const [loading, setLoading]: any = useState(false);
   const [activeStatus, setActiveStatus] = useState(false);
   const bankService = new BankService();
 
@@ -55,8 +62,10 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
-    const clientId = sessionStorage.getItem("clientid");
-    const projectId = sessionStorage.getItem("projectid");
+    setLoading(true)
+    const clientId = parseInt(sessionStorage.getItem("clientid"));
+    const projectId = parseInt(sessionStorage.getItem("projectid"));
+    const primaryContactPhone = `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -70,8 +79,8 @@ function BankAccordion() {
       IsActive: activeStatus,
       PrimaryContact: {
         FullName: data.contactName,
-        PhoneCode: parseInt(data.basicInfoCountryCode),
-        CellPhone: data.basicInfoContactNumber,
+        // PhoneCode: parseInt(data.basicInfoCountryCode),
+        CellPhone: primaryContactPhone,
         EmailID: data.emailIDBasicInfo
       },
       PhysicalAddress: {
@@ -90,7 +99,7 @@ function BankAccordion() {
         CountryId: parseInt(data.mailingAddressState.country.ID),
         Zipcode: parseInt(data.mailingAddressPostalCode),
         ContactPhone: data.mailingPhoneNumber,
-        ContactPhoneCode: "+1",
+        ContactPhoneCode: data.mailingCountryCode,
         ContactEmailID: data.mailingEmail,
       },
       Meta: {
@@ -152,10 +161,12 @@ function BankAccordion() {
       .editBank(BankId, bankPayload)
       .then(() => {
         toast.success("Bank details updated successfully");
+        setLoading(false)
         router.back()
       })
       .catch((error) => {
         toast.error(error?.error || error?.Message || 'Unable to edit Bank');
+        setLoading(false)
       });
   };
   const {
@@ -176,21 +187,21 @@ function BankAccordion() {
               label: res.Name,
               value: res.ID,
             };
-            setSelectedSeries(selectedSeries);
+            setValue("series", selectedSeries);
           });
           locationService.locationDetails(bankres.LocationID).then((res) => {
             const selectedlocation = {
               label: res.Name,
               value: res.ID,
             };
-            setSelectedLocation(selectedlocation);
+            setValue("location", selectedlocation);
           });
           setService.setsDetails(bankres.SetID).then((res) => {
             const selectedSets = {
               label: res.Name,
               value: res.ID,
             };
-            setSelectedSets(selectedSets);
+            setValue("set", selectedSets);
           });
           bankService.getBankConfigDetails(bankres.ID).then((configRes) => {
             setBankConfigDetails(configRes);
@@ -198,6 +209,39 @@ function BankAccordion() {
           bankService.getBankAchDetails(bankres.ID).then((BankAchRes) => {
             setBankAchDetails(BankAchRes);
           });
+          coaAccountsService.coaDetails(parseInt(bankres?.DefaultAccountDeposit)).then((res) => {
+            const deposit = {
+              value: res.ID,
+              label: `${res.Name} - ${res.Code}`,
+            }
+            setValue("defaultAccountDeposit", deposit);
+          });
+          coaAccountsService.coaDetails(parseInt(bankres?.DefaultAccountDiscount)).then((res) => {
+            const discount = {
+              value: res.ID,
+              label: `${res.Name} - ${res.Code}`,
+            }
+            setValue("defaultAccountDiscount", discount);
+
+
+
+          });
+          coaAccountsService.coaDetails(parseInt(bankres?.DefaultAccountClearing)).then((res) => {
+            const clearing = {
+              value: res.ID,
+              label: `${res.Name} - ${res.Code}`,
+            }
+            setValue("defaultAccountClearing", clearing);
+
+          });
+          coaAccountsService.coaDetails(parseInt(bankres?.DefaultAmountCash)).then((res) => {
+            const cash = {
+              value: res.ID,
+              label: `${res.Name} - ${res.Code}`,
+            }
+            setValue("defaultAccountCash", cash);
+          });
+
         })
         .catch((error) => {
           toast.error(error?.error || error?.Message || 'Unable to get data');
@@ -218,7 +262,10 @@ function BankAccordion() {
         value: bankDetails.Currency.ID,
       };
       setValue("currency", currency);
-      setValue("contactName", bankDetails?.ContactName);
+      setValue("contactName", bankDetails?.PrimaryContact?.FirstName);
+      setValue("emailIDBasicInfo", bankDetails?.PrimaryContact?.EmailID);
+      setValue("basicInfoCountryCode", bankDetails?.PrimaryContact?.CellPhone.split("-")[0]);
+      setValue("basicInfoContactNumber", bankDetails?.PrimaryContact?.CellPhone.split("-")[1]);
       setValue("branchNumber", bankDetails?.BranchNumber);
 
       //physical address
@@ -252,17 +299,9 @@ function BankAccordion() {
         bankDetails?.MailingAddress?.Zipcode
       );
       setValue("mailingPhoneNumber", bankDetails?.MailingAddress?.ContactPhone);
+      setValue("mailingCountryCode", bankDetails?.MailingAddress?.ContactPhoneCode);
       setValue("mailingFax", bankDetails?.Fax);
       setValue("mailingEmail", bankDetails?.MailingAddress?.ContactEmailID);
-
-      setValue("defaultAccountDeposit", bankDetails?.DefaultAccountDeposit);
-      setValue("defaultAccountDiscount", bankDetails?.DefaultAccountDiscount);
-      setValue("defaultAccountClearing", bankDetails?.DefaultAccountClearing);
-      setValue("defaultAccountCash", bankDetails?.DefaultAmountCash);
-
-      setValue("set", selectedSets);
-      setValue("location", selectedLocation);
-      setValue("series", selectedSeries);
 
       setValue("checkCopies", bankConfigDetails?.CheckCopies);
       setValue("checkRangeStart", bankConfigDetails?.CheckRangeStart);
@@ -276,7 +315,6 @@ function BankAccordion() {
       if (bankConfigDetails?.WireTransferRangeStart) {
         setWireTransfer(true)
       }
-
       setValue("ACHeftRangeStart", bankConfigDetails?.EftRangeStart);
       setValue("ACHeftRangeEnd", bankConfigDetails?.EftRangeEnd);
       setValue("ACHeftCopies", bankConfigDetails?.EftCopies);
@@ -286,17 +324,24 @@ function BankAccordion() {
           setValue("PPuserName", ach.Username);
           setValue("PPpassword", ach.Password);
           setValue("PPoutboundPath", ach.OutboundPath);
-          setValue("PPdataFormat", ach.DataFormat);
           setValue("PPcertificate", ach.Certificate);
           setValue("PPport", ach.Port);
+          const PPDataFormatOptions = DataFormatOptions.filter((data) => {
+            return data.value === ach.DataFormat;
+          })?.[0];
+          setValue("PPdataFormat", PPDataFormatOptions);
           setPositivePay(true)
         } else if (ach.Type === "ACH") {
           setValue("ACHhost", ach.Host);
           setValue("ACHuserName", ach.Username);
           setValue("ACHinboundPath", ach.InboundPath);
           setValue("ACHoutboundPath", ach.OutboundPath);
-          setValue("ACHdataFormat", ach.DataFormat);
+          const ACHDataFormatOptions = DataFormatOptions.filter((data) => {
+            return data.value === ach.DataFormat;
+          })?.[0];
+          setValue("ACHdataFormat", ACHDataFormatOptions);
           setValue("ACHcertificate", ach.Certificate);
+          setValue("ACHpassword", ach.Password);
           setACHExport(true)
         }
       })
@@ -341,27 +386,22 @@ function BankAccordion() {
           Edit Bank
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
+
+          <a
+            href="#"
             onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
+            className="text-decoration-none text-secondary m-2"
           >
             Dismiss
-          </Button>
+          </a>
+
           <Button
+            type="submit"
+            loading={loading}
+            disabled={loading}
+            className="px-3 py-2"
+            spinColor="#ffffff"
             onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
           >
             Save
           </Button>

@@ -10,10 +10,21 @@ import Image from "next/image";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
+import { LegislativesService } from "services";
+import useSWR from "swr";
 
 const AllLegislativeTypeTable = () => {
   const router = useRouter();
+  const legislativesService = new LegislativesService();
+
   const [searchText, setSearchText] = useState("");
+
+  const { data: rowData } = useSWR(
+    ["LIST_LEGISLATIVES", searchText],
+    () => legislativesService.getlegislatives()
+  );
+
+
   const StateBadge = (props) => {
     const stateDir = {
       true: "success",
@@ -30,16 +41,16 @@ const AllLegislativeTypeTable = () => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-          <div
-           onClick={() =>router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
-            className="cursor-pointer"
-            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
-          >
-            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
-          </div>
+        <div
+          onClick={() => router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
+          className="cursor-pointer"
+          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+        >
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+        </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-          {/* <div
+        {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -53,14 +64,14 @@ const AllLegislativeTypeTable = () => {
   const columnDefs = [
     {
       headerName: "Legislative Code",
-      field: "LegislativeCode",
+      field: "Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Legislative Name",
-      field: "LegislativeName",
+      field: "Name",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -74,57 +85,19 @@ const AllLegislativeTypeTable = () => {
     },
     {
       headerName: "Status",
-      field: "active",
+      field: "IsActive",
       cellRenderer: StateBadge,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       unSortIcon: true,
       sortable: true,
     },
-   
+
     {
       headerName: "Action",
       field: "id",
       cellRenderer: ActionsButton,
       headerClass: "custom-header-class",
-    },
-  ];
-  const rowData = [
-    {
-      id: 1,
-      LegislativeCode: "001",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'TH'
-    },
-    {
-      id: 2,
-      LegislativeCode: "002",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'COM'
-
-    },
-    {
-      id: 3,
-      LegislativeCode: "003",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: false,
-      Description:'TH'
-    },
-    {
-      id: 4,
-      LegislativeCode: "004",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'TH'
-    },
-    {
-      id: 5,
-      LegislativeCode: "005",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: false,
-      Description:'COM'
     },
   ];
 
@@ -194,17 +167,15 @@ const AllLegislativeTypeTable = () => {
           </CardBody>
         </Card>
       </div>
-      
-        <div className="mt-2">
-          <GridTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-     
-       
+
+      <div className="mt-2">
+        <GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />
+      </div>
     </div>
   );
 };

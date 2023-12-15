@@ -1,10 +1,72 @@
 import { useForm, Controller } from "react-hook-form";
-import { Col, Form, Input, Label, Row } from "reactstrap";
+import { Col, Form, Label, Row } from "reactstrap";
 import { formValidationRules } from "@/constants/common";
+import AsyncSelect from "react-select/async";
+import { useEffect, useState } from "react";
+import { getSessionVariables } from "@/constants/function";
+import { COAAccountsService } from "services";
+import { selectStyles } from "constants/common";
+const coaAccountsService = new COAAccountsService();
 
 function DefaultAccountForm({ onSubmit, control, errors }) {
   const bankValidationRules = formValidationRules.banks;
+  const [initialcoaOptions, setInitialcoaOptions] = useState([]);
   const { handleSubmit } = useForm();
+
+
+  //Options for Default Account Cash starts here
+  useEffect(() => {
+    const fetchInitialcoaOptions = async () => {
+      const { clientID, projectID } = getSessionVariables();
+      try {
+        const res = await coaAccountsService.getCoasAccounts(
+          { clientID, projectID },
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+            is_active: true
+          }
+        );
+        const options = res?.result.filter(item => item.IsActive).map((item) => ({
+          value: item.ID,
+          label: `${item.Name} - ${item.Code}`,
+        }));
+        setInitialcoaOptions(options);
+      } catch (error) {
+        console.error("Error fetching initial options:", error);
+      }
+    };
+
+    fetchInitialcoaOptions();
+  }, []);
+
+
+  const loadCoaOptions: any = async (inputValue, callback) => {
+    const { clientID, projectID } = getSessionVariables();
+    try {
+      const res = await coaAccountsService.getCoasAccounts(
+        { clientID, projectID },
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+          is_active: true
+        }
+      );
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+        value: item.ID,
+        label: `${item.Name} - ${item.Code}`,
+      }));
+
+      callback(options);
+    } catch (error) {
+      console.error("Error loading options:", error);
+    }
+  };
+
+  //Options  form Default Account Cash ends here
+
 
   return (
     <div className="text-black">
@@ -28,11 +90,15 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Default Account Cash"
-                  invalid={errors.defaultAccountCash && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -59,11 +125,15 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Default Account Clearing"
-                  invalid={errors.defaultAccountClearing && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -90,11 +160,15 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Default Account Deposit"
-                  invalid={errors.defaultAccountDeposit && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
                 />
               )}
             />
@@ -121,11 +195,15 @@ function DefaultAccountForm({ onSubmit, control, errors }) {
               }}
               control={control}
               render={({ field }) => (
-                <Input
-                  style={{ fontSize: "12px", fontWeight: "400" }}
-                  placeholder="Enter Default Account Discount"
-                  invalid={errors.defaultAccountDiscount && true}
+                <AsyncSelect
                   {...field}
+                  isClearable={true}
+                  className="react-select"
+                  classNamePrefix="select"
+                  loadOptions={loadCoaOptions}
+                  placeholder="Select COA Parent"
+                  defaultOptions={initialcoaOptions}
+                  styles={selectStyles}
                 />
               )}
             />

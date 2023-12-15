@@ -4,7 +4,6 @@ import {
   AccordionBody,
   AccordionHeader,
   AccordionItem,
-  Button,
 } from "reactstrap";
 import BasicDetailsForm from "./BasicDetailsForm";
 import MailingAddressForm from "./MailingAddress";
@@ -17,6 +16,7 @@ import DefaultAccountForm from "./DefaultAccount";
 import OtherDetailsForm from "./OtherDetails";
 import CheckEFTForm from "./CheckEftForm";
 import { getSessionVariables } from "@/constants/function";
+import Button from "react-bootstrap-button-loader";
 
 function BankAccordion() {
   const { reset } = useForm();
@@ -25,6 +25,7 @@ function BankAccordion() {
   const [eft, setEft] = useState(false);
   const [positivePay, setPositivePay] = useState(false);
   const [ACHExport, setACHExport] = useState(false);
+  const [loading, setLoading] = useState(false)
   const bankService = new BankService();
   // const addressService = new AddressService();
   const toggle = (id) => {
@@ -37,7 +38,9 @@ function BankAccordion() {
   };
 
   const onSubmit = (data) => {
+    setLoading(true)
     const { clientID, projectID } = getSessionVariables();
+    const primaryContactPhone = `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -50,9 +53,9 @@ function BankAccordion() {
       projectId: projectID,
       AccountFraction: data.accountFraction,
       PrimaryContact: {
-        FullName: data.contactName,
-        PhoneCode: parseInt(data.basicInfoCountryCode),
-        CellPhone: data.basicInfoContactNumber,
+        FirstName: data.contactName,
+        // PhoneCode: parseInt(data.basicInfoCountryCode),
+        CellPhone: primaryContactPhone,
         EmailID: data.emailIDBasicInfo,
       },
       PhysicalAddress: {
@@ -98,10 +101,10 @@ function BankAccordion() {
       CountryId: parseInt(data.physicalAddressState?.country?.ID),
       // PrimaryContactId: 1,
       // SecondaryContactId: 1,
-      DefaultAmountCash: parseFloat(data.defaultAccountCash),
-      DefaultAccountClearing: parseFloat(data.defaultAccountClearing),
-      DefaultAccountDiscount: parseFloat(data.defaultAccountDiscount),
-      DefaultAccountDeposit: parseInt(data.defaultAccountDeposit),
+      DefaultAmountCash: parseInt(data.defaultAccountCash?.value),
+      DefaultAccountClearing: parseInt(data.defaultAccountClearing?.value),
+      DefaultAccountDiscount: parseInt(data.defaultAccountDiscount?.value),
+      DefaultAccountDeposit: parseInt(data.defaultAccountDeposit?.value),
     };
     if (eft) {
       if (ACHExport) {
@@ -137,10 +140,12 @@ function BankAccordion() {
     bankService
       .createBank(bankPayload)
       .then(() => {
+        setLoading(false)
         toast.success("Bank created successfully");
         router.back();
       })
       .catch((error) => {
+        setLoading(false)
         toast.error(error?.error || error?.Message || "Unable to add Bank");
       });
   };
@@ -169,30 +174,24 @@ function BankAccordion() {
           Add New Bank
         </div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <Button
+          <a
+            href="#"
             onClick={() => router.back()}
-            style={{
-              fontSize: "14px",
-              fontWeight: "400",
-              height: "34px",
-              backgroundColor: "transparent",
-              color: "#2D2C2C",
-              border: "none",
-            }}
+            className="text-decoration-none text-secondary m-2"
           >
             Dismiss
-          </Button>
+          </a>
           <Button
+            type="submit"
+            loading={loading}
+            disabled={loading}
+            className="px-3 py-2"
+            spinColor="#ffffff"
             onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
           >
             Save
           </Button>
+
         </div>
       </div>
 
