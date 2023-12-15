@@ -8,6 +8,7 @@ export const baseUrl =
     : process.env.NEXT_PUBLIC_BASE_LOCAL;
 const tenantIdEndpoint = `${baseUrl}/api/${tenant_id}`;
 const withoutTenantIdEndpoint = `${baseUrl}/api`;
+const withoutTenantIdPrEndpoint = `${baseUrl}/api/pr`;
 
 export const RESET_PASSWORD = `${withoutTenantIdEndpoint}/reset-password`;
 export const LOGIN = `${withoutTenantIdEndpoint}/login`; //Banks
@@ -211,7 +212,7 @@ export const UPLOAD_SERIES_LIST = `${withoutTenantIdEndpoint}/series/upload`;
 export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 export const UPLOAD_COA_LIST = `${withoutTenantIdEndpoint}/coaaccounts/upload`;
-export const UPLOAD_PROJECTTYPE_LIST = `${tenantIdEndpoint}/projecttypes/upload`;
+export const UPLOAD_PROJECTTYPE_LIST = `${withoutTenantIdPrEndpoint}/projecttypes/upload`;
 export const UPLOAD_OCCUPATIONCODES_LIST = `${tenantIdEndpoint}/occupationCode/upload`;
 export const UPLOAD_EMPLOYEETYPE_LIST = `${tenantIdEndpoint}/employeetypes/upload`;
 export const UPLOAD_WCCLASSCODES_LIST = `${tenantIdEndpoint}/wc-class-code/upload`;
@@ -258,14 +259,14 @@ export const DELETE_EMPLOYEE = (tenant_id: any, id: any) =>
 
 //PROJECTTYPES ENDPOINTS
 
-export const GET_PROJECTTYPES = `${tenantIdEndpoint}/projecttypes/?limit=${100}&offset=0`; //Projecttypes
-export const CREATE_PROJECTTYPE = `${tenantIdEndpoint}/projecttypes/`; //Create Projecttypes
+export const GET_PROJECTTYPES = `${withoutTenantIdPrEndpoint}/projecttypes/?limit=${100}&offset=0`; //Projecttypes
+export const CREATE_PROJECTTYPE = `${withoutTenantIdPrEndpoint}/projecttypes/`; //Create Projecttypes
 export const DELETE_PROJECTTYPE = (id: any) =>
-  `${tenantIdEndpoint}/projecttypes/${id}`; //DELETE Projecttypes
+  `${withoutTenantIdPrEndpoint}/projecttypes/${id}`; //DELETE Projecttypes
 export const EDIT_PROJECTTYPE = (id: any) =>
-  `${tenantIdEndpoint}/projecttypes/${id}`; //EDIT Projecttypes
+  `${withoutTenantIdPrEndpoint}/projecttypes/${id}`; //EDIT Projecttypes
 export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) =>
-  `${tenantIdEndpoint}/projecttypes/${id}`;
+  `${withoutTenantIdPrEndpoint}/projecttypes/${id}`;
 
 export const GET_CLIENT_TYPES = `${withoutTenantIdEndpoint}/clienttypes/`;
 export const GET_CLIENT_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`;
