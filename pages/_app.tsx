@@ -36,9 +36,9 @@ function MyApp({ Component, pageProps, err }) {
         } else {
           const tenant = await authService.checkTenant({ name });
           if (Number(tenant?.ID)) cookie.set("tenant_id", tenant.ID);
-          if (Number(tenant?.ClientId))
+          if (Number(tenant?.ClientID))
             setClient({
-              staffUser: true,
+              staffUser: tenant?.Slug === "app",
               name: tenant?.ClientName,
               id: Number(tenant?.ClientID),
             });

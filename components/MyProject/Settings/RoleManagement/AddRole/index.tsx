@@ -1,4 +1,4 @@
-import { Button, FormGroup, Input, Label } from "reactstrap";
+import { Button, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { RoleService, AuthService } from "services";
@@ -28,6 +28,7 @@ function AddRole() {
   const [restricted, setRestricted] = useState(true);
   const [role_name, setRole_name] = useState("");
   const [role_id, setRole_id] = useState("");
+  const [IsStaff, setIsStaff] = useState(false);
   const [viewmode, setViewmode] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
   const [permissionSet, setPermissionSet]: any = useState(roleCreationData);
@@ -94,6 +95,7 @@ function AddRole() {
     if (router.query.q === "edit_role" || router.query.q === "view_role") {
       roleservice.getrole_by_id(router.query.role_id).then((res) => {
         setRole_name(res.RoleName);
+        setIsStaff(res.IsStaff);
         setRole_id(res.RoleId);
         setActiveStatus(res.IsActive);
 
@@ -280,6 +282,7 @@ function AddRole() {
     setRole_id(null);
     setRole_name("");
     setRestricted(false);
+    setIsStaff(false);
   };
 
   const save_role = () => {
@@ -303,6 +306,7 @@ function AddRole() {
       clientID,
       projectID,
       AccessType: restricted ? "restricted" : "full_access",
+      IsStaff,
     };
     if (restricted) {
       const convertedPayload = convertToNewFormat(permissionSet) || {};
@@ -325,7 +329,7 @@ function AddRole() {
         resetData();
       })
       .catch((err) => {
-        toast.error(err);
+        toast.error(err?.error || "Error");
         setLoading(false);
       });
   };
@@ -350,6 +354,7 @@ function AddRole() {
       clientID,
       projectID,
       AccessType: restricted ? "restricted" : "full_access",
+      IsStaff,
     };
     if (restricted) {
       const convertedPayload = convertToNewFormat(permissionSet) || {};
@@ -372,7 +377,7 @@ function AddRole() {
         setLoading(false);
       })
       .catch((err) => {
-        toast.error(err);
+        toast.error(err?.error || "Error");
       });
   };
 
@@ -511,12 +516,12 @@ function AddRole() {
 
       <hr className="mt-3 mb-2" style={{ height: "2px" }} />
 
-      <div style={{ width: "400px" }} className="gap-1">
-        <FormGroup>
-          <Label for="exampleEmail">Role Name</Label>
+      <div className="row">
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+          <Label for="roleName">Role Name</Label>
           <Input
-            id="exampleEmail"
-            name="email"
+            id="roleName"
+            name="roleName"
             disabled={viewmode}
             placeholder="Enter Role Name"
             type="text"
@@ -526,7 +531,21 @@ function AddRole() {
               setRole_id(e.target.value);
             }}
           />
-        </FormGroup>
+        </div>
+        <div className="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div className="h-100 d-flex align-items-end py-2">
+            <input
+              type="checkbox"
+              className="mb-1"
+              id={"Is Staff Role"}
+              checked={IsStaff}
+              onChange={(e) => setIsStaff(e.target.checked)}
+            />
+            <label htmlFor={"Is Staff Role"} className="ms-2">
+              {"Is Staff Role"}
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="d-flex flex-column mt-2">
@@ -567,7 +586,7 @@ function AddRole() {
       </div>
 
       <div className="d-flex flex-column mt-2">
-        <Label for="exampleEmail">Access</Label>
+        <Label for="access">Access</Label>
 
         {/* { userData?.data?.Role?.AccessType === "full_accesss" ||
                 userData?.data?.Role?.RoleName === "SUPER_ADMIN" ||
@@ -586,7 +605,7 @@ function AddRole() {
             <div style={{ fontSize: "15px" }}>Restricted Access</div>
 
             {userData?.data?.Role?.AccessType === "full_access" ||
-              userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
+            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
               <>
                 <div className="d-flex gap-1 cursor-pointer ms-3">
                   <input

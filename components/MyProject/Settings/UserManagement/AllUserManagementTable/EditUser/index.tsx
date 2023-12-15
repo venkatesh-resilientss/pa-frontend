@@ -18,25 +18,28 @@ const usersService = new UsersService();
 function EditUser() {
   const router = useRouter();
   const { id } = router.query;
-  const { control, handleSubmit, reset, formState: { errors }, watch } = useForm();
-  const watchRole = watch('role', '');
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm();
+  const watchRole = watch("role", "");
   const [showStaffUser, setShowStaffUser] = useState(true) as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const handleToggleEditMode = () => setEditMode(!editMode);
 
-
   const { data: userData } = useSWR("GET_USER_DETAILS", () =>
     authService.getUserDetails()
   );
 
-
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
 
-
   const [userDetails, setUserDetails] = useState() as any;
-  const [clientDetails, setClientDetails] = useState(null) as any;
+  // const [clientDetails, setClientDetails] = useState(null) as any;
 
   const [roleOptions, setRoleOptions] = useState();
   const [loading, setLoading] = useState<any>(false);
@@ -48,8 +51,7 @@ function EditUser() {
       production_id: [],
       productionOptions: [],
       productions: [],
-      clientData: null
-
+      clientData: null,
     },
   ]);
 
@@ -59,11 +61,11 @@ function EditUser() {
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-            ?.filter((e) => e?.IsActive)
-            .map((role) => ({
-              value: role.ID,
-              label: role.RoleName,
-            }))
+              ?.filter((e) => e?.IsActive)
+              .map((role) => ({
+                value: role.ID,
+                label: role.RoleName,
+              }))
           : [];
         setRoleOptions(temproleOptions);
       });
@@ -82,7 +84,7 @@ function EditUser() {
           limit: 250,
           offset: 0,
           search: "",
-          status: "true"
+          status: "true",
         });
         const options = (res?.data || [])
           ?.filter((e) => e?.IsActive)
@@ -101,13 +103,17 @@ function EditUser() {
 
   useEffect(() => {
     if (watchRole?.label == "Client Admin" || !isCheckedStaffUser) {
-      setClientProductionsList([clientProductionsList[0]])
+      setClientProductionsList([clientProductionsList[0]]);
     }
-    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
+    if (
+      ["Payroll Accountant", "Production Accountant", "Client Admin"].includes(
+        watchRole?.label
+      )
+    ) {
       setIsCheckedStaffUser(false);
       setShowStaffUser(false);
     } else setShowStaffUser(true);
-  }, [watchRole, isCheckedStaffUser])
+  }, [watchRole, isCheckedStaffUser]);
 
   useEffect(() => {
     setUserDetails(userData?.data);
@@ -118,7 +124,7 @@ function EditUser() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const resp = await usersService.getuserbyid(id)
+        const resp = await usersService.getuserbyid(id);
         reset({
           lastname: resp?.last_name || "",
           firstname: resp?.first_name || "",
@@ -128,7 +134,7 @@ function EditUser() {
           role: {
             value: resp?.Role?.ID || "",
             label: resp?.Role?.RoleName || "",
-          }
+          },
         });
         setActiveStatus(resp?.IsActive ? "active" : "inactive");
         setIsCheckedStaffUser(resp.IsStaffUser);
@@ -141,41 +147,47 @@ function EditUser() {
                 client: `client_${id + 1}`,
                 production: `production_${id + 1}`,
                 client_id: e.id,
-                production_id: (e?.projects || []).map(el => el.id),
+                production_id: (e?.projects || []).map((el) => el.id),
                 productionOptions,
-                productions: (e?.projects || []).map(el => ({ label: el.name, value: el.id })),
-                clientData: { label: e.name, value: e.id }
+                productions: (e?.projects || []).map((el) => ({
+                  label: el.name,
+                  value: el.id,
+                })),
+                clientData: { label: e.name, value: e.id },
               };
             })
-          )
+          );
           setClientProductionsList([...list]);
-
         } else {
-          setClientProductionsList([{
+          setClientProductionsList([
+            {
+              client: "client_1",
+              production: "production_1",
+              client_id: 0,
+              production_id: [],
+              productionOptions: [],
+              productions: [],
+              clientData: null,
+            },
+          ]);
+        }
+      } catch (e) {
+        toast.error(e?.error || "Error");
+        setClientProductionsList([
+          {
             client: "client_1",
             production: "production_1",
             client_id: 0,
             production_id: [],
             productionOptions: [],
             productions: [],
-            clientData: null
-          }]);
-        }
-      } catch (e) {
-        toast.error(e?.error || "Error")
-        setClientProductionsList([{
-          client: "client_1",
-          production: "production_1",
-          client_id: 0,
-          production_id: [],
-          productionOptions: [],
-          productions: [],
-          clientData: null
-        }]);
+            clientData: null,
+          },
+        ]);
       }
-    }
+    };
 
-    if (router.isReady && Number(id)) getData()
+    if (router.isReady && Number(id)) getData();
   }, [id, router.isReady, reset]);
 
   const loadClientOptions: any = async (inputValue, callback) => {
@@ -186,10 +198,15 @@ function EditUser() {
         offset: 0,
         is_active: true,
       });
-      const options = res?.data.filter(e => ![...clientProductionsList.map(el => el.client_id)].includes(e.ID)).map((item) => ({
-        value: item.ID,
-        label: item.Name
-      }));
+      const options = res?.data
+        .filter(
+          (e) =>
+            ![...clientProductionsList.map((el) => el.client_id)].includes(e.ID)
+        )
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
 
       callback(options);
     } catch (error) {
@@ -208,7 +225,7 @@ function EditUser() {
           });
       })
       .catch(() => {
-        return []
+        return [];
       });
   };
 
@@ -228,7 +245,6 @@ function EditUser() {
         setClientProductionsList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
-
               return {
                 ...item,
                 productionOptions: [...productions],
@@ -270,7 +286,11 @@ function EditUser() {
   };
 
   const onSubmit = async (data) => {
-    if (userDetails?.IsStaffUser && !isCheckedStaffUser && !clientDetails) {
+    if (
+      userDetails?.IsStaffUser &&
+      !isCheckedStaffUser &&
+      !clientProductionsList[0].client_id
+    ) {
       toast.error("Select Client");
       return;
     }
@@ -282,7 +302,7 @@ function EditUser() {
       client_id: userDetails?.IsStaffUser
         ? isCheckedStaffUser
           ? 0
-          : clientDetails?.value
+          : clientProductionsList[0].client_id
         : userDetails.Client.ID,
       roleID: data?.role?.value,
       IsStaffUser: isCheckedStaffUser,
@@ -293,7 +313,7 @@ function EditUser() {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
-          ProjectIDs: []
+          ProjectIDs: [],
         };
       });
       userPayload.Meta.userCPReference = userPreferences;
@@ -307,20 +327,18 @@ function EditUser() {
       userPayload.Meta.userCPReference = userPreferences;
     }
 
-    setLoading(true)
+    setLoading(true);
     usersService
       .editUser(id, userPayload)
       .then(() => {
         router.push("/settings/usermanagement");
         toast.success("User Updated successfully");
         reset();
-        setLoading(false)
-
+        setLoading(false);
       })
       .catch((error) => {
         toast.error(error?.error || "Error");
-        setLoading(false)
-
+        setLoading(false);
       }) as Promise<any>;
   };
 
@@ -329,7 +347,7 @@ function EditUser() {
       <div className="text-black font-size-16 fw-600">User Management</div>
 
       <div className="d-flex justify-content-between">
-        <div className="text-black font-size-32 fw-600">Add New User</div>
+        <div className="text-black font-size-32 fw-600">Edit User</div>
         <div className="d-flex gap-1">
           <a
             href="#"
@@ -345,11 +363,9 @@ function EditUser() {
             className="px-3 py-2"
             spinColor="#ffffff"
             onClick={() => {
-              if (editMode)
-                handleSubmit(onSubmit)()
-              else handleToggleEditMode()
-            }
-            }
+              if (editMode) handleSubmit(onSubmit)();
+              else handleToggleEditMode();
+            }}
           >
             {editMode ? "Save" : "Edit"}
           </Button>
@@ -443,7 +459,7 @@ function EditUser() {
                     )} */}
                   </>
                 )}
-              // rules={{ required: "Middle Name is required" }}
+                // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -502,9 +518,9 @@ function EditUser() {
                     styles={roleSelectStyles}
                     isDisabled={!editMode}
 
-                  // onChange={(e) => {
-                  //   setSelectedRole(e.label);
-                  // }}
+                    // onChange={(e) => {
+                    //   setSelectedRole(e.label);
+                    // }}
                   />
                 )}
               />
@@ -536,171 +552,183 @@ function EditUser() {
         <Row className="mt-4 mb-2">
           <label> {"Assign Client(s) & Production(s)"}</label>
         </Row>
-        {userDetails && initialClientOptions && clientProductionsList.map((CPlist, index) => (
-          <Row key={index}>
-            {userDetails?.IsStaffUser ? (
-              <Col xl="4">
-                <div className="mt-1">
-                  <Label>Select Client</Label>
-                  <AsyncSelect
-                    isDisabled={!editMode}
-                    className="react-select"
-                    classNamePrefix="select"
-                    loadOptions={loadClientOptions}
-                    placeholder="Select Client"
-                    defaultOptions={initialClientOptions.filter(e =>
-                      ![...clientProductionsList.map(el => el.client_id)].includes(e.value)
-                    )}
-                    value={CPlist.clientData}
-                    onChange={(client) => {
-                      if (index === 0) setClientDetails(client);
-                      const clientToUpdate = `client_${index + 1}`;
-                      getProductionOptions(clientToUpdate, client.value, client);
-                    }}
-
-
-                  />
-
-                  {errors.mailingAddressState && (
-                    <span className="text-danger">
-                      {errors.mailingAddressState.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-            ) : (
-              <Col xl="4">
-                <div className="mt-1">
-                  <Label>Select Client</Label>
-                  <Controller
-                    disabled
-                    name="Client"
-                    control={control}
-                    render={({ field }) => (
-                      <AsyncSelect
-                        isDisabled={true}
-                        {...field}
-                        className="react-select"
-                        classNamePrefix="select"
-                        placeholder="Select Client"
-                        defaultOptions={initialClientOptions}
-                        onChange={(client) => {
-                          setClientDetails(client);
-                          const clientToUpdate = `client_${index + 1}`;
-                          getProductionOptions(clientToUpdate, client.value, client);
-                        }}
-                        defaultValue={() => {
-                          return initialClientOptions?.filter(
-                            (option) => option.value === userDetails.client_id
-                          );
-                        }}
-                      />
-                    )}
-                  />
-
-                  {errors.mailingAddressState && (
-                    <span className="text-danger">
-                      {errors.mailingAddressState.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-            )}
-            <Col xl="4">
-              <div className="mt-1">
-                <Label>Select Productions</Label>
-                {watchRole?.label !== "Client Admin" ? (
-                  <>
-                    <Select
-                      closeMenuOnSelect={false}
-                      isMulti
-                      options={CPlist.productionOptions}
-                      value={CPlist.productions}
-                      onChange={(e) => {
-                        const temp = e.map((ele) => ele.value);
-                        const productionToUpdate = `production_${index + 1
-                          }`;
-                        setClientProductionsList((prevList) => {
-                          return prevList.map((item: any) => {
-                            if (item.production == productionToUpdate) {
-                              return {
-                                ...item,
-                                production_id: [...temp],
-                                productions: e,
-                              };
-                            }
-                            return item;
-                          });
-                        });
-                      }}
+        {userDetails &&
+          initialClientOptions &&
+          clientProductionsList.map((CPlist, index) => (
+            <Row key={index}>
+              {userDetails?.IsStaffUser ? (
+                <Col xl="4">
+                  <div className="mt-1">
+                    <Label>Select Client</Label>
+                    <AsyncSelect
                       isDisabled={!editMode}
+                      className="react-select"
+                      classNamePrefix="select"
+                      loadOptions={loadClientOptions}
+                      placeholder="Select Client"
+                      defaultOptions={initialClientOptions.filter(
+                        (e) =>
+                          ![
+                            ...clientProductionsList.map((el) => el.client_id),
+                          ].includes(e.value)
+                      )}
+                      value={CPlist.clientData}
+                      onChange={(client) => {
+                        // if (index === 0) setClientDetails(client);
+                        const clientToUpdate = `client_${index + 1}`;
+                        getProductionOptions(
+                          clientToUpdate,
+                          client.value,
+                          client
+                        );
+                      }}
                     />
 
-                  </>
-                ) : (
-                  <div>
+                    {errors.mailingAddressState && (
+                      <span className="text-danger">
+                        {errors.mailingAddressState.message as React.ReactNode}
+                      </span>
+                    )}
+                  </div>
+                </Col>
+              ) : (
+                <Col xl="4">
+                  <div className="mt-1">
+                    <Label>Select Client</Label>
                     <Controller
-                      disabled={true}
-                      name={CPlist.client}
+                      disabled
+                      name="Client"
                       control={control}
-                      render={() => (
-                        <Select isDisabled={true} closeMenuOnSelect={false} />
+                      render={({ field }) => (
+                        <AsyncSelect
+                          isDisabled={true}
+                          {...field}
+                          className="react-select"
+                          classNamePrefix="select"
+                          placeholder="Select Client"
+                          defaultOptions={initialClientOptions}
+                          onChange={(client) => {
+                            // setClientDetails(client);
+                            const clientToUpdate = `client_${index + 1}`;
+                            getProductionOptions(
+                              clientToUpdate,
+                              client.value,
+                              client
+                            );
+                          }}
+                          defaultValue={() => {
+                            return initialClientOptions?.filter(
+                              (option) => option.value === userDetails.client_id
+                            );
+                          }}
+                        />
                       )}
                     />
+
+                    {errors.mailingAddressState && (
+                      <span className="text-danger">
+                        {errors.mailingAddressState.message as React.ReactNode}
+                      </span>
+                    )}
                   </div>
-                )}
-              </div>
-            </Col>
-            {
-              <Col xl="1">
-                {index !== 0 && (
-                  <div className="d-flex align-items-end h-100 py-2 cursor-pointer">
-                    <img
-                      src="/deletebin.svg"
-                      alt=""
-                      width={15}
-                      onClick={() => {
-                        const updatedData = clientProductionsList.filter(
-                          (_, listIndex) => listIndex !== index
-                        );
-                        setClientProductionsList([...updatedData]);
-                      }}
-                    />
-                  </div>
-                )}
+                </Col>
+              )}
+              <Col xl="4">
+                <div className="mt-1">
+                  <Label>Select Productions</Label>
+                  {watchRole?.label !== "Client Admin" ? (
+                    <>
+                      <Select
+                        closeMenuOnSelect={false}
+                        isMulti
+                        options={CPlist.productionOptions}
+                        value={CPlist.productions}
+                        onChange={(e) => {
+                          const temp = e.map((ele) => ele.value);
+                          const productionToUpdate = `production_${index + 1}`;
+                          setClientProductionsList((prevList) => {
+                            return prevList.map((item: any) => {
+                              if (item.production == productionToUpdate) {
+                                return {
+                                  ...item,
+                                  production_id: [...temp],
+                                  productions: e,
+                                };
+                              }
+                              return item;
+                            });
+                          });
+                        }}
+                        isDisabled={!editMode}
+                      />
+                    </>
+                  ) : (
+                    <div>
+                      <Controller
+                        disabled={true}
+                        name={CPlist.client}
+                        control={control}
+                        render={() => (
+                          <Select isDisabled={true} closeMenuOnSelect={false} />
+                        )}
+                      />
+                    </div>
+                  )}
+                </div>
               </Col>
-            }
-            {isCheckedStaffUser && editMode && (
-              <Col xl="3">
-                {index === clientProductionsList.length - 1 && (
-                  <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
-                    <p className="my-2"></p>
-                    <p
-                      className="mb-2"
-                      onClick={() => {
-                        const id = clientProductionsList.length + 1;
-                        const tempObj = {
-                          client: `client_${id}`,
-                          production: `production_${id}`,
-                          client_id: 0,
-                          production_id: [],
-                          productionOptions: [],
-                          productions: [],
-                          clientData: null
-                        };
-                        setClientProductionsList([...clientProductionsList, tempObj,]);
-                      }}
-                    >
-                      {" "}
-                      <img src="/add-client-icon.svg" alt="" width={15} /> Add
-                      Client
-                    </p>
-                  </div>
-                )}
-              </Col>
-            )}
-          </Row>
-        ))}
+              {
+                <Col xl="1">
+                  {index !== 0 && (
+                    <div className="d-flex align-items-end h-100 py-2 cursor-pointer">
+                      <img
+                        src="/deletebin.svg"
+                        alt=""
+                        width={15}
+                        onClick={() => {
+                          const updatedData = clientProductionsList.filter(
+                            (_, listIndex) => listIndex !== index
+                          );
+                          setClientProductionsList([...updatedData]);
+                        }}
+                      />
+                    </div>
+                  )}
+                </Col>
+              }
+              {isCheckedStaffUser && editMode && (
+                <Col xl="3">
+                  {index === clientProductionsList.length - 1 && (
+                    <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
+                      <p className="my-2"></p>
+                      <p
+                        className="mb-2"
+                        onClick={() => {
+                          const id = clientProductionsList.length + 1;
+                          const tempObj = {
+                            client: `client_${id}`,
+                            production: `production_${id}`,
+                            client_id: 0,
+                            production_id: [],
+                            productionOptions: [],
+                            productions: [],
+                            clientData: null,
+                          };
+                          setClientProductionsList([
+                            ...clientProductionsList,
+                            tempObj,
+                          ]);
+                        }}
+                      >
+                        {" "}
+                        <img src="/add-client-icon.svg" alt="" width={15} /> Add
+                        Client
+                      </p>
+                    </div>
+                  )}
+                </Col>
+              )}
+            </Row>
+          ))}
 
         <div className="d-flex flex-column mt-2">
           <Label
