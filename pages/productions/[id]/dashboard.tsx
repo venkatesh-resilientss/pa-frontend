@@ -314,10 +314,7 @@ export default function ProductionDashboard() {
             </div>
             <div className="d-flex mt-3">
               <div>
-                <div className="d-flex gap-2 f-12">
-                  <img src="software_subscribed.svg" alt="" />
-                  Subscribed Softwares
-                </div>
+               
                 <div
                   className="d-flex justify-content-between"
                   style={{ fontSize: "10px" }}
