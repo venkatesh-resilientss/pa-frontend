@@ -33,20 +33,19 @@ export default function WorkSpaceDetails(props) {
   const data = [...(users?.data || [])]?.filter(
     (e) => e?.Role?.Code === "CLIENT_ADMIN"
   );
-  const staffUsers = [...(supportUsers?.data || [])]
-    ?.filter((e) => e.IsStaffUser)
-    .map((e) => ({ Name: e.adminName, ID: e.id }));
+  const staffUsers = [...(supportUsers?.data || [])].map((e) => ({
+    Name: e.name,
+    ID: e.id,
+  }));
 
   const loadOptions = (value, vl) => {
     if (vl === "rsslSupportUser")
       return clientService
         .getUsers(`?limit=50&offset=0&is_active=true&search=${value}`)
         .then((res) => {
-          return [...(res?.data || [])]
-            .filter((e) => e.IsStaffUser)
-            .map((e) => {
-              return { label: e?.adminName, value: e.id };
-            });
+          return [...(res?.data || [])].map((e) => {
+            return { label: e?.name, value: e.id };
+          });
         });
     else
       return clientService

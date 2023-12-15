@@ -170,18 +170,6 @@ const AllDepartmentsTable = ({ rerender }) => {
       unSortIcon: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (row: any) => {
-        if (typeof row.value === "number") {
-          // If it's a number, just display it as is
-          return <>{row.value}</>;
-        } else if (typeof row.value === "string") {
-          // If it's a string, display the uppercase version
-          return row.value?.toUpperCase();
-        } else {
-          // Handle other types if needed
-          return null;
-        }
-      },
     },
     {
       headerName: "Department Name",

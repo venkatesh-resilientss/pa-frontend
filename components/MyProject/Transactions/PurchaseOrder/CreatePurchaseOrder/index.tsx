@@ -115,7 +115,6 @@ const CreatePurchaseOrder = () => {
   const [sessionData, setSessionData] = useState() as any;
   const [setsData, setSetsData] = useState() as any;
 
-
   const intervalIdRef = useRef(null);
   const attemptsCountRef = useRef(0);
   const maxAttempts = 10;
@@ -147,24 +146,28 @@ const CreatePurchaseOrder = () => {
     return () => clearInterval(intervalIdRef.current);
   }, []);
 
-
   useEffect(() => {
     if (sessionData) {
       const queryParams = {
         search: "",
         pageLimit: 25,
         offset: 0,
-        is_active: true
+        is_active: true,
       };
-      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
-      setsService.getSets(queryParams, payload).then((response) => {
-        setSetsData(response)
-      }).catch((e) => {
-        console.error(e)
-      })
+      const payload = {
+        clientId: sessionData.clientID,
+        projectId: sessionData.projectID,
+      };
+      setsService
+        .getSets(queryParams, payload)
+        .then((response) => {
+          setSetsData(response);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
-
-  }, [sessionData])
+  }, [sessionData]);
 
   const vendorId = selectedVendor?.value;
 
@@ -200,7 +203,7 @@ const CreatePurchaseOrder = () => {
   const statsService = new DashboardService();
 
   const { data: statsData } = useSWR("GET_RECENET", () =>
-    statsService.getRecentProductions()
+    statsService.getRecentProductions("")
   );
 
   const productionSelectFormat = statsData?.data?.map((b) => {
@@ -216,8 +219,9 @@ const CreatePurchaseOrder = () => {
 
   const bankService = new BankService();
 
-
-  const { data: bankData } = useSWR("LIST_BANKS", () => bankService.getBanks({ search: "", pageLimit: 25, offset: 0 }));
+  const { data: bankData } = useSWR("LIST_BANKS", () =>
+    bankService.getBanks({ search: "", pageLimit: 25, offset: 0 })
+  );
 
   const bankSelectFormat = bankData?.data.map((b) => {
     return {
@@ -452,8 +456,6 @@ const CreatePurchaseOrder = () => {
 
   // const { data: setsData } = useSWR("LIST_SETS", () => setsService.getSets());
 
-
-
   const setsSelectFormat = setsData?.result.map((b) => {
     return {
       value: b.ID,
@@ -477,7 +479,12 @@ const CreatePurchaseOrder = () => {
   const taxcodesService = new TaxCodesService();
 
   const { data: taxcodesData } = useSWR("LIST_TAXCODES", () =>
-    taxcodesService.getTaxCodes({ search: "", limit: 25, offset: 0, is_active: true })
+    taxcodesService.getTaxCodes({
+      search: "",
+      limit: 25,
+      offset: 0,
+      is_active: true,
+    })
   );
 
   const taxcodeSelectFormat = taxcodesData?.data.map((b) => {
