@@ -59,7 +59,7 @@ function RecentProductions() {
             <Link href={`/productions/create-production`}>
               <button className="btn btn-primary d-flex justify-content-between align-items-center gap-2 ">
                 <BsCameraVideo />
-                <span className="f-14"> Create Production</span>
+                <span className="f-14">Create Production</span>
               </button>
             </Link>
           )}
