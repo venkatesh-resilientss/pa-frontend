@@ -131,6 +131,8 @@ export default function Productions({ router, user }) {
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
+          dateStart: dateFormat(filters.dateStart),
+          dateEnd: dateFormat(filters.dateEnd),
         };
         const response = await projectService.getAllProjectsList(payload);
         setTableData({
