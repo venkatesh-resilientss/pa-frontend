@@ -10,6 +10,7 @@ const clientService = new ClientsService();
 export default function CreateClientPage({ router }) {
   const { isReady, query } = router;
   const defaultClientData: any = {
+    logoFile: null,
     Softwares: [],
 
     Name: "",

@@ -20,6 +20,7 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getLabel } from "@/commonFunctions/common";
 const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   const router = useRouter();
   const recordsPerPage = 10;
@@ -132,7 +133,7 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           return <>{row.value}</>;
         } else if (typeof row.value === "string") {
           // If it's a string, display the uppercase version
-          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+          return getLabel(row.value);
         } else {
           // Handle other types if needed
           return null;
@@ -146,11 +147,8 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params) => {
-        return (
-          params?.data?.Name.charAt(0).toUpperCase() +
-          params?.data?.Name.slice(1)
-        );
+      cellRenderer: (row) => {
+        return getLabel(row.value);
       },
     },
     {
@@ -161,10 +159,7 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        return (
-          params?.data?.Name.charAt(0).toUpperCase() +
-          params?.data?.Client?.Name.slice(1)
-        );
+        return getLabel(params?.data?.Client?.Name);
       },
     },
     {
@@ -175,10 +170,7 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        return (
-          params?.data?.Project?.Name.charAt(0).toUpperCase() +
-          params?.data?.Project?.Name.slice(1)
-        );
+        return getLabel(params?.data?.Project?.Name);
       },
     },
 

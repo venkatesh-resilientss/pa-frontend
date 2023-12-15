@@ -25,16 +25,14 @@ function Index({ loginStatus, user, mutate, router }) {
 
         if (prefix !== tenant)
           window.location.href = `http://${tenant}.${process.env.NEXT_PUBLIC_REDIRECT}/dashboard/?accessToken=${accessToken}`;
-        else {
-          router.replace("/dashboard");
-          // setTimeout(() => router.reload(), 500);
-        }
+        else router.replace("/dashboard");
       } catch (e) {
         await authService.logout();
         await mutate();
         const prefix = window.location.hostname.split(".")[0];
         if (prefix !== "app")
           window.location.href = `http://app.${process.env.NEXT_PUBLIC_REDIRECT}/?reset=true`;
+        else router.replace("/");
       }
     };
 

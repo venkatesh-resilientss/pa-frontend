@@ -58,6 +58,15 @@ input[type="number"] {
   border-color: #dee2e6 !important;
 }
 
+.react-datepicker__close-icon::after {
+  color: black;
+  background-color: white;
+  font-weight: 700;
+}
+.react-datepicker__close-icon {
+  border: 0 !important;
+}
+
 .file-div {
   input[type="file"]::file-selector-button {
     height: 40px;
@@ -80,5 +89,11 @@ input[type="number"] {
 .filters-div {
   button {
     height: 40px;
+    box-shadow: none;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    div {
+      padding-top: 2px;
+    }
   }
 }
