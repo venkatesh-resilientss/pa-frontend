@@ -2,22 +2,23 @@ import { Button, Col, Row, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { LegislativesService } from "services";
+import { EmployeetypesService } from "services";
 import useSWR, { mutate } from "swr";
 import { useEffect, useState } from "react";
 
-function EditLegislativeType() {
+function EditEmployeeType() {
   const router = useRouter();
   const { id } = router.query;
+  const employeeTypesService = new EmployeetypesService();
 
-  const legislativesService = new LegislativesService();
+  const fetchemployeetypeDetails = (id) => employeeTypesService.employeetypeDetails(id);
 
-  const fetchlegislativesDetails = (id) => legislativesService.legislativesDetails(id);
-
-  const { data: legislative } = useSWR(
-    id ? ["LEGISLATIVE_DETAILS", id] : null,
-    () => fetchlegislativesDetails(id)
+  const { data: employeeType } = useSWR(
+    id ? ["EMPLOYEETYPE_DETAILS", id] : null,
+    () => fetchemployeetypeDetails(id)
   );
+
+
   const {
     handleSubmit,
     formState: { errors },
@@ -29,29 +30,43 @@ function EditLegislativeType() {
   const [activeStatus, setActiveStatus] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const { mutate: legislativeMutate } = useSWR("LIST_LEGISLATIVES", () =>
-  legislativesService.getlegislatives({ search: "", pageLimit: 25, offset: 0 })
-  );
-
   useEffect(() => {
-    if (!legislative) return;
-    legislative?.Code && setValue("code", legislative?.Code);
-    legislative?.Description && setValue("description", legislative?.Description);
-    legislative?.Name && setValue("name", legislative?.Name);
-    setActiveStatus(legislative?.IsActive);
-  }, [legislative]);
+    if (!employeeType) return;
+    employeeType?.Code && setValue("Code", employeeType?.Code);
+    employeeType?.Description && setValue("Description", employeeType?.Description);
+    setActiveStatus(employeeType?.IsActive);
+  }, [employeeType]);
+
+
+
+
+
+  // const onSubmit = async () => {
+  //   // Handle form submission logic here
+  //   try {
+  //     // Your logic to save the form data
+  //     toast.success("Employee Type Updated successfully");
+  //     router.push("/configurations/project-type");
+  //     reset();
+  //   } catch (error) {
+  //     toast.error("Error adding Employee Type");
+  //     console.error(error);
+  //     reset();
+
+  //   }
+  // };
 
   const onSubmit = (data) => {
     if (isSaving) return
     data.IsActive = activeStatus
     setIsSaving(true)
-    legislativesService
-      .editlegislatives(id, data)
+    employeeTypesService
+      .editEmployeetype(id, data)
       .then(() => {
         setIsSaving(false)
-        toast.success("Legislative Edited successfully");
-        mutate(legislativeMutate());
-        router.push("/configurations/legislative-type");
+        toast.success("Employee Type Edited successfully");
+        // mutate(employeeTypeMutate());
+        router.push("/configurations/employee-type");
         reset();
       })
       .catch((error) => {
@@ -59,7 +74,7 @@ function EditLegislativeType() {
         toast.error(error?.error);
       });
   };
- 
+
   return (
     <>
       <div className="section mt-4">
@@ -67,14 +82,14 @@ function EditLegislativeType() {
           <div
             className="text-black add-agents-header"
           >
-            Legislative Type
+            Employee Type
           </div>
 
           <div className="d-flex justify-content-between">
             <div
               className="text-black add-agents-subheader"
             >
-              Edit Legislative Type
+              Edit Employee Type
             </div>
             <div className="d-flex me-2 " style={{ gap: "10px" }}>
               <Button
@@ -112,23 +127,23 @@ function EditLegislativeType() {
             <Row>
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Code<span className="text-danger">*</span></Label>
+                  <Label className="form-lable-font">Employee Type<span className="text-danger">*</span></Label>
                   <Controller
-                    name="code"
-                    rules={{ required: "Legislative Code is required" }}
+                    name="Code"
+                    rules={{ required: "Employee Type is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
-                        placeholder="Legislative Code"
-                        invalid={errors.code && true}
+                        placeholder="Employee Type"
+                        invalid={errors.Code && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.code && (
+                  {errors.Code && (
                     <span className="text-danger">
-                      {errors.code.message as React.ReactNode}
+                      {errors.Code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -136,44 +151,27 @@ function EditLegislativeType() {
 
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Name<span className="text-danger">*</span></Label>
-                  <Controller
-                    name="name"
-                    rules={{ required: "Legislative Name is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Legislative Name"
-                        invalid={errors.name && true}
-                        {...field}
-                      />
-                    )}
-                  />
-                  {errors.name && (
-                    <span className="text-danger">
-                      {errors.name.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Description</Label>
+                  <Label className="form-lable-font">Employee Description<span className="text-danger">*</span></Label>
                   <Controller
                     name="Description"
+                    rules={{ required: "Employee Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
-                      {...field}
                         className="inputFeild"
-                        placeholder="Description"
+                        placeholder="Employee Description"
+                        invalid={errors.Description && true}
+                        {...field}
                       />
                     )}
                   />
+                  {errors.Description && (
+                    <span className="text-danger">
+                      {errors.Description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
-
             </Row>
             <Row>
               <Col>
@@ -217,4 +215,4 @@ function EditLegislativeType() {
   );
 }
 
-export default EditLegislativeType;
+export default EditEmployeeType;

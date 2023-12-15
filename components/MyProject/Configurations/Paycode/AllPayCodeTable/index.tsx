@@ -10,10 +10,22 @@ import Image from "next/image";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import React from "react";
+import { PaycodesService } from "services";
+import useSWR from "swr";
+import CustomBadge from "components/Generic/CustomBadge";
 
 const AllpayCodesTable = () => {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
+  const paycodesService = new PaycodesService();
+
+  const { data: rowData } = useSWR(
+    ["LIST_PAYCODES", searchText],
+    () => paycodesService.getPaycodes()
+  );
+ 
+  console.log('rowData', rowData)
+
     const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -38,10 +50,24 @@ const AllpayCodesTable = () => {
       </div>
     );
   };
+
+  const StateBadge = (props) => {
+    const sateDir = {
+      true: "success",
+      false: "danger",
+    };
+    return (
+      <CustomBadge
+        bg={sateDir[props.value]}
+        value={props.value === true ? "active" : "In-active"}
+      />
+    );
+  };
+
   const columnDefs = [
     {
       headerName: "Code",
-      field: "OCCCode",
+      field: "Code",
       sortable: true,
       resizable: true,
       width:"200px",
@@ -59,9 +85,8 @@ const AllpayCodesTable = () => {
     },
     {
       headerName: "Short Description",
-      field: "WcClass",
+      field: "ShortName",
       width:"200px",
-
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -70,7 +95,7 @@ const AllpayCodesTable = () => {
 
     {
       headerName: "Factor",
-      field: "EmployeeType",
+      field: "Factor",
       width:"200px",
 
       sortable: true,
@@ -80,7 +105,7 @@ const AllpayCodesTable = () => {
     },
     {
       headerName: "H/N/U/S",
-      field: "OCCCode",
+      field: "Hnus",
       width:"200px",
 
       sortable: true,
@@ -90,148 +115,250 @@ const AllpayCodesTable = () => {
     },
     {
       headerName: " TAXABLE",
-      field: "Description",
+      field: "Taxable",
       width:"200px",
-
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "WORK Time",
-      field: "WcClass",
+      field: "WorkTime",
       width:"200px",
-
       sortable: true,
       resizable: true,
-
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "Over Time",
-      field: "OCCCode",
+      field: "OverTime",
       width:"200px",
-
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: " SUBJECT TO WC",
-      field: "Description",
+      field: "SubjectToWc",
       width:"200px",
 
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "SUBJECT TO PHW",
-      field: "WcClass",
+      field: "SubjectToPhw",
       width:"200px",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "STRAIGHT TIME",
-      field: "OCCCode",
+      field: "StraightTime",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: " ALLOWANCE",
-      field: "Description",
+      field: "Allowance",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "SICK ACCRUAL",
-      field: "WcClass",
+      field: "SickAccrual",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
 
     {
       headerName: "SICK TIME WORKED",
-      field: "EmployeeType",
+      field: "SickWorked",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "VAC ACCRUAL",
-      field: "OCCCode",
+      field: "VacationAccrual",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: " VAC WORKED",
-      field: "Description",
+      field: "VacationWorked",
       sortable: true,
       resizable: true,
+      width:"200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "HOL ACCRUAL",
-      field: "WcClass",
+      field: "HolAccrual",
       sortable: true,
       width:"200px",
 
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "H-N-W",
-      field: "OCCCode",
+      field: "Hnw",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "HOL WORKED",
-      field: "Description",
+      field: "HolWorked",
       width:"200px",
 
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "ADD TO PREM OT CALC",
-      field: "WcClass",
+      field: "AddToPremOffCalc",
       sortable: true,
       width:"200px",
 
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
       headerName: "CATEGORY",
@@ -245,7 +372,7 @@ const AllpayCodesTable = () => {
     },
     {
       headerName: "GL CODE",
-      field: "WcClass",
+      field: "GlCodeID",
       width:"200px",
       sortable: true,
       resizable: true,
@@ -253,58 +380,23 @@ const AllpayCodesTable = () => {
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Action",
-      field: "id",
-      cellRenderer: ActionsButton,
+      headerName: "Status",
+      field: "IsActive",
+      cellRenderer: StateBadge,
+      sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      width:"200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
-  ];
-  const rowData = [
     {
-      id: 1,
-      OCCCode: "SER001",
-      WcClass: "WL",
-      Description: "This is the first product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "active",
-    },
-    {
-      id: 2,
-      OCCCode: "SER002",
-      WcClass: "WC",
-      Description: "This is the second product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "inactive",
-    },
-    {
-      id: 3,
-      OCCCode: "SER003",
-      WcClass: "WC",
-      Description: "This is the third product series",
-      EmployeeType: "TAL",
-      OFFProduction: "False",
-      Agreements: "active",
-    },
-    {
-      id: 4,
-      OCCCode: "SER003",
-      WcClass: "WC",
-      Description: "This is the third product series",
-      EmployeeType: "TAL",
-      OFFProduction: "True",
-      Agreements: "inactive",
-    },
-    {
-      id: 5,
-      OCCCode: "SER003",
-      WcClass: "WL",
-      Description: "This is the third product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "active",
+      headerName: "Action",
+      field: "id",
+      width:"200px",
+      cellRenderer: ActionsButton,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
     },
   ];
 

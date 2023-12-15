@@ -2,14 +2,13 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import React, { useState, useEffect } from "react";
-import { LegislativesService } from "services";
-import AsyncSelect from "react-select/async";
-import { selectStyles } from "constants/common";
-function AddLegislativeType() {
+import { WcclassService } from "services";
+import { useState } from "react";
+function AddWcclass() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
-  const legislativesService = new LegislativesService();
+  const wcclassService = new WcclassService();
+
   const {
     control,
     handleSubmit,
@@ -21,12 +20,12 @@ function AddLegislativeType() {
     if(isSaving) return
     setIsSaving(true)
     try {
-      legislativesService
-      .createlegislatives(data)
+      wcclassService
+      .createWcclass(data)
       .then(() => {
         setIsSaving(false)
-        toast.success("Legislative Type added successfully");
-        router.push("/configurations/legislative-type");
+        toast.success("Wc Class added successfully");
+        router.push("/configurations/wcclass");
         reset();
       })
       .catch((error) => {
@@ -34,12 +33,12 @@ function AddLegislativeType() {
         toast.error(error?.error);
       });
     } catch (error) {
-      toast.error("Error adding Legislative Type");
+      toast.error("Error adding Wc Class");
       console.error(error);
     }
   };
 
-
+ 
   return (
     <>
       <div className="section mt-4">
@@ -47,14 +46,14 @@ function AddLegislativeType() {
           <div
             className="text-black add-agents-header"
           >
-            Legislative Type
+            Wc Class
           </div>
 
           <div className="d-flex justify-content-between">
             <div
               className="text-black add-agents-subheader"
             >
-              Add New Legislative Type
+              Add New Wc Class
             </div>
             <div className="d-flex me-2 " style={{ gap: "10px" }}>
               <Button
@@ -92,23 +91,23 @@ function AddLegislativeType() {
             <Row>
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Code<span className="text-danger">*</span></Label>
+                  <Label className="form-lable-font">Wc Class<span className="text-danger">*</span></Label>
                   <Controller
-                    name="code"
-                    rules={{ required: "Legislative Code is required" }}
+                    name="Code"
+                    rules={{ required: "Wc Class is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
-                        placeholder="Legislative Code"
-                        invalid={errors.code && true}
+                        placeholder="Wc Class"
+                        invalid={errors.Code && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.code && (
+                  {errors.Code && (
                     <span className="text-danger">
-                      {errors.code.message as React.ReactNode}
+                      {errors.Code.message as React.ReactNode}
                     </span>
                   )}
                 </div>
@@ -116,44 +115,27 @@ function AddLegislativeType() {
 
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Name<span className="text-danger">*</span></Label>
-                  <Controller
-                    name="name"
-                    rules={{ required: "Legislative Name is required" }}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Legislative Name"
-                        invalid={errors.name && true}
-                        {...field}
-                      />
-                    )}
-                  />
-                  {errors.name && (
-                    <span className="text-danger">
-                      {errors.name.message as React.ReactNode}
-                    </span>
-                  )}
-                </div>
-              </Col>
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Description</Label>
+                  <Label className="form-lable-font">Description<span className="text-danger">*</span></Label>
                   <Controller
                     name="Description"
+                    rules={{ required: "Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
                         placeholder="Description"
+                        invalid={errors.description && true}
                         {...field}
                       />
                     )}
                   />
+                  {errors.Description && (
+                    <span className="text-danger">
+                      {errors.Description.message as React.ReactNode}
+                    </span>
+                  )}
                 </div>
               </Col>
-
             </Row>
           </Form>
         </div>
@@ -162,4 +144,4 @@ function AddLegislativeType() {
   );
 }
 
-export default AddLegislativeType;
+export default AddWcclass;

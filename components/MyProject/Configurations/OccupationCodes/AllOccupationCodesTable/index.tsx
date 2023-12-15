@@ -7,13 +7,22 @@ import {
 import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import React from "react";
+import React, {useState} from "react";
+import { OccupationcodeService } from "services";
+import useSWR from "swr";
+import CustomBadge from "components/Generic/CustomBadge";
 
 const AllOccupationCodesTable = () => {
   const router = useRouter();
+  const occupationcodeService = new OccupationcodeService();
   const [searchText, setSearchText] = useState("");
+
+  const { data: rowData } = useSWR(
+    ["LIST_OCCUPATIONCODES", searchText],
+    () => occupationcodeService.getOccupationcodes()
+  );
+ 
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
@@ -37,10 +46,22 @@ const AllOccupationCodesTable = () => {
       </div>
     );
   };
+  const StateBadge = (props) => {
+    const sateDir = {
+      true: "success",
+      false: "danger",
+    };
+    return (
+      <CustomBadge
+        bg={sateDir[props.value]}
+        value={props.value === true ? "active" : "In-active"}
+      />
+    );
+  };
   const columnDefs = [
     {
       headerName: "OCC Code",
-      field: "OCCCode",
+      field: "Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -54,7 +75,7 @@ const AllOccupationCodesTable = () => {
     },
     {
       headerName: "WC Class",
-      field: "WcClass",
+      field: "WcClass.Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -62,7 +83,7 @@ const AllOccupationCodesTable = () => {
 
     {
       headerName: "Employee Type",
-      field: "EmployeeType",
+      field: "EmployeeType.Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -70,20 +91,28 @@ const AllOccupationCodesTable = () => {
 
     {
       headerName: "OFF Production",
-      field: "OFFProduction",
+      field: "OffProduction",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
-
+      cellRenderer: (params) => {
+        return params.value ? (
+          <span style={{ color: '#0A9B58' }}>&#10004;</span>
+        ) : (
+          <span style={{ color: 'red' }}>&#10008;</span>
+        );
+      }
     },
     {
-      headerName: "Agreements",
-      field: "Agreements",
+      headerName: "Status",
+      field: "IsActive",
+      cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
-
     {
       headerName: "Action",
       field: "id",
@@ -91,54 +120,7 @@ const AllOccupationCodesTable = () => {
       headerClass: "custom-header-class",
     },
   ];
-  const rowData = [
-    {
-      id: 1,
-      OCCCode: "SER001",
-      WcClass: "WL",
-      Description: "This is the first product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "active",
-    },
-    {
-      id: 2,
-      OCCCode: "SER002",
-      WcClass: "WC",
-      Description: "This is the second product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "inactive",
-    },
-    {
-      id: 3,
-      OCCCode: "SER003",
-      WcClass: "WC",
-      Description: "This is the third product series",
-      EmployeeType: "TAL",
-      OFFProduction: "False",
-      Agreements: "active",
-    },
-    {
-      id: 4,
-      OCCCode: "SER003",
-      WcClass: "WC",
-      Description: "This is the third product series",
-      EmployeeType: "TAL",
-      OFFProduction: "True",
-      Agreements: "inactive",
-    },
-    {
-      id: 5,
-      OCCCode: "SER003",
-      WcClass: "WL",
-      Description: "This is the third product series",
-      EmployeeType: "CR",
-      OFFProduction: "True",
-      Agreements: "active",
-    },
-  ];
-
+  
   return (
     <div>
       <div className="section mt-4">
@@ -158,10 +140,6 @@ const AllOccupationCodesTable = () => {
               <div
                 className="d-flex align-items-center gap-10"
               >
-                <div className="occupation-subheader">
-                  {5} Occupation codes
-                </div>
-
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
                   type="search"
@@ -208,8 +186,8 @@ const AllOccupationCodesTable = () => {
         </Card>
       </div>
 
-      <div className="mt-2">
-        <GridTable
+      <div className="mt-3">
+      <GridTable
           rowData={rowData}
           columnDefs={columnDefs}
           pageSize={10}

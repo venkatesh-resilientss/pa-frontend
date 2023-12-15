@@ -4,46 +4,31 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import GridTable from "../../../../grid-tables/gridTable";
+import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import CustomBadge from "components/Generic/CustomBadge";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import { LegislativesService } from "services";
+import { EmployeetypesService } from "services";
 import useSWR from "swr";
+import CustomBadge from "components/Generic/CustomBadge";
 
-const AllLegislativeTypeTable = () => {
+const AllEmployeeTypeTable = () => {
   const router = useRouter();
-  const legislativesService = new LegislativesService();
-
   const [searchText, setSearchText] = useState("");
+  const employeeTypesService = new EmployeetypesService();
 
   const { data: rowData } = useSWR(
-    ["LIST_LEGISLATIVES", searchText],
-    () => legislativesService.getlegislatives()
+    ["LIST_EMPLOYEETYPES", searchText],
+    () => employeeTypesService.getEmployeetypes()
   );
 
-  console.log('rowData', rowData)
-
-  const StateBadge = (props) => {
-    const stateDir = {
-      true: "success",
-      false: "danger",
-    };
-    return (
-      <CustomBadge
-        bg={stateDir[props.value]}
-        value={props.value ? "Active" : "In-active"}
-      />
-    );
-  };
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
           <div
-           onClick={() =>router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
+           onClick={() =>router.push(`/configurations/edit-employee-list/${props.data?.ID}`)}
             className="cursor-pointer"
             style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
           >
@@ -62,23 +47,29 @@ const AllLegislativeTypeTable = () => {
       </div>
     );
   };
+
+  const StateBadge = (props) => {
+    const sateDir = {
+      true: "success",
+      false: "danger",
+    };
+    return (
+      <CustomBadge
+        bg={sateDir[props.value]}
+        value={props.value === true ? "active" : "In-active"}
+      />
+    );
+  };
   const columnDefs = [
     {
-      headerName: "Legislative Code",
+      headerName: "Employee Type",
       field: "Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Legislative Name",
-      field: "Name",
-      sortable: true,
-      resizable: true,
-      headerClass: "custom-header-class",
-    },
-    {
-      headerName: "Description",
+      headerName: "Employee Description",
       field: "Description",
       sortable: true,
       resizable: true,
@@ -88,12 +79,12 @@ const AllLegislativeTypeTable = () => {
       headerName: "Status",
       field: "IsActive",
       cellRenderer: StateBadge,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      unSortIcon: true,
       sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
     },
-   
     {
       headerName: "Action",
       field: "id",
@@ -114,7 +105,7 @@ const AllLegislativeTypeTable = () => {
                 <div
                   className="m-2 agents-header"
                 >
-                  Legislative Type List
+                  Employee Type List
                 </div>
               </div>
 
@@ -131,7 +122,7 @@ const AllLegislativeTypeTable = () => {
                 />
 
                 <Button
-                  onClick={() => router.push(`/configurations/add-legislative-type`)}
+                  onClick={() => router.push(`/configurations/add-employee-type`)}
                   className="agents-new-button"
                 >
                   <Image
@@ -173,8 +164,10 @@ const AllLegislativeTypeTable = () => {
           <GridTable
             rowData={rowData}
             columnDefs={columnDefs}
-            pageSize={10}
+            pageSize={7}
             searchText={searchText}
+            pagination={true}
+            paginationPageSize={1}
           />
         </div>
      
@@ -183,4 +176,4 @@ const AllLegislativeTypeTable = () => {
   );
 };
 
-export default AllLegislativeTypeTable;
+export default AllEmployeeTypeTable;

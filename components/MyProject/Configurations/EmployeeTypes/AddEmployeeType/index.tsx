@@ -2,14 +2,13 @@ import { Button, Col, Row, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import React, { useState, useEffect } from "react";
-import { LegislativesService } from "services";
-import AsyncSelect from "react-select/async";
-import { selectStyles } from "constants/common";
-function AddLegislativeType() {
+import { EmployeetypesService } from "services";
+import { useState } from "react";
+function AddEmployeeType() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
-  const legislativesService = new LegislativesService();
+  const employeeTypesService = new EmployeetypesService();
+
   const {
     control,
     handleSubmit,
@@ -21,12 +20,12 @@ function AddLegislativeType() {
     if(isSaving) return
     setIsSaving(true)
     try {
-      legislativesService
-      .createlegislatives(data)
+      employeeTypesService
+      .createEmployeetype(data)
       .then(() => {
         setIsSaving(false)
-        toast.success("Legislative Type added successfully");
-        router.push("/configurations/legislative-type");
+        toast.success("Employee Type added successfully");
+        router.push("/configurations/employee-type");
         reset();
       })
       .catch((error) => {
@@ -34,12 +33,12 @@ function AddLegislativeType() {
         toast.error(error?.error);
       });
     } catch (error) {
-      toast.error("Error adding Legislative Type");
+      toast.error("Error adding Employee type");
       console.error(error);
     }
   };
 
-
+ 
   return (
     <>
       <div className="section mt-4">
@@ -47,14 +46,14 @@ function AddLegislativeType() {
           <div
             className="text-black add-agents-header"
           >
-            Legislative Type
+            Employee Type
           </div>
 
           <div className="d-flex justify-content-between">
             <div
               className="text-black add-agents-subheader"
             >
-              Add New Legislative Type
+              Add New  Employee Type
             </div>
             <div className="d-flex me-2 " style={{ gap: "10px" }}>
               <Button
@@ -92,15 +91,15 @@ function AddLegislativeType() {
             <Row>
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Code<span className="text-danger">*</span></Label>
+                  <Label className="form-lable-font">Employee Type<span className="text-danger">*</span></Label>
                   <Controller
                     name="code"
-                    rules={{ required: "Legislative Code is required" }}
+                    rules={{ required: "Employee Type is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
-                        placeholder="Legislative Code"
+                        placeholder="Employee Type"
                         invalid={errors.code && true}
                         {...field}
                       />
@@ -116,44 +115,27 @@ function AddLegislativeType() {
 
               <Col xl="4">
                 <div className="mb-1">
-                  <Label className="form-lable-font">Legislative Name<span className="text-danger">*</span></Label>
+                  <Label className="form-lable-font">Employee Description<span className="text-danger">*</span></Label>
                   <Controller
-                    name="name"
-                    rules={{ required: "Legislative Name is required" }}
+                    name="description"
+                    rules={{ required: "Employee Description is required" }}
                     control={control}
                     render={({ field }) => (
                       <Input
                         className="inputFeild"
-                        placeholder="Legislative Name"
-                        invalid={errors.name && true}
+                        placeholder="Employee Description"
+                        invalid={errors.description && true}
                         {...field}
                       />
                     )}
                   />
-                  {errors.name && (
+                  {errors.description && (
                     <span className="text-danger">
-                      {errors.name.message as React.ReactNode}
+                      {errors.description.message as React.ReactNode}
                     </span>
                   )}
                 </div>
               </Col>
-              <Col xl="4">
-                <div className="mb-1">
-                  <Label className="form-lable-font">Description</Label>
-                  <Controller
-                    name="Description"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        className="inputFeild"
-                        placeholder="Description"
-                        {...field}
-                      />
-                    )}
-                  />
-                </div>
-              </Col>
-
             </Row>
           </Form>
         </div>
@@ -162,4 +144,4 @@ function AddLegislativeType() {
   );
 }
 
-export default AddLegislativeType;
+export default AddEmployeeType;

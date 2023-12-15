@@ -4,46 +4,31 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import GridTable from "../../../../grid-tables/gridTable";
+import GridTable from "components/grid-tables/gridTable";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import CustomBadge from "components/Generic/CustomBadge";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
-import { LegislativesService } from "services";
+import { WcclasscodeService } from "services";
 import useSWR from "swr";
+import CustomBadge from "components/Generic/CustomBadge";
 
-const AllLegislativeTypeTable = () => {
+const AllWcClassCodeTable = () => {
   const router = useRouter();
-  const legislativesService = new LegislativesService();
-
   const [searchText, setSearchText] = useState("");
+  const wcclasscodeService = new WcclasscodeService();
 
   const { data: rowData } = useSWR(
-    ["LIST_LEGISLATIVES", searchText],
-    () => legislativesService.getlegislatives()
+    ["LIST_WCCLASSCODE", searchText],
+    () => wcclasscodeService.getWcclasscodes()
   );
 
-  console.log('rowData', rowData)
-
-  const StateBadge = (props) => {
-    const stateDir = {
-      true: "success",
-      false: "danger",
-    };
-    return (
-      <CustomBadge
-        bg={stateDir[props.value]}
-        value={props.value ? "Active" : "In-active"}
-      />
-    );
-  };
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
           <div
-           onClick={() =>router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
+           onClick={() =>router.push(`/configurations/edit-wcclasscode/${props.data?.ID}`)}
             className="cursor-pointer"
             style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
           >
@@ -62,24 +47,65 @@ const AllLegislativeTypeTable = () => {
       </div>
     );
   };
+
+  const StateBadge = (props) => {
+    const sateDir = {
+      true: "success",
+      false: "danger",
+    };
+    return (
+      <CustomBadge
+        bg={sateDir[props.value]}
+        value={props.value === true ? "active" : "In-active"}
+      />
+    );
+  };
   const columnDefs = [
     {
-      headerName: "Legislative Code",
-      field: "Code",
+      headerName: "Wk State",
+      field: "State.Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
-      headerName: "Legislative Name",
-      field: "Name",
+      headerName: "Wc Code",
+      field: "WcClass.Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Description",
-      field: "Description",
+      field: "WcClass.Description",
+      sortable: true,
+      resizable: true,
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "State Wc Code",
+      field: "WcCode",
+      sortable: true,
+      resizable: true,
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "%Rate",
+      field: "Rate",
+      sortable: true,
+      resizable: true,
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "Hourly Rate",
+      field: "HourlyRate",
+      sortable: true,
+      resizable: true,
+      headerClass: "custom-header-class",
+    },
+    {
+      headerName: "Subject Wages",
+      field: "SubjectWages",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -88,12 +114,12 @@ const AllLegislativeTypeTable = () => {
       headerName: "Status",
       field: "IsActive",
       cellRenderer: StateBadge,
-      cellStyle: { fontSize: "16px", fontWeight: "400" },
-      headerClass: "custom-header-class",
-      unSortIcon: true,
       sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
     },
-   
     {
       headerName: "Action",
       field: "id",
@@ -101,6 +127,7 @@ const AllLegislativeTypeTable = () => {
       headerClass: "custom-header-class",
     },
   ];
+
 
   return (
     <div>
@@ -114,7 +141,7 @@ const AllLegislativeTypeTable = () => {
                 <div
                   className="m-2 agents-header"
                 >
-                  Legislative Type List
+                  Wc Code
                 </div>
               </div>
 
@@ -131,7 +158,7 @@ const AllLegislativeTypeTable = () => {
                 />
 
                 <Button
-                  onClick={() => router.push(`/configurations/add-legislative-type`)}
+                  onClick={() => router.push(`/configurations/add-wcclasscode`)}
                   className="agents-new-button"
                 >
                   <Image
@@ -173,8 +200,10 @@ const AllLegislativeTypeTable = () => {
           <GridTable
             rowData={rowData}
             columnDefs={columnDefs}
-            pageSize={10}
+            pageSize={7}
             searchText={searchText}
+            pagination={true}
+            paginationPageSize={1}
           />
         </div>
      
@@ -183,4 +212,4 @@ const AllLegislativeTypeTable = () => {
   );
 };
 
-export default AllLegislativeTypeTable;
+export default AllWcClassCodeTable;

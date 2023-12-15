@@ -212,6 +212,11 @@ export const UPLOAD_BUDGET_LIST = `${tenantIdEndpoint}/budget/upload`;
 export const UPLOAD_VENDORS_LIST = `${tenantIdEndpoint}/vendors/upload`;
 export const UPLOAD_COA_LIST = `${withoutTenantIdEndpoint}/coaaccounts/upload`;
 export const UPLOAD_PROJECTTYPE_LIST = `${tenantIdEndpoint}/projecttypes/upload`;
+export const UPLOAD_OCCUPATIONCODES_LIST = `${tenantIdEndpoint}/occupationCode/upload`;
+export const UPLOAD_EMPLOYEETYPE_LIST = `${tenantIdEndpoint}/employeetypes/upload`;
+export const UPLOAD_WCCLASSCODES_LIST = `${tenantIdEndpoint}/wc-class-code/upload`;
+
+export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
 
 //addresss
 export const ADDRESSES = `${tenantIdEndpoint}/addresses/`;
@@ -262,8 +267,6 @@ export const EDIT_PROJECTTYPE = (id: any) =>
 export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/projecttypes/${id}`;
 
-export const GET_SOFTWARES = `${withoutTenantIdEndpoint}/softwares/`;
-
 export const GET_CLIENT_TYPES = `${withoutTenantIdEndpoint}/clienttypes/`;
 export const GET_CLIENT_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`;
 export const GET_STATES_BY_COUNTRY = (id) =>
@@ -278,3 +281,53 @@ export const GET_CLIENTS_LIST = `${withoutTenantIdEndpoint}/clients/search`; //C
 export const GET_CLIENTS_FILTERS = `${withoutTenantIdEndpoint}/clients/filters`; //Clients
 export const UPDATE_PRODUCTION = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`; //Create projects
+  //LEGISLATIVES ENDPOINTS
+
+export const GET_LEGISLATIVES = `${tenantIdEndpoint}/legislatives/?limit=${100}&offset=0`; //legislatives
+export const CREATE_LEGISLATIVE = `${tenantIdEndpoint}/legislatives/`; //Create legislatives
+export const DELETE_LEGISLATIVE = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`; //DELETE legislatives
+export const EDIT_LEGISLATIVE = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`; //EDIT legislatives
+export const LEGISLATIVE_DETAIL_ENDPOINT = (id: any) =>
+  `${tenantIdEndpoint}/legislatives/${id}`;
+
+
+//PAYCODES ENDPOINTS
+
+export const GET_PAYCODES = `${tenantIdEndpoint}/pay-code/?limit=${100}&offset=0`; //pay-code
+export const CREATE_PAYCODE = `${tenantIdEndpoint}/pay-code/`; //Create pay-code
+export const DELETE_PAYCODE = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`; //DELETE pay-code
+export const EDIT_PAYCODE = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`; //EDIT pay-code
+export const PAYCODE_DETAIL_ENDPOINT = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`;
+
+//EMPLOYEETYPES ENDPOINTS
+export const GET_EMPLOYEETYPES = `${tenantIdEndpoint}/employee-type/?limit=${100}&offset=0`; //Employeetypes
+export const CREATE_EMPLOYEETYPE = `${tenantIdEndpoint}/employee-type/`; //Create Employeetypes
+export const DELETE_EMPLOYEETYPE = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`; //DELETE Employeetypes
+export const EDIT_EMPLOYEETYPE = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`; //EDIT Employeetypes
+export const EMPLOYEETYPES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/employee-type/${id}`;
+
+//OCCUPATIONCODES ENDPOINTS
+export const GET_OCCUPATIONCODES = `${tenantIdEndpoint}/occupationCode/?limit=${100}&offset=0`; //occupationCode
+export const CREATE_OCCUPATIONCODE = `${tenantIdEndpoint}/occupationCode/`; //Create occupationCode
+export const DELETE_OCCUPATIONCODE = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`; //DELETE occupationCode
+export const EDIT_OCCUPATIONCODE = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`; //EDIT occupationCode
+export const OCCUPATIONCODES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/occupationCode/${id}`;
+
+//WCCLASSCODES ENDPOINTS
+export const GET_WCCLASS = `${tenantIdEndpoint}/wc-class/?limit=${100}&offset=0`; //wc-class-code
+export const CREATE_WCCLASS = `${tenantIdEndpoint}/wc-class/`; //Create wc-class-code
+export const DELETE_WCCLASS = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`; //DELETE wc-class-code
+export const EDIT_WCCLASS = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`; //EDIT wc-class-code
+export const WCCLASS_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/wc-class/${id}`;
+
+//WCCODES ENDPOINTS
+export const GET_WCCLASSCODES = `${tenantIdEndpoint}/wc-class-code/?limit=${100}&offset=0`; //wc-code
+export const CREATE_WCCLASSCODE = `${tenantIdEndpoint}/wc-class-code/`; //Create wc-code
+export const DELETE_WCCLASSCODE = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`; //DELETE wc-code
+export const EDIT_WCCLASSCODE = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`; //EDIT wc-code
+export const WCCLASSCODES_DETAIL_ENDPOINT = (id: any) => `${tenantIdEndpoint}/wc-class-code/${id}`;
