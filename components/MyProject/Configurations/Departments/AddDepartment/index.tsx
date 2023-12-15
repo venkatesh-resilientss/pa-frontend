@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { useState } from "react";
+import { LoaderButton } from "@/components/Loaders";
 
 function AddDepartment() {
   const router = useRouter();
@@ -18,8 +20,9 @@ function AddDepartment() {
     reset,
     formState: { errors },
   } = useForm();
-
+  const [isLoading,setLoader] = useState(false);
   const onSubmit = (data) => {
+    setLoader(true);
     const { clientID } = getSessionVariables();
     const backendFormat = {
       name: getLabel(data.departmentname),
@@ -34,11 +37,13 @@ function AddDepartment() {
         toast.success("Department added successfully");
         reset();
         router.back();
+        setLoader(false);
       })
       .catch((error) => {
         toast.error(
           error?.error || error?.Message || "Unable to add Department"
         );
+        setLoader(false);
       });
   };
 
@@ -48,7 +53,7 @@ function AddDepartment() {
 
       <div className="d-flex justify-content-between">
         <div className="title">Add New Department</div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -62,17 +67,7 @@ function AddDepartment() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
         </div>
       </div>
 

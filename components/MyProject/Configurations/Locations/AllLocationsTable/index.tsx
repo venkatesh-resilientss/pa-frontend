@@ -9,7 +9,6 @@ import {
   Input,
 } from "reactstrap";
 import { useDispatch } from "react-redux";
-// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
@@ -23,12 +22,16 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import { TableLoading } from "@/components/Loaders";
+import { debounce } from "@/commonFunctions/common";
+import detailsIocn from "assets/myIcons/list.svg";
 
-const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
+const AllLocationsTable = ({ rerender}) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const perPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -42,38 +45,58 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
 
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
-  // const hasDeactivateConfiguration = hasPermission(
-  //   "configuration_management",
-  //   "deactivate_configuration"
-  // );
 
   const locationsService = new LocationsService();
 
-  const fetchData1 = async (pageNumber) => {
-    try {
-      const { clientID, projectID } = getSessionVariables();
-      const queryParams = {
-        search: searchText,
-        pageLimit: perPage,
-        offset: pageNumber,
-      };
-      const payload = { clientId: clientID, projectId: projectID };
-      const response = await locationsService.getLocations(
-        queryParams,
-        payload
-      );
-      const data = response.result; // Adjust based on the actual structure of the response
-      // setBankData(data)
-      // setTotalRecords(response.total_records)
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
-    }
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  const [isLoading, setLoader] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await locationsService.getLocations(queryParams, {
+          clientID,
+          projectID,
+        });
+        setTableData({
+          data: response.result || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+        setLoader(false);
+      }
+    };
 
+    fetchData();
+  }, [filters, rerender]);
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -89,7 +112,6 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
 
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
-
     const Action = ({ icon, name }) => {
       return (
         <div className="d-flex align-items-center gap-2">
@@ -111,13 +133,14 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(`/configurations/edit-location/${props.data.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
@@ -129,15 +152,6 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {/* {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => dispatch(openDeleteLocationPopup(props.data.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -262,7 +276,7 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
                 </div> */}
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -291,24 +305,6 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
                     Bulk Upload
                   </Button>
                 )}
-
-                {/* <Button
-                  onClick={() => router.push(`/configurations/add-location`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Add Location
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-location`)}
@@ -333,55 +329,25 @@ const AllLocationsTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      {/* {locationsLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {locationsData?.result.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Location"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Location" : "No button"
-                }
-                buttonLink={"/configurations/add-location"}
-              />
-            </div>
-          )}
-        </>
-      )} */}
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData1}
-          pageSize={perPage}
-          noDataPage={() => (
-            <NoDataPage
-              buttonName={
-                hasCreateConfiguration ? "Create Location" : "No button"
-              }
-              buttonLink={"/configurations/add-location"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={
+              hasCreateConfiguration ? "Create Location" : "No button"
+            }
+            buttonLink={"/configurations/add-location"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

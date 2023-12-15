@@ -3,25 +3,22 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR, { mutate } from "swr";
 import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
-
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 function EditLocation() {
   const router = useRouter();
-  const { id } = router.query;
   const locationValidationRules = formValidationRules.locations;
   const locationService = new LocationsService();
-
-  const fetchLocationDetails = (id) => locationService.locationDetails(id);
-
-  const { data: locationData } = useSWR(
-    id ? ["LOCATION_DETAILS", id] : null,
-    () => fetchLocationDetails(id)
+  const [editMode, setEditMode] = useState(false);
+  const [isLoading,setLoader] = useState(false);
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
   );
-
   const {
     handleSubmit,
     formState: { errors },
@@ -29,52 +26,57 @@ function EditLocation() {
     control,
     reset,
   } = useForm();
-
+  const [activeStatus, setActiveStatus] = useState(false);
   useEffect(() => {
-    if (!locationData) return;
-
-    locationData?.Name && setValue("locationname", locationData?.Name);
-    locationData?.Code && setValue("locationcode", locationData?.Code);
-
-    locationData?.Description &&
-      setValue("description", locationData?.Description);
-
-    setActiveStatus(locationData?.IsActive);
-  }, [locationData]);
-
-  const locationsService = new LocationsService();
-
-  const { mutate: locationMutate } = useSWR("LIST_LOCATIONS", () =>
-    locationsService.getLocations({ search: "", pageLimit: 25, offset: 0 })
-  );
-
-  const [activeStatus, setActiveStatus] = useState(locationData?.IsActive);
-
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.locationname),
-      description: data.description,
-      isActive: activeStatus,
-      code: data.locationcode,
-      clientID,
-      projectID,
-    };
-
-    locationsService
-      .editLocation(id, backendFormat)
-      .then(() => {
-        toast.success("Location Edited successfully");
-        mutate(locationMutate());
-        router.push("/configurations/locations");
-
-        reset();
-      })
-      .catch((error) => {
+    const fetchData = async (id: any) => {
+      try {
+        const response = await locationService.locationDetails(id);
+        const data = response;
+        /**Set form values */
+        setValue("locationname", response?.Name);
+        setValue("locationcode", response?.Code);
+        setValue("description", response?.Description);
+        setActiveStatus(data.IsActive);
+      } catch (error) {
         toast.error(
-          error?.error || error?.Message || "Unable to edit Location"
+          error?.message ||
+            error?.Message ||
+            error?.error ||
+            "Unable to fetch data"
         );
-      });
+      }
+    };
+    const {id} = router.query;
+    if(id)
+      fetchData(id);
+  }, [router.query]);
+
+  const onSubmit = async(data) => {
+    setLoader(true);
+    const {id} = router.query;
+    try{
+      const { clientID, projectID} = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const payload = {
+        name: getLabel(data.locationname),
+        description: data.description,
+        isActive: activeStatus,
+        code: data.locationcode,
+        clientID,
+        projectID,
+      };
+      await locationService.editLocation(id,payload);
+      toast.success("Location Edited successfully");
+      router.push("/configurations/locations");
+      reset();
+      setLoader(false);
+    }
+    catch(error){
+      setLoader(false);
+      toast.error(error?.error || error?.Message || error?.message || 'Unable to update Location')
+    }
   };
 
   return (
@@ -84,7 +86,7 @@ function EditLocation() {
       <div className="d-flex justify-content-between">
         <div className="title">Edit Location</div>
 
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -98,17 +100,19 @@ function EditLocation() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
         </div>
       </div>
 
@@ -135,6 +139,7 @@ function EditLocation() {
                   placeholder="Location Name"
                   invalid={errors.locationname && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -161,6 +166,7 @@ function EditLocation() {
                   placeholder="Location Code"
                   invalid={errors.locationcode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -191,6 +197,7 @@ function EditLocation() {
                   type="textarea"
                   invalid={errors.description && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -218,6 +225,7 @@ function EditLocation() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -230,6 +238,7 @@ function EditLocation() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>
