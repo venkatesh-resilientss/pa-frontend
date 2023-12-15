@@ -1,9 +1,9 @@
 import Select from "react-select";
 
 export default function ClientControl(props) {
-  const { clientData, setClientData, disabled } = props;
+  const { clientData, setClientData, errors, disabled } = props;
   const selectStyle = {
-    control: (base) => ({
+    control: (base, state) => ({
       ...base,
       background: "#fff",
       border: "1px solid #dee2e6",
@@ -13,16 +13,13 @@ export default function ClientControl(props) {
       ":hover": {
         borderColor: "#A2CFFE",
       },
-      //   borderColor:
-      //     err &&
-      //     !(
-      //       state.selectProps.instanceId.includes("MailingAddress") ||
-      //       state.selectProps.placeholder === "Select Admin"
-      //     ) &&
-      //     !state.hasValue
-      //       ? "#e50000 !important"
-      //       : "#dee2e6",
+      borderColor:
+        errors && !getObjectValue(clientData, "IsActive") && !state.hasValue
+          ? "#e50000 !important"
+          : "#dee2e6",
     }),
+
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
 
     valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
@@ -76,6 +73,7 @@ export default function ClientControl(props) {
         <Select
           instanceId={`react-select-deactivate`}
           styles={selectStyle}
+          className="f-16"
           placeholder={"Select"}
           options={[
             { label: "Completed", value: "Completed" },
@@ -95,9 +93,11 @@ export default function ClientControl(props) {
           isDisabled={disabled || false}
         />
 
-        {/* {err && !getObjectValue(clientData, "IsActive") && (
-          <span className="text-danger f-12">Select Reason</span>
-        )} */}
+        {errors &&
+          !getObjectValue(clientData, "IsActive") &&
+          !getObjectValue(clientData, "DeactivationReason") && (
+            <span className="text-danger f-12">Select Reason</span>
+          )}
       </div>
 
       <div className="col-12 col-lg-4 py-1">

@@ -214,6 +214,8 @@ export default function EditProductions({ router, clientData, user }) {
           : "#dee2e6",
     }),
 
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
+
     valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
     input: (base) => ({ ...base, margin: "0" }),

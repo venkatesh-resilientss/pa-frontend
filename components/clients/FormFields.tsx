@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Button from "react-bootstrap-button-loader";
 
 import { ClientsService } from "services";
+import { exclude } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 
@@ -36,6 +37,8 @@ export default function FormFields(props: any) {
           ? "#e50000 !important"
           : "#dee2e6",
     }),
+
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
 
     valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
@@ -100,6 +103,7 @@ export default function FormFields(props: any) {
     current[keys[keys.length - 1]] = newValue;
     setClientData({ ...obj });
   };
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
   const next = async () => {
     let tempErr = false;
@@ -108,15 +112,23 @@ export default function FormFields(props: any) {
         el.err &&
         (el.typ === "select"
           ? !getObjectValue(clientData, el.vl)
-          : (el.vl === "Company.PrimaryContact.EmailID" &&
-              !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
-                getObjectValue(clientData, el.vl)
-              )) ||
+          : (el.vl === "Company.SecondaryContact.EmailID" &&
+              getObjectValue(clientData, el.vl).toString().trim() &&
+              (!emailRegex.test(
+                getObjectValue(clientData, el.vl).toString().trim()
+              ) ||
+                getObjectValue(clientData, el.vl).toString().trim() ===
+                  getObjectValue(clientData, "Company.PrimaryContact.EmailID")
+                    .toString()
+                    .trim())) ||
+            (el.vl === "Company.PrimaryContact.EmailID" &&
+              !emailRegex.test(getObjectValue(clientData, el.vl))) ||
             (el.vl === "Tenant.Slug" &&
               !new RegExp(/^[a-z0-9-_]{2,}$/).test(
                 getObjectValue(clientData, el.vl)
               )) ||
-            !getObjectValue(clientData, el.vl).toString().trim())
+            (el.vl !== "Company.SecondaryContact.EmailID" &&
+              !getObjectValue(clientData, el.vl).toString().trim()))
       )
         tempErr = true;
     });
@@ -125,9 +137,19 @@ export default function FormFields(props: any) {
     if (tempErr) return;
     else setStep((prev) => Math.min(prev + 1, 5));
     if (step == 5) {
+      let url: any = "";
       try {
         setLoading(true);
-        const payload = { ...clientData };
+        if (clientData.logoFile) {
+          const formData = new FormData();
+          formData.append("file", clientData.logoFile);
+          formData.append("name", "uploadedFile");
+
+          const fileUpload = await clientService.s3upload(formData);
+          url = fileUpload.url;
+        }
+
+        const payload = { ...exclude(clientData, ["logoFile"]), LogoUrl: url };
 
         payload["ClientSoftwares"] = clientData.Softwares.map((e) => ({
           SoftwareID: e,
@@ -164,6 +186,7 @@ export default function FormFields(props: any) {
         toast.success("Client created successfully");
         setLoading(false);
       } catch (e) {
+        if (clientData.logoFile && !url) toast.error("Error Saving Logo");
         toast.error(e?.error || "Error");
         setLoading(false);
       }
@@ -190,7 +213,9 @@ export default function FormFields(props: any) {
           >
             <label className="form-label text-black f-12">
               {el.lb}
-              {el.err && <span className="ms-1 text-danger">*</span>}
+              {el.err && el.vl !== "Company.SecondaryContact.EmailID" && (
+                <span className="ms-1 text-danger">*</span>
+              )}
             </label>
             {el.typ === "select" ? (
               <AsyncSelect
@@ -199,6 +224,7 @@ export default function FormFields(props: any) {
                   ""
                 )}-${idx}`}
                 styles={selectStyle}
+                className="f-16"
                 placeholder={el.ph}
                 defaultOptions={getOptions(el.lb, el.vl)}
                 loadOptions={(value) => loadOptions(value, el.vl)}
@@ -235,12 +261,7 @@ export default function FormFields(props: any) {
                         toast.error("File rejected");
                         return;
                       }
-                      const formData = new FormData();
-                      formData.append("file", file);
-                      formData.append("name", "uploadedFile");
-                      const fileUpload = await clientService.s3upload(formData);
-                      const url = fileUpload.url;
-                      setClientData({ ...clientData, LogoUrl: url });
+                      setClientData({ ...clientData, logoFile: file });
                     } catch (e) {
                       toast.error("Error saving file");
                     }
@@ -276,7 +297,17 @@ export default function FormFields(props: any) {
                 className={`form-control ${
                   err &&
                   el.err &&
-                  !getObjectValue(clientData, el.vl).toString().trim()
+                  ((el.vl === "Company.SecondaryContact.EmailID" &&
+                    getObjectValue(clientData, el.vl).trim() &&
+                    getObjectValue(clientData, el.vl).toString().trim() ===
+                      getObjectValue(
+                        clientData,
+                        "Company.PrimaryContact.EmailID"
+                      )
+                        .toString()
+                        .trim()) ||
+                    (el.vl !== "Company.SecondaryContact.EmailID" &&
+                      !getObjectValue(clientData, el.vl).toString().trim()))
                     ? "border-danger"
                     : ""
                 }`}
@@ -292,15 +323,26 @@ export default function FormFields(props: any) {
             {err &&
               (el.typ === "select"
                 ? !getObjectValue(clientData, el.vl)
-                : (el.vl === "Company.PrimaryContact.EmailID" &&
-                    !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
-                      getObjectValue(clientData, el.vl)
-                    )) ||
+                : (el.vl === "Company.SecondaryContact.EmailID" &&
+                    getObjectValue(clientData, el.vl).toString().trim() &&
+                    (!emailRegex.test(
+                      getObjectValue(clientData, el.vl).toString().trim()
+                    ) ||
+                      getObjectValue(clientData, el.vl).toString().trim() ===
+                        getObjectValue(
+                          clientData,
+                          "Company.PrimaryContact.EmailID"
+                        )
+                          .toString()
+                          .trim())) ||
+                  (el.vl === "Company.PrimaryContact.EmailID" &&
+                    !emailRegex.test(getObjectValue(clientData, el.vl))) ||
                   (el.vl === "Tenant.Slug" &&
                     !new RegExp(/^[a-z0-9-_]{2,}$/).test(
                       getObjectValue(clientData, el.vl)
                     )) ||
-                  !getObjectValue(clientData, el.vl).toString().trim()) && (
+                  (el.vl !== "Company.SecondaryContact.EmailID" &&
+                    !getObjectValue(clientData, el.vl).toString().trim())) && (
                 <span className="text-danger f-12">
                   {el.vl === "Company.PrimaryContact.EmailID" &&
                   getObjectValue(clientData, el.vl).toString().trim()
@@ -308,6 +350,22 @@ export default function FormFields(props: any) {
                     : el.vl === "Tenant.Slug" &&
                       getObjectValue(clientData, el.vl).toString().trim()
                     ? "Domain should contain at least two characters of lowercase,numeric or symbols(-, _)"
+                    : el.vl === "Company.SecondaryContact.EmailID"
+                    ? getObjectValue(clientData, el.vl).toString().trim()
+                      ? !emailRegex.test(getObjectValue(clientData, el.vl))
+                        ? "Email is invalid"
+                        : getObjectValue(clientData, el.vl)
+                            .toString()
+                            .trim() ===
+                          getObjectValue(
+                            clientData,
+                            "Company.PrimaryContact.EmailID"
+                          )
+                            .toString()
+                            .trim()
+                        ? el.err
+                        : ""
+                      : ""
                     : el.err}
                 </span>
               )}
