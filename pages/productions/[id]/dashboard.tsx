@@ -309,12 +309,37 @@ export default function ProductionDashboard() {
             </div>
             <div className="mt-4">
               <p>
-                <img src="/software_subscribed.svg" alt="" /> Softwares
-                Subscribed
+                <img src="/software_subscribed.svg" alt="" /> Softwares Subscribed
               </p>
             </div>
             <div className="d-flex mt-3">
-              <p className="mr-4 productionBorder">-</p>
+              <div>
+                <div className="d-flex gap-2 f-12">
+                  <img src="software_subscribed.svg" alt="" />
+                  Subscribed Softwares
+                </div>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ fontSize: "10px" }}
+                >
+                  <div className="d-flex gap-2 mt-2 f-12">
+                    {projectDetails.softwares?.map((software, i) => {
+                      return (
+                        <div
+                          key={`software-card-${i}`}
+                          style={{
+                            backgroundColor: "#B5DEF0",
+                            color: "#030229",
+                            borderRadius: "5%",
+                          }} className="p-1 px-2 f-12"
+                        >
+                          {software?.software_name || "-"}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
         )}
