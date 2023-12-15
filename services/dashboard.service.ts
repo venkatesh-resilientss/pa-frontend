@@ -60,7 +60,6 @@ class DashboardService extends APIService {
   }
 
     getProductionDetails(id: any) {
-      console.log(id)
     return this.get(ON_BOARDED_PROJECTS(id))
       .then((response) => {
         return response.data;
@@ -71,7 +70,6 @@ class DashboardService extends APIService {
   }
 
     getDashboardCards(id: any) {
-      console.log(id)
     return this.get(PRODUCTION_DASHBOARD_CARDS(id))
       .then((response) => {
         return response.data;

@@ -37,7 +37,7 @@ function AddBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+        const options = res?.result.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -62,7 +62,7 @@ function AddBudget() {
             projectId: projectID,
           }
         );
-        const options = res?.data.filter(item=>item.IsActive).map((item) => ({
+        const options = res?.data.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -74,19 +74,19 @@ function AddBudget() {
     fetchInitalSeriesOptions();
 
     /** Locations */
-    const fetchLocationsOptions = async ()=>{
+    const fetchLocationsOptions = async () => {
       try {
         const res = await locationService.getLocations({
           search: "",
           pageLimit: 25,
           offset: 0,
         },
-        {
-          clientId: clientID,
-          projectId: projectID,
-        }
+          {
+            clientId: clientID,
+            projectId: projectID,
+          }
         );
-        const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+        const options = res?.result.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -99,7 +99,7 @@ function AddBudget() {
     fetchLocationsOptions();
 
     /** Sets */
-    const fetchSetsOptions = async ()=>{
+    const fetchSetsOptions = async () => {
       const { clientID, projectID } = getSessionVariables();
       try {
         const res = await setsService.getSets({
@@ -107,11 +107,11 @@ function AddBudget() {
           pageLimit: 25,
           offset: 0,
         },
-        {
-          clientId : clientID,
-          projectID : projectID
-        });
-        const options = res?.data.filter(item=>item.IsActive).map((item) => ({
+          {
+            clientId: clientID,
+            projectID: projectID
+          });
+        const options = res?.data.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
@@ -133,7 +133,7 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -159,7 +159,7 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -178,12 +178,12 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       },
-      {
-        clientId: clientID,
-        projectId: projectID,
-      }
+        {
+          clientId: clientID,
+          projectId: projectID,
+        }
       );
-      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -191,10 +191,10 @@ function AddBudget() {
     } catch (error) {
       console.error("Error loading options:", error);
     }
-  }; 
+  };
 
   /** Sets */
-  const loadSetsOptions : any = async (inputValue, callback) => {
+  const loadSetsOptions: any = async (inputValue, callback) => {
     const { clientID, projectID } = getSessionVariables();
     try {
       const res = await setsService.getSets({
@@ -202,11 +202,11 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       },
-      {
-        clientId : clientID,
-        projectID : projectID
-      });
-      const options = res?.result.filter(item=>item.IsActive).map((item) => ({
+        {
+          clientId: clientID,
+          projectID: projectID
+        });
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
@@ -215,7 +215,7 @@ function AddBudget() {
       console.error("Error loading options:", error);
     }
   }
-  
+
 
   const budgetService = new BudgetService();
 
@@ -240,7 +240,7 @@ function AddBudget() {
       projectID,
     };
 
-    // console.log(backendFormat);
+
 
     budgetService
       .createBudget(backendFormat)
@@ -315,7 +315,7 @@ function AddBudget() {
                   placeholder="Budget Name"
                   invalid={errors.name && true}
                   {...field}
-                  style={{ fontSize : '1rem'}}
+                  style={{ fontSize: '1rem' }}
                 />
               )}
             />
@@ -338,7 +338,7 @@ function AddBudget() {
                   placeholder="Budget Code"
                   invalid={errors.code && true}
                   {...field}
-                  style={{ fontSize : '1rem'}}
+                  style={{ fontSize: '1rem' }}
                 />
               )}
             />

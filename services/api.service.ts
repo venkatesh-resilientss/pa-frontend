@@ -32,7 +32,7 @@ abstract class APIService {
         const decoded = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_KEY);
         return true;
       } catch (err) {
-        console.log(err);
+        // 
       }
     }
 

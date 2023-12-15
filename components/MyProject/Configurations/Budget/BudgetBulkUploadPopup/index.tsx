@@ -10,7 +10,7 @@ import uploadIcon from "assets/myIcons/upload.svg";
 import cancelIcon from "assets/myIcons/cancel.svg";
 import { BudgetService } from "services";
 
-const BudgetBulkUploadPopup = ({rerender,setRerender}) => {
+const BudgetBulkUploadPopup = ({ rerender, setRerender }) => {
   const dispatch = useDispatch();
   const budgetService = new BudgetService();
 
@@ -24,10 +24,12 @@ const BudgetBulkUploadPopup = ({rerender,setRerender}) => {
     setUploadedFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept : {
-    'text/csv' : ['.csv'],
-    'application/vnd.ms-excel' : ['.xls','.xlsx']
-  } });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop, accept: {
+      'text/csv': ['.csv'],
+      'application/vnd.ms-excel': ['.xls', '.xlsx']
+    }
+  });
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -52,9 +54,9 @@ const BudgetBulkUploadPopup = ({rerender,setRerender}) => {
         setRerender(!rerender);
         dispatch(closeBulkUploadBudgetsPopup("close"));
       })
-      .catch((error) => {
+      .catch(() => {
         // Handle error
-        console.error("Upload failed", error);
+
 
         toast.error("Failed to insert data.");
       });

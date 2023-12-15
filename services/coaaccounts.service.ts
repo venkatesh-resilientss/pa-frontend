@@ -44,15 +44,9 @@ class COAAccountsService extends APIService {
     return this.post(UPLOAD_COA_LIST, formData, {
       "Content-Type": "multipart/form-data",
     })
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error("Upload failed", error);
-        // Log the entire error response
-        console.log("Error Response:", error.response);
-        throw error.response.data;
-      });
+    .catch((error) => {
+      throw error.response.data;
+    });
   }
 
   createCOA(data: any) {

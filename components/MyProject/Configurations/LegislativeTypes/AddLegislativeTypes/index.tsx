@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import React, { useState } from "react";
 import { LegislativesService } from "services";
+
+
 function AddLegislativeType() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
