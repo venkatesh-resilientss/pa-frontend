@@ -10,10 +10,20 @@ import Image from "next/image";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useState } from "react";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
+import { LegislativesService } from "services";
+import useSWR from "swr";
 
 const AllLegislativeTypeTable = () => {
   const router = useRouter();
+  const legislativesService = new LegislativesService();
+
   const [searchText, setSearchText] = useState("");
+
+  const { data: rowData } = useSWR(
+    ["LIST_LEGISLATIVES", searchText],
+    () => legislativesService.getlegislatives()
+  );
+
   const StateBadge = (props) => {
     const stateDir = {
       true: "success",
@@ -53,14 +63,14 @@ const AllLegislativeTypeTable = () => {
   const columnDefs = [
     {
       headerName: "Legislative Code",
-      field: "LegislativeCode",
+      field: "Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
     },
     {
       headerName: "Legislative Name",
-      field: "LegislativeName",
+      field: "Name",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -74,7 +84,7 @@ const AllLegislativeTypeTable = () => {
     },
     {
       headerName: "Status",
-      field: "active",
+      field: "IsActive",
       cellRenderer: StateBadge,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -87,44 +97,6 @@ const AllLegislativeTypeTable = () => {
       field: "id",
       cellRenderer: ActionsButton,
       headerClass: "custom-header-class",
-    },
-  ];
-  const rowData = [
-    {
-      id: 1,
-      LegislativeCode: "001",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'TH'
-    },
-    {
-      id: 2,
-      LegislativeCode: "002",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'COM'
-
-    },
-    {
-      id: 3,
-      LegislativeCode: "003",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: false,
-      Description:'TH'
-    },
-    {
-      id: 4,
-      LegislativeCode: "004",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: true,
-      Description:'TH'
-    },
-    {
-      id: 5,
-      LegislativeCode: "005",
-      LegislativeName: "Resilient Software Solutions LLC",
-      active: false,
-      Description:'COM'
     },
   ];
 

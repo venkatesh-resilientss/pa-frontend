@@ -141,6 +141,18 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "Name",
@@ -150,6 +162,12 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Name.charAt(0).toUpperCase() +
+          params?.data?.Name.slice(1)
+        );
+      },
     },
     {
       headerName: "Description",
@@ -159,6 +177,12 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Description.charAt(0).toUpperCase() +
+          params?.data?.Description.slice(1)
+        );
+      },
     },
 
     {
@@ -167,9 +191,11 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },

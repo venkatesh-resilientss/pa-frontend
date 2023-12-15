@@ -61,7 +61,7 @@ const AllRoleTable = () => {
         search: searchText,
         limit: pageLimit,
         offset: offfset,
-        name: 'asc'
+        name: "asc",
       };
       userService
         .getUsers(queryParams)
@@ -220,9 +220,13 @@ const AllRoleTable = () => {
           />
         </div>
         <div>
-          <p style={{ fontSize: "14px" }}>{props.data?.adminName}</p>
+          <p style={{ fontSize: "14px" }}>
+            {props?.data?.adminName?.charAt(0).toUpperCase() +
+              props?.data?.adminName?.slice(1)}
+          </p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
-            {props.data?.email}
+            {props?.data?.email?.charAt(0).toUpperCase() +
+              props?.data?.email?.slice(1)}
           </p>
         </div>
       </div>
@@ -240,7 +244,10 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params.adminName}${params.email}`;
+        const res = `${
+          params?.adminName?.charAt(0).toUpperCase() +
+          params?.adminName?.slice(1)
+        }${params?.email?.charAt(0).toUpperCase() + params?.email?.slice(1)}`;
         return res;
       },
     },
@@ -253,6 +260,12 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       // cellRenderer: (params) => params.roleName,
       unSortIcon: true,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.roleName?.charAt(0).toUpperCase() +
+          params?.data?.roleName?.slice(1)
+        );
+      },
     },
     {
       headerName: "Client",
@@ -282,15 +295,24 @@ const AllRoleTable = () => {
 
           displayContent =
             firstClientName.length > maxLength
-              ? `${firstClientName.substring(0, maxLength)}...`
-              : firstClientName;
+              ? `${
+                  firstClientName?.charAt(0).toUpperCase() +
+                  firstClientName?.slice(1).substring(0, maxLength)
+                }...`
+              : firstClientName?.charAt(0).toUpperCase() +
+                firstClientName?.slice(1);
         } else {
           const firstClientName = clientNames[0] || "";
 
-          displayContent = `${firstClientName.length > maxLength
-            ? `${firstClientName.substring(0, maxLength)}...`
-            : firstClientName
-            } + ${arrayLength - 1}`;
+          displayContent = `${
+            firstClientName.length > maxLength
+              ? `${
+                  firstClientName?.charAt(0).toUpperCase() +
+                  firstClientName?.slice(1).substring(0, maxLength)
+                }...`
+              : firstClientName?.charAt(0).toUpperCase() +
+                firstClientName?.slice(1)
+          } + ${arrayLength - 1}`;
         }
 
         return (
@@ -316,7 +338,7 @@ const AllRoleTable = () => {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        return params.value;
+        return params?.value?.charAt(0).toUpperCase() + params?.value?.slice(1);
       },
     },
     {

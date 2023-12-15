@@ -20,6 +20,7 @@ import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getLabel } from "@/commonFunctions/common";
 const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   const router = useRouter();
   const recordsPerPage = 10;
@@ -126,6 +127,18 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return getLabel(row.value);
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "Budget Name",
@@ -134,6 +147,9 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row) => {
+        return getLabel(row.value);
+      },
     },
     {
       headerName: "Client",
@@ -142,6 +158,9 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return getLabel(params?.data?.Client?.Name);
+      },
     },
     {
       headerName: "Production",
@@ -150,6 +169,9 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return getLabel(params?.data?.Project?.Name);
+      },
     },
 
     {
@@ -158,9 +180,11 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },
@@ -237,8 +261,6 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
                   style={{ width: "217px", height: "38px" }}
                 />
 
-                
-
                 {/* <Button
                   style={{
                     height: "38px",
@@ -280,9 +302,9 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      
+
       <div className="mt-3">
-      <AGGridTable
+        <AGGridTable
           rerender={rerender}
           columnDefs={columnDefs}
           searchText={searchText}
@@ -290,10 +312,10 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           pageSize={recordsPerPage}
           noDataPage={() => (
             <NoDataPage
-                // buttonName={"Add Budget"}
-                buttonName={hasCreateConfiguration ? "Create Budget" : ""}
-                buttonLink={"/configurations/add-budget"}
-              />
+              // buttonName={"Add Budget"}
+              buttonName={hasCreateConfiguration ? "Create Budget" : ""}
+              buttonLink={"/configurations/add-budget"}
+            />
           )}
         />
       </div>

@@ -16,6 +16,7 @@ import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
 import Link from "next/link";
+import { getLabel } from "@/commonFunctions/common";
 import { dateFormat } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
@@ -176,22 +177,25 @@ export default function Clients({ router, user }) {
           <div className="d-flex gap-2">
             {params?.data?.LogoUrl ? (
               <img
-                src={params?.data?.LogoUrl || "/endamol.svg"}
+                src={params?.data?.LogoUrl}
                 width={30}
                 height={30}
                 className="rounded-circle"
               />
             ) : (
-              <div className="img-div-30">
-                {(params?.data?.Name || "").charAt(0).toUpperCase()}
+              <div className="img-div-30 mt-2">
+                {params?.data?.Name?.charAt(0)?.toUpperCase()}
               </div>
             )}
             <div className="d-flex flex-column" style={{ gap: "3px" }}>
               <div className="m-auto fw-bolder">
                 {params?.data?.Company.name}
               </div>
-              <div className="">{params?.data?.Name}</div>
-              <div className="">{params?.data?.ClientAdmin?.email} &nbsp; </div>
+              <div className="">{getLabel(params?.data?.Name)}</div>
+              <div className="">
+                {params?.data?.ClientAdmin?.email}
+                &nbsp;
+              </div>
             </div>
           </div>
         );
@@ -220,9 +224,9 @@ export default function Clients({ router, user }) {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {getLabel(params?.data?.Created?.first_name || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              getLabel(params?.data?.Created?.last_name || "")}
           </div>
         );
       },

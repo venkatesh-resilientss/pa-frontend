@@ -42,7 +42,7 @@ export default function ProductionDashboard() {
   };
 
   const router = useRouter();
-  const { production_id } = router.query;
+  const { id } = router.query;
   const productionService = new DashboardService();
 
   const [projectDetails, setProjectDetails] = useState(null);
@@ -53,7 +53,7 @@ export default function ProductionDashboard() {
     const fetchData = async () => {
       try {
         const result = await productionService.getProductionDetails(
-          production_id
+          id
         );
         const projectDetailsData = result?.data?.[0];
         // Set project details state
@@ -67,15 +67,15 @@ export default function ProductionDashboard() {
       }
     };
 
-    if (production_id) {
+    if (id) {
       fetchData();
     }
-  }, [production_id]);
+  }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await productionService.getDashboardCards(production_id);
+        const result = await productionService.getDashboardCards(id);
 
         // Set dashboardCards state
         setDashboardCards(result);
@@ -93,10 +93,10 @@ export default function ProductionDashboard() {
       }
     };
 
-    if (production_id) {
+    if (id) {
       fetchData();
     }
-  }, [production_id]);
+  }, [id]);
 
   const createCard = (title, iconSrc, subTitle, content) => (
     <Col>
@@ -204,8 +204,8 @@ export default function ProductionDashboard() {
                   className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
                   style={{ fontSize: "10px", fontWeight: "400", gap: "3px" }}
                   onClick={() => {
-                    if (production_id) {
-                      router.push(`/productions/${production_id}`);
+                    if (id) {
+                      router.push(`/productions/${id}`);
                     }
                   }}
                 >

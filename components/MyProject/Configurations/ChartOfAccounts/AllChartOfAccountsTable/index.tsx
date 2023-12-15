@@ -20,13 +20,10 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
-import {
-  openBulkUploadCOAPopup,
-} from "redux/slices/mySlices/configurations";
+import { openBulkUploadCOAPopup } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
 import { getSessionVariables } from "@/constants/function";
-
 
 const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
   const dispatch = useDispatch();
@@ -43,18 +40,23 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
 
-  const hasUploadConfigurationPermission = hasPermission("", "bulk_upload") &&  hasCreateConfiguration;
-  
+  const hasUploadConfigurationPermission =
+    hasPermission("", "bulk_upload") && hasCreateConfiguration;
+
   const fetchData = async (pageNumber) => {
-    const {clientID,projectID} = getSessionVariables()
+    const { clientID, projectID } = getSessionVariables();
     try {
-      const response = await coasService.getCoasAccounts({
-        clientID,projectID
-      },{
-        search: searchText,
-        pageLimit: recordsPerPage,
-        offset: pageNumber,
-      });
+      const response = await coasService.getCoasAccounts(
+        {
+          clientID,
+          projectID,
+        },
+        {
+          search: searchText,
+          pageLimit: recordsPerPage,
+          offset: pageNumber,
+        }
+      );
       const data = response.result; // Adjust based on the actual structure of the response
       const totalRecords = response.total_records; // Adjust based on the actual structure of the response
       return { data, totalRecords };
@@ -62,7 +64,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       return { data: null, totalRecords: 0 };
     }
   };
-  
+
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -133,6 +135,18 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "COA Name",
@@ -141,6 +155,12 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Name.charAt(0).toUpperCase() +
+          params?.data?.Name.slice(1)
+        );
+      },
     },
     // {
     //   headerName: "Postable",
@@ -157,6 +177,14 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params: any) => {
+        return (
+          <>
+            {params?.data?.Parent?.Name.charAt(0).toUpperCase() +
+              params?.data?.Parent?.Name.slice(1)}
+          </>
+        );
+      },
     },
     {
       headerName: "Created By",
@@ -164,9 +192,11 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },
@@ -232,9 +262,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  COAs
-                </div>
+                <div style={{ fontSize: "16px", fontWeight: "400" }}>COAs</div>
 
                 <Input
                   onChange={(e) => setSearchText(e.target.value)}
@@ -342,20 +370,20 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
         </>
       )} */}
       <div className="mt-3">
-      <AGGridTable
-        rerender={rerender}
-        columnDefs={columnDefs}
-        searchText={searchText}
-        fetchData={fetchData}
-        pageSize={recordsPerPage}
-        noDataPage={() => (
-          <NoDataPage
-                // buttonName={"Create COA"}
-                buttonName={hasCreateConfiguration ? "Create COA" : ""}
-                buttonLink={"/configurations/add-chart-of-accounts"}
-              />
-        )}
-      />
+        <AGGridTable
+          rerender={rerender}
+          columnDefs={columnDefs}
+          searchText={searchText}
+          fetchData={fetchData}
+          pageSize={recordsPerPage}
+          noDataPage={() => (
+            <NoDataPage
+              // buttonName={"Create COA"}
+              buttonName={hasCreateConfiguration ? "Create COA" : ""}
+              buttonLink={"/configurations/add-chart-of-accounts"}
+            />
+          )}
+        />
       </div>
     </div>
   );

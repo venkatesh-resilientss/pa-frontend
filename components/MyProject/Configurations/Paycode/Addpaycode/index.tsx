@@ -3,51 +3,104 @@ import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import Select from "react-select";
+import { PaycodesService } from "services";
+import { useState } from "react";
 function AddpayCodes() {
   const router = useRouter();
-  const onSubmit = async () => {
-    // Handle form submission logic here
+  const [isSaving, setIsSaving] = useState(false);
+  const paycodesService = new PaycodesService();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    data.Factor = parseInt(data.Factor)
+    data.hnus = data.hnus.value
+    data.Category = data.Category.value
+    data.glCodeID = parseInt(data.glCodeID)
+
+
+    if(isSaving) return
+    setIsSaving(true)
     try {
-      // Your logic to save the form data
-      toast.success("Paycode added successfully");
-      router.push("/configurations/paycode");
+      paycodesService
+      .createPaycode(data)
+      .then(() => {
+        setIsSaving(false)
+        toast.success("Paycode added successfully");
+        router.push("/configurations/paycode");
+        reset();
+      })
+      .catch((error) => {
+        setIsSaving(false)
+        toast.error(error?.error);
+      });
     } catch (error) {
       toast.error("Error adding Paycode");
       console.error(error);
     }
   };
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  
   return (
     <>
-      <div className="section mt-4">
-        <div className="overflow-auto add-agents">
+      <div className="overflow-auto mt-4">
+        <div
+          className="text-black"
+          style={{ fontSize: "16px", fontWeight: "600" }}
+        >
+          Paycodes
+        </div>
+
+        <div className="d-flex justify-content-between">
           <div
-            className="text-black add-agents-header"
+            className="text-black"
+            style={{ fontSize: "32px", fontWeight: "600" }}
           >
-           Paycodes
+            Add New Paycode
           </div>
-
-          <div className="d-flex justify-content-between">
-            <div
-              className="text-black add-agents-subheader "
-            >
-              Add  New Paycode
-            </div>
-          </div>
-
-          <hr className="occupation-hr " />
-          <Form
-            className=" mt-2 d-flex flex-column add-form "
+          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <Button
+            onClick={() => router.back()}
+            style={{
+              fontSize: "14px",
+              fontWeight: "400",
+              height: "34px",
+              backgroundColor: "transparent",
+              color: "#2D2C2C",
+              border: "none",
+            }}
+          >
+            Dismiss
+          </Button>
+          <Button
             onClick={handleSubmit(onSubmit)}
+            color="primary"
+            style={{
+              fontSize: "14px",
+              fontWeight: "600",
+              height: "34px",
+            }}
+          >
+            Save
+          </Button>
+        </div>
+          
+        </div>
+
+        <hr style={{ height: "2px" }} />
+
+        <Form
+            style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
+            className=" mt-2 d-flex flex-column"
+            onSubmit={handleSubmit(onSubmit)}
           >
             <Row>
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">CODE<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Code<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="Code"
                   rules={{ required: "Code is required" }}
@@ -62,7 +115,7 @@ function AddpayCodes() {
                   )}
                 />
                 {errors.Code && (
-                  <span className="text-danger">
+                  <span style={{ color: "red" }}>
                     {errors.Code.message as React.ReactNode}
                   </span>
                 )}
@@ -70,7 +123,7 @@ function AddpayCodes() {
             </Col>
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">DESCRIPTION<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Description<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="Description"
                   rules={{ required: "Description is required" }}
@@ -85,7 +138,7 @@ function AddpayCodes() {
                   )}
                 />
                 {errors.Description && (
-                  <span className="text-danger">
+                  <span style={{ color: "red" }}>
                     {errors.Description.message as React.ReactNode}
                   </span>
                 )}
@@ -93,23 +146,23 @@ function AddpayCodes() {
             </Col>
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">SHORT DESCRIPTION<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Short Description<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
-                  name="ShortDescription"
+                  name="shortName"
                   rules={{ required: "Short Description is required" }}
                   control={control}
                   render={({ field }) => (
                     <Input
                     className="inputFeild"
                       placeholder="Short Description"
-                      invalid={errors.ShortDescription && true}
+                      invalid={errors.shortName && true}
                       {...field}
                     />
                   )}
                 />
-                {errors.ShortDescription && (
-                  <span className="text-danger">
-                    {errors.ShortDescription.message as React.ReactNode}
+                {errors.shortName && (
+                  <span style={{ color: "red" }}>
+                    {errors.shortName.message as React.ReactNode}
                   </span>
                 )}
               </div>
@@ -117,7 +170,7 @@ function AddpayCodes() {
 
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">FACTOR<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Factor<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
                   name="Factor"
                   rules={{ required: "Factor is required" }}
@@ -132,7 +185,7 @@ function AddpayCodes() {
                   )}
                 />
                 {errors.Factor && (
-                  <span className="text-danger">
+                  <span style={{ color: "red" }}>
                     {errors.Factor.message as React.ReactNode}
                   </span>
                 )}
@@ -142,439 +195,322 @@ function AddpayCodes() {
             <Row>
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">H/N/U/S<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">H/N/U/S<span style={{ color: 'red' }}>*</span></Label>
                 <Controller
-                  name="HNUS"
+                  name="hnus"
                   rules={{ required: "H/N/U/S is required" }}
                   control={control}
                   render={({ field }) => (
-                    <Input
-                    className="inputFeild"
-                      placeholder="H/N/U/S"
-                      invalid={errors.HNUS && true}
-                      {...field}
+                    <Select
+                      className="selectField"
+                      value={field.value}
+                      onChange={(selectedOption) => field.onChange(selectedOption)}
+                      options={[
+                        { value: 'H', label: 'H' },
+                        { value: 'N', label: 'N' },
+                        { value: 'U', label: 'U' },
+                        { value: 'S', label: 'S' },
+                      ]}
                     />
                   )}
                 />
-                {errors.HNUS && (
-                  <span className="text-danger">
-                    {errors.HNUS.message as React.ReactNode}
+                {errors.hnus && (
+                  <span style={{ color: "red" }}>
+                    {errors.hnus.message as React.ReactNode}
                   </span>
                 )}
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+                <div className="d-flex gap-1 m-auto">
+                <Controller
+                    name="hnw"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Label
+                    className="form-lable-font"
+                  >
+                    HNW
+                  </Label>
+                </div>
+              </Col>
+
+            <Col xl="3" className="m-auto">
+                <div className="d-flex gap-1 m-auto">
+                <Controller
+                    name="taxable"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Label
+                    className="form-lable-font"
+                  >
+                    Taxable
+                  </Label>
+                </div>
+              </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="workTime"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Work Time</Label>
+              </div>
+            </Col>
+            
+            </Row>
+            <Row className="m-2">
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="overTime"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Over Time</Label>
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="subjectToWc"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Subject To Wc</Label>
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="subjectToPhw"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Subject To Phw</Label>
               </div>
             </Col>
 
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">TAXABLE<span className="text-danger">*</span></Label>
-                <Controller
-                  name="TAXABLE"
-                  rules={{ required: "Taxable is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Taxable"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.TAXABLE && (
-                  <span className="text-danger">
-                    {errors.TAXABLE.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">WORK TIME<span className="text-danger">*</span></Label>
-                <Controller
-                  name="WORKTIME"
-                  rules={{ required: "Work Time is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Worked Time"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.WORKTIME && (
-                  <span className="text-danger">
-                    {errors.WORKTIME.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">OVER TIME<span className="text-danger">*</span></Label>
-                <Controller
-                  name="OVERTIME"
-                  rules={{ required: "Over Time is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Over time"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.OVERTIME && (
-                  <span className="text-danger">
-                    {errors.OVERTIME.message as React.ReactNode}
-                  </span>
-                )}
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="straightTime"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Straight Time</Label>
               </div>
             </Col>
             </Row>
-            <Row>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">SUBJECT TO WC<span className="text-danger">*</span></Label>
-                <Controller
-                  name="SUBJECTTOWC"
-                  rules={{ required: "Subject To WC is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Subject To WC"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.SUBJECTTOWC && (
-                  <span className="text-danger">
-                    {errors.SUBJECTTOWC.message as React.ReactNode}
-                  </span>
-                )}
+            <Row className="m-2">
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="allowance"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Allowance</Label>
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="sickAccrual"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Sick Accrual</Label>
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="sickWorked"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Sick Time Worked</Label>
               </div>
             </Col>
 
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">STRIAGHT TIME<span className="text-danger">*</span></Label>
-                <Controller
-                  name="STRIAGHTTIME"
-                  rules={{ required: "Straight Time is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Striaght Time"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.STRIAGHTTIME && (
-                  <span className="text-danger">
-                    {errors.STRIAGHTTIME.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">ALLOWANCE<span className="text-danger">*</span></Label>
-                <Controller
-                  name="ALLOWANCE"
-                  rules={{ required: "Allowance is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Allowance"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.ALLOWANCE && (
-                  <span className="text-danger">
-                    {errors.ALLOWANCE.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">SICK ACCRUAL<span className="text-danger">*</span></Label>
-                <Controller
-                  name="SICKACCRUAL"
-                  rules={{ required: "Sick Accrual is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Sick Accrual"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.SICKACCRUAL && (
-                  <span className="text-danger">
-                    {errors.SICKACCRUAL.message as React.ReactNode}
-                  </span>
-                )}
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="vacationAccrual"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Vacation Accrual</Label>
               </div>
             </Col>
             </Row>
-            <Row>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">SICK TIME WORKED<span className="text-danger">*</span></Label>
-                <Controller
-                  name="SICKTIMEWORKED"
-                  rules={{ required: "Sick Time Worked is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Sick Time Worked"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.SICKTIMEWORKED && (
-                  <span className="text-danger">
-                    {errors.SICKTIMEWORKED.message as React.ReactNode}
-                  </span>
-                )}
+            <Row className="m-2">
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="vacationWorked"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Vacation Pay</Label>
+              </div>
+            </Col>
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="holAccrual"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Hol Accrual</Label>
+              </div>
+            </Col>
+            
+
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="holWorked"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Hol Worked</Label>
               </div>
             </Col>
 
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">VAC ACCURAL<span className="text-danger">*</span></Label>
-                <Controller
-                  name="VACACCURAL"
-                  rules={{ required: "VAC Accural is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Vac Accural"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.VACACCURAL && (
-                  <span className="text-danger">
-                    {errors.VACACCURAL.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">VAC WORKED<span className="text-danger">*</span></Label>
-                <Controller
-                  name="VACWORKED"
-                  rules={{ required: "VAC Worked is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Vac Worked"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.VACWORKED && (
-                  <span className="text-danger">
-                    {errors.VACWORKED.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">HOL ACCRUAL<span className="text-danger">*</span></Label>
-                <Controller
-                  name="HOLACCRUAL"
-                  rules={{ required: "HOL Accrual is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Hol Accrual"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.HOLACCRUAL && (
-                  <span className="text-danger">
-                    {errors.HOLACCRUAL.message as React.ReactNode}
-                  </span>
-                )}
+            <Col xl="3" className="m-auto">
+            <div className="d-flex gap-1 m-auto">
+              <Controller
+                    name="addToPremOffCalc"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        type="checkbox"
+                        {...field}
+                      />
+                    )}
+                  />
+                <Label className="form-lable-font">Add To OT Calc</Label>
               </div>
             </Col>
             </Row>
-            <Row>
+            <Row className="m-2">
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">H-N-W<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">Category</Label>
                 <Controller
-                  name="HNW"
-                  rules={{ required: "H-N-W is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="H-N-W"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.HNW && (
-                  <span className="text-danger">
-                    {errors.HNW.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">HOL WORKED<span className="text-danger">*</span></Label>
-                <Controller
-                  name="HOLWORKED"
-                  rules={{ required: "HOL Worked is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Hol Worked"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.HOLWORKED && (
-                  <span className="text-danger">
-                    {errors.HOLWORKED.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">ADD TO PREM OT CAL<span className="text-danger">*</span></Label>
-                <Controller
-                  name="ADDTOPREMOTCAL"
-                  rules={{ required: "ADD TO PREM OT CAL is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                    className="inputFeild"
-                      placeholder="Add To Prem Ot Cal"
-                      invalid={errors.ADDTOPREMOTCAL && true}
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.ADDTOPREMOTCAL && (
-                  <span className="text-danger">
-                    {errors.ADDTOPREMOTCAL.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">CATEGORY<span className="text-danger">*</span></Label>
-                <Controller
-                  name="CATEGORY"
+                  name="Category"
                   rules={{ required: "Category is required" }}
                   control={control}
                   render={({ field }) => (
                     <Select
-                    className="inputFeild"
-                      placeholder="Category"
-                      {...field}
+                      className="selectField"
+                      value={field.value}
+                      onChange={(selectedOption) => field.onChange(selectedOption)}
+                      options={[
+                        { value: 'Idle', label: 'Idle' },
+                        { value: 'Rest Invasion', label: 'Rest Invasion' },
+                        { value: 'VAC', label: 'VAC' },
+                        { value: 'Travel', label: 'Travel' },
+                      ]}
                     />
                   )}
                 />
-                {errors.CATEGORY && (
-                  <span className="text-danger">
-                    {errors.CATEGORY.message as React.ReactNode}
-                  </span>
-                )}
               </div>
             </Col>
-            </Row>
-            <Row>
             <Col xl="3">
               <div className="mb-1">
-                <Label className="form-lable-font">GL CODE<span className="text-danger">*</span></Label>
+                <Label className="form-lable-font">GL Code</Label>
                 <Controller
-                  name="GLCODE"
+                  name="glCodeID"
                   rules={{ required: "GL Code is required" }}
                   control={control}
                   render={({ field }) => (
                     <Input
                     className="inputFeild"
                       placeholder="GL Code"
-                      invalid={errors.GLCODE && true}
                       {...field}
                     />
                   )}
                 />
-                {errors.GLCODE && (
-                  <span className="text-danger">
-                    {errors.GLCODE.message as React.ReactNode}
-                  </span>
-                )}
               </div>
             </Col>
-            <Col xl="3">
-              <div className="mb-1">
-                <Label className="form-lable-font">SUBJECT TO PHW<span className="text-danger">*</span></Label>
-                <Controller
-                  name="SUBJECTTOPHW"
-                  rules={{ required: "Subject To PHW is required" }}
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                    className="inputFeild"
-                      placeholder="Subject To PHW"
-                      {...field}
-                    />
-                  )}
-                />
-                {errors.SUBJECTTOPHW && (
-                  <span className="text-danger">
-                    {errors.SUBJECTTOPHW.message as React.ReactNode}
-                  </span>
-                )}
-              </div>
-            </Col>
-            </Row>
-            <Row className="margin-t-20">
-              <Col>
-                 <div className="d-flex me-2 gap-20">
-              <Button
-                onClick={() => router.back()}
-               className="buttonStyle"
-              >
-                Cancel 
-              </Button>
-              <Button
-                color="primary"
-                className="buttonStyle1"
-              >
-                Save
-              </Button>
-            </div></Col>
             </Row>
           </Form>
-        </div>
       </div>
     </>
   );

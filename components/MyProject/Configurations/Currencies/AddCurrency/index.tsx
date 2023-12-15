@@ -4,9 +4,13 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { CurrencyService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
+import { useState } from "react";
+import {LoaderButton} from '@/components/Loaders/';
 function AddCurrency() {
   const currencyService = new CurrencyService();
   const currencyValidationRules = formValidationRules.currencies;
+  const [isLoading,setLoader] = useState(false);
   const {
     control,
     handleSubmit,
@@ -17,23 +21,25 @@ function AddCurrency() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.currencyname,
+      name: getLabel(data.currencyname),
       code: data.currencycode,
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
       description: data.description,
-      BaseCurrency: data.BaseCurrency
+      BaseCurrency: data.BaseCurrency,
     };
-
+    setLoader(true);
     currencyService
       .createCurrency(backendFormat)
       .then(() => {
         toast.success("Currency Added successfully");
         reset();
+        setLoader(false);
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Currency');
+        setLoader(false);
+        toast.error(error?.error || error?.Message || "Unable to add Currency");
       });
   };
 
@@ -43,7 +49,7 @@ function AddCurrency() {
         <div className="title-head">All Currencies</div>
         <div className="d-flex justify-content-between">
           <div className="title">Add New Currency</div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}
               style={{
@@ -57,18 +63,8 @@ function AddCurrency() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
-          </div>  
+            <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
+          </div>
         </div>
         <hr style={{ height: "2px" }} />
         <Form
@@ -166,9 +162,7 @@ function AddCurrency() {
                   />
                 )}
               />
-              <Label className="form-lable-font mb-0">
-                Is Base Currency
-              </Label>
+              <Label className="form-lable-font mb-0">Is Base Currency</Label>
             </div>
           </Col>
           <Col xl="5">

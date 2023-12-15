@@ -25,3 +25,9 @@ export { default as AddressService } from "services/address.service";
 export {default as PurchaseOrderService} from "services/purchaseorders.service"
 export { default as EmployeeService } from "services/employee.service";
 export { default as ProjectTypesService } from "services/projecttypes.service";
+export { default as LegislativesService } from "services/legislatives.service";
+export { default as PaycodesService } from "services/paycodes.service";
+export { default as OccupationcodeService } from "services/occupationcode.service";
+export { default as WcclasscodeService } from "services/wcclasscode.service";
+export { default as WcclassService } from "@/services/wcclass.service";
+export { default as EmployeetypesService } from "services/employeetypes.service";

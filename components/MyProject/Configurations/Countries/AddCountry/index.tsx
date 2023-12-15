@@ -4,6 +4,7 @@ import { CountryService } from "services";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
 function AddCountry() {
   const router = useRouter();
   const countryValidations = formValidationRules.countries;
@@ -18,9 +19,9 @@ function AddCountry() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.countryname,
-      description : data.description,
-      code : data.countrycode,
+      name: getLabel(data.countryname),
+      description: data.description,
+      code: data.countrycode,
     };
 
     countryService
@@ -31,7 +32,7 @@ function AddCountry() {
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Country');
+        toast.error(error?.error || error?.Message || "Unable to add Country");
       });
   };
 
@@ -87,7 +88,9 @@ function AddCountry() {
           >
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Country Name <span className="required">*</span></Label>
+                <Label className="form-lable-font">
+                  Country Name <span className="required">*</span>
+                </Label>
                 <Controller
                   name="countryname"
                   control={control}
@@ -110,7 +113,9 @@ function AddCountry() {
             </Col>
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Country Code <span className="required">*</span></Label>
+                <Label className="form-lable-font">
+                  Country Code <span className="required">*</span>
+                </Label>
                 <Controller
                   name="countrycode"
                   control={control}
@@ -132,33 +137,33 @@ function AddCountry() {
               </div>
             </Col>
             <Col xl="4">
-            <div className="mb-1">
-              <Label className="form-lable-font">Description</Label>
-              <Controller
-                name="description"
-                control={control}
-                rules={countryValidations.description}
-                render={({ field }) => (
-                  <Input
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: "400",
-                      height: "81px",
-                    }}
-                    placeholder="Description"
-                    invalid={errors.description && true}
-                    {...field}
-                    type="textarea"
-                  />
+              <div className="mb-1">
+                <Label className="form-lable-font">Description</Label>
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={countryValidations.description}
+                  render={({ field }) => (
+                    <Input
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "400",
+                        height: "81px",
+                      }}
+                      placeholder="Description"
+                      invalid={errors.description && true}
+                      {...field}
+                      type="textarea"
+                    />
+                  )}
+                />
+                {errors.description && (
+                  <span style={{ color: "red" }}>
+                    {errors.description.message as React.ReactNode}
+                  </span>
                 )}
-              />
-              {errors.description && (
-                <span style={{ color: "red" }}>
-                  {errors.description.message as React.ReactNode}
-                </span>
-              )}
-            </div>
-          </Col>
+              </div>
+            </Col>
           </Form>
         </div>
       </div>

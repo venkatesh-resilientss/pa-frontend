@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 function EditSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
@@ -42,19 +43,19 @@ function EditSet() {
   const onSubmit = (data) => {
     const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.setname,
+      name: getLabel(data.setname),
       description: data.description,
       isActive: activeStatus,
       code: data.setcode,
       clientID,
-      projectID
+      projectID,
     };
 
     setService
       .editSet(id, backendFormat)
       .then(() => {
         toast.success("Set Edited successfully");
-        router.push('/configurations/sets');
+        router.push("/configurations/sets");
 
         reset();
       })

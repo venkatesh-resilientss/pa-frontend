@@ -26,6 +26,7 @@ import CustomBadge from "components/Generic/CustomBadge";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { getLabel } from "@/commonFunctions/common";
 
 const AllBanksTable = () => {
   // const dispatch = useDispatch();
@@ -170,6 +171,18 @@ const AllBanksTable = () => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return getLabel(row.value)
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "Bank Name",
@@ -178,18 +191,15 @@ const AllBanksTable = () => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row) => {
+        return getLabel(row.value);
+      },
     },
     {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
-        return (
-          <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
-              " " +
-              (params?.data?.Created?.last_name || "")}
-          </div>
-        );
+        return getLabel(params?.data?.Created?.first_name + " " + params?.data?.Created?.last_name);
       },
       sortable: true,
       resizable: true,

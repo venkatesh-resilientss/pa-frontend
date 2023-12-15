@@ -20,6 +20,7 @@ import CreateProductionButton from "@/components/productions/CreateProductionBut
 import NoProductionPage from "@/components/productions/NoProductionPage";
 
 import { ClientsService, ProjectService } from "services";
+import { getLabel } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const projectService = new ProjectService();
@@ -211,6 +212,9 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
+      cellRenderer: (params) => {
+        return getLabel(params?.data?.Code);
+      },
     },
     {
       headerName: "Production Name",
@@ -219,6 +223,9 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return getLabel(params?.data?.Name);
+      },
     },
     {
       headerName: "Production Type",
@@ -227,6 +234,9 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return getLabel(params?.data?.ProjectType?.Name);
+      },
     },
     {
       headerName: "Client",
@@ -235,6 +245,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Client?.Name.charAt(0).toUpperCase() +
+          params?.data?.Client?.Name.slice(1)
+        );
+      },
     },
     {
       headerName: "Last Payroll Date",
@@ -252,6 +268,12 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
+      // cellRenderer: (params) => {
+      //   return (
+      //     params?.data?.LabourType.charAt(0).toUpperCase() +
+      //     params?.data?.LabourType.slice(1)
+      //   );
+      // },
     },
     {
       headerName: "Created By",
@@ -259,9 +281,9 @@ export default function Productions({ router, user }) {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {getLabel(params?.data?.Created?.first_name || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              getLabel(params?.data?.Created?.last_name || "")}
           </div>
         );
       },

@@ -33,8 +33,6 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
     "edit_configuration"
   );
 
-
-
   const periodsService = new PeriodsService();
 
   const fetchData = async (pageNumber) => {
@@ -173,6 +171,12 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Description.charAt(0).toUpperCase() +
+          params?.data?.Description.slice(1)
+        );
+      },
     },
 
     {
@@ -181,9 +185,11 @@ const AllPeriodsTable = ({ rerender, searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },
