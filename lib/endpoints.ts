@@ -216,7 +216,7 @@ export const UPLOAD_OCCUPATIONCODES_LIST = `${tenantIdEndpoint}/occupationCode/u
 export const UPLOAD_EMPLOYEETYPE_LIST = `${tenantIdEndpoint}/employeetypes/upload`;
 export const UPLOAD_WCCLASSCODES_LIST = `${tenantIdEndpoint}/wc-class-code/upload`;
 
-export const GET_SOFTWARES = `${tenantIdEndpoint}/softwares/`;
+export const GET_SOFTWARES = `${withoutTenantIdEndpoint}/softwares/`;
 
 //addresss
 export const ADDRESSES = `${tenantIdEndpoint}/addresses/`;
