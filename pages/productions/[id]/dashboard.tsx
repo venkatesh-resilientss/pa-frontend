@@ -184,15 +184,15 @@ export default function ProductionDashboard() {
           )}
         </Row>
       </div>
-      <Row>
-        <div className="col-md-6 mt-3">
+      <Row className="d-flex flex-wrap">
+        <div className="col-md-6 mt-3 d-flex">
         {error || !projectDetails ? (
           <div className="text-center nodataAvailable">
             <img src="/no_client_data_available.svg" alt="Error" />
             <p>No Data available.</p>
           </div>
         ) : (
-          <Card style={{ borderRadius: "10px" }} className="p-3">
+          <Card style={{ borderRadius: "10px" }} className="p-3 w-100">
             <Col>
               <div className="d-flex justify-content-between">
                 <div>
@@ -322,10 +322,10 @@ export default function ProductionDashboard() {
 
       <div className="col-md-6 mt-3">
           
-        <Card>
-          <div className="px-4 pb-5" style={{ height: '361px', width:"100%" }}>
+        <Card className="h-100"> 
+          <div className="px-4 pb-5">
             <h6 className="productionDashboardCard p-1">Expense Trends Over Time</h6>
-                <Line data={data} options={options} />
+                <Line data={data} options={options} height={100}/>
               </div>
         </Card>
       </div>
