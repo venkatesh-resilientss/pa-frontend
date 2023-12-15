@@ -1,6 +1,5 @@
 import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
-import useSWR, { mutate } from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -8,17 +7,12 @@ import { SeriesService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 function EditSeries() {
   const router = useRouter();
   const seriesValidationRules = formValidationRules.series;
-  const { id } = router.query;
-
-  const fetchSeriesDetails = (id) => seriesService.seriesDetails(id);
-
-  const { data: seriesData } = useSWR(id ? ["SERIES_DETAILS", id] : null, () =>
-    fetchSeriesDetails(id)
-  );
-
+  const [editMode,setEditMode] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -26,48 +20,59 @@ function EditSeries() {
     control,
     reset,
   } = useForm();
-
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const [isLoading,setLoader] = useState(false);
   useEffect(() => {
-    if (!seriesData) return;
-
-    seriesData?.Name && setValue("seriesname", seriesData?.Name);
-    seriesData?.Code && setValue("Seriescode", seriesData?.Code);
-
-    seriesData?.Description && setValue("description", seriesData?.Description);
-    setActiveStatus(seriesData?.IsActive);
-  }, [seriesData]);
+    const fetchData = async (id : any)=>{
+      try{
+        const response = await seriesService.seriesDetails(id);
+        const data = response;
+        /**Set form values */
+        setValue('seriesname',data.Name);
+        setValue('Seriescode',data.Code);
+        setValue('description',data.Description);
+        setActiveStatus(data.IsActive);
+      }catch(error){
+        toast.error(error?.message || error?.Message || error?.error || 'Unable to fetch data');
+      }
+    }
+    const {id} = router.query;
+    if(id)
+      fetchData(id);
+  }, [router.query]);
 
   const seriesService = new SeriesService();
 
-  const { mutate: countryMutate } = useSWR("LIST_STATES", () =>
-    seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
-  );
+  const [activeStatus, setActiveStatus] = useState(false);
 
-  const [activeStatus, setActiveStatus] = useState(seriesData?.IsActive);
-
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.seriesname),
-      description: data.description,
-      isActive: activeStatus,
-      code: data.Seriescode,
-      clientID,
-      projectID,
-    };
-
-    seriesService
-      .editSeries(id, backendFormat)
-      .then(() => {
-        toast.success("Series Edited successfully");
-        mutate(countryMutate());
-        router.push("/configurations/series");
-
-        reset();
-      })
-      .catch((error) => {
-        toast.error(error?.error || error?.Message || "Unable to edit Series");
-      });
+  const onSubmit = async(data) => {
+    setLoader(true);
+    const {id} = router.query;
+    try{
+      const { clientID, projectID } = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const payload = {
+        name: getLabel(data.seriesname),
+        code: data.Seriescode,
+        description: data.description,
+        IsActive: false,
+        clientID,
+        projectID,
+      };
+      await seriesService.editSeries(id,payload);
+      setLoader(false);
+      toast.success("Series Added successfully");
+      reset();
+      router.back();
+    }catch(error){
+      setLoader(false);
+      toast.error(error?.error || error?.message || error?.Message || "Unable to add Series");
+    }
   };
 
   return (
@@ -87,9 +92,9 @@ function EditSeries() {
           >
             Edit Series
           </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
             <Button
-              onClick={() => router.back()}
+              onClick={() => router.push('/configurations/series')}
               style={{
                 fontSize: "14px",
                 fontWeight: "400",
@@ -101,17 +106,19 @@ function EditSeries() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
+            {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
           </div>
         </div>
 
@@ -137,6 +144,7 @@ function EditSeries() {
                     placeholder="Series Name"
                     invalid={errors.seriesname && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -163,6 +171,7 @@ function EditSeries() {
                     placeholder="Series Code"
                     invalid={errors.Seriescode && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -194,6 +203,7 @@ function EditSeries() {
                     type="textarea"
                     invalid={errors.description && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -214,6 +224,7 @@ function EditSeries() {
                   id="ex1-active"
                   name="ex1"
                   checked={activeStatus}
+                  disabled={!editMode}
                   onChange={() => {
                     setActiveStatus(true);
                   }}
@@ -226,6 +237,7 @@ function EditSeries() {
                   name="ex1"
                   id="ex1-inactive"
                   checked={!activeStatus}
+                  disabled={!editMode}
                   onChange={() => {
                     setActiveStatus(false);
                   }}

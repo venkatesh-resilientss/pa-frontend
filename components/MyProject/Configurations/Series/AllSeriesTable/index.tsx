@@ -15,23 +15,24 @@ import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import { SeriesService } from "services";
 import moment from "moment";
-// import useSWR from "swr";
 import { useDispatch } from "react-redux";
 import { openBulkUploadSeriesPopup } from "redux/slices/mySlices/configurations";
 import Image from "next/image";
-// import { useState } from "react";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
+import { TableLoading } from "@/components/Loaders";
 import { getSessionVariables } from "@/constants/function";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import detailsIocn from "assets/myIcons/list.svg";
+import { debounce, getLabel } from "@/commonFunctions/common";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
-const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
+const AllSeriesTable = ({ rerender }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const perPage = 10;
-  // const [searchText, setSearchText] = useState("");
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -44,35 +45,55 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
   const seriesService = new SeriesService();
-
-  // const { data: seriesData, isLoading: seriesLoading } = useSWR(
-  //   ["LIST_SERIES", searchText],
-  //   () => seriesService.getSeries({ search: "", pageLimit: 25, offset: 0 })
-  // );
-
-  // const dataSource = seriesData?.data;
-
-  const fetchData1 = async (pageNumber) => {
-    try {
-      const { clientID, projectID } = getSessionVariables();
-      const queryParams = {
-        search: searchText,
-        pageLimit: perPage,
-        offset: pageNumber,
-      };
-      const payload = { clientId: clientID, projectId: projectID };
-      const response = await seriesService.getSeries(queryParams, payload);
-      const data = response.data; // Adjust based on the actual structure of the response
-      // setBankData(data)
-      // setTotalRecords(response.total_records)
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
-    }
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  const [isLoading, setLoader] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await seriesService.getSeries(queryParams, {
+          clientID,
+          projectID,
+        });
+        setTableData({
+          data: response.data || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+        setLoader(false);
+      }
+    };
+
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -90,9 +111,9 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
   const ActionsButton = (props) => {
     const id = `action-popover-${props.value}`;
 
-    const Action = ({ icon, name, action }) => {
+    const Action = ({ icon, name }) => {
       return (
-        <div onClick={action} className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2">
           <Image src={icon} alt={name} />
           <p>{name}</p>
         </div>
@@ -111,28 +132,23 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"\ Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(`/configurations/edit-series/${props.data?.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() =>
                   router.push(`/configurations/edit-series/${props.data?.ID}`)
                 }
               >
-                <Action
-                  icon={editIocn}
-                  name={"Edit"}
-                  action={() => {
-                    //
-                  }}
-                />
+                <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
           </DropdownMenu>
@@ -154,7 +170,7 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
           return <>{row.value}</>;
         } else if (typeof row.value === "string") {
           // If it's a string, display the uppercase version
-          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+          return getLabel(row.value);
         } else {
           // Handle other types if needed
           return null;
@@ -168,11 +184,8 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params) => {
-        return (
-          params?.data?.Name.charAt(0).toUpperCase() +
-          params?.data?.Name.slice(1)
-        );
+      cellRenderer: (row) => {
+        return getLabel(row.value);
       },
     },
     {
@@ -218,7 +231,7 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
+        const formattedDate = moment(params.value).format("YYYY-MM-DD , HH:MM");
         return <div>{formattedDate}</div>;
       },
     },
@@ -271,7 +284,7 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
                 </div> */}
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -299,24 +312,6 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
                     Bulk Upload
                   </Button>
                 )}
-
-                {/* <Button
-                  onClick={() => router.push(`/configurations/add-series`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Add Series
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-series`)}
@@ -343,52 +338,23 @@ const AllSeriesTable = ({ rerender, searchText, setSearchText }) => {
       </div>
 
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData1}
-          pageSize={perPage}
-          noDataPage={() => (
-            <NoDataPage
-              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-              buttonLink={"/configurations/add-set"}
-            />
-          )}
-        />
-      </div>
-      {/* {seriesLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Series" : "No button"}
+            buttonLink={"/configurations/add-series"}
           />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Add Series"}
-                buttonName={hasCreateConfiguration ? "Create Series" : ""}
-                buttonLink={"/configurations/add-series"}
-              />
-            </div>
-          )}
-        </>
-      )} */}
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
+      </div>
     </div>
   );
 };

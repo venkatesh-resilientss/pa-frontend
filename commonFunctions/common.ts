@@ -20,6 +20,15 @@ export const exclude = (data, keys) =>
     Object.entries(data).filter(([key]) => !keys.includes(key))
   );
 
+export const debounce = (fn, delay?) => {
+  let timeoutId;
+
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay || 200);
+  };
+};
+
 export const objectsAreEqual = (obj1, obj2) => {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);

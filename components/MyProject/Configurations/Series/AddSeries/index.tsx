@@ -6,6 +6,8 @@ import { SeriesService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { LoaderButton } from "@/components/Loaders";
+import { useState } from "react";
 function AddSeries() {
   const router = useRouter();
   const seriesValidationRules = formValidationRules.series;
@@ -16,28 +18,31 @@ function AddSeries() {
     reset,
     formState: { errors },
   } = useForm();
-
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.seriesname),
-      code: data.Seriescode,
-      description: data.description,
-      is_active: false,
-      clientID,
-      projectID,
-    };
-
-    seriesService
-      .createSeries(backendFormat)
-      .then(() => {
-        toast.success("Series Added successfully");
-        reset();
-        router.back();
-      })
-      .catch((error) => {
-        toast.error(error?.error || error?.Message || "Unable to add Series");
-      });
+  const [isLoading,setLoader] = useState(false);
+  const onSubmit = async (data) => {
+    setLoader(true);
+    try{
+      const { clientID, projectID } = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const payload = {
+        name: getLabel(data.seriesname),
+        code: data.Seriescode,
+        description: data.description,
+        is_active: false,
+        clientID,
+        projectID,
+      };
+      await seriesService.createSeries(payload);
+      setLoader(false);
+      toast.success("Series Added successfully");
+      reset();
+      router.back();
+    }catch(error){
+      setLoader(false);
+      toast.error(error?.error || error?.message || error?.Message || "Unable to add Series");
+    }
   };
 
   return (
@@ -58,7 +63,7 @@ function AddSeries() {
             >
               Add New Series
             </div>
-            <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
               <Button
                 onClick={() => router.back()}
                 style={{
@@ -72,17 +77,7 @@ function AddSeries() {
               >
                 Dismiss
               </Button>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                color="primary"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  height: "34px",
-                }}
-              >
-                Save
-              </Button>
+              <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
             </div>
           </div>
 
