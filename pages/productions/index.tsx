@@ -438,7 +438,7 @@ export default function Productions({ router, user }) {
           />
         </div>
 
-        <div className="w-m-125">
+        <div className="w-m-150">
           {step !== 1 ? (
             <Select
               instanceId={`react-select-status`}
@@ -451,7 +451,7 @@ export default function Productions({ router, user }) {
                   <span className="clr-dblack fw-600">All</span>
                 </div>
               }
-              value={statusOpts.find((e) => e.value === filters.status)}
+              value={statusOpts.find((e) => e.value === filters.status) || null}
               onChange={(e) =>
                 setFilters({
                   ...filters,
@@ -473,7 +473,10 @@ export default function Productions({ router, user }) {
                   <span className="clr-dblack fw-600">All</span>
                 </div>
               }
-              value={completedOpts.find((e) => e.value === filters.isCompleted)}
+              value={
+                completedOpts.find((e) => e.value === filters.isCompleted) ||
+                null
+              }
               onChange={(e) =>
                 setFilters({
                   ...filters,
@@ -486,7 +489,7 @@ export default function Productions({ router, user }) {
           )}
         </div>
 
-        <div className=" ms-auto">
+        <div className="ms-auto">
           <input
             className="form-control f-16 me-0 search-input"
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
