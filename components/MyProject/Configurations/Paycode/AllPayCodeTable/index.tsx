@@ -25,7 +25,6 @@ const AllpayCodesTable = () => {
   );
 
 
-
   const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">

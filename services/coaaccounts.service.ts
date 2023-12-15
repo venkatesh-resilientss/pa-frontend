@@ -5,18 +5,15 @@ import {
   GET_COAACCOUNTS,
   CREATE_COAACCOUNTS,
   COAACCOUNTS_DETAIL_ENDPOINT,
-  UPLOAD_COA_LIST
+  UPLOAD_COA_LIST,
 } from "../lib/endpoints";
 
 class COAAccountsService extends APIService {
   /** data => {clientId : 0, projectId : 0} */
   /** params : {pageLimit : 10, search  : "", offset : 0 } */
-  getCoasAccounts(data,params?): Promise<any> {
-    return this.post(
-      params ?
-        `${GET_COAACCOUNTS}`
-        : `${GET_COAACCOUNTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,
-      data)
+  getCoasAccounts(data, params?): Promise<any> {
+    const queryParams = new URLSearchParams(params).toString();
+    return this.post(`${GET_COAACCOUNTS}?${queryParams}`, data)
       .then((res) => {
         return res?.data;
       })
@@ -35,20 +32,17 @@ class COAAccountsService extends APIService {
       });
   }
 
-  uploadList(fileName: any, clientId : any, projetId : any) {
+  uploadList(fileName: any, clientId: any, projetId: any) {
     // Create a FormData object
     const formData = new FormData();
 
     // Append the file name to the FormData object with the specified field name
     formData.append("file", fileName);
-    formData.append("clientId",clientId);
-    formData.append("projectId",projetId);
+    formData.append("clientId", clientId);
+    formData.append("projectId", projetId);
 
-    return this.post(UPLOAD_COA_LIST, formData,  {
-        'Content-Type': 'multipart/form-data',
-      },)
-    .then((response) => {
-      return response.data;
+    return this.post(UPLOAD_COA_LIST, formData, {
+      "Content-Type": "multipart/form-data",
     })
     .catch((error) => {
       throw error.response.data;
