@@ -424,7 +424,7 @@ export default function Productions({ router, user }) {
         <div className="">
           <ReactMultiSelectCheckboxes
             className="drop-down"
-            value={{ label: "Production Type is All", value: "" }}
+            value={null}
             placeholderButtonLabel={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Production Types</span>
