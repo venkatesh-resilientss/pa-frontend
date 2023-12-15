@@ -9,17 +9,13 @@ import { Controller, useForm } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 
 function EditDepartment() {
   const router = useRouter();
-  const { id } = router.query;
   const departmentValidationRules = formValidationRules.department;
   const departmentsService = new DepartmentsService();
-
-  const { data: departmentsData } = useSWR(["DEPARTMENT_DETAILS", id], () =>
-    departmentsService.departmentDetails(id)
-  );
-
   const {
     handleSubmit,
     formState: { errors },
@@ -28,55 +24,73 @@ function EditDepartment() {
     reset,
   } = useForm();
 
-  useEffect(() => {
-    if (!departmentsData) return;
-
-    departmentsData?.Name && setValue("name", departmentsData?.Name);
-    departmentsData?.Code && setValue("code", departmentsData?.Code);
-
-    departmentsData?.Description &&
-      setValue("description", departmentsData?.Description);
-    setActiveStatus(departmentsData?.IsActive);
-  }, [departmentsData]);
-
   const departmentService = new DepartmentsService();
-
-  // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
-  const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
-  const onSubmit = (data) => {
-    const { clientID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.name),
-      description: data.description,
-      code: data.code,
-      isActive: activeStatus,
-      clientID,
-    };
-
-    departmentService
-      .editDepartment(id, backendFormat)
-      .then(() => {
-        toast.success("Department Edited successfully");
-        router.push("/configurations/departments");
-
-        reset();
-      })
-      .catch((error) => {
-        toast.error(
-          error?.error || error?.Message || "Unable to edit Department"
-        );
-      });
+  const [activeStatus, setActiveStatus] = useState(false);
+  const [isLoading, setLoader] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const onSubmit = async (data) => {
+    setLoader(true);
+    const { id } = router.query;
+    try {
+      const { clientID } = getSessionVariables();
+      const payload = {
+        name: getLabel(data.name),
+        description: data.description,
+        code: data.code,
+        isActive: activeStatus,
+        clientID,
+      };
+      await departmentService.editDepartment(id, payload);
+      setLoader(false);
+      toast.success("Department updated successfully");
+      reset();
+      router.push("/configurations/departments");
+    } catch (error) {
+      setLoader(false);
+      toast.error(
+        error?.error ||
+          error?.message ||
+          error?.Message ||
+          "Unable to update Department"
+      );
+    }
   };
 
+  useEffect(() => {
+    const fetchData = async (id: any) => {
+      try {
+        const response = await departmentService.departmentDetails(id);
+        const data = response;
+        /**Set form value */
+        setValue("name", data?.Name);
+        setValue("code", data?.Code);
+        setValue("description", data?.Description);
+        setActiveStatus(data?.IsActive);
+      } catch (error) {
+        toast.error(
+          error?.message ||
+            error?.Message ||
+            error?.error ||
+            "Unable to fetch data"
+        );
+      }
+    };
+    const { id } = router.query;
+    if (id) fetchData(id);
+  }, [router.query]);
   return (
     <div className="mt-4 configuration-add">
       <div className="title-sub">All Departments</div>
 
       <div className="d-flex justify-content-between">
         <div className="title">Edit Department</div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
-            onClick={() => router.back()}
+            onClick={() => router.push("/configurations/departments")}
             style={{
               fontSize: "14px",
               fontWeight: "400",
@@ -88,17 +102,19 @@ function EditDepartment() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          {hasEditConfigurationPermission && (
+            <LoaderButton
+              buttonText={editMode ? "Save" : "Edit"}
+              isLoading={isLoading}
+              handleClick={() => {
+                if (!editMode) {
+                  setEditMode(true);
+                  return;
+                }
+                handleSubmit(onSubmit)();
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -123,6 +139,7 @@ function EditDepartment() {
                   placeholder="Department Name"
                   invalid={errors.name && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -152,6 +169,7 @@ function EditDepartment() {
                   placeholder="Department Code"
                   invalid={errors.code && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -183,6 +201,7 @@ function EditDepartment() {
                   type="textarea"
                   invalid={errors.description && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -208,6 +227,7 @@ function EditDepartment() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -220,6 +240,7 @@ function EditDepartment() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>

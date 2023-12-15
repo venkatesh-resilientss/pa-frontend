@@ -8,7 +8,6 @@ import {
   Button,
   Input,
 } from "reactstrap";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -23,11 +22,15 @@ import CustomBadge from "components/Generic/CustomBadge";
 import { getSessionVariables } from "@/constants/function";
 import Image from "next/image";
 import NoDataPage from "components/NoDataPage";
-
-const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
+import detailsIocn from "assets/myIcons/list.svg";
+import { useEffect, useState } from "react";
+import { TableLoading } from "@/components/Loaders";
+import { toast } from "react-toastify";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import { debounce } from "@/commonFunctions/common";
+const AllDepartmentsTable = ({ rerender }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -39,37 +42,56 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
   );
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
-  // const hasDeactivateConfiguration = hasPermission(
-  //   "configuration_management",
-  //   "deactivate_configuration"
-  // );
 
   const departmentsService = new DepartmentsService();
-
-  // const { data: departmentsData, isLoading: departmentLoading } = useSWR(
-  //   ["LIST_DEPARTMENTS", searchText],
-  //   () => departmentsService.getDepartments()
-  // );
-
-  // const dataSource = departmentsData && departmentsData.result;
-  const fetchData = async (pageNumber) => {
-    const { clientID } = getSessionVariables();
-    try {
-      const response = await departmentsService.getDepartments(
-        { clientId: clientID },
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
-      const data = response.result; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    }
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  const [isLoading, setLoader] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID } = getSessionVariables();
+        if (!clientID) throw new Error("Client not found");
+        const response = await departmentsService.getDepartments(
+          { clientId: clientID },
+          queryParams
+        );
+        setTableData({
+          data: response.result || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+        setLoader(false);
+      }
+    };
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -108,13 +130,17 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: `/configurations/edit-department/${props.data?.ID}`,
+                });
+              }}
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
@@ -130,17 +156,6 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {/* {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  dispatch(openDeleteDepartmentPopup(props.data?.ID))
-                }
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -161,7 +176,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
           return <>{row.value}</>;
         } else if (typeof row.value === "string") {
           // If it's a string, display the uppercase version
-          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+          return row.value?.toUpperCase();
         } else {
           // Handle other types if needed
           return null;
@@ -223,7 +238,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
       headerName: "Updated On",
       field: "UpdatedDate",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
+        const formattedDate = moment(params.value).format("YYYY-MM-DD , HH:MM");
         return <div>{formattedDate}</div>;
       },
       sortable: true,
@@ -275,7 +290,7 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
                 </div>
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -304,24 +319,6 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
                     Bulk Upload
                   </Button>
                 )}
-
-                {/* <Button
-                  onClick={() => router.push(`/configurations/add-department`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Create Department
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
@@ -348,53 +345,27 @@ const AllDepartmentsTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      {/* {departmentLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {dataSource?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={10}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Department"}
-                buttonName={
-                  hasCreateConfiguration ? "Create Department" : "No button"
-                }
-                buttonLink={"/configurations/add-department"}
-              />
-            </div>
-          )}
-        </>
-      )} */}
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
+        <div className="mt-3">
+          {isLoading ? (
+            <TableLoading />
+          ) : tableData.data.length === 0 ? (
             <NoDataPage
-              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-              buttonLink={"/configurations/add-set"}
+              buttonName={
+                hasCreateConfiguration ? "Create Department" : "No button"
+              }
+              buttonLink={"/configurations/add-department"}
+            />
+          ) : (
+            <GridWithPagination
+              rowData={tableData}
+              columnDefs={columnDefs}
+              limit={filters.limit}
+              pageNumber={filters.pageNumber}
+              setPageNumber={setFilters}
             />
           )}
-        />
+        </div>
       </div>
     </div>
   );

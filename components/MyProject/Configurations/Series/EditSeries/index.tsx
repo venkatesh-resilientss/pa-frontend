@@ -66,12 +66,12 @@ function EditSeries() {
       };
       await seriesService.editSeries(id,payload);
       setLoader(false);
-      toast.success("Series Added successfully");
+      toast.success("Series updated successfully");
       reset();
-      router.back();
+      router.push('/configurations/series');
     }catch(error){
       setLoader(false);
-      toast.error(error?.error || error?.message || error?.Message || "Unable to add Series");
+      toast.error(error?.error || error?.message || error?.Message || "Unable to update Series");
     }
   };
 

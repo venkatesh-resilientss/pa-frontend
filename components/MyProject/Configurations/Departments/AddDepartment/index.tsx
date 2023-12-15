@@ -31,7 +31,7 @@ function AddDepartment() {
     departmentService
       .createDepartment(backendFormat)
       .then(() => {
-        toast.success("Department Added successfully");
+        toast.success("Department added successfully");
         reset();
         router.back();
       })
@@ -166,35 +166,6 @@ function AddDepartment() {
             )}
           </div>
         </Col>
-
-        {/* <div className="d-flex flex-column mt-1">
-          <Label className="form-lable-font">Status </Label>
-          <div className="d-flex gap-1">
-            <div className="d-flex gap-1">
-              <input
-                className="custom-radio-input"
-                type="radio"
-                id="ex1-active"
-                name="ex1"
-                onChange={() => {
-                  setActiveStatus(true);
-                }}
-              />
-              <div>Active</div>
-            </div>
-            <div className="d-flex gap-1">
-              <input
-                type="radio"
-                name="ex1"
-                id="ex1-inactive"
-                onChange={() => {
-                  setActiveStatus(false);
-                }}
-              />
-              <div>In-Active</div>
-            </div>
-          </div>
-        </div> */}
       </Form>
     </div>
   );
