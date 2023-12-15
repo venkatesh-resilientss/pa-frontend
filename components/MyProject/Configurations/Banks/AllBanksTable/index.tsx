@@ -21,23 +21,31 @@ import { hasPermission } from "commonFunctions/functions";
 // } from "redux/slices/mySlices/configurations";
 // import { useDispatch } from "react-redux";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
 import { getLabel } from "@/commonFunctions/common";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 const AllBanksTable = () => {
   // const dispatch = useDispatch();
   const router = useRouter();
-  const [searchText, setSearchText] = useState("");
-  // const [pageOffset, setPageOffset] = useState(0);
-  // const [bankData, setBankData] = useState([]);
-  // const [bankLoading, setBankLoading] = useState(false);
-  // const [totalRecords, setTotalRecords] = useState(0);
-  const [rerender] = useState(false);
-  const perPage = 10;
+  const [tableData, setTableData] = useState<any>({
+    data: [],
+    total_records: 0,
+  });
+  const [filters, setFilters] = useState<any>({
+    dateStart: "",
+    dateEnd: "",
+    limit: 10,
+    offset: 0,
+    search: "",
+    status: "",
+    pageNumber: 1,
+  });
+
+
 
   const bankService = new BankService();
   const hasCreateConfiguration = hasPermission(
@@ -53,29 +61,26 @@ const AllBanksTable = () => {
   //   "deactivate_configuration"
   // );
 
-  const fetchData1 = async (pageNumber) => {
-    const clientId = sessionStorage.getItem("clientid");
-    const projectId = sessionStorage.getItem("projectid");
-    if (clientId && projectId) {
+  useEffect(() => {
+    const getTableData = async () => {
       try {
-        const response = await bankService.getBanksNew(
-          {
-            search: searchText,
-            pageLimit: perPage,
-            offset: pageNumber,
-          },
-          { clientId: parseInt(clientId), projectId: parseInt(projectId) }
-        );
-        const data = response.data; // Adjust based on the actual structure of the response
-        const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-        return { data, totalRecords };
-      } catch (error) {
-        return { data: null, totalRecords: 0 };
-      } finally {
-        // setBankLoading(false)
+        const clientId = sessionStorage.getItem("clientid");
+        const projectId = sessionStorage.getItem("projectid");
+        const data = { clientId: parseInt(clientId), projectId: parseInt(projectId) }
+
+        const response = await bankService.getBanksNew(filters, data);
+        setTableData({
+          data: response.data || [],
+          total_records: response.total_records || 0,
+        });
+        /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      } catch (e) {
+        console.error(e)
       }
-    }
-  };
+    };
+    getTableData();
+  }, [filters]);
+
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -269,7 +274,7 @@ const AllBanksTable = () => {
                 </div> */}
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -337,17 +342,24 @@ const AllBanksTable = () => {
           </CardBody>
         </Card>
       </div>
-      {/* {bankLoading ? (
-        <div className="mt-3">
-          <GridTable
-            columnDefs={columnDefs}
-            pageSize={perPage}
-            searchText={searchText}
-            fetchData={""}
+
+      <div className="mt-3">
+        {tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
+            buttonLink={"/configurations/add-bank"}
           />
-        </div>
-      ) : ( */}
-      <AGGridTable
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
+      </div>
+      {/* <AGGridTable
         rerender={rerender}
         // rowData={bankData}
         // totalRecords={totalRecords}
@@ -362,15 +374,7 @@ const AllBanksTable = () => {
             buttonLink={"/configurations/add-bank"}
           />
         )}
-      />
-      {/* {bankData.length > 0 ? (
-      ): (
-          <NoDataPage
-          buttonName = {
-            hasCreateConfiguration? "Create Bank": "No button"
-          }
-          buttonLink = { "/configurations/add-bank" }
-        />)} */}
+      /> */}
     </div>
   );
 };

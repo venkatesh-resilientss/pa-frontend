@@ -108,7 +108,7 @@ function MailingAddressForm({ onSubmit, control, errors }) {
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
             >
-              Mailing Address Line 2 <span className="required">*</span>
+              Mailing Address Line 2
             </Label>
             <Controller
               name="mailingAddress2"

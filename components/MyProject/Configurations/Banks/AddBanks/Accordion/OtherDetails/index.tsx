@@ -27,7 +27,7 @@ function OtherDetailsForm({ onSubmit, control, errors }) {
           pageLimit: 25,
           offset: 0,
         }, { clientId: clientID, projectId: projectID });
-        const options = res?.result.map((item) => ({
+        const options = res?.data.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
