@@ -18,8 +18,8 @@ const ProjectCard = ({ data }) => {
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
               <div className="d-flex justify-content-between">
-                <div>
-                  {getLabel(data.client_name ? data.client_name : "-")}
+                <div style={{ fontSize: "14px", color: "#030229" }}>
+                  {getLabel(data?.client_name || "-")}
                 </div>
                 <Link href={`/productions/${data.id}`}>
                   <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
@@ -38,33 +38,26 @@ const ProjectCard = ({ data }) => {
                 </Link>
               </div>
 
-              <div className="d-flex justify-content-between ">
-                <div className="clientcard_headings clr-dblack">
-                  {getLabel(data.project_name || "-")}
+              <div className="d-flex justify-content-between mt-1">
+                <div className="fw-600 clr-dblack">
+                  {getLabel(data?.project_name || "-")}
                 </div>
               </div>
             </div>
 
-            <div className="mt-2 f-12 fw-600">
-              <p>Production Accountant :{" "} {data.payroll_coordinator ? data.payroll_coordinator : "-"}</p>
-              
+            <div className="mt-2 f-12">
+              <b>Production Accountant</b> :{" "}
+              {data?.production_accountant || "-"}
             </div>
           </div>
         </div>
 
         <div className="d-flex justify-content-between mt-3 f-12">
-          <div className="d-flex gap-2 ">
-
-            <div className="d-flex gap-2">
-              <Image
-                src={budget}
-                alt=""
-                className="productionBudgetAllocated"
-              />
-              <div>
-                <div className="f-12">Budget Allocated </div>
-                <div className="fw-bold f-14">{data.budget  || 0}</div>
-              </div>
+          <div className="d-flex gap-2">
+            <Image src={budget} alt="" style={{ width: "15px" }} />
+            <div>
+              <span>Budget Allocated</span>
+              <div className="fw-bold font-size-14">{data?.budget || 0}</div>
             </div>
             <div className="d-flex gap-2 iconsSpace">
               <Image
@@ -75,8 +68,8 @@ const ProjectCard = ({ data }) => {
                 }}
               />
               <div>
-                <div className="f-12">Budget Spent </div>
-                <div className="fw-bold f-14">{data.budget_spent || 0}</div>
+                <div>Budget Spent </div>
+                <div className="fw-bold">{data?.budget_spent || 0}</div>
               </div>
             </div>
           </div>
@@ -104,7 +97,7 @@ const ProjectCard = ({ data }) => {
                         borderRadius: "5%",
                       }} className="p-1 px-2 f-12"
                     >
-                      {software.software_name}
+                      {software?.software_name || "-"}
                     </div>
                   );
                 })}

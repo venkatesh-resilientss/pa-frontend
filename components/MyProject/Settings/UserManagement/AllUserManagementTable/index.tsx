@@ -225,8 +225,7 @@ const AllRoleTable = () => {
               props?.data?.adminName?.slice(1)}
           </p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
-            {props?.data?.email?.charAt(0).toUpperCase() +
-              props?.data?.email?.slice(1)}
+            {props?.data?.email}
           </p>
         </div>
       </div>
@@ -244,10 +243,9 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${
-          params?.adminName?.charAt(0).toUpperCase() +
+        const res = `${params?.adminName?.charAt(0).toUpperCase() +
           params?.adminName?.slice(1)
-        }${params?.email?.charAt(0).toUpperCase() + params?.email?.slice(1)}`;
+          }${params?.email}`;
         return res;
       },
     },
@@ -282,7 +280,8 @@ const AllRoleTable = () => {
         if (arrayLength === 0) {
           tooltipContent = ""; // Provide a default message if array is empty
         } else {
-          tooltipContent = clientNames.join(", ");
+          const capitalizedNames = clientNames?.map(name => name?.charAt(0).toLocaleUpperCase() + name?.slice(1));
+          tooltipContent = capitalizedNames.join(", ");
         }
 
         const maxLength = 8; // Adjust the maximum length for ellipsis as needed
@@ -295,24 +294,21 @@ const AllRoleTable = () => {
 
           displayContent =
             firstClientName.length > maxLength
-              ? `${
-                  firstClientName?.charAt(0).toUpperCase() +
-                  firstClientName?.slice(1).substring(0, maxLength)
-                }...`
+              ? `${firstClientName?.charAt(0).toUpperCase() +
+              firstClientName?.slice(1).substring(0, maxLength)
+              }...`
               : firstClientName?.charAt(0).toUpperCase() +
-                firstClientName?.slice(1);
+              firstClientName?.slice(1);
         } else {
           const firstClientName = clientNames[0] || "";
 
-          displayContent = `${
-            firstClientName.length > maxLength
-              ? `${
-                  firstClientName?.charAt(0).toUpperCase() +
-                  firstClientName?.slice(1).substring(0, maxLength)
-                }...`
-              : firstClientName?.charAt(0).toUpperCase() +
-                firstClientName?.slice(1)
-          } + ${arrayLength - 1}`;
+          displayContent = `${firstClientName.length > maxLength
+            ? `${firstClientName?.charAt(0).toUpperCase() +
+            firstClientName?.slice(1).substring(0, maxLength)
+            }...`
+            : firstClientName?.charAt(0).toUpperCase() +
+            firstClientName?.slice(1)
+            } + ${arrayLength - 1}`;
         }
 
         return (
@@ -321,7 +317,7 @@ const AllRoleTable = () => {
               placement="bottom"
               overlay={<Tooltip id="tooltip-engine">{tooltipContent}</Tooltip>}
             >
-              <p title={tooltipContent}>{displayContent}</p>
+              <p >{displayContent}</p>
             </OverlayTrigger>
           </>
         );

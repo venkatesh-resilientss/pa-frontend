@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Card, UncontrolledDropdown } from "reactstrap";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
-import moment from "moment";
 import { useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
@@ -20,7 +19,11 @@ import CreateProductionButton from "@/components/productions/CreateProductionBut
 import NoProductionPage from "@/components/productions/NoProductionPage";
 
 import { ClientsService, ProjectService } from "services";
-import { getLabel } from "@/commonFunctions/common";
+import {
+  dateFormat,
+  getLabel,
+  objectsAreEqual,
+} from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const projectService = new ProjectService();
@@ -41,7 +44,7 @@ export default function Productions({ router, user }) {
   }) as any;
   const [clFilters, setClFilters] = useState([]) as any;
 
-  const [filters, setFilters] = useState<any>({
+  const defaultFilters: any = {
     dateStart: "",
     dateEnd: "",
     clients: [],
@@ -52,7 +55,8 @@ export default function Productions({ router, user }) {
     status: "",
     pageNumber: 1,
     isCompleted: "",
-  });
+  };
+  const [filters, setFilters] = useState<any>(defaultFilters);
 
   const toggle = (tab) => {
     setStep(tab);
@@ -107,7 +111,7 @@ export default function Productions({ router, user }) {
   };
 
   useEffect(() => {
-    const getData = async () => {
+    const getFiltersData = async () => {
       try {
         const clients = await clientService.getClientsFilters();
         setClFilters(clients.map((e) => ({ label: e.name, value: e.id })));
@@ -117,15 +121,17 @@ export default function Productions({ router, user }) {
         //
       }
     };
-    getData();
+    getFiltersData();
   }, []);
 
   useEffect(() => {
-    const getData = async () => {
+    const getTableData = async () => {
       try {
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
+          dateStart: dateFormat(filters.dateStart),
+          dateEnd: dateFormat(filters.dateEnd),
         };
         const response = await projectService.getAllProjectsList(payload);
         setTableData({
@@ -137,7 +143,7 @@ export default function Productions({ router, user }) {
         //
       }
     };
-    getData();
+    getTableData();
   }, [filters]);
 
   const StateBadge = (props) => {
@@ -212,9 +218,6 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
-      cellRenderer: (params) => {
-        return getLabel(params?.data?.Code);
-      },
     },
     {
       headerName: "Production Name",
@@ -223,9 +226,7 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
-      cellRenderer: (params) => {
-        return getLabel(params?.data?.Name);
-      },
+      cellRenderer: (params) => getLabel(params?.data?.Name),
     },
     {
       headerName: "Production Type",
@@ -234,9 +235,7 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
-      cellRenderer: (params) => {
-        return getLabel(params?.data?.ProjectType?.Name);
-      },
+      cellRenderer: (params) => getLabel(params?.data?.ProjectType?.Name),
     },
     {
       headerName: "Client",
@@ -245,12 +244,7 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 2,
-      cellRenderer: (params) => {
-        return (
-          params?.data?.Client?.Name.charAt(0).toUpperCase() +
-          params?.data?.Client?.Name.slice(1)
-        );
-      },
+      cellRenderer: (params) => getLabel(params?.data?.Client?.Name),
     },
     {
       headerName: "Last Payroll Date",
@@ -268,12 +262,6 @@ export default function Productions({ router, user }) {
       resizable: true,
       suppressSizeToFit: true,
       flex: 1,
-      // cellRenderer: (params) => {
-      //   return (
-      //     params?.data?.LabourType.charAt(0).toUpperCase() +
-      //     params?.data?.LabourType.slice(1)
-      //   );
-      // },
     },
     {
       headerName: "Created By",
@@ -295,10 +283,7 @@ export default function Productions({ router, user }) {
     {
       headerName: "Created On",
       field: "CreatedDate",
-      cellRenderer: (params) => {
-        const formattedDate = moment(params.value).format("YYYY-MM-DD");
-        return <div>{formattedDate}</div>;
-      },
+      cellRenderer: (params) => <div>{params.value.split("T")[0]}</div>,
       sortable: true,
       resizable: true,
       suppressSizeToFit: true,
@@ -323,19 +308,24 @@ export default function Productions({ router, user }) {
 
   const CustomDatePicker = forwardRef(({ value, onClick }: any, ref: any) => (
     <button className="btn border bg-white" onClick={onClick} ref={ref}>
-      <span className="clr-dblack fw-600">Date</span> is{" "}
-      <span className="clr-dblack fw-600">{value || "All"}</span>
+      <span className="clr-dblack fw-600">Date</span> {value ? "from " : "is "}
+      <span className={"clr-dblack fw-600" + (value ? " me-3" : "")}>
+        {value
+          .split(" - ")
+          .map((e) => dateFormat(e))
+          .join(" - ") || "All"}
+      </span>
     </button>
   ));
 
   const statusOpts = [
-    { label: "All", value: "" },
+    { label: "All", value: "all" },
     { label: "Active", value: "true" },
     { label: "In-active", value: "false" },
   ];
 
   const completedOpts = [
-    { label: "All", value: "" },
+    { label: "All", value: "all" },
     { label: "Pending", value: "false" },
     { label: "Completed", value: "true" },
   ];
@@ -371,13 +361,11 @@ export default function Productions({ router, user }) {
       <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
         <div className="">
           <DatePicker
-            style={{ fontSize: "12px", fontWeight: "400" }}
-            id="startDatePicker" // Add the id here
+            id="startDatePicker"
             className="w-100 form-control"
             placeholderText="Select Start date"
             startDate={filters.dateStart ? filters.dateStart : null}
             endDate={filters.dateEnd ? filters.dateEnd : null}
-            dateFormat="yyyy-MM-dd"
             onChange={(dts) => {
               const [start, end] = dts;
               setFilters({
@@ -391,13 +379,20 @@ export default function Productions({ router, user }) {
             selectsRange
             monthsShown={2}
             customInput={<CustomDatePicker />}
+            isClearable
           />
         </div>
         <div className="">
           <ReactMultiSelectCheckboxes
             className="drop-down"
             value={filters.clients}
-            placeholderButtonLabel="Client is All"
+            placeholderButtonLabel={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Client</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
             options={[
               { label: "Select All", value: "s" },
               { label: "Unselect All", value: "u" },
@@ -430,26 +425,38 @@ export default function Productions({ router, user }) {
         <div className="">
           <ReactMultiSelectCheckboxes
             className="drop-down"
-            value={{ label: "Production Type is All", value: "" }}
-            placeholderButtonLabel="Select Production Types"
+            value={null}
+            placeholderButtonLabel={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Production Types</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
             options={[]}
           />
         </div>
 
-        <div className="w-m-125">
+        <div className="w-m-150">
           {step !== 1 ? (
             <Select
               instanceId={`react-select-status`}
               styles={selectStyle}
-              placeholder={"Status is All"}
               options={statusOpts}
-              value={statusOpts.find((e) => e.value === filters.status)}
+              placeholder={
+                <div className="f-16">
+                  <span className="clr-dblack fw-600">Status</span>
+                  &nbsp;is&nbsp;
+                  <span className="clr-dblack fw-600">All</span>
+                </div>
+              }
+              value={statusOpts.find((e) => e.value === filters.status) || null}
               onChange={(e) =>
                 setFilters({
                   ...filters,
                   pageNumber: 1,
                   offset: 0,
-                  status: e.value,
+                  status: e.value === "all" ? "" : e.value,
                 })
               }
             />
@@ -457,19 +464,37 @@ export default function Productions({ router, user }) {
             <Select
               instanceId={`react-select-completed`}
               styles={selectStyle}
-              placeholder={"Status is All"}
               options={completedOpts}
-              value={completedOpts.find((e) => e.value === filters.isCompleted)}
+              placeholder={
+                <div className="f-16">
+                  <span className="clr-dblack fw-600">Status</span>
+                  &nbsp;is&nbsp;
+                  <span className="clr-dblack fw-600">All</span>
+                </div>
+              }
+              value={
+                completedOpts.find((e) => e.value === filters.isCompleted) ||
+                null
+              }
               onChange={(e) =>
                 setFilters({
                   ...filters,
                   pageNumber: 1,
                   offset: 0,
-                  isCompleted: e.value,
+                  isCompleted: e.value === "all" ? "" : e.value,
                 })
               }
             />
           )}
+        </div>
+
+        <div className="ms-auto">
+          <input
+            className="form-control f-16 me-0 search-input"
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            type="search"
+            placeholder="Search"
+          />
         </div>
       </div>
 
@@ -478,7 +503,14 @@ export default function Productions({ router, user }) {
         {[...Array(3)].map((e, id) => (
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
-              {tableData.data.length === 0 ? (
+              {tableData.data.length === 0 &&
+                objectsAreEqual(
+                  {
+                    ...defaultFilters,
+                    isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
+                  },
+                  filters
+                ) ? (
                 <NoProductionPage {...{ user }} />
               ) : (
                 <GridWithPagination

@@ -26,8 +26,7 @@ import GridWithPagination from "@/components/dataTable/GridWithPagination";
 import { toast } from "react-toastify";
 import { TableLoading } from "@/components/Loaders";
 import detailsIocn from "assets/myIcons/list.svg";
-import { getLabel } from "@/commonFunctions/common";
-
+import { debounce, getLabel } from "@/commonFunctions/common";
 const AllCurrencyTable = ({ rerender }) => {
   const router = useRouter();
   const hasCreateConfiguration = hasPermission(
@@ -55,14 +54,21 @@ const AllCurrencyTable = ({ rerender }) => {
     offset: 0,
     pageNumber: 1,
   });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
+  };
   const [isLoading, setLoader] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const payLoad = {
+        const queryParams = {
           ...filters,
         };
-        const response = await currencyService.getCurrencies(payLoad);
+        const response = await currencyService.getCurrencies(queryParams);
         setTableData({
           data: response.result || [],
           total_records: response.total_records,
@@ -148,18 +154,6 @@ const AllCurrencyTable = ({ rerender }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (row: any) => {
-        if (typeof row.value === "number") {
-          // If it's a number, just display it as is
-          return <>{row.value}</>;
-        } else if (typeof row.value === "string") {
-          // If it's a string, display the uppercase version
-          return getLabel(row.value);
-        } else {
-          // Handle other types if needed
-          return null;
-        }
-      },
     },
     {
       headerName: "Currencies Name",
@@ -177,7 +171,11 @@ const AllCurrencyTable = ({ rerender }) => {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
-        return getLabel(params?.data?.Created?.first_name + " " + params?.data?.Created?.first_name);
+        return getLabel(
+          params?.data?.Created?.first_name +
+          " " +
+          params?.data?.Created?.first_name
+        );
       },
       sortable: true,
       unSortIcon: true,
@@ -244,13 +242,7 @@ const AllCurrencyTable = ({ rerender }) => {
                   </div>
 
                   <Input
-                    onChange={(e) => {
-                      const searchText = e.target.value;
-                        setFilters({
-                          ...filters,
-                          search: searchText,
-                        });
-                    }}
+                    onChange={debounce(handleSearch, 200)}
                     type="search"
                     className="searchConfig"
                     placeholder="Search..."
