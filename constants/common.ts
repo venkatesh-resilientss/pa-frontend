@@ -262,7 +262,7 @@ export const sidebarRoutesMaster = [
       },
       {
         name: "Occupation Codes",
-        path: "/occupation-codes",
+        path: "/OccupationCodes",
       },
       {
         name: "WC Class",
