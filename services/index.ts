@@ -26,3 +26,4 @@ export {default as PurchaseOrderService} from "services/purchaseorders.service"
 export { default as EmployeeService } from "services/employee.service";
 export { default as ProjectTypesService } from "services/projecttypes.service";
 export { default as LegislativesService } from "services/legislatives.service";
+export { default as PaycodesService } from "services/paycodes.service";

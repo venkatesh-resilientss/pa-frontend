@@ -288,3 +288,15 @@ export const EDIT_LEGISLATIVE = (id: any) =>
   `${tenantIdEndpoint}/legislatives/${id}`; //EDIT legislatives
 export const LEGISLATIVE_DETAIL_ENDPOINT = (id: any) =>
   `${tenantIdEndpoint}/legislatives/${id}`;
+
+
+//PAYCODES ENDPOINTS
+
+export const GET_PAYCODES = `${tenantIdEndpoint}/pay-code/?limit=${100}&offset=0`; //pay-code
+export const CREATE_PAYCODE = `${tenantIdEndpoint}/pay-code/`; //Create pay-code
+export const DELETE_PAYCODE = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`; //DELETE pay-code
+export const EDIT_PAYCODE = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`; //EDIT pay-code
+export const PAYCODE_DETAIL_ENDPOINT = (id: any) =>
+  `${tenantIdEndpoint}/pay-code/${id}`;
