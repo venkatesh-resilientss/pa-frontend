@@ -76,7 +76,7 @@ class UsersService extends APIService {
   getProductionsByClient(clientId): Promise<any> {
     return this.get(`${getProductionByClint(clientId)}`)
       .then((res) => {
-        return res?.data;
+        return res?.data?.data;
       })
       .catch((error: any) => {
         throw error?.response?.data;
