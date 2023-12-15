@@ -19,15 +19,19 @@ function AddUser() {
   const { control, handleSubmit, reset, formState: { errors }, watch } = useForm();
   const watchRole = watch('role', '');
   const [showStaffUser, setShowStaffUser] = useState(true) as any;
+  const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
 
 
 
   useEffect(() => {
+    if (watchRole?.label == "Client Admin" || !isCheckedStaffUser) {
+      setClientProductionsList([clientProductionsList[0]])
+    }
     if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
       setIsCheckedStaffUser(false);
       setShowStaffUser(false);
     } else setShowStaffUser(true);
-  }, [watchRole])
+  }, [watchRole, isCheckedStaffUser])
   // const watchRole = watch('productions', '');
 
 
@@ -43,7 +47,7 @@ function AddUser() {
 
   const [userDetails, setUserDetails] = useState() as any;
   const [clientDetails, setClientDetails] = useState(null) as any;
-  const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
+
   const [roleOptions, setRoleOptions] = useState();
   const [loading, setLoading] = useState<any>(false);
   const [clientProductionsList, setClientProductionsList] = useState([

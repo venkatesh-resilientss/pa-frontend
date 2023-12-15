@@ -218,7 +218,7 @@ export const inFields = [
     ph: "Enter Email ID",
     typ: "text",
     vl: "Company.SecondaryContact.EmailID",
-    err: "",
+    err: "Primary and Secondary should not match",
   },
 ];
 

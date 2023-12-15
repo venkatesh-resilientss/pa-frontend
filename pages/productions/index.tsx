@@ -77,6 +77,8 @@ export default function Productions({ router, user }) {
       },
     }),
 
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
+
     valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
     input: (base) => ({ ...base, margin: "0" }),
