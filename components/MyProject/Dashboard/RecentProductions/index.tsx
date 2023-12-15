@@ -72,7 +72,7 @@ function RecentProductions() {
             // Show when no data is available
             <div className="text-center mt-3 nodataAvailable">
               <img
-                src="./no_data_image.png" // Replace with the path to your image
+                src="/no_client_data_available.svg" // Replace with the path to your image
                 alt="No data available"
                 style={{ maxWidth: "100%" }}
               />
@@ -112,7 +112,7 @@ function RecentProductions() {
             // Show when there's search input and no results found
             <div className="text-center mt-3 nodataAvailable">
               <img
-                  src="no_client_data_available.svg"
+                  src="/no_client_data_available.svg"
                   alt="No clients available"
                   style={{ maxWidth: '100%' }}
                 />

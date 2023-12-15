@@ -8,6 +8,7 @@ import helpcenter2 from 'assets/DashboardIcons/helpcenter2.svg'
 import helpcenter3 from 'assets/DashboardIcons/helpcenter3.svg'
 import router from "next/router";
 import moment from 'moment';
+import { AiFillCaretRight } from "react-icons/ai";
 
 // Define your component
 export default function ProductionDashboard() {
@@ -131,7 +132,7 @@ export default function ProductionDashboard() {
               <Card style={{borderRadius: "10px" }} className="p-3">
                 <div className="d-flex justify-content-between">
                 <div>
-                    <h4 className="text-nowrap clientcard_headings">{production.name}</h4>
+                    <h4 className="text-nowrap productionDashboardCard">{production.name}</h4>
                 </div>
                    <div
                   className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
@@ -142,11 +143,12 @@ export default function ProductionDashboard() {
                   <img src="/view_details.svg" alt="" />
                 </div>{" "}
                 <p style={{ fontSize: "14px" }}>View Details</p>
+                <AiFillCaretRight />
               </div>
                 </div>
                 <div className="d-flex justify-content-between mt-2 ">
                     <div>
-                        <p className="fw-600">Payroll Coordinator : {production.PayrollCoordinator}</p>
+                        <p className="fw-600">Production Accountant : {production.PayrollCoordinator}</p>
                     </div>
                     <div>
                         <div>
@@ -157,24 +159,24 @@ export default function ProductionDashboard() {
                  <div className="d-flex justify-content-between mt-4">
                     <div>
                         <div>
-                            <span style={{fontSize:"18px"}}><img src="/budget_allocated.svg"/> Budget Allocated</span>
+                            <span  className="f-18"><img src="/budget_allocated.svg"/> Budget Allocated</span>
                         </div>
                     </div>
                     <div>
                         <div>
-                            <span style={{fontSize:"18px"}}><img src="/budget_spend.svg" alt="" /> Budget Spend</span>
+                            <span className="f-18"><img src="/budget_spend.svg" alt="" /> Budget Spend</span>
                         </div>
                     </div>
                 </div>
-                <div className="d-flex justify-content-between mt-4">
+                <div className="d-flex justify-content-between mt-2">
                     <div>
                         <div>
-                        <p className="fw-600" style={{fontSize:"21px"}}>-</p>
+                        <p className="fw-600 f-21" >$500,000</p>
                         </div>
                     </div>
                     <div>
                         <div>
-                            <p className="fw-600" style={{fontSize:"21px"}}>-</p>
+                            <p className="fw-600 f-21" >$350,190</p>
                         </div>
                     </div>
                  </div>

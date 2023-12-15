@@ -8,8 +8,12 @@ import { useRouter } from "next/router";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { AiFillCaretRight } from "react-icons/ai";
+
 
 export default function ProductionDashboard() {
+
+  
   const router = useRouter();
   const { production_id } = router.query;
   const productionService = new DashboardService();
@@ -107,6 +111,9 @@ export default function ProductionDashboard() {
     },
   ];
 
+
+
+
   return (
     <>
       <div className="rounded mt-3">
@@ -121,13 +128,13 @@ export default function ProductionDashboard() {
             "Total Budget Vs Actual Spending",
             "/total_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.TotalBudget || "0"}</p>
+            <p className="fw-600 f-16">$ {dashboardCards?.TotalBudget || "0"}</p>
           )}
           {createCard(
             "Remaining Budget Allocation",
             "/remaining_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.RemainingBudgetAllocation || "0"}</p>
+            <p className="fw-600">$ {dashboardCards?.RemainingBudgetAllocation || "0"}</p>
           )}
           {createCard(
             "Pending Approval Items",
@@ -136,13 +143,13 @@ export default function ProductionDashboard() {
             <div className="row">
               <div className="col-md-6 text-nowrap">
                 <h6 className="text-center ">Purchase Order</h6>
-                <p className="text-center font-size-16 ">
+                <p className="text-center fw-600  f-16">
                   {dashboardCards?.PendingApprovalItems?.PettyCash || "0"}
                 </p>
               </div>
               <div className="col-md-6">
                 <h6 className="text-center ">Account Payable</h6>
-                <p className="text-center ">
+                <p className="text-center fw-600 f-16">
                   {dashboardCards?.PendingApprovalItems?.AccountPayable || "0"}
                 </p>
               </div>
@@ -162,7 +169,7 @@ export default function ProductionDashboard() {
             <Col>
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="text-nowrap clientcard_headings">
+                  <h4 className="text-nowrap productionDashboardCard">
                     {projectDetails?.name || "-"}
                   </h4>
                 </div>
@@ -179,12 +186,14 @@ export default function ProductionDashboard() {
                     <img src="/view_details.svg" alt="" />
                   </div>{" "}
                   <p style={{ fontSize: "14px" }}>View Details</p>
+                      <AiFillCaretRight />
                 </div>
+                 
               </div>
-              <div className="d-flex justify-content-between mt-2">
+              <div className="d-flex justify-content-between mt-1">
                 <div>
                   <p className="fw-600">
-                    Payroll Coordinator :{" "}
+                    Production Accountant :{" "}
                     {projectDetails?.PayrollCoordinator || "-"}
                   </p>
                 </div>
@@ -204,33 +213,33 @@ export default function ProductionDashboard() {
               <div className="d-flex justify-content-between mt-4">
                 <div>
                   <div>
-                    <span style={{ fontSize: "18px" }}>
+                    <span className="f-18">
                       <img src="/budget_allocated.svg" /> Budget Allocated
                     </span>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <span style={{ fontSize: "18px" }}>
+                    <span className="f-18">
                       <img src="/budget_spend.svg" alt="" /> Budget Spend
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-between mt-3">
+              <div className="d-flex justify-content-between mt-2">
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>0</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }} >$500,000</p>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>0</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }} >$350,190</p>
                   </div>
                 </div>
               </div>
             </Col>
-            <div className="row mt-2">
+            <div className="row mt-4">
               <div className="col-md-4">
                 <h6 className="text-center"> <img
                     src="/production_type.svg"
@@ -238,32 +247,40 @@ export default function ProductionDashboard() {
                     style={{ width: "15px" }}
                   /> Project Type</h6>
                 <p className="text-center fw-600" >
-                  {projectDetails?.projectType?.name || "-"}
+                  {projectDetails?.projectType?.name || "TV Show"}
                 </p>
               </div>
+             
               <div className="col-md-4 text-nowrap">
-                <h6 className="text-center"><img
+                <h6 className="text-center">
+                  <img
                     src="/calender.svg"
                     alt="custom production"
                     style={{ width: "15px" }}
-                  />
-                  Last Payroll Date</h6>
-                <p className="text-center fw-600" >
+                  />{' '} {/* Non-breaking space added here */}
+                  Last Payroll Date
+                </h6>
+                <p className="text-center fw-600">
                   {projectDetails?.LastPayrollDate || "-"}
                 </p>
               </div>
+
               <div className="col-md-4">
-                <h6 className="text-center"><img
-                    src="/Vector.svg"
-                    alt="custom production"
-                    style={{ width: "15px" }}
-                  />Labour Type</h6>
-                <p className="text-center fw-600">
-                  {projectDetails?.LabourType || "-"}
-                </p>
-              </div>
+              <h6 className="text-center">
+                <img
+                  src="/Vector.svg"
+                  alt="custom production"
+                  style={{ width: "15px" }}
+                />{' '} {/* Non-breaking space added here */}
+                Labour Type
+              </h6>
+              <p className="text-center fw-600">
+                {projectDetails?.LabourType || "-"}
+              </p>
             </div>
-            <div className="mt-2">
+
+            </div>
+            <div className="mt-4">
               <p>
                 <img src="/software_subscribed.svg" alt="" /> Softwares
                 Subscribed
@@ -275,6 +292,7 @@ export default function ProductionDashboard() {
           </Card>
         )}
       </div>
+      
       <div
         className="my-1 mt-3 mb-2"
         style={{ fontSize: "18px", fontWeight: "600", color: "#030229" }}

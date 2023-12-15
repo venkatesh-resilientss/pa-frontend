@@ -59,9 +59,7 @@ const ProjectCard = ({ data }) => {
               <Image
                 src={budget}
                 alt=""
-                style={{
-                  width: "12px",
-                }}
+                className="productionBudgetAllocated"
               />
               <div>
                 <div className="f-12">Budget Allocated </div>
