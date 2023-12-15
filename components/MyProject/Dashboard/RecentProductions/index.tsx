@@ -22,7 +22,7 @@ function RecentProductions() {
       dashboardService.getRecentProductions().then((res) => {
         if (res.data) {
           // setRecentProductionsData(res.data);
-          setRecentProductionsData(res.data.slice(0, 3));
+          setRecentProductionsData(res.data.slice(0, 6));
         }
       });
     };

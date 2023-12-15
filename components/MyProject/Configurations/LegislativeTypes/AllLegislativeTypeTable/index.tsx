@@ -24,7 +24,6 @@ const AllLegislativeTypeTable = () => {
     () => legislativesService.getlegislatives()
   );
 
-  console.log('rowData', rowData)
 
   const StateBadge = (props) => {
     const stateDir = {
@@ -42,16 +41,16 @@ const AllLegislativeTypeTable = () => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-          <div
-           onClick={() =>router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
-            className="cursor-pointer"
-            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
-          >
-            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
-          </div>
+        <div
+          onClick={() => router.push(`/configurations/edit-legislative-type/${props.data?.ID}`)}
+          className="cursor-pointer"
+          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+        >
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+        </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-          {/* <div
+        {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -93,7 +92,7 @@ const AllLegislativeTypeTable = () => {
       unSortIcon: true,
       sortable: true,
     },
-   
+
     {
       headerName: "Action",
       field: "id",
@@ -168,17 +167,15 @@ const AllLegislativeTypeTable = () => {
           </CardBody>
         </Card>
       </div>
-      
-        <div className="mt-2">
-          <GridTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-     
-       
+
+      <div className="mt-2">
+        <GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />
+      </div>
     </div>
   );
 };

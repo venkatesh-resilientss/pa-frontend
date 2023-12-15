@@ -23,23 +23,22 @@ const AllpayCodesTable = () => {
     ["LIST_PAYCODES", searchText],
     () => paycodesService.getPaycodes()
   );
- 
-  console.log('rowData', rowData)
 
-    const ActionsButton = (props) => {
+
+  const ActionsButton = (props) => {
     return (
       <div className="d-flex align-items-center gap-2">
         {/* {hasPermission("user_and_role_management", "edit_user") && ( */}
-          <div
-           onClick={() =>router.push(`/configurations/edit-paycode/${props.data?.ID}`)}
-            className="cursor-pointer"
-            style={{ backgroundColor: '#AED8FF',width:"30px",height:"30px", borderRadius:"20px" }}
-          >
-            <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{marginTop:"6px",marginLeft:"8px"}} />
-          </div>
+        <div
+          onClick={() => router.push(`/configurations/edit-paycode/${props.data?.ID}`)}
+          className="cursor-pointer"
+          style={{ backgroundColor: '#AED8FF', width: "30px", height: "30px", borderRadius: "20px" }}
+        >
+          <img src={"/icons/edit_square.svg"} alt="Edit" width={15} style={{ marginTop: "6px", marginLeft: "8px" }} />
+        </div>
         {/* )} */}
         {/* {hasPermission("user_and_role_management", "deactivate_user") && ( */}
-          {/* <div
+        {/* <div
             onClick={() => handleDeleteClick(id)}
             className="cursor-pointer"
             style={{ backgroundColor: '#FCB3B3',width:"30px",height:"30px" , borderRadius:"20px"   }}
@@ -70,7 +69,7 @@ const AllpayCodesTable = () => {
       field: "Code",
       sortable: true,
       resizable: true,
-      width:"200px",
+      width: "200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
@@ -79,14 +78,14 @@ const AllpayCodesTable = () => {
       field: "Description",
       sortable: true,
       resizable: true,
-      width:"200px",
+      width: "200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Short Description",
       field: "ShortName",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -96,7 +95,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "Factor",
       field: "Factor",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -106,7 +105,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "H/N/U/S",
       field: "Hnus",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -116,7 +115,7 @@ const AllpayCodesTable = () => {
     {
       headerName: " TAXABLE",
       field: "Taxable",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -132,7 +131,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "WORK Time",
       field: "WorkTime",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -147,7 +146,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "Over Time",
       field: "OverTime",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -162,7 +161,7 @@ const AllpayCodesTable = () => {
     {
       headerName: " SUBJECT TO WC",
       field: "SubjectToWc",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -178,7 +177,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "SUBJECT TO PHW",
       field: "SubjectToPhw",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -193,7 +192,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "STRAIGHT TIME",
       field: "StraightTime",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -210,7 +209,7 @@ const AllpayCodesTable = () => {
     {
       headerName: " ALLOWANCE",
       field: "Allowance",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -227,7 +226,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "SICK ACCRUAL",
       field: "SickAccrual",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -245,7 +244,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "SICK TIME WORKED",
       field: "SickWorked",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -262,7 +261,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "VAC ACCRUAL",
       field: "VacationAccrual",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -281,7 +280,7 @@ const AllpayCodesTable = () => {
       field: "VacationWorked",
       sortable: true,
       resizable: true,
-      width:"200px",
+      width: "200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
@@ -296,7 +295,7 @@ const AllpayCodesTable = () => {
       headerName: "HOL ACCRUAL",
       field: "HolAccrual",
       sortable: true,
-      width:"200px",
+      width: "200px",
 
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -312,7 +311,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "H-N-W",
       field: "Hnw",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -329,7 +328,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "HOL WORKED",
       field: "HolWorked",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -347,7 +346,7 @@ const AllpayCodesTable = () => {
       headerName: "ADD TO PREM OT CALC",
       field: "AddToPremOffCalc",
       sortable: true,
-      width:"200px",
+      width: "200px",
 
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -363,7 +362,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "CATEGORY",
       field: "Description",
-      width:"200px",
+      width: "200px",
 
       sortable: true,
       resizable: true,
@@ -373,7 +372,7 @@ const AllpayCodesTable = () => {
     {
       headerName: "GL CODE",
       field: "GlCodeID",
-      width:"200px",
+      width: "200px",
       sortable: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
@@ -386,14 +385,14 @@ const AllpayCodesTable = () => {
       sortable: true,
       unSortIcon: true,
       resizable: true,
-      width:"200px",
+      width: "200px",
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
     },
     {
       headerName: "Action",
       field: "id",
-      width:"200px",
+      width: "200px",
       cellRenderer: ActionsButton,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -477,17 +476,17 @@ const AllpayCodesTable = () => {
           </CardBody>
         </Card>
       </div>
-      
-        <div className="mt-2">
-          <GridTable
-            rowData={rowData}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-     
-       
+
+      <div className="mt-2">
+        <GridTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pageSize={10}
+          searchText={searchText}
+        />
+      </div>
+
+
     </div>
   );
 };
