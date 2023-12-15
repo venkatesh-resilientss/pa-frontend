@@ -75,7 +75,7 @@ const AllOccupationCodesTable = () => {
     },
     {
       headerName: "WC Class",
-      field: "wcClassID",
+      field: "WcClass.Code",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",
@@ -91,7 +91,7 @@ const AllOccupationCodesTable = () => {
 
     {
       headerName: "OFF Production",
-      field: "offProduction",
+      field: "OffProduction",
       sortable: true,
       resizable: true,
       headerClass: "custom-header-class",

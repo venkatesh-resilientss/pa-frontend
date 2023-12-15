@@ -39,13 +39,12 @@ function EditOccupationCodes() {
 
   useEffect(() => {
     if (!occupationcodeData) return;
-    console.log('occupationcodeData', occupationcodeData)
     occupationcodeData?.Name && setValue("name", occupationcodeData?.Name);
     occupationcodeData?.Code && setValue("code", occupationcodeData?.Code);
     occupationcodeData?.Description &&
       setValue("description", occupationcodeData?.Description);
-    occupationcodeData?.EmployeeType && setValue("EmployeeTypeID", {value: occupationcodeData?.EmployeeType.ID, label: occupationcodeData?.EmployeeType.Code});
-    occupationcodeData?.WcClass && setValue("WcClassID", {value: occupationcodeData?.WcClass.ID, label: occupationcodeData?.WcClass.Code});
+    occupationcodeData?.EmployeeType && setValue("employeeTypeID", {value: occupationcodeData?.EmployeeType?.ID, label: occupationcodeData?.EmployeeType?.Code});
+    occupationcodeData?.WcClass && setValue("wcClassID", {value: occupationcodeData?.WcClass?.ID, label: occupationcodeData?.WcClass?.Code});
     occupationcodeData?.offProduction && setValue("offProduction", occupationcodeData?.offProduction);
     setActiveStatus(occupationcodeData?.IsActive);
   }, [occupationcodeData]);

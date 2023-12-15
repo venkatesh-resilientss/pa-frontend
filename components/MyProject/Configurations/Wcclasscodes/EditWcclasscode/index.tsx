@@ -119,9 +119,9 @@ function EditWcclasscode() {
   useEffect(() => {
     if (!wcClassCode) return;
 
-    wcClassCode?.State && setValue("StateID", {value: wcClassCode?.State.ID, label: wcClassCode?.State.Code});
-    wcClassCode?.WcClass && setValue("WcClassID", {value: wcClassCode?.WcClass.ID, label: wcClassCode?.WcClass.Code});
-    wcClassCode?.WcCode && setValue("WcCode", wcClassCode?.WcCode);
+    wcClassCode?.State && setValue("stateID", {value: wcClassCode?.State.ID, label: wcClassCode?.State.Code});
+    wcClassCode?.WcClass && setValue("wcClassID", {value: wcClassCode?.WcClass.ID, label: wcClassCode?.WcClass.Code});
+    wcClassCode?.WcCode && setValue("wcCode", wcClassCode?.WcCode);
 
     wcClassCode?.Rate && setValue("rate", wcClassCode?.Rate);
     wcClassCode?.HourlyRate && setValue("hourlyRate", wcClassCode?.HourlyRate);
@@ -136,8 +136,8 @@ function EditWcclasscode() {
     data.hourlyRate = parseInt(data.hourlyRate)
     data.rate = parseInt(data.rate)
     data.subjectWages = parseInt(data.subjectWages)
-
-    console.log('data', data)
+    data.stateID = data.stateID.value
+    data.wcClassID = data.wcClassID.value
 
     setIsSaving(true)
     wcclasscodeService
