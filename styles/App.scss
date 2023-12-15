@@ -85,7 +85,7 @@ input.searchProduction {
   margin-right: 10px;
 }
 input.searchProduction1 {
-  width: 215px !important;
+  width: 210px !important;
   height: 35px !important;
   display: block;
   padding: 9px 4px 9px 40px;
@@ -281,15 +281,27 @@ input::placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.ressl {
+.popover-arrow{
+  display: none !important;
+}
+.popover-side{
+  max-width: 220px;
+}
+.ressl{
   color: #777777;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.01em;
   text-align: center;
 }
-
+.ressl1{
+  color: #777777;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-align: center;
+  
+}
 .clicked {
   background-color: #d0f2ff;
   padding-right: 16px; /* Adjust this value based on the width of your tickmark image */

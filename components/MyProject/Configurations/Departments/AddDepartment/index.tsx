@@ -5,6 +5,7 @@ import { DepartmentsService } from "services";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 
 function AddDepartment() {
   const router = useRouter();
@@ -19,12 +20,12 @@ function AddDepartment() {
   } = useForm();
 
   const onSubmit = (data) => {
-    const {clientID} = getSessionVariables();
+    const { clientID } = getSessionVariables();
     const backendFormat = {
-      name: data.departmentname,
+      name: getLabel(data.departmentname),
       code: data.departmentcode,
       description: data.description,
-      clientID
+      clientID,
     };
 
     departmentService
@@ -35,10 +36,12 @@ function AddDepartment() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Department');
+        toast.error(
+          error?.error || error?.Message || "Unable to add Department"
+        );
       });
   };
-  
+
   return (
     <div className="mt-4 configuration-add">
       <p className="title-head">All Departments</p>

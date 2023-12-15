@@ -5,6 +5,7 @@ import { SetsService } from "services";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 function AddSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
@@ -18,13 +19,13 @@ function AddSet() {
   const setsService = new SetsService();
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.setname,
+      name: getLabel(data.setname),
       code: data.setcode,
       description: data.description,
       clientID,
-      projectID
+      projectID,
     };
 
     setsService
@@ -93,7 +94,9 @@ function AddSet() {
         {" "}
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Set Name <span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Set Name <span className="required">*</span>
+            </Label>
             <Controller
               name="setname"
               rules={setsValidationRules.name}
@@ -116,7 +119,9 @@ function AddSet() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Set Code <span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Set Code <span className="required">*</span>
+            </Label>
             <Controller
               name="setcode"
               rules={setsValidationRules.code}

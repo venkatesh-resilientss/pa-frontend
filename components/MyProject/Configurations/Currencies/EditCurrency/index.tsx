@@ -6,14 +6,21 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 import { CurrencyService } from "services";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 function EditCurrency() {
   const router = useRouter();
   const currencyValidationRules = formValidationRules.currencies;
   const { id } = router.query;
   const currencyService = new CurrencyService();
-  const [isBaseCurrency,setIsBaseCurrency] = useState(false);
+  const [isBaseCurrency, setIsBaseCurrency] = useState(false);
   const fetchCurrencyDetails = (id) => currencyService.currencyDetails(id);
-
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const [editMode, setEditMode] = useState(false);
   const { data: currencyData } = useSWR(
     id ? ["CURRENCY_DETAILS", id] : null,
     () => fetchCurrencyDetails(id)
@@ -32,8 +39,10 @@ function EditCurrency() {
 
     currencyData?.Name && setValue("currencyname", currencyData?.Name);
     currencyData?.Code && setValue("currencycode", currencyData?.Code);
-    currencyData?.CurrencySymbol && setValue("currencysymbol", currencyData?.CurrencySymbol);
-    currencyData?.CurrentRate && setValue("currentRate",currencyData?.CurrentRate)
+    currencyData?.CurrencySymbol &&
+      setValue("currencysymbol", currencyData?.CurrencySymbol);
+    currencyData?.CurrentRate &&
+      setValue("currentRate", currencyData?.CurrentRate);
     currencyData?.Description &&
       setValue("description", currencyData?.Description);
 
@@ -46,10 +55,10 @@ function EditCurrency() {
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
-
+  const [isLoading, setLoader] = useState(false);
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.currencyname,
+      name: getLabel(data.currencyname),
       code: data.currencycode,
       currencySymbol: data.currencysymbol,
       currentRate: data.currentRate,
@@ -57,18 +66,21 @@ function EditCurrency() {
       BaseCurrency: isBaseCurrency,
       isActive: activeStatus,
     };
-
+    setLoader(true);
     currencyService
       .editCurrency(id, backendFormat)
       .then(() => {
         toast.success("Currency Edited successfully");
         mutate(currencyMutate());
-        router.push('/configurations/currencies');
-
+        router.push("/configurations/currencies");
         reset();
+        setLoader(false);
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit Currency');
+        toast.error(
+          error?.error || error?.Message || "Unable to edit Currency"
+        );
+        setLoader(false);
       });
   };
 
@@ -79,7 +91,10 @@ function EditCurrency() {
 
         <div className="d-flex justify-content-between">
           <div className="title">Edit Currency</div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div
+            className="d-flex me-2 align-items-center"
+            style={{ gap: "10px" }}
+          >
             <Button
               onClick={() => router.back()}
               style={{
@@ -93,17 +108,19 @@ function EditCurrency() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
+            {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
           </div>
         </div>
 
@@ -129,6 +146,7 @@ function EditCurrency() {
                     invalid={errors.currencycode && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -154,6 +172,7 @@ function EditCurrency() {
                     invalid={errors.currencyname && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -179,6 +198,7 @@ function EditCurrency() {
                     invalid={errors.currencyname && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -200,16 +220,15 @@ function EditCurrency() {
                     invalid={errors.isBaseCurrency && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                     checked={isBaseCurrency}
-                    onChange={(e)=>{
-                      setIsBaseCurrency(e.target.checked)
+                    onChange={(e) => {
+                      setIsBaseCurrency(e.target.checked);
                     }}
                   />
                 )}
               />
-              <Label className="form-lable-font mb-0">
-                Is Base Currency
-              </Label>
+              <Label className="form-lable-font mb-0">Is Base Currency</Label>
             </div>
           </Col>
           <Col xl="5">
@@ -228,6 +247,7 @@ function EditCurrency() {
                     invalid={errors.currentRate && true}
                     style={{ fontSize: "12px", fontWeight: "400" }}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -256,6 +276,7 @@ function EditCurrency() {
                     placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -283,6 +304,7 @@ function EditCurrency() {
                   onChange={() => {
                     setActiveStatus(true);
                   }}
+                  disabled={!editMode}
                 />
                 <div>Active</div>
               </div>
@@ -295,6 +317,7 @@ function EditCurrency() {
                   onChange={() => {
                     setActiveStatus(false);
                   }}
+                  disabled={!editMode}
                 />
                 <div>In-Active</div>
               </div>

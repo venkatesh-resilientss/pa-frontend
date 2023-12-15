@@ -33,10 +33,10 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
   const router = useRouter();
   // const [searchText, setSearchText] = useState("");
 
-  const [tableData, setTableData] = useState() as any
-  const [loading, setLoading] = useState() as any
-  const [pageNumber, setPageNumber] = useState(1) as any
-  const [pageLimit] = useState(10) as any
+  const [tableData, setTableData] = useState() as any;
+  const [loading, setLoading] = useState() as any;
+  const [pageNumber, setPageNumber] = useState(1) as any;
+  const [pageLimit] = useState(10) as any;
   const [sessionData, setSessionData] = useState() as any;
 
   const hasCreateConfiguration = hasPermission(
@@ -48,7 +48,6 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
     "edit_configuration"
   );
   const dispatch = useDispatch();
-
 
   const intervalIdRef = useRef(null);
   const attemptsCountRef = useRef(0);
@@ -81,29 +80,31 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
     return () => clearInterval(intervalIdRef.current);
   }, []);
 
-
   useEffect(() => {
     if (sessionData) {
-      setLoading(true)
+      setLoading(true);
       // const pageNumber = 1
-      const offfset = (pageNumber - 1) * pageLimit
+      const offfset = (pageNumber - 1) * pageLimit;
       const queryParams = {
         search: searchText,
         pageLimit: pageLimit,
         offset: offfset,
       };
-      const payload = { clientId: sessionData.clientID, projectId: sessionData.projectID };
-      setsService.getSets(queryParams, payload).then((response) => {
-        setTableData(response)
-        setLoading(false)
-
-      }).catch((e) => {
-        console.error(e)
-      })
+      const payload = {
+        clientId: sessionData.clientID,
+        projectId: sessionData.projectID,
+      };
+      setsService
+        .getSets(queryParams, payload)
+        .then((response) => {
+          setTableData(response);
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
-
-  }, [sessionData, searchText, pageNumber])
-
+  }, [sessionData, searchText, pageNumber]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -174,6 +175,18 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (row: any) => {
+        if (typeof row.value === "number") {
+          // If it's a number, just display it as is
+          return <>{row.value}</>;
+        } else if (typeof row.value === "string") {
+          // If it's a string, display the uppercase version
+          return <>{row.value.charAt(0).toUpperCase() + row.value.slice(1)}</>;
+        } else {
+          // Handle other types if needed
+          return null;
+        }
+      },
     },
     {
       headerName: "Set Name",
@@ -182,6 +195,12 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Name.charAt(0).toUpperCase() +
+          params?.data?.Name.slice(1)
+        );
+      },
     },
     {
       headerName: "Description",
@@ -190,6 +209,12 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
+      cellRenderer: (params) => {
+        return (
+          params?.data?.Description.charAt(0).toUpperCase() +
+          params?.data?.Description.slice(1)
+        );
+      },
     },
     {
       headerName: "Created By",
@@ -197,9 +222,11 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       cellRenderer: (params) => {
         return (
           <div className="f-ellipsis">
-            {(params?.data?.Created?.first_name || "") +
+            {(params?.data?.Created?.first_name.charAt(0).toUpperCase() +
+              params?.data?.Created?.first_name?.slice(1) || "") +
               " " +
-              (params?.data?.Created?.last_name || "")}
+              (params?.data?.Created?.last_name.charAt(0).toUpperCase() +
+                params?.data?.Created?.last_name?.slice(1) || "")}
           </div>
         );
       },

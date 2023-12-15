@@ -7,6 +7,7 @@ import AsyncSelect from "react-select/async";
 import useSWR from "swr";
 import { selectStyles } from "@/constants/common";
 import { formValidationRules } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
 function AddState() {
   const router = useRouter();
   const statesValidationRules = formValidationRules.states;
@@ -25,7 +26,7 @@ function AddState() {
       search: "",
       limit: 25,
       offset: 0,
-      is_active: true
+      is_active: true,
     })
   );
 
@@ -42,7 +43,7 @@ function AddState() {
 
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.Statename,
+      name: getLabel(data.Statename),
       code: data.Statecode,
       Description: data.description,
       CountryID: data.country?.value,
@@ -56,7 +57,7 @@ function AddState() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add State');
+        toast.error(error?.error || error?.Message || "Unable to add State");
       });
   };
 
@@ -114,7 +115,9 @@ function AddState() {
         >
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">State Name <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                State Name <span className="required">*</span>
+              </Label>
               <Controller
                 name="Statename"
                 control={control}
@@ -138,7 +141,9 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="fform-lable-font">State Code <span className="required">*</span></Label>
+              <Label className="fform-lable-font">
+                State Code <span className="required">*</span>
+              </Label>
               <Controller
                 name="Statecode"
                 rules={statesValidationRules.code}
@@ -162,7 +167,9 @@ function AddState() {
 
           <Col xl="4">
             <div className="mb-1">
-              <Label className="form-lable-font">Country <span className="required">*</span></Label>
+              <Label className="form-lable-font">
+                Country <span className="required">*</span>
+              </Label>
               <Controller
                 name="country"
                 control={control}

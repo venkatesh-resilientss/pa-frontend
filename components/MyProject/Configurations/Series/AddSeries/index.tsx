@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { SeriesService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 function AddSeries() {
   const router = useRouter();
   const seriesValidationRules = formValidationRules.series;
@@ -17,14 +18,14 @@ function AddSeries() {
   } = useForm();
 
   const onSubmit = (data) => {
-    const {clientID,projectID} = getSessionVariables();
+    const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
-      name: data.seriesname,
+      name: getLabel(data.seriesname),
       code: data.Seriescode,
       description: data.description,
       is_active: false,
       clientID,
-      projectID
+      projectID,
     };
 
     seriesService
@@ -35,7 +36,7 @@ function AddSeries() {
         router.back();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Series');
+        toast.error(error?.error || error?.Message || "Unable to add Series");
       });
   };
 
@@ -93,7 +94,9 @@ function AddSeries() {
           >
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Name <span className="required">*</span></Label>
+                <Label className="form-lable-font">
+                  Series Name <span className="required">*</span>
+                </Label>
                 <Controller
                   name="seriesname"
                   rules={seriesValidationRules.name}
@@ -117,7 +120,9 @@ function AddSeries() {
 
             <Col xl="4">
               <div className="mb-1">
-                <Label className="form-lable-font">Series Code <span className="required">*</span></Label>
+                <Label className="form-lable-font">
+                  Series Code <span className="required">*</span>
+                </Label>
                 <Controller
                   name="Seriescode"
                   rules={seriesValidationRules.code}

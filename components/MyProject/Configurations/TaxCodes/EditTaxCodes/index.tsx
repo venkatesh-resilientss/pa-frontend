@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import AsyncSelect from "react-select/async";
 import { selectStyles } from "@/constants/common";
+import { getLabel } from "@/commonFunctions/common";
 
 function EditTaxCode() {
   const router = useRouter();
@@ -39,20 +40,28 @@ function EditTaxCode() {
     taxcodesData?.Name && setValue("taxcodename", taxcodesData.Name);
     const taxCodeCountry = {
       value: taxcodesData.Country.ID,
-      label: taxcodesData.Country.Name
-    }
+      label: taxcodesData.Country.Name,
+    };
     setValue("country", taxCodeCountry);
     setActiveStatus(taxcodesData?.IsActive);
   }, [taxcodesData]);
 
   const { mutate: taxCodeMutate } = useSWR("LIST_TAXCODES", () =>
-    taxCodeService.getTaxCodes({ search: "", limit: 25, offset: 0, is_active: true })
+    taxCodeService.getTaxCodes({
+      search: "",
+      limit: 25,
+      offset: 0,
+      is_active: true,
+    })
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
     countryService.getCountries({
-      search: "", limit: 25, offset: 0, is_active: true
+      search: "",
+      limit: 25,
+      offset: 0,
+      is_active: true,
     })
   );
 
@@ -68,11 +77,11 @@ function EditTaxCode() {
   };
   const onSubmit = (data) => {
     const backendFormat = {
-      name: data.taxcodename,
+      name: getLabel(data.taxcodename),
       code: data.taxcode,
       description: data.description,
       countryID: parseInt(data.country.value),
-      IsActive : activeStatus
+      IsActive: activeStatus,
     };
 
     taxCodeService
@@ -80,12 +89,12 @@ function EditTaxCode() {
       .then(() => {
         toast.success("TaxCode Edited successfully");
         mutate(taxCodeMutate());
-        router.push('/configurations/taxcodes');
+        router.push("/configurations/taxcodes");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit TaxCode');
+        toast.error(error?.error || error?.Message || "Unable to edit TaxCode");
       });
   };
 
@@ -141,7 +150,9 @@ function EditTaxCode() {
       >
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code<span className="required">*</span> </Label>
+            <Label className="form-lable-font">
+              Tax Code<span className="required">*</span>{" "}
+            </Label>
             <Controller
               name="taxcode"
               rules={taxCodeValidationRules.code}
@@ -164,7 +175,9 @@ function EditTaxCode() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Tax Code Name<span className="required">*</span> </Label>
+            <Label className="form-lable-font">
+              Tax Code Name<span className="required">*</span>{" "}
+            </Label>
             <Controller
               name="taxcodename"
               rules={taxCodeValidationRules.name}
@@ -187,7 +200,9 @@ function EditTaxCode() {
         </Col>
         <Col xl="4">
           <div className="mb-1">
-            <Label className="form-lable-font">Country <span className="required">*</span></Label>
+            <Label className="form-lable-font">
+              Country <span className="required">*</span>
+            </Label>
             <Controller
               name="country"
               control={control}

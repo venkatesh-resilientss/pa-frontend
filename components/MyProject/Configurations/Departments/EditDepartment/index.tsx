@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { Controller, useForm } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { getLabel } from "@/commonFunctions/common";
 
 function EditDepartment() {
   const router = useRouter();
@@ -27,7 +28,6 @@ function EditDepartment() {
     reset,
   } = useForm();
 
-  
   useEffect(() => {
     if (!departmentsData) return;
 
@@ -44,43 +44,36 @@ function EditDepartment() {
   // const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive ? 'active' : 'inactive');
   const [activeStatus, setActiveStatus] = useState(departmentsData?.IsActive);
   const onSubmit = (data) => {
-    const {clientID} = getSessionVariables();
+    const { clientID } = getSessionVariables();
     const backendFormat = {
-      name: data.name,
+      name: getLabel(data.name),
       description: data.description,
       code: data.code,
       isActive: activeStatus,
-      clientID
+      clientID,
     };
 
     departmentService
       .editDepartment(id, backendFormat)
       .then(() => {
         toast.success("Department Edited successfully");
-        router.push('/configurations/departments');
+        router.push("/configurations/departments");
 
         reset();
       })
       .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to edit Department');
+        toast.error(
+          error?.error || error?.Message || "Unable to edit Department"
+        );
       });
   };
 
   return (
     <div className="mt-4 configuration-add">
-      <div
-        className="title-sub"
-        
-      >
-        All Departments
-      </div>
+      <div className="title-sub">All Departments</div>
 
       <div className="d-flex justify-content-between">
-        <div
-          className="title"
-        >
-          Edit Department
-        </div>
+        <div className="title">Edit Department</div>
         <div className="d-flex me-2 " style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}

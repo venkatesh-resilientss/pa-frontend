@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Modal, Button } from "react-bootstrap";
+import {
+  Card,
+  Image,
+  Modal,
+  OverlayTrigger,
+  Popover,
+  Tooltip,
+  Button,
+} from "react-bootstrap";
 
 import {
   sidebarRoutesMaster,
   sidebarRoutesNonStaff,
   sidebarRoutesProduction,
 } from "constants/common";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import { Card, Image } from "react-bootstrap";
 import { AuthService, ClientsService } from "services";
 import { Input } from "reactstrap";
 import useSWR from "swr";
@@ -23,7 +28,7 @@ const Sidebar = ({ props }) => {
     if (!showSidebar && childRoute) handleDropDownChange(parentRoute);
     setSidebar(!showSidebar);
     if (showSidebar) {
-      setProductionList(false);
+      // setProductionList(false);
       setSelectedProduction();
     }
   };
@@ -253,7 +258,7 @@ const Sidebar = ({ props }) => {
                 className="d-flex gap-2"
                 href={
                   clickedItemIndex
-                    ? `/production/${temp1?.ID}/dashboard`
+                    ? `/productions/${temp1?.ID}/dashboard`
                     : route.children
                     ? ""
                     : route.path
@@ -350,13 +355,134 @@ const Sidebar = ({ props }) => {
       </div>
     );
   };
+
+  const popover = (
+    <Popover id="popover-contained" className="w-100 popover-side">
+      <Popover.Body className="p-0">
+        <div>
+          {productionList ? (
+            <>
+              <div className="container cursor-pointer p-0">
+                <div
+                  className="d-flex align-items-center mt-2 flex-row"
+                  onClick={() => {
+                    setProductionList(false);
+                    setSelectedProduction();
+                    setClickedItemIndex(null);
+                    setSearchText("");
+                    clearProductionSelection();
+                  }}
+                >
+                  <Image
+                    src="/home.svg"
+                    alt="project"
+                    width="20"
+                    height="24"
+                    className="ms-2 cursor-pointer me-2"
+                  />
+                  <div className="d-flex align-items-start ms-2">
+                    <p
+                      id="clicked"
+                      className="home cursor-pointer"
+                      onClick={() => {
+                        setProductionList(false);
+                        setSelectedProduction();
+                        setClickedItemIndex(null);
+                        setSearchText("");
+                        clearProductionSelection();
+                      }}
+                    >
+                      <div
+                        onClick={() => {
+                          // Redirect to the dashboard when clicking on "HOME"
+                          router.push("/dashboard");
+                        }}
+                      >
+                        Home
+                      </div>
+                    </p>
+                  </div>
+                </div>
+                <Input
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="search"
+                  className="searchProduction1 mt-2 ms-1 cursor-pointer w-100 mx-0"
+                  placeholder="Search Production"
+                  style={{ height: "38px" }}
+                />
+                {productionData ? (
+                  <>
+                    {productionData?.map((item: any, index: any) => {
+                      const isClicked = index === clickedItemIndex;
+                      return (
+                        <div
+                          key={index}
+                          className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
+                            isClicked ? " clicked" : ""
+                          }`}
+                          onClick={() => handleItemClick(item, index)}
+                        >
+                          <img
+                            className="rounded-circle cursor-pointer me-1 ms-2"
+                            src={item.img || getPlaceholderImage(item.Name)}
+                            width="22"
+                            height="22"
+                            alt="avatar"
+                            key={index}
+                          />
+                          <div className="d-flex flex-column">
+                            <div className="d-flex align-items-start">
+                              <p
+                                className={`home cursor-pointer mt-1 ms-2 ${
+                                  item?.Name.length > 5 ? "ellipsis" : ""
+                                }`}
+                              >
+                                {item.Name}
+                              </p>
+                            </div>
+                            <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
+                              <p className="ressl ellipsis">
+                                {item.Client.Name
+                                  ? item.Client.Name
+                                  : item.Description}
+                              </p>
+                            </div>
+                          </div>
+                          {isClicked && (
+                            <img
+                              key={index}
+                              className="me-2 cursor-pointer"
+                              src="/tick.svg"
+                              alt="tickmark"
+                              width="16"
+                              height="16"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    <div className="d-flex align-items-center mb-2 justify-content-center">
+                      <p className="ressl1">No productions found</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
   return (
     <div
-      className={`d-flex flex-column sidebar justify-content-between ${
+      className={`d-flex flex-column sidebar align-items-between bd-highlight ${
         showSidebar ? "" : "minimized"
       }`}
     >
-      <div className="">
+      <div className="bd-highlight">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
           <div>
             {showSidebar ? (
@@ -413,73 +539,49 @@ const Sidebar = ({ props }) => {
             className="sidenavDropdown"
             onClick={() => {
               if (productionList) {
-                setProductionList(false);
-                // setSelectedProduction();
-                // setClickedItemIndex(null);
+                // setProductionList(false);
                 setSearchText("");
-                // clearProductionSelection();
               } else {
                 setProductionList(true);
               }
             }}
           >
-            {selectedProduction ? (
-              <div
-                className="d-flex align-items-center cursor-pointer flex-row"
-                onClick={() => {
-                  setSearchText("");
-                  // clearProductionSelection();
-                }}
-              >
-                <div className="d-flex align-items-center justify-content-center">
-                  <Image
-                    src="/home.svg"
-                    alt="project"
-                    width="30"
-                    height="35"
-                    className="ms-2 me-2 cursor-pointer"
-                  />
-                  <div className="text-container text-center">
-                    <div className="d-flex align-items-start">
-                      <p className="home mt-1 cursor-pointer ellipsis">
-                        {selectedProduction?.Name}
-                      </p>
-                    </div>
-                    <div className="d-flex mt-1 mb-1 align-items-start">
-                      <p className="ressl cursor-pointer">
-                        {selectedProduction?.Client?.Name
-                          ? selectedProduction?.Client?.Name
-                          : selectedProduction?.Description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <Image
-                  src="/chevron-down.svg"
-                  alt="project"
-                  width="20"
-                  height="24"
-                  className="ms-auto me-2 cursor-pointer"
-                />
-              </div>
-            ) : (
-              showSidebar && (
-                <div className="d-flex align-items-center flex-row">
-                  <Image
-                    src="/home.svg"
-                    alt="project"
-                    width="30"
-                    height="35"
-                    className="ms-2 me-2"
-                  />
-                  <div className="d-flex flex-column cursor-pointer">
-                    <div className="d-flex align-items-start">
-                      <p className="home mt-1 cursor-pointer">Home</p>
-                    </div>
-                    <div className="d-flex mb-1 align-items-start">
-                      <p className="ressl cursor-pointer">
-                        Resilient Software Solutions
-                      </p>
+            <OverlayTrigger
+              rootClose
+              trigger="click"
+              placement="bottom"
+              overlay={popover}
+              transition
+            >
+              {selectedProduction ? (
+                <div
+                  className="d-flex align-items-center cursor-pointer flex-row"
+                  onClick={() => {
+                    setSearchText("");
+                    // clearProductionSelection();
+                  }}
+                >
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Image
+                      src="/home.svg"
+                      alt="project"
+                      width="30"
+                      height="35"
+                      className="ms-2 me-2 cursor-pointer"
+                    />
+                    <div className="text-container text-center">
+                      <div className="d-flex align-items-start">
+                        <p className="home mt-1 cursor-pointer ellipsis">
+                          {selectedProduction?.Name}
+                        </p>
+                      </div>
+                      <div className="d-flex mt-1 mb-1 align-items-start">
+                        <p className="ressl cursor-pointer">
+                          {selectedProduction?.Client?.Name
+                            ? selectedProduction?.Client?.Name
+                            : selectedProduction?.Description}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <Image
@@ -487,126 +589,45 @@ const Sidebar = ({ props }) => {
                     alt="project"
                     width="20"
                     height="24"
-                    className="ms-auto cursor-pointer me-3"
+                    className="ms-auto me-2 cursor-pointer"
                   />
                 </div>
-              )
-            )}
+              ) : (
+                showSidebar && (
+                  <div className="d-flex align-items-center flex-row">
+                    <Image
+                      src="/home.svg"
+                      alt="project"
+                      width="30"
+                      height="35"
+                      className="ms-2 me-2"
+                    />
+                    <div className="d-flex flex-column cursor-pointer">
+                      <div className="d-flex align-items-start">
+                        <p className="home mt-1 cursor-pointer">Home</p>
+                      </div>
+                      <div className="d-flex mb-1 align-items-start">
+                        <p className="ressl cursor-pointer">
+                          Resilient Software Solutions
+                        </p>
+                      </div>
+                    </div>
+                    <Image
+                      src="/chevron-down.svg"
+                      alt="project"
+                      width="20"
+                      height="24"
+                      className="ms-auto cursor-pointer me-3"
+                    />
+                  </div>
+                )
+              )}
+            </OverlayTrigger>
           </div>
         )}
-
-        {productionList ? (
-          <>
-            <div className="container cursor-pointer p-0">
-              <div
-                className="d-flex align-items-center mt-2 flex-row"
-                onClick={() => {
-                  setProductionList(false);
-                  setSelectedProduction();
-                  setClickedItemIndex(null);
-                  setSearchText("");
-                  clearProductionSelection();
-                }}
-              >
-                <Image
-                  src="/home.svg"
-                  alt="project"
-                  width="20"
-                  height="24"
-                  className="ms-2 cursor-pointer me-2"
-                />
-                <div className="d-flex align-items-start ms-2">
-                  <p
-                    id="clicked"
-                    className="home cursor-pointer"
-                    onClick={() => {
-                      setProductionList(false);
-                      setSelectedProduction();
-                      setClickedItemIndex(null);
-                      setSearchText("");
-                      clearProductionSelection();
-                    }}
-                  >
-                    <div
-                      onClick={() => {
-                        // Redirect to the dashboard when clicking on "HOME"
-                        router.push("/dashboard");
-                      }}
-                    >
-                      Home
-                    </div>
-                  </p>
-                </div>
-              </div>
-              <Input
-                onChange={(e) => setSearchText(e.target.value)}
-                type="search"
-                className="searchProduction1 mt-2 ms-1 cursor-pointer w-100 mx-0"
-                placeholder="Search Production"
-                style={{ height: "38px" }}
-              />
-              {productionData ? (
-                <>
-                  {productionData?.map((item: any, index: any) => {
-                    const isClicked = index === clickedItemIndex;
-                    return (
-                      <div
-                        key={index}
-                        className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
-                          isClicked ? " clicked" : ""
-                        }`}
-                        onClick={() => handleItemClick(item, index)}
-                      >
-                        <img
-                          className="rounded-circle cursor-pointer me-1 ms-2"
-                          src={item.img || getPlaceholderImage(item.Name)}
-                          width="22"
-                          height="22"
-                          alt="avatar"
-                          key={index}
-                        />
-                        <div className="d-flex flex-column">
-                          <div className="d-flex align-items-start">
-                            <p
-                              className={`home cursor-pointer mt-1 ms-2 ${
-                                item?.Name.length > 5 ? "ellipsis" : ""
-                              }`}
-                            >
-                              {item.Name}
-                            </p>
-                          </div>
-                          <div className="d-flex mb-1 mt-1 ms-2 cursor-pointer align-items-start">
-                            <p className="ressl ellipsis">
-                              {item.Client.Name
-                                ? item.Client.Name
-                                : item.Description}
-                            </p>
-                          </div>
-                        </div>
-                        {isClicked && (
-                          <img
-                            key={index}
-                            className="me-2 cursor-pointer"
-                            src="/tick.svg"
-                            alt="tickmark"
-                            width="16"
-                            height="16"
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  <div className="d-flex align-items-center mb-2 justify-content-center">
-                    <p className="ressl">No productions found</p>
-                  </div>
-                </>
-              )}
-            </div>
-          </>
-        ) : userData?.data?.IsStaffUser ? (
+      </div>
+      <div className="bd-highlight ms-1">
+        {userData?.data?.IsStaffUser ? (
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
@@ -708,7 +729,7 @@ const Sidebar = ({ props }) => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bottom-bar mb-2">
+      <div className="bottom-bar mb-2 ms-1 mt-auto bd-highlight">
         <hr />
         {/* Help Button */}
         <div className="d-flex py-2 align-items-center my-1 select-btn">
@@ -819,7 +840,7 @@ const Sidebar = ({ props }) => {
               handleProductionSelection(temp1);
               sessionStorage.setItem("clientid", temp1?.Client?.ID);
               sessionStorage.setItem("projectid", temp1?.ID);
-              router.push(`/production/${temp1.ID}/dashboard`);
+              router.push(`/productions/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
             }}
             style={{ width: 150 }}
