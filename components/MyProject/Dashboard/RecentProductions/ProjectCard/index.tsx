@@ -18,7 +18,7 @@ const ProjectCard = ({ data }) => {
             <div className="">
               <div className="d-flex justify-content-between">
                 <div style={{ fontSize: "14px", color: "#030229" }}>
-                  {getLabel(data.client_name ? data.client_name : "-")}
+                  {getLabel(data?.client_name || "-")}
                 </div>
                 <Link href={`/productions/${data.id}`}>
                   <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
@@ -39,14 +39,14 @@ const ProjectCard = ({ data }) => {
 
               <div className="d-flex justify-content-between mt-1">
                 <div className="fw-600 clr-dblack">
-                  {getLabel(data.project_name || "-")}
+                  {getLabel(data?.project_name || "-")}
                 </div>
               </div>
             </div>
 
             <div className="mt-2 f-12">
-              Payroll Coordinator :{" "}
-              {data.payroll_coordinator ? data.payroll_coordinator : "-"}
+              <b>Production Accountant</b> :{" "}
+              {data?.production_accountant || "-"}
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ const ProjectCard = ({ data }) => {
             <Image src={budget} alt="" style={{ width: "15px" }} />
             <div>
               <span>Budget Allocated</span>
-              <div className="fw-bold font-size-14">{data.budget || 0}</div>
+              <div className="fw-bold font-size-14">{data?.budget || 0}</div>
             </div>
 
             <div className="d-flex gap-2 iconsSpace">
@@ -69,7 +69,7 @@ const ProjectCard = ({ data }) => {
               />
               <div>
                 <div>Budget Spent </div>
-                <div className="fw-bold">{data.budget_spent || 0}</div>
+                <div className="fw-bold">{data?.budget_spent || 0}</div>
               </div>
             </div>
           </div>
@@ -98,7 +98,7 @@ const ProjectCard = ({ data }) => {
                         borderRadius: "5%",
                       }}
                     >
-                      {software.software_name}
+                      {software?.software_name || "-"}
                     </div>
                   );
                 })}
