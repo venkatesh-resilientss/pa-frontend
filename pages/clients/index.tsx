@@ -16,16 +16,17 @@ import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
 import Link from "next/link";
+import { dateFormat } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 
 export default function Clients({ router, user }) {
-  const [tableData, setTableData] = useState({
+  const [tableData, setTableData] = useState<any>({
     data: [],
     total_records: 0,
-  }) as any;
-  const [clFilters, setClFilters] = useState([]) as any;
-  const [swFilters, setSwFilters] = useState([]) as any;
+  });
+  const [clFilters, setClFilters] = useState<any>([]);
+  const [swFilters, setSwFilters] = useState<any>([]);
 
   const [filters, setFilters] = useState<any>({
     dateStart: "",
@@ -51,6 +52,8 @@ export default function Clients({ router, user }) {
         borderColor: "#A2CFFE",
       },
     }),
+
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
 
     valueContainer: (base) => ({ ...base, padding: "0 6px" }),
 
@@ -79,27 +82,29 @@ export default function Clients({ router, user }) {
     indicatorSeparator: () => ({ display: "none" }),
   };
   useEffect(() => {
-    const getData = async () => {
+    const getFiltersData = async () => {
       try {
         const clients = await clientService.getClientsFilters();
         const softwares = await clientService.getSoftwares();
         setClFilters(clients.map((e) => ({ label: e.name, value: e.id })));
         setSwFilters(softwares.map((e) => ({ label: e.Name, value: e.ID })));
-
         /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
       } catch (e) {
         //
       }
     };
-    getData();
+    getFiltersData();
   }, []);
+
   useEffect(() => {
-    const getData = async () => {
+    const getTableData = async () => {
       try {
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
           softwares: filters.softwares.map((e) => e.value),
+          dateStart: dateFormat(filters.dateStart),
+          dateEnd: dateFormat(filters.dateEnd),
         };
         const response = await clientService.getClientsList(payload);
         setTableData({
@@ -111,7 +116,7 @@ export default function Clients({ router, user }) {
         //
       }
     };
-    getData();
+    getTableData();
   }, [filters]);
 
   const StateBadge = (props) => {
@@ -122,7 +127,7 @@ export default function Clients({ router, user }) {
     return (
       <CustomBadge
         bg={sateDir[props.value]}
-        value={props.value ? "active" : "In-active"}
+        value={props.value ? "Active" : "In-active"}
       />
     );
   };
@@ -271,10 +276,16 @@ export default function Clients({ router, user }) {
 
   const CustomDatePicker = forwardRef(({ value, onClick }: any, ref: any) => (
     <button className="btn border bg-white" onClick={onClick} ref={ref}>
-      <span className="clr-dblack fw-600">Date</span> is{" "}
-      <span className="clr-dblack fw-600">{value || "All"}</span>
+      <span className="clr-dblack fw-600">Date</span> {value ? "from " : "is "}
+      <span className={"clr-dblack fw-600" + (value ? " me-3" : "")}>
+        {value
+          .split(" - ")
+          .map((e) => dateFormat(e))
+          .join(" - ") || "All"}
+      </span>
     </button>
   ));
+
   const statusOpts = [
     { label: "All", value: "" },
     { label: "Active", value: "true" },
@@ -294,13 +305,11 @@ export default function Clients({ router, user }) {
       <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
         <div className="">
           <DatePicker
-            style={{ fontSize: "12px", fontWeight: "400" }}
-            id="startDatePicker" // Add the id here
+            id="startDatePicker"
             className="w-100 form-control"
             placeholderText="Select Start date"
             startDate={filters.dateStart ? filters.dateStart : null}
             endDate={filters.dateEnd ? filters.dateEnd : null}
-            dateFormat="yyyy-MM-dd"
             onChange={(dts) => {
               const [start, end] = dts;
               setFilters({
@@ -314,13 +323,21 @@ export default function Clients({ router, user }) {
             selectsRange
             monthsShown={2}
             customInput={<CustomDatePicker />}
+            isClearable
           />
         </div>
+
         <div className="">
           <ReactMultiSelectCheckboxes
             className="drop-down"
             value={filters.clients}
-            placeholderButtonLabel="Client is All"
+            placeholderButtonLabel={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Client</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
             options={[
               { label: "Select All", value: "s" },
               { label: "Unselect All", value: "u" },
@@ -349,11 +366,18 @@ export default function Clients({ router, user }) {
             }}
           />
         </div>
+
         <div className="">
           <ReactMultiSelectCheckboxes
             className="drop-down"
             value={filters.softwares}
-            placeholderButtonLabel="Software is All"
+            placeholderButtonLabel={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Software</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
             options={[
               { label: "Select All", value: "s" },
               { label: "Unselect All", value: "u" },
@@ -382,11 +406,11 @@ export default function Clients({ router, user }) {
             }}
           />
         </div>
+
         <div className="w-m-125">
           <Select
             instanceId={`react-select-status`}
             styles={selectStyle}
-            placeholder={"Status is All"}
             options={statusOpts}
             value={statusOpts.find((e) => e.value === filters.status)}
             onChange={(e) =>
@@ -397,6 +421,15 @@ export default function Clients({ router, user }) {
                 status: e.value,
               })
             }
+          />
+        </div>
+
+        <div className=" ms-auto">
+          <input
+            className="form-control f-16 me-0 search-input"
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            type="search"
+            placeholder="Search"
           />
         </div>
       </div>

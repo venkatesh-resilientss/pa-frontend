@@ -7,6 +7,7 @@ import ClientTabs from "@/components/clients/ClientTabs";
 
 import { ClientsService } from "services";
 import { allFields } from "@/commonData";
+import { exclude } from "@/commonFunctions/common";
 
 function Clients({ router, user }) {
   const clientService = new ClientsService();
@@ -15,6 +16,7 @@ function Clients({ router, user }) {
   const [err, setErr] = useState(false);
 
   const defaultClientData: any = {
+    logoFile: null,
     Softwares: [],
 
     Name: "",
@@ -129,6 +131,9 @@ function Clients({ router, user }) {
               }
             : null;
 
+        tempObj.PhysicalAddress.Zipcode =
+          tempObj?.PhysicalAddress?.Zipcode || "";
+
         tempObj.MailingAddress.country =
           tempObj?.MailingAddress?.CountryID &&
           tempObj?.MailingAddress?.Country?.Name
@@ -146,10 +151,9 @@ function Clients({ router, user }) {
                 value: tempObj?.MailingAddress?.StateID,
               }
             : null;
-        // tempObj.Company.PrimaryContact.EmailID =
-        //   resp?.primary_contactID?.email_id || "";
-        // tempObj.Company.SecondaryContact.EmailID =
-        //   resp?.secondary_contactID?.email_id || "";
+
+        tempObj.MailingAddress.Zipcode = tempObj?.MailingAddress?.Zipcode || "";
+
         setClientData(tempObj);
       } catch (e) {
         toast.error(e?.error || e || "Error");
@@ -189,14 +193,28 @@ function Clients({ router, user }) {
           tempErr = true;
       });
 
+      if (!clientData?.IsActive && !clientData?.DeactivationReason)
+        tempErr = true;
+
       setErr(tempErr);
       if (tempErr) {
         toast.error("Please check for invalid fields");
         return;
       }
-      setLoading(true);
+      let url: any = "";
       try {
-        const payload = { ...clientData };
+        setLoading(true);
+        if (clientData.logoFile) {
+          const formData = new FormData();
+          formData.append("file", clientData.logoFile);
+          formData.append("name", "uploadedFile");
+
+          const fileUpload = await clientService.s3upload(formData);
+          url = fileUpload.url;
+        }
+
+        const payload = { ...exclude(clientData, ["logoFile"]), LogoUrl: url };
+
         if (clientData.clientType)
           payload["ClientTypeID"] = clientData.clientType.value;
         if (clientData.clientAdmin)
@@ -210,9 +228,9 @@ function Clients({ router, user }) {
         if (clientData.MailingAddress.state)
           payload["MailingAddress"]["StateID"] =
             clientData.MailingAddress.state.value;
-        if (clientData.MailingAddress.Zipcode)
-          payload["MailingAddress"]["Zipcode"] =
-            Number(clientData.MailingAddress.Zipcode) || 0;
+
+        payload["MailingAddress"]["Zipcode"] =
+          Number(clientData.MailingAddress.Zipcode) || 0;
 
         if (clientData.PhysicalAddress.country)
           payload["PhysicalAddress"]["CountryID"] =
@@ -220,16 +238,18 @@ function Clients({ router, user }) {
         if (clientData.PhysicalAddress.state)
           payload["PhysicalAddress"]["StateID"] =
             clientData.PhysicalAddress.state.value;
-        if (clientData.PhysicalAddress.Zipcode)
-          payload["PhysicalAddress"]["Zipcode"] =
-            Number(clientData.PhysicalAddress.Zipcode) || 0;
+
+        payload["PhysicalAddress"]["Zipcode"] =
+          Number(clientData.PhysicalAddress.Zipcode) || 0;
+
         await clientService.editClient(Number(router.query.id), payload);
         setEditing(false);
         setLoading(false);
         toast.success("Client Updated Successfully");
       } catch (e) {
-        setLoading(false);
+        if (clientData.logoFile && !url) toast.error("Error Saving Logo");
         toast.error(e?.error || e || "Error");
+        setLoading(false);
       }
     } else {
       if (hasPermission) setEditing(true);
