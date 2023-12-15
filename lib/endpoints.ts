@@ -40,7 +40,7 @@ export const CREATE_TRANSACTION_LINES = `${tenantIdEndpoint}/transactionlines/`;
 
 export const CREATE_PROJECT = `${withoutTenantIdEndpoint}/projects/`; //Create projects
 export const GET_DASHBOARD_STATS = `${withoutTenantIdEndpoint}/overview`; //Dashboard Stats
-export const GET_RECENT_PRODUCTIONS = `${withoutTenantIdEndpoint}/recent-productions/`; //Recent Productions
+export const GET_RECENT_PRODUCTIONS = `${withoutTenantIdEndpoint}/recent-productions`; //Recent Productions
 export const GET_ONBOARDED_CLIENTS = `${withoutTenantIdEndpoint}/onboarded-clients`; //OnBoarded Clients
 export const CREATE_APPROVERS = `${tenantIdEndpoint}/approvers/`; //Projects
 export const ON_BOARDED_PROJECTS = (id: any) =>
