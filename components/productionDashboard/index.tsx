@@ -181,7 +181,7 @@ export default function ProductionDashboard() {
                  <div className="row mt-2">
                     <div className="col-md-4">
                         <h6 className="text-center">Project Type</h6>
-                        <p className="text-center fw-600" >{production.projectType.name}</p>
+                        <p className="text-center fw-600" >{production?.projectType?.name}</p>
                     </div>
                     <div className="col-md-4 text-nowrap">
                         <h6 className="text-center">Last Payroll Date</h6>
