@@ -26,10 +26,12 @@ const BanksBulkUploadPopup = () => {
     setUploadedFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept : {
-    'text/csv' : ['.csv'],
-    'application/vnd.ms-excel' : ['.xls','.xlsx']
-  } });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop, accept: {
+      'text/csv': ['.csv'],
+      'application/vnd.ms-excel': ['.xls', '.xlsx']
+    }
+  });
 
   const handleRemoveFile = (index) => {
     const updatedFiles = [...uploadedFiles];
@@ -54,9 +56,9 @@ const BanksBulkUploadPopup = () => {
 
         dispatch(closeBulkUploadBanksPopup("close"));
       })
-      .catch((error) => {
+      .catch(() => {
         // Handle error
-        console.error("Upload failed", error);
+
 
         toast.error("Failed to insert data.");
       });

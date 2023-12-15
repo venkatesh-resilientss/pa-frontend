@@ -206,7 +206,7 @@ function AddUser() {
     }),
   };
 
-  // console.log(initialClientOptions.filter(e => ![...clientProductionsList.map(el => el.client_id)].includes(e.ID)))
+
 
   const usersService = new UsersService();
   // {

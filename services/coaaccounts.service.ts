@@ -51,9 +51,6 @@ class COAAccountsService extends APIService {
       return response.data;
     })
     .catch((error) => {
-      console.error("Upload failed", error);
-      // Log the entire error response
-      console.log("Error Response:", error.response);
       throw error.response.data;
     });
   }

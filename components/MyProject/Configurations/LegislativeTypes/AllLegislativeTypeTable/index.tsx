@@ -24,7 +24,6 @@ const AllLegislativeTypeTable = () => {
     () => legislativesService.getlegislatives()
   );
 
-  console.log('rowData', rowData)
 
   const StateBadge = (props) => {
     const stateDir = {

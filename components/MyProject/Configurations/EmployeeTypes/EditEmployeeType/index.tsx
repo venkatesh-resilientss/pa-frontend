@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { EmployeetypesService } from "services";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { useEffect, useState } from "react";
 
 function EditEmployeeType() {

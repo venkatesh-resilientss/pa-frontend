@@ -57,7 +57,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
     }
   };
 
-  // console.log("", countryData);
+
 
   const StateBadge = (props) => {
     const sateDir = {

@@ -61,7 +61,7 @@ const Welcome = () => {
         });
     } else {
       // Handle the case where session or user is undefined
-      // console.log("User details not available");
+      //
     }
   }, [session]);
 
@@ -230,9 +230,8 @@ const Welcome = () => {
                       type="text"
                       placeholder="Enter email address"
                       {...register("email")}
-                      className={`form-control mt-2 teamworkspaceplaceholder ${
-                        errors.email ? "is-invalid" : ""
-                      }`}
+                      className={`form-control mt-2 teamworkspaceplaceholder ${errors.email ? "is-invalid" : ""
+                        }`}
                       style={{ width: "380px", height: "54px" }}
                       onChange={(e: any) => {
                         setEmail(e.target.value);
@@ -462,10 +461,10 @@ const Welcome = () => {
                       // {...register("email")}
                       className="form-control mt-2 teamworkspaceplaceholder1"
                       style={{ height: "54px" }}
-                      // onChange={(e: any) => {
-                      //   setEmail(e.target.value);
-                      //   sessionStorage.setItem("email", e.target.value);
-                      // }}
+                    // onChange={(e: any) => {
+                    //   setEmail(e.target.value);
+                    //   sessionStorage.setItem("email", e.target.value);
+                    // }}
                     />
                     {/* <div className="invalid-feedback">{errors.email?.message}</div> */}
                   </div>
@@ -484,9 +483,8 @@ const Welcome = () => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...register("password")}
-                      className={`form-control mt-2 teamworkspaceformpassword ${
-                        errors.password ? "is-invalid" : ""
-                      }`}
+                      className={`form-control mt-2 teamworkspaceformpassword ${errors.password ? "is-invalid" : ""
+                        }`}
                       style={{ color: "#626873", height: "54px" }}
                     />
                     <i onClick={togglePasswordVisiblity}>

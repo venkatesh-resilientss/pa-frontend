@@ -17,7 +17,6 @@ function AddpayCodes() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log('data', data)
     data.Factor = parseInt(data.Factor)
     data.hnus = data.hnus.value
     data.Category = data.Category.value
