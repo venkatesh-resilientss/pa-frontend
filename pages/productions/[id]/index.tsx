@@ -141,35 +141,31 @@ export default function EditProductions({ router, clientData, user }) {
       try {
         setLoading(true);
         const approvers: any = [];
-        const data: any = [];
         if (poVal) {
           poValues.map((e, id) => {
-            const pyld: any = {
+            approvers.push({
               approverType: id + 1,
               TransactionType: "PO",
               UserID: e.value,
-            };
-            approvers.push(pyld);
-            data.push({ ...pyld, UserID: e });
+            });
           });
         }
         if (apVal) {
           apValues.map((e, id) => {
-            const pyld: any = {
+            approvers.push({
               approverType: id + 1,
               TransactionType: "AP",
               UserID: e.value,
-            };
-            approvers.push(pyld);
-            data.push({ ...pyld, UserID: e });
+            });
           });
         }
+
         const payload = {
           code: payld.code || "",
           name: payld.name || "",
           ProjectAccountantID: pAUser?.value || 0,
           clientID: payld.client?.value,
-          meta: { approvers, data },
+          meta: { approvers },
           IsCompleted: payld.IsCompleted || false,
           IsActive: payld.IsActive || false,
         };
