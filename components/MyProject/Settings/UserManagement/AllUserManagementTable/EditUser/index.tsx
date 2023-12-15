@@ -24,31 +24,6 @@ function EditUser() {
 
   const watchRole = watch('role', '');
   const [showStaffUser, setShowStaffUser] = useState(true) as any;
-  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
-    authService.getUserDetails()
-  );
-  const [userDetails, setUserDetails] = useState() as any;
-
-  useEffect(() => {
-    setUserDetails(userData?.data);
-  }, [userData]);
-
-
-
-  useEffect(() => {
-    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
-      setIsCheckedStaffUser(false);
-      setShowStaffUser(false);
-    } else setShowStaffUser(true);
-  }, [watchRole])
-
-
-  const getUserdetails = (id) => usersService.getuserbyid(id);
-
-  const { data: eachclicntdata, isLoading: userLoading } = useSWR(
-    id ? ["USER_DETAILS", id] : null,
-    () => getUserdetails(id)
-  );
   const [initialClientOptions, setInitialClientOptions] = useState() as any;
   const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
   const [roleOptions, setRoleOptions] = useState();
@@ -63,6 +38,35 @@ function EditUser() {
       disabledClient: true,
     },
   ]);
+  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
+    authService.getUserDetails()
+  );
+  const [userDetails, setUserDetails] = useState() as any;
+
+  useEffect(() => {
+    setUserDetails(userData?.data);
+  }, [userData]);
+
+
+
+  useEffect(() => {
+    if (watchRole?.label == "Client Admin" || !isCheckedStaffUser) {
+      setClientProductionsList([clientProductionsList[0]])
+    }
+    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
+      setIsCheckedStaffUser(false);
+      setShowStaffUser(false);
+    } else setShowStaffUser(true);
+  }, [watchRole, isCheckedStaffUser])
+
+
+  const getUserdetails = (id) => usersService.getuserbyid(id);
+
+  const { data: eachclicntdata, isLoading: userLoading } = useSWR(
+    id ? ["USER_DETAILS", id] : null,
+    () => getUserdetails(id)
+  );
+
 
 
 
@@ -499,7 +503,6 @@ function EditUser() {
               <Col xl="4">
                 <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
                   <input
-                    disabled
                     type="checkbox"
                     name="customSwitch"
                     id="exampleCustomSwitch"
