@@ -10,6 +10,7 @@ import { getLabel } from "@/commonFunctions/common";
 import Link from "next/link";
 
 const ProjectCard = ({ data }) => {
+  
   return (
     <Card className="text-black px-1 h-100">
       <CardBody>
@@ -17,7 +18,7 @@ const ProjectCard = ({ data }) => {
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
               <div className="d-flex justify-content-between">
-                <div style={{ fontSize: "14px", color: "#030229" }}>
+                <div>
                   {getLabel(data.client_name ? data.client_name : "-")}
                 </div>
                 <Link href={`/productions/${data.id}`}>
@@ -25,11 +26,11 @@ const ProjectCard = ({ data }) => {
                     <div>
                       <Image
                         src={carbonDecumentView}
-                        style={{ height: "11px", width: "11px" }}
+                        style={{ height: "12px", width: "12px",marginBottom:"5px" }}
                         alt={"view details"}
                       />
                     </div>
-                    <div>View Details</div>
+                    <div className="view_details">View Details</div>
                     <div>
                       <AiFillCaretRight style={{ marginBottom: "1px" }} />
                     </div>
@@ -37,43 +38,52 @@ const ProjectCard = ({ data }) => {
                 </Link>
               </div>
 
-              <div className="d-flex justify-content-between mt-1">
-                <div className="fw-600 clr-dblack">
+              <div className="d-flex justify-content-between ">
+                <div className="clientcard_headings clr-dblack">
                   {getLabel(data.project_name || "-")}
                 </div>
               </div>
             </div>
 
-            <div className="mt-2 f-12">
-              Payroll Coordinator :{" "}
-              {data.payroll_coordinator ? data.payroll_coordinator : "-"}
+            <div className="mt-2 f-12 fw-600">
+              <p>Production Accountant :{" "} {data.payroll_coordinator ? data.payroll_coordinator : "-"}</p>
+              
             </div>
           </div>
         </div>
 
         <div className="d-flex justify-content-between mt-3 f-12">
-          <div className="d-flex gap-2">
-            <Image src={budget} alt="" style={{ width: "15px" }} />
-            <div>
-              <span>Budget Allocated</span>
-              <div className="fw-bold font-size-14">{data.budget || 0}</div>
-            </div>
+          <div className="d-flex gap-2 ">
 
+            <div className="d-flex gap-2">
+              <Image
+                src={budget}
+                alt=""
+                style={{
+                  width: "12px",
+                }}
+              />
+              <div>
+                <div className="f-12">Budget Allocated </div>
+                <div className="fw-bold f-14">{data.budget  || 0}</div>
+              </div>
+            </div>
             <div className="d-flex gap-2 iconsSpace">
               <Image
                 src={budgetSpend}
                 alt=""
                 style={{
-                  width: "15px",
+                  width: "12px",
                 }}
               />
               <div>
-                <div>Budget Spent </div>
-                <div className="fw-bold">{data.budget_spent || 0}</div>
+                <div className="f-12">Budget Spent </div>
+                <div className="fw-bold f-14">{data.budget_spent || 0}</div>
               </div>
             </div>
           </div>
         </div>
+        
 
         <div className="d-flex justify-content-between mt-3">
           <div>
@@ -85,18 +95,16 @@ const ProjectCard = ({ data }) => {
               className="d-flex justify-content-between"
               style={{ fontSize: "10px" }}
             >
-              <div className="d-flex gap-2 mt-1 font-size-14 fw-400">
+              <div className="d-flex gap-2 mt-2 f-12">
                 {data.softwares?.map((software, i) => {
                   return (
                     <div
                       key={`software-card-${i}`}
                       style={{
                         backgroundColor: "#B5DEF0",
-                        width: "auto",
                         color: "#030229",
-                        padding: "4px",
                         borderRadius: "5%",
-                      }}
+                      }} className="p-1 px-2 f-12"
                     >
                       {software.software_name}
                     </div>
@@ -122,7 +130,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
             <div>
-              <div className="f-12 fw-bold">
+              <div className="f-14 fw-bold text-end">
                 <p>Custom Design</p>
               </div>
             </div>

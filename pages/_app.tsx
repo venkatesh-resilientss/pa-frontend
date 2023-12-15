@@ -97,6 +97,7 @@ function MyApp({ Component, pageProps, err }) {
       <Head>
         <title>RSSL</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://db.onlinewebfonts.com/c/860a62f61e94367696df249678cf8efc?family=Segoe+Bold" rel="stylesheet"></link>
       </Head>
 
       <Provider store={store}>

@@ -131,7 +131,7 @@ export default function ProductionDashboard() {
               <Card style={{borderRadius: "10px" }} className="p-3">
                 <div className="d-flex justify-content-between">
                 <div>
-                    <h4 className="text-nowrap fw-bold">{production.name}</h4>
+                    <h4 className="text-nowrap clientcard_headings">{production.name}</h4>
                 </div>
                    <div
                   className="border rounded cursor-pointer text-black text-center d-flex align-items-center py-1 px-2"
@@ -144,9 +144,9 @@ export default function ProductionDashboard() {
                 <p style={{ fontSize: "14px" }}>View Details</p>
               </div>
                 </div>
-                <div className="d-flex justify-content-between mt-2">
+                <div className="d-flex justify-content-between mt-2 ">
                     <div>
-                        <p>Payroll Coordinator : {production.PayrollCoordinator}</p>
+                        <p className="fw-600">Payroll Coordinator : {production.PayrollCoordinator}</p>
                     </div>
                     <div>
                         <div>
@@ -180,15 +180,31 @@ export default function ProductionDashboard() {
                  </div>
                  <div className="row mt-2">
                     <div className="col-md-4">
-                        <h6 className="text-center">Project Type</h6>
+                        <h6 className="text-center">
+                           <img
+                    src="/production_type.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />
+                          Project Type</h6>
                         <p className="text-center fw-600" >{production.projectType.name}</p>
                     </div>
                     <div className="col-md-4 text-nowrap">
-                        <h6 className="text-center">Last Payroll Date</h6>
+                        <h6 className="text-center">
+                          <img
+                    src="/calender.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />Last Payroll Date</h6>
                         <p className="text-center fw-600" >{production.LastPayrollDate}</p>
                     </div>
                     <div className="col-md-4">
-                        <h6 className="text-center">Labour Type</h6>
+                        <h6 className="text-center">
+                          <img
+                    src="/Vector.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />Labour Type</h6>
                         <p className="text-center fw-600" >{production.LabourType}</p>
                     </div>
                 </div>

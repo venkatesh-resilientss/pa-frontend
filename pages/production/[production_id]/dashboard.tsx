@@ -115,19 +115,19 @@ export default function ProductionDashboard() {
             "Total Active Productions",
             "/active_productions.png",
             null,
-            <h4>{dashboardCards?.TotalActiveProductions || "-"}</h4>
+            <h4>{dashboardCards?.TotalActiveProductions || "0"}</h4>
           )}
           {createCard(
             "Total Budget Vs Actual Spending",
             "/total_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.TotalBudget || "-"}</p>
+            <p>{dashboardCards?.TotalBudget || "0"}</p>
           )}
           {createCard(
             "Remaining Budget Allocation",
             "/remaining_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.RemainingBudgetAllocation || "-"}</p>
+            <p>{dashboardCards?.RemainingBudgetAllocation || "0"}</p>
           )}
           {createCard(
             "Pending Approval Items",
@@ -137,13 +137,13 @@ export default function ProductionDashboard() {
               <div className="col-md-6 text-nowrap">
                 <h6 className="text-center ">Purchase Order</h6>
                 <p className="text-center font-size-16 ">
-                  {dashboardCards?.PendingApprovalItems?.PettyCash || "-"}
+                  {dashboardCards?.PendingApprovalItems?.PettyCash || "0"}
                 </p>
               </div>
               <div className="col-md-6">
                 <h6 className="text-center ">Account Payable</h6>
                 <p className="text-center ">
-                  {dashboardCards?.PendingApprovalItems?.AccountPayable || "-"}
+                  {dashboardCards?.PendingApprovalItems?.AccountPayable || "0"}
                 </p>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function ProductionDashboard() {
             <Col>
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="text-nowrap fw-bold">
+                  <h4 className="text-nowrap clientcard_headings">
                     {projectDetails?.name || "-"}
                   </h4>
                 </div>
@@ -183,7 +183,7 @@ export default function ProductionDashboard() {
               </div>
               <div className="d-flex justify-content-between mt-2">
                 <div>
-                  <p>
+                  <p className="fw-600">
                     Payroll Coordinator :{" "}
                     {projectDetails?.PayrollCoordinator || "-"}
                   </p>
@@ -220,32 +220,45 @@ export default function ProductionDashboard() {
               <div className="d-flex justify-content-between mt-3">
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }}>0</p>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }}>0</p>
                   </div>
                 </div>
               </div>
             </Col>
             <div className="row mt-2">
               <div className="col-md-4">
-                <h6 className="text-center">Project Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
+                <h6 className="text-center"> <img
+                    src="/production_type.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  /> Project Type</h6>
+                <p className="text-center fw-600" >
                   {projectDetails?.projectType?.name || "-"}
                 </p>
               </div>
               <div className="col-md-4 text-nowrap">
-                <h6 className="text-center">Last Payroll Date</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
+                <h6 className="text-center"><img
+                    src="/calender.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />
+                  Last Payroll Date</h6>
+                <p className="text-center fw-600" >
                   {projectDetails?.LastPayrollDate || "-"}
                 </p>
               </div>
               <div className="col-md-4">
-                <h6 className="text-center">Labour Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
+                <h6 className="text-center"><img
+                    src="/Vector.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />Labour Type</h6>
+                <p className="text-center fw-600">
                   {projectDetails?.LabourType || "-"}
                 </p>
               </div>

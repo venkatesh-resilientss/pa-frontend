@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { hasPermission } from "commonFunctions/functions";
 import router from "next/router";
 import { Plus } from "react-feather";
-import Link from "next/link";
 
 function RecentProductions() {
   const dashboardService = new DashboardService();
@@ -21,7 +20,6 @@ function RecentProductions() {
     const getTenant = async () => {
       dashboardService.getRecentProductions().then((res) => {
         if (res.data) {
-          // setRecentProductionsData(res.data);
           setRecentProductionsData(res.data.slice(0, 3));
         }
       });
@@ -56,28 +54,56 @@ function RecentProductions() {
             />
           </Form>
           {hasCreateProductionPermission && (
-            <Link href={`/productions/create-production`}>
-              <button className="btn btn-primary d-flex justify-content-between align-items-center gap-2 ">
-                <BsCameraVideo />
-                <span className="f-14"> Create Production</span>
-              </button>
-            </Link>
+            <Button
+              color="primary"
+              className="py-1 px-3"
+              onClick={() => router.push(`/productions`)}
+            >
+              <BsCameraVideo />
+              <span style={{ fontSize: "14px" }}> New Production</span>
+            </Button>
           )}
         </div>
       </div>
 
       <div className="my-2">
         <div className="row">
-          {searchInput === "" ? (
+          {recentProductionsData.length === 0 ? (
+            // Show when no data is available
+            <div className="text-center mt-3 nodataAvailable">
+              <img
+                src="./no_data_image.png" // Replace with the path to your image
+                alt="No data available"
+                style={{ maxWidth: "100%" }}
+              />
+              <p className="nodataAvailable">No Data available.</p>
+              <h6 className="text-sm">
+                Please create your first Production to be able to work{" "}
+              </h6>
+              <Button
+                size="sm"
+                className="py-2 px-3 mt-2"
+                color="info"
+                style={{
+                  fontSize: "14px",
+                  color: "#FFFFFF",
+                  backgroundColor: "#00AEEF",
+                }}
+                onClick={() => router.push(`/productions`)}
+              >
+                <Plus size={16} /> Create Production
+              </Button>
+            </div>
+          ) : searchInput === "" ? (
             // Show when no search input
-            recentProductionsData.slice(0, 6).map((project, i) => (
+            recentProductionsData.map((project, i) => (
               <div className="col-md-4 mb-4" key={`recent-project-card-${i}`}>
                 <ProjectCard data={project} />
               </div>
             ))
           ) : filteredProductions.length > 0 ? (
             // Show when there's search input and results found
-            filteredProductions.slice(0, 6).map((project, i) => (
+            filteredProductions.map((project, i) => (
               <div className="col-md-4 mb-4" key={`recent-project-card-${i}`}>
                 <ProjectCard data={project} />
               </div>
@@ -86,10 +112,10 @@ function RecentProductions() {
             // Show when there's search input and no results found
             <div className="text-center mt-3 nodataAvailable">
               <img
-                src="./no_client_data_available.svg"
-                alt="No clients available"
-                style={{ maxWidth: "100%" }}
-              />
+                  src="no_client_data_available.svg"
+                  alt="No clients available"
+                  style={{ maxWidth: '100%' }}
+                />
               <p className="nodataAvailable">No Data available.</p>
               <h6 className="text-sm">
                 Please create your first Production to be able to work{" "}
