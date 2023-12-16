@@ -538,6 +538,7 @@ function AddRole() {
               type="checkbox"
               className="mb-1"
               id={"Is Staff Role"}
+              disabled={viewmode}
               checked={IsStaff}
               onChange={(e) => setIsStaff(e.target.checked)}
             />
@@ -605,7 +606,7 @@ function AddRole() {
             <div style={{ fontSize: "15px" }}>Restricted Access</div>
 
             {userData?.data?.Role?.AccessType === "full_access" ||
-            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
+              userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
               <>
                 <div className="d-flex gap-1 cursor-pointer ms-3">
                   <input

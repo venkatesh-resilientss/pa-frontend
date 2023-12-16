@@ -41,7 +41,7 @@ function EditUser() {
   const [userDetails, setUserDetails] = useState() as any;
   // const [clientDetails, setClientDetails] = useState(null) as any;
 
-  const [roleOptions, setRoleOptions] = useState();
+  const [roleOptions, setRoleOptions] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
   const [clientProductionsList, setClientProductionsList] = useState([
     {
@@ -102,18 +102,18 @@ function EditUser() {
   }, [userDetails]);
 
   useEffect(() => {
-    if (watchRole?.label == "Client Admin" || !isCheckedStaffUser) {
-      setClientProductionsList([clientProductionsList[0]]);
-    }
-    if (
-      ["Payroll Accountant", "Production Accountant", "Client Admin"].includes(
-        watchRole?.label
-      )
-    ) {
+    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
       setIsCheckedStaffUser(false);
       setShowStaffUser(false);
+      if (watchRole?.label == "Client Admin")
+        setClientProductionsList([{ ...clientProductionsList[0], production_id: [], productions: [] }])
+      else setClientProductionsList([{ ...clientProductionsList[0] }])
     } else setShowStaffUser(true);
-  }, [watchRole, isCheckedStaffUser]);
+  }, [watchRole])
+
+  useEffect(() => {
+    if (!isCheckedStaffUser) setClientProductionsList([{ ...clientProductionsList[0] }])
+  }, [isCheckedStaffUser])
 
   useEffect(() => {
     setUserDetails(userData?.data);
@@ -309,7 +309,7 @@ function EditUser() {
       Meta: { userCPReference: [] },
     };
 
-    if (data?.role?.value === "Client Admin") {
+    if (data?.role?.label === "Client Admin") {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
@@ -539,9 +539,7 @@ function EditUser() {
                   className="mb-1"
                   checked={isCheckedStaffUser}
                   disabled={!editMode}
-                  onChange={(e) => {
-                    setIsCheckedStaffUser(e.target.checked);
-                  }}
+                  onChange={(e) => setIsCheckedStaffUser(e.target.checked)}
                 />
 
                 <Label className="mb-0">Is Staff User</Label>
