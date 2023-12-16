@@ -171,7 +171,11 @@ const StatesBulkUploadPopup = ({ setRerender, rerender }) => {
 
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
-            onClick={() => dispatch(closeBulkUploadStatesPopup("close"))}
+            onClick={() => {
+              dispatch(closeBulkUploadStatesPopup("close"));
+              setUploadedFiles([]);
+              setLoader(false);
+            }}
             color="white"
             style={{
               fontSize: "14px",
