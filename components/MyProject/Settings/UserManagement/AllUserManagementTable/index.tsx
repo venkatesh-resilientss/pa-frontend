@@ -13,7 +13,7 @@ import Image from "next/image";
 import { UsersService } from "services";
 import moment from "moment";
 import { Plus } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
@@ -24,7 +24,6 @@ import { useEffect, useState } from "react";
 import { AuthService, ForgotPasswordService } from "services";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-// import GridTable from "@/components/dataTable/GridWithPagination";
 
 const authService = new AuthService();
 const forgotPassword = new ForgotPasswordService();
@@ -32,10 +31,12 @@ const forgotPassword = new ForgotPasswordService();
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [tableData, setTableData] = useState() as any;
-  const [loading, setLoading] = useState() as any;
+  const [tableData, setTableData] = useState<any>({
+    data: [],
+    total_records: 0,
+  });
   const [pageNumber, setPageNumber] = useState(1) as any;
-  const [userDetails, setUserDetails] = useState() as any;
+  const [userDetails, setUserDetails] = useState(null) as any;
   const [pageLimit] = useState(10) as any;
 
   const hasCreateUseerPermission = hasPermission(
@@ -55,10 +56,9 @@ const AllRoleTable = () => {
 
   useEffect(() => {
     if (userDetails) {
-      setLoading(true);
       const offfset = (pageNumber - 1) * pageLimit;
       const queryParams = {
-        search: searchText,
+        search: searchText.trim(),
         limit: pageLimit,
         offset: offfset,
         name: "asc",
@@ -67,7 +67,6 @@ const AllRoleTable = () => {
         .getUsers(queryParams)
         .then((response) => {
           setTableData(response);
-          setLoading(false);
         })
         .catch((e) => {
           console.error(e);
@@ -124,10 +123,6 @@ const AllRoleTable = () => {
   );
 
   const userService = new UsersService();
-
-  // const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
-  //   userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
-  // );
 
   const resendPasswordLink = (data) => {
     const payload = { email: data.email };
@@ -243,9 +238,10 @@ const AllRoleTable = () => {
       headerClass: "custom-header-class",
       resizable: true,
       getQuickFilterText: (params) => {
-        const res = `${params?.adminName?.charAt(0).toUpperCase() +
+        const res = `${
+          params?.adminName?.charAt(0).toUpperCase() +
           params?.adminName?.slice(1)
-          }${params?.email}`;
+        }${params?.email}`;
         return res;
       },
     },
@@ -280,7 +276,9 @@ const AllRoleTable = () => {
         if (arrayLength === 0) {
           tooltipContent = ""; // Provide a default message if array is empty
         } else {
-          const capitalizedNames = clientNames?.map(name => name?.charAt(0).toLocaleUpperCase() + name?.slice(1));
+          const capitalizedNames = clientNames?.map(
+            (name) => name?.charAt(0).toLocaleUpperCase() + name?.slice(1)
+          );
           tooltipContent = capitalizedNames.join(", ");
         }
 
@@ -294,21 +292,24 @@ const AllRoleTable = () => {
 
           displayContent =
             firstClientName.length > maxLength
-              ? `${firstClientName?.charAt(0).toUpperCase() +
-              firstClientName?.slice(1).substring(0, maxLength)
-              }...`
+              ? `${
+                  firstClientName?.charAt(0).toUpperCase() +
+                  firstClientName?.slice(1).substring(0, maxLength)
+                }...`
               : firstClientName?.charAt(0).toUpperCase() +
-              firstClientName?.slice(1);
+                firstClientName?.slice(1);
         } else {
           const firstClientName = clientNames[0] || "";
 
-          displayContent = `${firstClientName.length > maxLength
-            ? `${firstClientName?.charAt(0).toUpperCase() +
-            firstClientName?.slice(1).substring(0, maxLength)
-            }...`
-            : firstClientName?.charAt(0).toUpperCase() +
-            firstClientName?.slice(1)
-            } + ${arrayLength - 1}`;
+          displayContent = `${
+            firstClientName.length > maxLength
+              ? `${
+                  firstClientName?.charAt(0).toUpperCase() +
+                  firstClientName?.slice(1).substring(0, maxLength)
+                }...`
+              : firstClientName?.charAt(0).toUpperCase() +
+                firstClientName?.slice(1)
+          } + ${arrayLength - 1}`;
         }
 
         return (
@@ -317,7 +318,7 @@ const AllRoleTable = () => {
               placement="bottom"
               overlay={<Tooltip id="tooltip-engine">{tooltipContent}</Tooltip>}
             >
-              <p >{displayContent}</p>
+              <p>{displayContent}</p>
             </OverlayTrigger>
           </>
         );
@@ -414,54 +415,22 @@ const AllRoleTable = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={{}}
+      <div className="mt-3">
+        {tableData.data.length === 0 && !searchText.trim() ? (
+          <NoDataPage
+            buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
+            buttonLink={"/settings/add-user"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
             columnDefs={columnDefs}
-            pageSize={pageLimit}
-            searchText={searchText}
+            limit={pageLimit}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}
-            setLoading={setLoading}
           />
-        </div>
-      ) : (
-        <>
-          {tableData?.data?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={tableData}
-                columnDefs={columnDefs}
-                pageSize={pageLimit}
-                searchText={searchText}
-                pageNumber={pageNumber}
-                setPageNumber={setPageNumber}
-                setLoading={setLoading}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Set"}
-                buttonName={
-                  hasCreateUseerPermission ? "Create User" : "No button"
-                }
-                buttonLink={"/settings/add-user"}
-              />
-            </div>
-          )}
-        </>
-      )}
-
-      {/* <div className="mt-3">
-        <GridTable
-          rowData={clientData}
-          columnDefs={columnDefs}
-          pageSize={10}
-          searchText={searchText}
-        />
-      </div> */}
+        )}
+      </div>
 
       <DeleteModal />
     </>
