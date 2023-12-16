@@ -36,9 +36,9 @@ function MyApp({ Component, pageProps, err }) {
         } else {
           const tenant = await authService.checkTenant({ name });
           if (Number(tenant?.ID)) cookie.set("tenant_id", tenant.ID);
-          if (Number(tenant?.ClientId))
+          if (Number(tenant?.ClientID))
             setClient({
-              staffUser: true,
+              staffUser: tenant?.Slug === "app",
               name: tenant?.ClientName,
               id: Number(tenant?.ClientID),
             });
@@ -97,6 +97,7 @@ function MyApp({ Component, pageProps, err }) {
       <Head>
         <title>RSSL</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://db.onlinewebfonts.com/c/860a62f61e94367696df249678cf8efc?family=Segoe+Bold" rel="stylesheet"></link>
       </Head>
 
       <Provider store={store}>

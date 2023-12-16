@@ -283,7 +283,9 @@ export default function Productions({ router, user }) {
     {
       headerName: "Created On",
       field: "CreatedDate",
-      cellRenderer: (params) => <div>{params.value.split("T")[0]}</div>,
+      cellRenderer: (params) => (
+        <div>{params?.data?.CreatedDate?.split("T")[0]}</div>
+      ),
       sortable: true,
       resizable: true,
       suppressSizeToFit: true,
@@ -504,13 +506,13 @@ export default function Productions({ router, user }) {
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
               {tableData.data.length === 0 &&
-                objectsAreEqual(
-                  {
-                    ...defaultFilters,
-                    isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
-                  },
-                  filters
-                ) ? (
+              objectsAreEqual(
+                {
+                  ...defaultFilters,
+                  isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
+                },
+                filters
+              ) ? (
                 <NoProductionPage {...{ user }} />
               ) : (
                 <GridWithPagination

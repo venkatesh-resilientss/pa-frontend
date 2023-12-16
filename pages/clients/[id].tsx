@@ -163,6 +163,8 @@ function Clients({ router, user }) {
   }, [router.query.id]);
 
   const hasPermission = hasAccess(user, "client_management", "edit_client");
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
   const handleEdit = async () => {
     if (isEditing) {
       // form submission
@@ -180,15 +182,23 @@ function Clients({ router, user }) {
           el.err &&
           (el.typ === "select"
             ? !getObjectValue(clientData, el.vl)
-            : (el.vl === "Company.PrimaryContact.EmailID" &&
-                !new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}").test(
-                  getObjectValue(clientData, el.vl)
-                )) ||
+            : (el.vl === "Company.SecondaryContact.EmailID" &&
+                getObjectValue(clientData, el.vl).toString().trim() &&
+                (!emailRegex.test(
+                  getObjectValue(clientData, el.vl).toString().trim()
+                ) ||
+                  getObjectValue(clientData, el.vl).toString().trim() ===
+                    getObjectValue(clientData, "Company.PrimaryContact.EmailID")
+                      .toString()
+                      .trim())) ||
+              (el.vl === "Company.PrimaryContact.EmailID" &&
+                !emailRegex.test(getObjectValue(clientData, el.vl))) ||
               (el.vl === "Tenant.Slug" &&
                 !new RegExp(/^[a-z0-9-_]{2,}$/).test(
                   getObjectValue(clientData, el.vl)
                 )) ||
-              !getObjectValue(clientData, el.vl).toString().trim())
+              (el.vl !== "Company.SecondaryContact.EmailID" &&
+                !getObjectValue(clientData, el.vl).toString().trim()))
         )
           tempErr = true;
       });

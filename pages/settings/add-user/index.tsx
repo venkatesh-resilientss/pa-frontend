@@ -1,9 +1,9 @@
 import AddUser from "components/MyProject/Settings/UserManagement/AddUser";
 
-export default function index() {
+export default function AddUserPage({router,user}) {
   return (
     <div>
-      <AddUser />
+      <AddUser {...{router,user}} />
     </div>
   );
 }

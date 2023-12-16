@@ -28,7 +28,7 @@ const ClientsCard = ({ data }) => {
         </div>
         <div className="w-100 ms-2">
           <div className="d-flex justify-content-between">
-            <div className="f-18 fw-bold clr-dblack">
+            <div className="clientcard_headings">
               {getLabel(data.name || "-")}
             </div>
             <Link href={`/clients/${data.id}`}>
@@ -36,11 +36,11 @@ const ClientsCard = ({ data }) => {
                 <div>
                   <Image
                     src={carbonDecumentView}
-                    style={{ height: "11px", width: "11px" }}
+                    style={{ height: "12px", width: "12px",marginBottom:"5px" }}
                     alt={"view details"}
                   />
                 </div>
-                <div>View Details</div>
+                <div className="view_details">View Details</div>
                 <div>
                   <AiFillCaretRight style={{ marginBottom: "1px" }} />
                 </div>
@@ -132,14 +132,9 @@ const ClientsCard = ({ data }) => {
           <div
             key={i}
             style={{
-              fontSize: "12px",
-              fontWeight: "400",
               backgroundColor: "#B5DEF0",
-              width: "auto",
-              color: "#030229",
-              padding: "4px",
               borderRadius: "5%",
-            }}
+            }} className="p-1 px-2 f-12"
           >
             {software.software_name || "-"}
           </div>

@@ -10,6 +10,7 @@ import { getLabel } from "@/commonFunctions/common";
 import Link from "next/link";
 
 const ProjectCard = ({ data }) => {
+  
   return (
     <Card className="text-black px-1 h-100">
       <CardBody>
@@ -25,11 +26,11 @@ const ProjectCard = ({ data }) => {
                     <div>
                       <Image
                         src={carbonDecumentView}
-                        style={{ height: "11px", width: "11px" }}
+                        style={{ height: "12px", width: "12px",marginBottom:"5px" }}
                         alt={"view details"}
                       />
                     </div>
-                    <div>View Details</div>
+                    <div className="view_details">View Details</div>
                     <div>
                       <AiFillCaretRight style={{ marginBottom: "1px" }} />
                     </div>
@@ -58,13 +59,12 @@ const ProjectCard = ({ data }) => {
               <span>Budget Allocated</span>
               <div className="fw-bold font-size-14">{data?.budget || 0}</div>
             </div>
-
             <div className="d-flex gap-2 iconsSpace">
               <Image
                 src={budgetSpend}
                 alt=""
                 style={{
-                  width: "15px",
+                  width: "12px",
                 }}
               />
               <div>
@@ -74,6 +74,7 @@ const ProjectCard = ({ data }) => {
             </div>
           </div>
         </div>
+        
 
         <div className="d-flex justify-content-between mt-3">
           <div>
@@ -85,18 +86,16 @@ const ProjectCard = ({ data }) => {
               className="d-flex justify-content-between"
               style={{ fontSize: "10px" }}
             >
-              <div className="d-flex gap-2 mt-1 font-size-14 fw-400">
+              <div className="d-flex gap-2 mt-2 f-12">
                 {data.softwares?.map((software, i) => {
                   return (
                     <div
                       key={`software-card-${i}`}
                       style={{
                         backgroundColor: "#B5DEF0",
-                        width: "auto",
                         color: "#030229",
-                        padding: "4px",
                         borderRadius: "5%",
-                      }}
+                      }} className="p-1 px-2 f-12"
                     >
                       {software?.software_name || "-"}
                     </div>
@@ -122,7 +121,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
             <div>
-              <div className="f-12 fw-bold">
+              <div className="f-14 fw-bold text-end">
                 <p>Custom Design</p>
               </div>
             </div>
