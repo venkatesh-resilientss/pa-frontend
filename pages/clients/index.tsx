@@ -162,7 +162,7 @@ export default function Clients({ router, user }) {
           <DropdownMenu end container="body">
             <Link href={`/clients/${props.data?.ID}`}>
               <DropdownItem tag="span" className="w-100 cr-p">
-                <Action icon={editIocn} name={"View/Edit Clients"} />
+                <Action icon={editIocn} name={"View/Edit Client"} />
               </DropdownItem>
             </Link>
           </DropdownMenu>

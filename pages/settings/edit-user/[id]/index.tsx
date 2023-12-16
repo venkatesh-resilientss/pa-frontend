@@ -13,14 +13,19 @@ const clientService = new ClientsService();
 const roleService = new RoleService();
 const usersService = new UsersService();
 
-
 export default function EditUser({ router, user: userData }) {
   const { id } = router.query;
   const [editMode, setEditMode] = useState(false);
   const handleToggleEditMode = () => setEditMode(!editMode);
 
-  const { control, handleSubmit, reset, formState: { errors }, watch } = useForm();
-  const watchRole = watch('role', '');
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm();
+  const watchRole = watch("role", "");
 
   const [showStaffUser, setShowStaffUser] = useState(true) as any;
   const [initialClientOptions, setInitialClientOptions] = useState([]) as any;
@@ -44,10 +49,12 @@ export default function EditUser({ router, user: userData }) {
     else {
       setShowStaffUser(false);
       if (watchRole?.label == "Client Admin")
-        setClientProductionsList([{ ...clientProductionsList[0], production_id: [], productions: [] }])
-      else setClientProductionsList([{ ...clientProductionsList[0] }])
+        setClientProductionsList([
+          { ...clientProductionsList[0], production_id: [], productions: [] },
+        ]);
+      else setClientProductionsList([{ ...clientProductionsList[0] }]);
     }
-  }, [watchRole])
+  }, [watchRole]);
 
   useEffect(() => {
     roleService
@@ -55,12 +62,12 @@ export default function EditUser({ router, user: userData }) {
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-            ?.filter((e) => e?.IsActive)
-            .map((role) => ({
-              value: role.ID,
-              label: role.RoleName,
-              field: role.IsStaff
-            }))
+              ?.filter((e) => e?.IsActive)
+              .map((role) => ({
+                value: role.ID,
+                label: role.RoleName,
+                field: role.IsStaff,
+              }))
           : [];
         setRoleOptions(temproleOptions);
       });
@@ -75,7 +82,7 @@ export default function EditUser({ router, user: userData }) {
           limit: 250,
           offset: 0,
           search: "",
-          status: "true"
+          status: "true",
         });
         const options = (res?.data || [])
           ?.filter((e) => e?.IsActive)
@@ -107,7 +114,6 @@ export default function EditUser({ router, user: userData }) {
         setClientProductionsList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
-
               return {
                 ...item,
                 productionOptions: [...productions],
@@ -157,7 +163,7 @@ export default function EditUser({ router, user: userData }) {
   useEffect(() => {
     const getData = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const resp = await usersService.getuserbyid(id);
         reset({
           lastname: resp?.last_name || "",
@@ -168,26 +174,29 @@ export default function EditUser({ router, user: userData }) {
           role: {
             value: resp?.Role?.ID || "",
             label: resp?.Role?.RoleName || "",
+            field: resp?.Role?.IsStaff || "",
           },
         });
         setActiveStatus(resp?.IsActive ? "active" : "inactive");
 
         if ((resp.Meta || [])?.length > 0) {
-          setClientProductionsList((transformList(resp.Meta || [])).map((e: any, id) => {
-            return {
-              client: `client_${id + 1}`,
-              production: `production_${id + 1}`,
-              client_id: e.id,
-              production_id: (e?.projects || []).map((el) => el.id),
-              productionOptions: [],
-              productions: (e?.projects || []).map((el) => ({
-                label: el.name,
-                value: el.id,
-              })),
-              clientData: { label: e.name, value: e.id },
-            };
-          }))
-          setLoading(false)
+          setClientProductionsList(
+            transformList(resp.Meta || []).map((e: any, id) => {
+              return {
+                client: `client_${id + 1}`,
+                production: `production_${id + 1}`,
+                client_id: e.id,
+                production_id: (e?.projects || []).map((el) => el.id),
+                productionOptions: [],
+                productions: (e?.projects || []).map((el) => ({
+                  label: el.name,
+                  value: el.id,
+                })),
+                clientData: { label: e.name, value: e.id },
+              };
+            })
+          );
+          setLoading(false);
           // const list = await Promise.all(
           //   (transformList(resp.Meta || [])).map(async (e: any, id) => {
           //     const productionOptions = await ProductionOptions(e.ID);
@@ -207,7 +216,7 @@ export default function EditUser({ router, user: userData }) {
           // );
           // setClientProductionsList([...list]);
         } else {
-          setLoading(false)
+          setLoading(false);
           setClientProductionsList([
             {
               client: "client_1",
@@ -221,7 +230,7 @@ export default function EditUser({ router, user: userData }) {
           ]);
         }
       } catch (e) {
-        setLoading(false)
+        setLoading(false);
         toast.error(e?.error || "Error");
         setClientProductionsList([
           {
@@ -241,7 +250,7 @@ export default function EditUser({ router, user: userData }) {
   }, [id, router.isReady, reset]);
 
   useEffect(() => {
-    setUserDetails(userData)
+    setUserDetails(userData);
   }, [userData]);
 
   const loadClientOptions: any = async (inputValue, callback) => {
@@ -252,10 +261,15 @@ export default function EditUser({ router, user: userData }) {
         offset: 0,
         is_active: true,
       });
-      const options = res?.data.filter(e => ![...clientProductionsList.map(el => el.client_id)].includes(e.ID)).map((item) => ({
-        value: item.ID,
-        label: item.Name
-      }));
+      const options = res?.data
+        .filter(
+          (e) =>
+            ![...clientProductionsList.map((el) => el.client_id)].includes(e.ID)
+        )
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
 
       callback(options);
     } catch (error) {
@@ -272,9 +286,12 @@ export default function EditUser({ router, user: userData }) {
     }),
   };
 
-
   const onSubmit = async (data) => {
-    if (userDetails?.IsStaffUser && !data?.role?.value && !clientProductionsList[0].client_id) {
+    if (
+      userDetails?.IsStaffUser &&
+      !data?.role?.value &&
+      !clientProductionsList[0].client_id
+    ) {
       toast.error("Select Client");
       return;
     }
@@ -299,7 +316,7 @@ export default function EditUser({ router, user: userData }) {
       const userPreferences = clientProductionsList.map((list) => {
         return {
           ClientID: list.client_id,
-          ProjectIDs: []
+          ProjectIDs: [],
         };
       });
       userPayload.Meta.userCPReference = userPreferences;
@@ -313,7 +330,7 @@ export default function EditUser({ router, user: userData }) {
       userPayload.Meta.userCPReference = userPreferences;
     }
 
-    setLoading(true)
+    setLoading(true);
     usersService
       .editUser(id, userPayload)
       .then(() => {
@@ -321,16 +338,12 @@ export default function EditUser({ router, user: userData }) {
         toast.success("User Updated successfully");
         reset();
         setLoading(false);
-
       })
       .catch((error) => {
         toast.error(error?.error);
-        setLoading(false)
-
+        setLoading(false);
       }) as Promise<any>;
   };
-
-
 
   return (
     <div className=" text-black mt-4 p-3">
@@ -449,7 +462,7 @@ export default function EditUser({ router, user: userData }) {
                     )} */}
                   </>
                 )}
-              // rules={{ required: "Middle Name is required" }}
+                // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -508,9 +521,9 @@ export default function EditUser({ router, user: userData }) {
                     styles={roleSelectStyles}
                     isDisabled={!editMode}
 
-                  // onChange={(e) => {
-                  //   setSelectedRole(e.label);
-                  // }}
+                    // onChange={(e) => {
+                    //   setSelectedRole(e.label);
+                    // }}
                   />
                 )}
               />
@@ -555,17 +568,20 @@ export default function EditUser({ router, user: userData }) {
                         classNamePrefix="select"
                         loadOptions={loadClientOptions}
                         placeholder="Select Client"
-                        defaultOptions={initialClientOptions.filter(e =>
-                          ![...clientProductionsList.map(el => el.client_id)].includes(e.value)
-                        )
-                        }
+                        defaultOptions={initialClientOptions.filter(
+                          (e) =>
+                            ![
+                              ...clientProductionsList.map(
+                                (el) => el.client_id
+                              ),
+                            ].includes(e.value)
+                        )}
                         value={CPlist.clientData || null}
                         onChange={(client) => {
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
                         isDisabled={!editMode}
-
                       />
                     )}
                   />
@@ -626,8 +642,7 @@ export default function EditUser({ router, user: userData }) {
                       value={CPlist.productions}
                       onChange={(e) => {
                         const temp = e.map((ele) => ele.value);
-                        const productionToUpdate = `production_${index + 1
-                          }`;
+                        const productionToUpdate = `production_${index + 1}`;
                         setClientProductionsList((prevList) => {
                           return prevList.map((item: any) => {
                             if (item.production == productionToUpdate) {
@@ -643,7 +658,6 @@ export default function EditUser({ router, user: userData }) {
                       }}
                       isDisabled={!editMode}
                     />
-
                   </>
                 ) : (
                   <div>

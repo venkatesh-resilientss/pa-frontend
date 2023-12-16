@@ -67,7 +67,7 @@ class UsersService extends APIService {
   getuserbyid(id): Promise<any> {
     return this.get(`${USERS_DETAIL_ENDPOINT(id)}`)
       .then((res) => {
-        return res?.data;
+        return res?.data?.data;
       })
       .catch((error: any) => {
         throw error?.response?.data;
