@@ -189,7 +189,7 @@ export default function EditUser({ router, user: userData }) {
           setLoading(false)
           const list = await Promise.all(
             (resp.Meta || []).map(async (e, id) => {
-              const productionOptions = await ProductionOptions(e.id);
+              const productionOptions = await ProductionOptions(e.ID);
               return {
                 client: `client_${id + 1}`,
                 production: `production_${id + 1}`,

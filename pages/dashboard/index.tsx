@@ -52,7 +52,7 @@ function Index({ loginStatus, user, mutate, router }) {
       ) : user?.IsStaffUser ? (
         <Dashboard {...{ router, user }} />
       ) : (
-        <ProductionDashboard />
+        <ProductionDashboard {...{ user }} />
       )}
     </div>
   );
