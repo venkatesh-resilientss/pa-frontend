@@ -7,6 +7,7 @@ import Button from "react-bootstrap-button-loader";
 import AsyncSelect from "react-select/async";
 
 import { ClientsService, RoleService, UsersService } from "services";
+import { transformList } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const roleService = new RoleService();
@@ -138,20 +139,20 @@ export default function EditUser({ router, user: userData }) {
 
   const [activeStatus, setActiveStatus] = useState("inactive");
 
-  const ProductionOptions = (clientId) => {
-    return usersService
-      .getProductionsByClient(clientId)
-      .then((res) => {
-        return (res || [])
-          ?.filter((e) => e?.IsActive)
-          .map((pr) => {
-            return { label: pr.Name, value: pr.ID };
-          });
-      })
-      .catch(() => {
-        return [];
-      });
-  };
+  // const ProductionOptions = (clientId) => {
+  //   return usersService
+  //     .getProductionsByClient(clientId)
+  //     .then((res) => {
+  //       return (res || [])
+  //         ?.filter((e) => e?.IsActive)
+  //         .map((pr) => {
+  //           return { label: pr.Name, value: pr.ID };
+  //         });
+  //     })
+  //     .catch(() => {
+  //       return [];
+  //     });
+  // };
 
   useEffect(() => {
     const getData = async () => {
@@ -172,7 +173,7 @@ export default function EditUser({ router, user: userData }) {
         setActiveStatus(resp?.IsActive ? "active" : "inactive");
 
         if ((resp.Meta || [])?.length > 0) {
-          setClientProductionsList((resp.Meta || []).map((e, id) => {
+          setClientProductionsList((transformList(resp.Meta || [])).map((e: any, id) => {
             return {
               client: `client_${id + 1}`,
               production: `production_${id + 1}`,
@@ -187,24 +188,24 @@ export default function EditUser({ router, user: userData }) {
             };
           }))
           setLoading(false)
-          const list = await Promise.all(
-            (resp.Meta || []).map(async (e, id) => {
-              const productionOptions = await ProductionOptions(e.ID);
-              return {
-                client: `client_${id + 1}`,
-                production: `production_${id + 1}`,
-                client_id: e.id,
-                production_id: (e?.projects || []).map((el) => el.id),
-                productionOptions,
-                productions: (e?.projects || []).map((el) => ({
-                  label: el.name,
-                  value: el.id,
-                })),
-                clientData: { label: e.name, value: e.id },
-              };
-            })
-          );
-          setClientProductionsList([...list]);
+          // const list = await Promise.all(
+          //   (transformList(resp.Meta || [])).map(async (e: any, id) => {
+          //     const productionOptions = await ProductionOptions(e.ID);
+          //     return {
+          //       client: `client_${id + 1}`,
+          //       production: `production_${id + 1}`,
+          //       client_id: e.id,
+          //       production_id: (e?.projects || []).map((el) => el.id),
+          //       productionOptions,
+          //       productions: (e?.projects || []).map((el) => ({
+          //         label: el.name,
+          //         value: el.id,
+          //       })),
+          //       clientData: { label: e.name, value: e.id },
+          //     };
+          //   })
+          // );
+          // setClientProductionsList([...list]);
         } else {
           setLoading(false)
           setClientProductionsList([
@@ -328,6 +329,8 @@ export default function EditUser({ router, user: userData }) {
 
       }) as Promise<any>;
   };
+
+
 
   return (
     <div className=" text-black mt-4 p-3">
