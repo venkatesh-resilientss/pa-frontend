@@ -30,14 +30,20 @@ const forgotPassword = new ForgotPasswordService();
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
   const [tableData, setTableData] = useState<any>({
     data: [],
     total_records: 0,
   });
-  const [pageNumber, setPageNumber] = useState(1) as any;
+
+  const defaultFilters: any = {
+    limit: 10,
+    offset: 0,
+    search: "",
+    pageNumber: 1,
+  };
+
+  const [filters, setFilters] = useState<any>(defaultFilters);
   const [userDetails, setUserDetails] = useState(null) as any;
-  const [pageLimit] = useState(10) as any;
 
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
@@ -56,11 +62,10 @@ const AllRoleTable = () => {
 
   useEffect(() => {
     if (userDetails) {
-      const offfset = (pageNumber - 1) * pageLimit;
       const queryParams = {
-        search: searchText.trim(),
-        limit: pageLimit,
-        offset: offfset,
+        search: filters.search.trim(),
+        limit: filters.limit,
+        offset: filters.offset,
         name: "asc",
       };
       userService
@@ -72,7 +77,7 @@ const AllRoleTable = () => {
           console.error(e);
         });
     }
-  }, [searchText, pageNumber, userDetails]);
+  }, [filters, userDetails]);
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
@@ -395,7 +400,9 @@ const AllRoleTable = () => {
                   <Form>
                     <input
                       className="search mr-2"
-                      onChange={(e) => setSearchText(e.target.value)}
+                      onChange={(e) =>
+                        setFilters({ ...filters, search: e.target.value })
+                      }
                       type="search"
                       placeholder="Search..."
                     />
@@ -416,7 +423,7 @@ const AllRoleTable = () => {
       </div>
 
       <div className="mt-3">
-        {tableData.data.length === 0 && !searchText.trim() ? (
+        {tableData.data.length === 0 && !filters.search.trim() ? (
           <NoDataPage
             buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
             buttonLink={"/settings/add-user"}
@@ -425,9 +432,9 @@ const AllRoleTable = () => {
           <GridWithPagination
             rowData={tableData}
             columnDefs={columnDefs}
-            limit={pageLimit}
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
           />
         )}
       </div>
