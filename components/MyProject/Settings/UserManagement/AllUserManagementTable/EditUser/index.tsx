@@ -102,18 +102,25 @@ function EditUser() {
   }, [userDetails]);
 
   useEffect(() => {
-    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
+    if (
+      ["Payroll Accountant", "Production Accountant", "Client Admin"].includes(
+        watchRole?.label
+      )
+    ) {
       setIsCheckedStaffUser(false);
       setShowStaffUser(false);
       if (watchRole?.label == "Client Admin")
-        setClientProductionsList([{ ...clientProductionsList[0], production_id: [], productions: [] }])
-      else setClientProductionsList([{ ...clientProductionsList[0] }])
+        setClientProductionsList([
+          { ...clientProductionsList[0], production_id: [], productions: [] },
+        ]);
+      else setClientProductionsList([{ ...clientProductionsList[0] }]);
     } else setShowStaffUser(true);
-  }, [watchRole])
+  }, [watchRole]);
 
   useEffect(() => {
-    if (!isCheckedStaffUser) setClientProductionsList([{ ...clientProductionsList[0] }])
-  }, [isCheckedStaffUser])
+    if (!isCheckedStaffUser)
+      setClientProductionsList([{ ...clientProductionsList[0] }]);
+  }, [isCheckedStaffUser]);
 
   useEffect(() => {
     setUserDetails(userData?.data);
@@ -331,7 +338,7 @@ function EditUser() {
     usersService
       .editUser(id, userPayload)
       .then(() => {
-        router.push("/settings/usermanagement");
+        router.push("/settings/users");
         toast.success("User Updated successfully");
         reset();
         setLoading(false);

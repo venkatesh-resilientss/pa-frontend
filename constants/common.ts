@@ -243,7 +243,7 @@ export const sidebarRoutesMaster = [
         name: "Countries",
         path: "/countries",
       },
-     
+
       {
         name: "Legislative Types",
         path: "/legislative-type",
@@ -275,7 +275,7 @@ export const sidebarRoutesMaster = [
       {
         name: "WC Class Codes",
         path: "/wcclasscodes",
-      }
+      },
     ],
   },
   {
@@ -285,7 +285,7 @@ export const sidebarRoutesMaster = [
     children: [
       {
         name: "User Management",
-        path: "/usermanagement",
+        path: "/users",
       },
       {
         name: "Role Management",
@@ -421,10 +421,9 @@ export const sidebarRoutesProduction = [
       {
         name: "MPIPHP Production code",
         path: "/MPIPHP",
-      }
-    ]
+      },
+    ],
   },
-
 ];
 
 export const sidebarRoutesNonStaff = [
@@ -473,7 +472,6 @@ export const sidebarRoutesNonStaff = [
         name: "WC Class Codes",
         path: "/wcclasscodes",
       },
-
     ],
   },
   {
@@ -483,12 +481,10 @@ export const sidebarRoutesNonStaff = [
     children: [
       {
         name: "User Management",
-        path: "/usermanagement",
+        path: "/users",
       },
-
     ],
   },
-
 ];
 
 /**Chart of accounts */
@@ -532,7 +528,7 @@ export const COAAccountyTypeOptions = [
   {
     label: "Capital",
     value: "Capital",
-  }
+  },
 ];
 
 /**Payment Options */
@@ -572,10 +568,10 @@ const ACCOUNT_NUMBER_MAX_LENGTH = 12;
 const ROUTING_NUMBER_MAX_LENGTH = 9;
 const EMAIL_MAX_LENGTH = 30;
 const PHONE_MAX_LENGTH = 30;
-const COUNTRY_CODE = 3
-const PHONE_NUMBER = 10
-const FAX_MAX_LENGTH = 10
-const CHECK_RANGE_START_END_COPIES_MAXLENGTH = 10
+const COUNTRY_CODE = 3;
+const PHONE_NUMBER = 10;
+const FAX_MAX_LENGTH = 10;
+const CHECK_RANGE_START_END_COPIES_MAXLENGTH = 10;
 const cityMaxLength = 20;
 const EFT_HOST_MAX_LENGTH = 30;
 const EFT_USERNAME_MAX_LENGTH = 50;
@@ -1026,14 +1022,9 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    city: {
-
-    },
-    state: {
-
-    },
-    country: {
-    },
+    city: {},
+    state: {},
+    country: {},
     zipCode: {
       maxLength: {
         value: ZIP_CODE_MAX_LENGTH,
@@ -1113,7 +1104,7 @@ export const formValidationRules = {
       required: "Default Address is required",
     },
     country: {
-      required: "Country is required"
+      required: "Country is required",
     },
     workState: {
       required: "Work State is required",
@@ -1257,7 +1248,7 @@ export const formValidationRules = {
     },
     email: contactValidationRules.email,
     contactName: contactValidationRules.fullName,
-    physicalAddressLine1 :  {
+    physicalAddressLine1: {
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
         message: `Line 1 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
@@ -1267,7 +1258,7 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    physicalAddressLine2 :  {
+    physicalAddressLine2: {
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
         message: `Line 2 cannot have more than ${ADDRESS_LINE_MAX_LENGTH} characters`,
@@ -1277,7 +1268,7 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    physicalAddressCity :  {
+    physicalAddressCity: {
       maxLength: {
         value: cityMaxLength,
         message: `city cannot have more than ${cityMaxLength} characters`,
@@ -1287,7 +1278,7 @@ export const formValidationRules = {
         message: "Special characters are not allowed",
       },
     },
-    physicalAddressPostalCode :  {
+    physicalAddressPostalCode: {
       maxLength: {
         value: ZIP_CODE_MAX_LENGTH,
         message: `Postal Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`,
@@ -1319,7 +1310,7 @@ export const formValidationRules = {
       },
     },
     mailingAddressCity: {
-       required: "City is required",
+      required: "City is required",
       maxLength: {
         value: cityMaxLength,
         message: `city cannot have more than ${cityMaxLength} characters`,
@@ -1330,10 +1321,10 @@ export const formValidationRules = {
       },
     },
     mailingAddressState: {
-       required: "City is required",
+      required: "City is required",
     },
     mailingAddressPostalCode: {
-       required: "Postal Code is required",
+      required: "Postal Code is required",
       maxLength: {
         value: ZIP_CODE_MAX_LENGTH,
         message: `Postal Code cannot contain more than ${ZIP_CODE_MAX_LENGTH} character`,
@@ -1344,8 +1335,8 @@ export const formValidationRules = {
       },
     },
     mailingAddressCountryCode: {
-       required: "Country Code is required",
-       maxLength: {
+      required: "Country Code is required",
+      maxLength: {
         value: COUNTRY_CODE,
         message: `Country Code must contain less than ${COUNTRY_CODE} characters`,
       },
@@ -1355,7 +1346,7 @@ export const formValidationRules = {
       },
     },
     mailingAddressPhoneNumber: {
-       required: "Phone Number is required",
+      required: "Phone Number is required",
       maxLength: {
         value: PHONE_NUMBER,
         message: `Phone Number must contain less than ${PHONE_NUMBER} characters`,
@@ -1410,89 +1401,85 @@ export const formValidationRules = {
       maxLength: {
         value: EFT_HOST_MAX_LENGTH,
         message: `Host must contain less than ${EFT_HOST_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftUserName: {
       maxLength: {
         value: EFT_USERNAME_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_USERNAME_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftPassword: {
       maxLength: {
         value: EFT_PASSWORD_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_PASSWORD_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftInboundPath: {
       maxLength: {
         value: EFT_PATHS_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_PATHS_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftOutboundPath: {
       maxLength: {
         value: EFT_PATHS_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_PATHS_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftCertificate: {
       maxLength: {
         value: EFT_CERTIFCATE_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_CERTIFCATE_MAX_LENGTH} characters`,
-      }
+      },
     },
     eftPort: {
       maxLength: {
         value: EFT_PORT_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_PORT_MAX_LENGTH} characters`,
-      }
+      },
     },
     defaultAmountCash: {
       required: "Default Amount Cash is required",
       maxLength: {
         value: DEFAULT_AMOUNTS_MAX_LENGTH,
         message: `Default Amount Cash must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
-      }
+      },
     },
     defaultAmountClearing: {
       required: "Default Amount Clearing is required",
       maxLength: {
         value: DEFAULT_AMOUNTS_MAX_LENGTH,
         message: `Default Amount Clearing must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
-      }
+      },
     },
     defaultAccountDeposit: {
       required: "Default Account Deposit is required",
       maxLength: {
         value: DEFAULT_AMOUNTS_MAX_LENGTH,
         message: `Default Account Deposit must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
-      }
+      },
     },
     defaultAccountDiscount: {
       required: "Default Account Discount is required",
       maxLength: {
         value: DEFAULT_AMOUNTS_MAX_LENGTH,
         message: `Default Account Discount must contain less than ${DEFAULT_AMOUNTS_MAX_LENGTH} characters`,
-      }
+      },
     },
-
-
-
   },
 };
 
-const UPLOAD_BASE_URL  = '/upload-sample-files'
+const UPLOAD_BASE_URL = "/upload-sample-files";
 export const UploadSampleFiles = {
-  countries : `${UPLOAD_BASE_URL}/RSSL Sample Data - countries.csv`,
-  coa : `${UPLOAD_BASE_URL}/RSSL Sample Data - coa.csv`,
-  currencies : `${UPLOAD_BASE_URL}/RSSL Sample Data - currencies.csv`,
-  departments : `${UPLOAD_BASE_URL}/RSSL Sample Data - departments.csv`,
-  locations : `${UPLOAD_BASE_URL}/RSSL Sample Data - locations.csv`,
-  periods : `${UPLOAD_BASE_URL}/RSSL Sample Data - periods.csv`,
-  series : `${UPLOAD_BASE_URL}/RSSL Sample Data - series.csv`,
-  sets : `${UPLOAD_BASE_URL}/RSSL Sample Data - sets.csv`,
-  states : `${UPLOAD_BASE_URL}/RSSL Sample Data - states.csv`,
-  taxcodes : `${UPLOAD_BASE_URL}/RSSL Sample Data - taxcodes.csv`,
-}
-  
+  countries: `${UPLOAD_BASE_URL}/RSSL Sample Data - countries.csv`,
+  coa: `${UPLOAD_BASE_URL}/RSSL Sample Data - coa.csv`,
+  currencies: `${UPLOAD_BASE_URL}/RSSL Sample Data - currencies.csv`,
+  departments: `${UPLOAD_BASE_URL}/RSSL Sample Data - departments.csv`,
+  locations: `${UPLOAD_BASE_URL}/RSSL Sample Data - locations.csv`,
+  periods: `${UPLOAD_BASE_URL}/RSSL Sample Data - periods.csv`,
+  series: `${UPLOAD_BASE_URL}/RSSL Sample Data - series.csv`,
+  sets: `${UPLOAD_BASE_URL}/RSSL Sample Data - sets.csv`,
+  states: `${UPLOAD_BASE_URL}/RSSL Sample Data - states.csv`,
+  taxcodes: `${UPLOAD_BASE_URL}/RSSL Sample Data - taxcodes.csv`,
+};

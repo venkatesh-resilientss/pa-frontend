@@ -110,7 +110,7 @@ export default function Users({ user: userDetails }) {
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
-                onClick={() => router.push(`/settings/edit-user/${id}`)}
+                onClick={() => router.push(`/settings/users/${id}`)}
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
@@ -344,7 +344,7 @@ export default function Users({ user: userDetails }) {
                   {hasCreateUseerPermission && (
                     <button
                       className="btn btn-primary"
-                      onClick={() => router.push("/settings/add-user")}
+                      onClick={() => router.push("/settings/users/create-user")}
                     >
                       <Plus size={16} /> Add User
                     </button>
@@ -360,7 +360,7 @@ export default function Users({ user: userDetails }) {
         {tableData.data.length === 0 && !filters.search.trim() ? (
           <NoDataPage
             buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
-            buttonLink={"/settings/add-user"}
+            buttonLink={"/settings/users/create-user"}
           />
         ) : (
           <GridWithPagination

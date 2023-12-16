@@ -12,7 +12,7 @@ const clientService = new ClientsService();
 const roleService = new RoleService();
 const usersService = new UsersService();
 
-export default function AddUser({ router, user: userData }) {
+export default function CreateUser({ router, user: userData }) {
   const {
     control,
     handleSubmit,
