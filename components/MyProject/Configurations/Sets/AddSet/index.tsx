@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { LoaderButton } from "@/components/Loaders";
+import { useState } from "react";
 function AddSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
@@ -17,8 +19,9 @@ function AddSet() {
   } = useForm();
 
   const setsService = new SetsService();
-
+  const [isLoading,setLoader] = useState(false);
   const onSubmit = (data) => {
+    setLoader(true);
     const { clientID, projectID } = getSessionVariables();
     const backendFormat = {
       name: getLabel(data.setname),
@@ -33,10 +36,12 @@ function AddSet() {
       .then(() => {
         toast.success("Sets Added successfully");
         reset();
-        router.back();
+        router.push('/configurations/sets');
+        setLoader(false)
       })
       .catch((error) => {
         toast.error(error?.Message);
+        setLoader(false)
       });
   };
 
@@ -56,7 +61,7 @@ function AddSet() {
         >
           Add New Set
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -70,17 +75,7 @@ function AddSet() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
         </div>
       </div>
 
