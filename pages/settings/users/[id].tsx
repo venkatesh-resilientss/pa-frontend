@@ -7,7 +7,7 @@ import Button from "react-bootstrap-button-loader";
 import AsyncSelect from "react-select/async";
 
 import { ClientsService, RoleService, UsersService } from "services";
-import { transformList } from "@/commonFunctions/common";
+import { groupAndConcatProjects } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const roleService = new RoleService();
@@ -32,27 +32,24 @@ export default function EditUser({ router, user: userData }) {
   const [userDetails, setUserDetails] = useState(null) as any;
   const [roleOptions, setRoleOptions] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
-  const [clientProductionsList, setClientProductionsList] = useState([
-    {
-      client: "client_1",
-      production: "production_1",
-      client_id: 0,
-      production_id: [],
-      productionOptions: [],
-      productions: [],
-      clientData: null,
-    },
-  ]);
+  const defaultListItem = {
+    client: "client_1",
+    production: "production_1",
+    client_id: 0,
+    production_id: [],
+    productionOptions: [],
+    productions: [],
+    clientData: null,
+  };
+  const [list, setList] = useState([{ ...defaultListItem }]);
 
   useEffect(() => {
     if (watchRole?.field) setShowStaffUser(true);
     else {
       setShowStaffUser(false);
       if (watchRole?.label == "Client Admin")
-        setClientProductionsList([
-          { ...clientProductionsList[0], production_id: [], productions: [] },
-        ]);
-      else setClientProductionsList([{ ...clientProductionsList[0] }]);
+        setList([{ ...list[0], production_id: [], productions: [] }]);
+      else setList([{ ...list[0] }]);
     }
   }, [watchRole]);
 
@@ -99,9 +96,9 @@ export default function EditUser({ router, user: userData }) {
     fetchInitialClients();
   }, []);
 
-  const getProductionOptions = (client, clientId) => {
+  const getProductionOptions = (client, clientData) => {
     usersService
-      .getProductionsByClient(clientId)
+      .getProductionsByClient(clientData.value)
       .then((res) => {
         const productions = (res || [])
           ?.filter((e) => e?.IsActive)
@@ -111,13 +108,14 @@ export default function EditUser({ router, user: userData }) {
               value: pr.ID,
             };
           });
-        setClientProductionsList((prevList) => {
+        setList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
               return {
                 ...item,
                 productionOptions: [...productions],
-                client_id: clientId,
+                client_id: clientData.value,
+                clientData: clientData,
                 production_id: [],
                 productions: [],
               };
@@ -128,13 +126,14 @@ export default function EditUser({ router, user: userData }) {
       })
       .catch((error) => {
         toast.error(error?.error);
-        setClientProductionsList((prevList) => {
+        setList((prevList) => {
           return prevList.map((item: any) => {
             if (item.client == client) {
               return {
                 ...item,
                 productionOptions: [],
-                client_id: clientId,
+                client_id: clientData.value,
+                clientData: clientData,
               };
             }
             return item;
@@ -145,20 +144,17 @@ export default function EditUser({ router, user: userData }) {
 
   const [activeStatus, setActiveStatus] = useState("inactive");
 
-  // const ProductionOptions = (clientId) => {
-  //   return usersService
-  //     .getProductionsByClient(clientId)
-  //     .then((res) => {
-  //       return (res || [])
-  //         ?.filter((e) => e?.IsActive)
-  //         .map((pr) => {
-  //           return { label: pr.Name, value: pr.ID };
-  //         });
-  //     })
-  //     .catch(() => {
-  //       return [];
-  //     });
-  // };
+  const ProductionOptions = (clientId) => {
+    if (clientId === 0) return [];
+    return usersService
+      .getProductionsByClient(clientId)
+      .then((res) =>
+        (res || [])
+          ?.filter((e) => e?.IsActive)
+          .map((pr) => ({ label: pr.Name, value: pr.ID }))
+      )
+      .catch(() => []);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -172,77 +168,61 @@ export default function EditUser({ router, user: userData }) {
           email: resp?.email || "",
           IsActive: resp?.IsActive ? "active" : "inactive",
           role: {
-            value: resp?.Role?.ID || "",
-            label: resp?.Role?.RoleName || "",
-            field: resp?.Role?.IsStaff || "",
+            value: resp?.role_id || "",
+            label: resp?.role_name || "",
+            field: resp?.is_staff_role || false,
           },
         });
         setActiveStatus(resp?.IsActive ? "active" : "inactive");
 
-        if ((resp.Meta || [])?.length > 0) {
-          setClientProductionsList(
-            transformList(resp.Meta || []).map((e: any, id) => {
-              return {
-                client: `client_${id + 1}`,
-                production: `production_${id + 1}`,
-                client_id: e.id,
-                production_id: (e?.projects || []).map((el) => el.id),
-                productionOptions: [],
-                productions: (e?.projects || []).map((el) => ({
-                  label: el.name,
-                  value: el.id,
-                })),
-                clientData: { label: e.name, value: e.id },
-              };
-            })
+        if ((resp?.client_data || [])?.length > 0) {
+          setList(
+            groupAndConcatProjects(resp?.client_data || []).map(
+              (e: any, id) => {
+                return {
+                  client: `client_${id + 1}`,
+                  production: `production_${id + 1}`,
+                  client_id: e.id,
+                  production_id: (e?.projects || []).map((el) => el.id),
+                  productionOptions: [],
+                  productions: (e?.projects || []).map((el) => ({
+                    label: el.name,
+                    value: el.id,
+                  })),
+                  clientData: e.client,
+                };
+              }
+            )
           );
           setLoading(false);
-          // const list = await Promise.all(
-          //   (transformList(resp.Meta || [])).map(async (e: any, id) => {
-          //     const productionOptions = await ProductionOptions(e.ID);
-          //     return {
-          //       client: `client_${id + 1}`,
-          //       production: `production_${id + 1}`,
-          //       client_id: e.id,
-          //       production_id: (e?.projects || []).map((el) => el.id),
-          //       productionOptions,
-          //       productions: (e?.projects || []).map((el) => ({
-          //         label: el.name,
-          //         value: el.id,
-          //       })),
-          //       clientData: { label: e.name, value: e.id },
-          //     };
-          //   })
-          // );
-          // setClientProductionsList([...list]);
+          const list = await Promise.all(
+            groupAndConcatProjects(resp?.client_data || []).map(
+              async (e: any, id) => {
+                const productionOptions = await ProductionOptions(e.id);
+                return {
+                  client: `client_${id + 1}`,
+                  production: `production_${id + 1}`,
+                  client_id: e.id,
+                  production_id: (e?.projects || []).map((el) => el.id),
+                  productionOptions,
+                  productions: (e?.projects || []).map((el) => ({
+                    label: el.name,
+                    value: el.id,
+                  })),
+                  clientData: e.client,
+                };
+              }
+            )
+          );
+          setList([...list]);
         } else {
           setLoading(false);
-          setClientProductionsList([
-            {
-              client: "client_1",
-              production: "production_1",
-              client_id: 0,
-              production_id: [],
-              productionOptions: [],
-              productions: [],
-              clientData: null,
-            },
-          ]);
+          setList([{ ...defaultListItem }]);
         }
       } catch (e) {
         setLoading(false);
         toast.error(e?.error || "Error");
-        setClientProductionsList([
-          {
-            client: "client_1",
-            production: "production_1",
-            client_id: 0,
-            production_id: [],
-            productionOptions: [],
-            productions: [],
-            clientData: null,
-          },
-        ]);
+        setList([{ ...defaultListItem }]);
       }
     };
 
@@ -262,10 +242,7 @@ export default function EditUser({ router, user: userData }) {
         is_active: true,
       });
       const options = res?.data
-        .filter(
-          (e) =>
-            ![...clientProductionsList.map((el) => el.client_id)].includes(e.ID)
-        )
+        .filter((e) => ![...list.map((el) => el.client_id)].includes(e.ID))
         .map((item) => ({
           value: item.ID,
           label: item.Name,
@@ -289,12 +266,13 @@ export default function EditUser({ router, user: userData }) {
   const onSubmit = async (data) => {
     if (
       userDetails?.IsStaffUser &&
-      !data?.role?.value &&
-      !clientProductionsList[0].client_id
+      !data?.role?.field &&
+      list[0].client_id === 0
     ) {
       toast.error("Select Client");
       return;
     }
+
     const userPayload: any = {
       first_name: data.firstname,
       last_name: data.lastname,
@@ -303,7 +281,7 @@ export default function EditUser({ router, user: userData }) {
       client_id: userDetails?.IsStaffUser
         ? data?.role?.field
           ? 0
-          : clientProductionsList[0].client_id
+          : list[0].client_id
         : userDetails.Client.ID,
       roleID: data?.role?.value,
       IsStaffUser: data?.role?.field,
@@ -313,20 +291,18 @@ export default function EditUser({ router, user: userData }) {
     };
 
     if (data?.role?.label === "Client Admin") {
-      const userPreferences = clientProductionsList.map((list) => {
-        return {
-          ClientID: list.client_id,
-          ProjectIDs: [],
-        };
-      });
+      const userPreferences = list.map((lt) => ({
+        ClientID: lt.client_id,
+        ProjectIDs: [],
+      }));
       userPayload.Meta.userCPReference = userPreferences;
     } else {
-      const userPreferences = clientProductionsList.map((list) => {
-        return {
-          ClientID: list.client_id,
-          ProjectIDs: [...list.production_id],
-        };
-      });
+      const userPreferences = list
+        .map((lt) => ({
+          ClientID: lt.client_id,
+          ProjectIDs: [...lt.production_id],
+        }))
+        .filter((e) => e.ClientID);
       userPayload.Meta.userCPReference = userPreferences;
     }
 
@@ -334,7 +310,7 @@ export default function EditUser({ router, user: userData }) {
     usersService
       .editUser(id, userPayload)
       .then(() => {
-        router.push("/settings/usermanagement");
+        router.push("/settings/users");
         toast.success("User Updated successfully");
         reset();
         setLoading(false);
@@ -552,7 +528,7 @@ export default function EditUser({ router, user: userData }) {
         <Row className="mt-4 mb-2">
           <label> {"Assign Client(s) & Production(s)"}</label>
         </Row>
-        {clientProductionsList.map((CPlist, index) => (
+        {list.map((CPlist, index) => (
           <Row key={index}>
             {userDetails?.IsStaffUser ? (
               <Col xl="4">
@@ -570,16 +546,14 @@ export default function EditUser({ router, user: userData }) {
                         placeholder="Select Client"
                         defaultOptions={initialClientOptions.filter(
                           (e) =>
-                            ![
-                              ...clientProductionsList.map(
-                                (el) => el.client_id
-                              ),
-                            ].includes(e.value)
+                            ![...list.map((el) => el.client_id)].includes(
+                              e.value
+                            )
                         )}
                         value={CPlist.clientData || null}
                         onChange={(client) => {
                           const clientToUpdate = `client_${index + 1}`;
-                          getProductionOptions(clientToUpdate, client.value);
+                          getProductionOptions(clientToUpdate, client);
                         }}
                         isDisabled={!editMode}
                       />
@@ -611,7 +585,7 @@ export default function EditUser({ router, user: userData }) {
                         defaultOptions={initialClientOptions}
                         onChange={(client) => {
                           const clientToUpdate = `client_${index + 1}`;
-                          getProductionOptions(clientToUpdate, client.value);
+                          getProductionOptions(clientToUpdate, client);
                         }}
                         value={initialClientOptions?.filter(
                           (option) => option.value === userDetails?.client_id
@@ -641,7 +615,7 @@ export default function EditUser({ router, user: userData }) {
                       onChange={(e) => {
                         const temp = e.map((ele) => ele.value);
                         const productionToUpdate = `production_${index + 1}`;
-                        setClientProductionsList((prevList) => {
+                        setList((prevList) => {
                           return prevList.map((item: any) => {
                             if (item.production == productionToUpdate) {
                               return {
@@ -680,10 +654,10 @@ export default function EditUser({ router, user: userData }) {
                       alt=""
                       width={15}
                       onClick={() => {
-                        const updatedData = clientProductionsList.filter(
+                        const updatedData = list.filter(
                           (_, listIndex) => listIndex !== index
                         );
-                        setClientProductionsList([...updatedData]);
+                        setList([...updatedData]);
                       }}
                     />
                   </div>
@@ -692,13 +666,13 @@ export default function EditUser({ router, user: userData }) {
             }
             {showStaffUser && (
               <Col xl="3">
-                {index === clientProductionsList.length - 1 && (
+                {index === list.length - 1 && (
                   <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
                     <p className="my-2"></p>
-                    <p
-                      className="mb-2"
+                    <button
+                      className="btn border-0"
                       onClick={() => {
-                        const id = clientProductionsList.length + 1;
+                        const id = list.length + 1;
                         const tempObj = {
                           client: `client_${id}`,
                           production: `production_${id}`,
@@ -708,16 +682,13 @@ export default function EditUser({ router, user: userData }) {
                           productions: [],
                           clientData: null,
                         };
-                        setClientProductionsList([
-                          ...clientProductionsList,
-                          tempObj,
-                        ]);
+                        setList([...list, tempObj]);
                       }}
+                      disabled={!editMode}
                     >
-                      {" "}
-                      <img src="/add-client-icon.svg" alt="" width={15} /> Add
-                      Client
-                    </p>
+                      <img src="/add-client-icon.svg" alt="add" width={15} />{" "}
+                      Add Client
+                    </button>
                   </div>
                 )}
               </Col>

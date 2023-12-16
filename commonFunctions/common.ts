@@ -42,16 +42,36 @@ export const objectsAreEqual = (obj1, obj2) => {
   return true;
 };
 
-export const transformList = (inputList) =>{
+export const transformList = (inputList) => {
   let transformedData = {};
-console.log(inputList, "inputlist")
-  inputList.forEach(item => {
-    if (item.ID && !transformedData[item.ID]) 
+  console.log(inputList, "inputlist");
+  inputList.forEach((item) => {
+    if (item.ID && !transformedData[item.ID])
       transformedData[item.ID] = { id: item.ID, name: item.Name, projects: [] };
-    
-    if(item.ID && item.ProjectID)
-    transformedData[item.ID].projects.push({ id: item.ProjectID, name: item.ProjectName });
+
+    if (item.ID && item.ProjectID)
+      transformedData[item.ID].projects.push({
+        id: item.ProjectID,
+        name: item.ProjectName,
+      });
   });
-console.log(Object.values(transformedData),"transfored")
+
   return Object.values(transformedData);
-}
+};
+
+export const groupAndConcatProjects = (data) => {
+  const groupedData = {};
+  data.forEach((entry) => {
+    const { id, name: clientName, projects } = entry;
+    const groupId = id || 0;
+    const client = groupId ? { label: clientName || "", value: groupId } : null;
+    const projectsArr = Array.isArray(projects) ? projects : [];
+    const projectNames = projectsArr;
+    if (!groupedData[groupId])
+      groupedData[groupId] = { id: groupId, client, projects: [] };
+
+    groupedData[groupId].projects.push(...projectNames);
+  });
+
+  return Object.values(groupedData);
+};
