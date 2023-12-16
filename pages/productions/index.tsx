@@ -64,7 +64,7 @@ export default function Productions({ router, user }) {
       ...filters,
       offset: 0,
       status: "",
-      isCompleted: tab === 1 ? "" : tab === 2 ? "true" : "false",
+      isCompleted: tab === 1 ? "" : tab === 2 ? "false" : "true",
     });
   };
 
@@ -506,13 +506,13 @@ export default function Productions({ router, user }) {
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
               {tableData.data.length === 0 &&
-              objectsAreEqual(
-                {
-                  ...defaultFilters,
-                  isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
-                },
-                filters
-              ) ? (
+                objectsAreEqual(
+                  {
+                    ...defaultFilters,
+                    isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
+                  },
+                  filters
+                ) ? (
                 <NoProductionPage {...{ user }} />
               ) : (
                 <GridWithPagination

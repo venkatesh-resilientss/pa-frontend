@@ -41,3 +41,17 @@ export const objectsAreEqual = (obj1, obj2) => {
 
   return true;
 };
+
+export const transformList = (inputList) =>{
+  let transformedData = {};
+console.log(inputList, "inputlist")
+  inputList.forEach(item => {
+    if (item.ID && !transformedData[item.ID]) 
+      transformedData[item.ID] = { id: item.ID, name: item.Name, projects: [] };
+    
+    if(item.ID && item.ProjectID)
+    transformedData[item.ID].projects.push({ id: item.ProjectID, name: item.ProjectName });
+  });
+console.log(Object.values(transformedData),"transfored")
+  return Object.values(transformedData);
+}
