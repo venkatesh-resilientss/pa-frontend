@@ -613,11 +613,9 @@ export default function EditUser({ router, user: userData }) {
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
-                        defaultValue={() => {
-                          return initialClientOptions?.filter(
-                            (option) => option.value === userDetails.client_id
-                          );
-                        }}
+                        value={initialClientOptions?.filter(
+                          (option) => option.value === userDetails?.client_id
+                        )}
                       />
                     )}
                   />
