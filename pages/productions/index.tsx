@@ -3,14 +3,14 @@ import Image from "next/image";
 import { Card, UncontrolledDropdown } from "reactstrap";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 
-import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
+// import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
 import editIocn from "assets/myIcons/edit_square.svg";
-import detailsIocn from "assets/myIcons/list.svg";
+// import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
@@ -37,7 +37,7 @@ const steps = [
 export default function Productions({ router, user }) {
   const [step, setStep] = useState(1);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [tableData, setTableData] = useState({
     data: [],
     total_records: 0,
@@ -127,11 +127,14 @@ export default function Productions({ router, user }) {
   useEffect(() => {
     const getTableData = async () => {
       try {
+        const dateStart = dateFormat(filters.dateStart);
+        const dateEnd = dateFormat(filters.dateEnd);
+        if ((dateStart && !dateEnd) || (!dateStart && dateEnd)) return;
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
-          dateStart: dateFormat(filters.dateStart),
-          dateEnd: dateFormat(filters.dateEnd),
+          dateStart,
+          dateEnd,
         };
         const response = await projectService.getAllProjectsList(payload);
         setTableData({
@@ -197,13 +200,13 @@ export default function Productions({ router, user }) {
               />
             </DropdownItem>
 
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
                 action={() => dispatch(openAssignRSSLPopup(props.data))}
               />
-            </DropdownItem>
+            </DropdownItem> */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -331,6 +334,7 @@ export default function Productions({ router, user }) {
     { label: "Pending", value: "false" },
     { label: "Completed", value: "true" },
   ];
+
   return (
     <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
@@ -361,7 +365,7 @@ export default function Productions({ router, user }) {
       </Nav>
 
       <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
-        <div className="">
+        <div className="z-index-999">
           <DatePicker
             id="startDatePicker"
             className="w-100 form-control"
@@ -506,13 +510,13 @@ export default function Productions({ router, user }) {
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
               {tableData.data.length === 0 &&
-                objectsAreEqual(
-                  {
-                    ...defaultFilters,
-                    isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
-                  },
-                  filters
-                ) ? (
+              objectsAreEqual(
+                {
+                  ...defaultFilters,
+                  isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
+                },
+                filters
+              ) ? (
                 <NoProductionPage {...{ user }} />
               ) : (
                 <GridWithPagination

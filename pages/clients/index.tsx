@@ -102,12 +102,15 @@ export default function Clients({ router, user }) {
   useEffect(() => {
     const getTableData = async () => {
       try {
+        const dateStart = dateFormat(filters.dateStart);
+        const dateEnd = dateFormat(filters.dateEnd);
+        if ((dateStart && !dateEnd) || (!dateStart && dateEnd)) return;
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
           softwares: filters.softwares.map((e) => e.value),
-          dateStart: dateFormat(filters.dateStart),
-          dateEnd: dateFormat(filters.dateEnd),
+          dateStart,
+          dateEnd,
         };
         const response = await clientService.getClientsList(payload);
         setTableData({
@@ -309,7 +312,7 @@ export default function Clients({ router, user }) {
       </Card>
 
       <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
-        <div className="">
+        <div className="z-index-999">
           <DatePicker
             id="startDatePicker"
             className="w-100 form-control"

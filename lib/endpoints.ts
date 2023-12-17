@@ -241,7 +241,7 @@ export const PROJECT_DETAILS = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`;
 
 export const GET_ALL_USERS = `${withoutTenantIdEndpoint}/users/`; //get Users
-export const GET_STAFF_USERS = `${withoutTenantIdEndpoint}/users/staffusers/`; //get Users
+export const GET_STAFF_ROLE_USERS = `${withoutTenantIdEndpoint}/users/staffusers`; //get Users
 export const GET_CLIENT_USERS = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}/users`; //get Users
 

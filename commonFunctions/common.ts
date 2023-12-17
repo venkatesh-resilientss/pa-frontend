@@ -29,6 +29,13 @@ export const debounce = (fn, delay?) => {
   };
 };
 
+export const areArraysEqual = (arr1, arr2) => {
+  return (
+    arr1.length === arr2.length &&
+    arr1.every((element, index) => element === arr2[index])
+  );
+};
+
 export const objectsAreEqual = (obj1, obj2) => {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);
@@ -36,27 +43,16 @@ export const objectsAreEqual = (obj1, obj2) => {
   if (keys1.length !== keys2.length) return false;
 
   for (let key of keys1) {
-    if (obj1[key] !== obj2[key]) return false;
+    if (
+      (!["clients", "softwares", "projectTypes"].includes(key) &&
+        obj1[key] !== obj2[key]) ||
+      (["clients", "softwares", "projectTypes"].includes(key) &&
+        !areArraysEqual(obj1[key], obj2[key]))
+    )
+      return false;
   }
 
   return true;
-};
-
-export const transformList = (inputList) => {
-  let transformedData = {};
-  console.log(inputList, "inputlist");
-  inputList.forEach((item) => {
-    if (item.ID && !transformedData[item.ID])
-      transformedData[item.ID] = { id: item.ID, name: item.Name, projects: [] };
-
-    if (item.ID && item.ProjectID)
-      transformedData[item.ID].projects.push({
-        id: item.ProjectID,
-        name: item.ProjectName,
-      });
-  });
-
-  return Object.values(transformedData);
 };
 
 export const groupAndConcatProjects = (data) => {
@@ -74,4 +70,15 @@ export const groupAndConcatProjects = (data) => {
   });
 
   return Object.values(groupedData);
+};
+
+export const removeDuplicates = (arr, key) => {
+  const uniqueKeys = {};
+  return arr.filter((item) => {
+    if (!uniqueKeys[item[key]]) {
+      uniqueKeys[item[key]] = true;
+      return true;
+    }
+    return false;
+  });
 };

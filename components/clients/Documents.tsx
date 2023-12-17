@@ -50,7 +50,7 @@ export default function Documents(props) {
       {!disabled && (
         <div className="d-inline-flex flex-column">
           <input
-            className={`form-control ${
+            className={`form-control w-m-190 ${
               err && !name.trim() ? "border-danger" : ""
             }`}
             placeholder="Enter Document Name"

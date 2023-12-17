@@ -89,46 +89,46 @@ function Clients({ router, user }) {
         const tempObj: any = { ...clientData, ...resp };
         tempObj.clientType = tempObj?.ClientType?.ID
           ? {
-            label: tempObj?.ClientType?.Name,
-            value: tempObj?.ClientType?.ID,
-          }
+              label: tempObj?.ClientType?.Name,
+              value: tempObj?.ClientType?.ID,
+            }
           : null;
         tempObj.clientAdmin = tempObj?.ClientAdmin?.ID
           ? {
-            label:
-              (tempObj?.ClientAdmin?.first_name || "") +
-              " " +
-              (tempObj?.ClientAdmin?.last_name || ""),
-            value: tempObj?.ClientAdmin?.ID,
-          }
+              label:
+                (tempObj?.ClientAdmin?.first_name || "") +
+                " " +
+                (tempObj?.ClientAdmin?.last_name || ""),
+              value: tempObj?.ClientAdmin?.ID,
+            }
           : null;
 
         tempObj.rsslSupportUser = tempObj?.RsslSupportUser?.ID
           ? {
-            label:
-              (tempObj?.RsslSupportUser?.first_name || "") +
-              " " +
-              (tempObj?.RsslSupportUser?.last_name || ""),
-            value: tempObj?.RsslSupportUser?.ID,
-          }
+              label:
+                (tempObj?.RsslSupportUser?.first_name || "") +
+                " " +
+                (tempObj?.RsslSupportUser?.last_name || ""),
+              value: tempObj?.RsslSupportUser?.ID,
+            }
           : null;
 
         tempObj.PhysicalAddress.country =
           tempObj?.PhysicalAddress?.CountryID &&
-            tempObj?.PhysicalAddress?.Country?.Name
+          tempObj?.PhysicalAddress?.Country?.Name
             ? {
-              label: tempObj?.PhysicalAddress?.Country?.Name,
-              value: tempObj?.PhysicalAddress?.CountryID,
-            }
+                label: tempObj?.PhysicalAddress?.Country?.Name,
+                value: tempObj?.PhysicalAddress?.CountryID,
+              }
             : null;
 
         tempObj.PhysicalAddress.state =
           tempObj?.PhysicalAddress?.StateID &&
-            tempObj?.PhysicalAddress?.State?.Name
+          tempObj?.PhysicalAddress?.State?.Name
             ? {
-              label: tempObj?.PhysicalAddress?.State?.Name,
-              value: tempObj?.PhysicalAddress?.StateID,
-            }
+                label: tempObj?.PhysicalAddress?.State?.Name,
+                value: tempObj?.PhysicalAddress?.StateID,
+              }
             : null;
 
         tempObj.PhysicalAddress.Zipcode =
@@ -136,20 +136,20 @@ function Clients({ router, user }) {
 
         tempObj.MailingAddress.country =
           tempObj?.MailingAddress?.CountryID &&
-            tempObj?.MailingAddress?.Country?.Name
+          tempObj?.MailingAddress?.Country?.Name
             ? {
-              label: tempObj?.MailingAddress?.Country?.Name,
-              value: tempObj?.MailingAddress?.CountryID,
-            }
+                label: tempObj?.MailingAddress?.Country?.Name,
+                value: tempObj?.MailingAddress?.CountryID,
+              }
             : null;
 
         tempObj.MailingAddress.state =
           tempObj?.MailingAddress?.StateID &&
-            tempObj?.MailingAddress?.State?.Name
+          tempObj?.MailingAddress?.State?.Name
             ? {
-              label: tempObj?.MailingAddress?.State?.Name,
-              value: tempObj?.MailingAddress?.StateID,
-            }
+                label: tempObj?.MailingAddress?.State?.Name,
+                value: tempObj?.MailingAddress?.StateID,
+              }
             : null;
 
         tempObj.MailingAddress.Zipcode = tempObj?.MailingAddress?.Zipcode || "";
@@ -183,22 +183,22 @@ function Clients({ router, user }) {
           (el.typ === "select"
             ? !getObjectValue(clientData, el.vl)
             : (el.vl === "Company.SecondaryContact.EmailID" &&
-              getObjectValue(clientData, el.vl).toString().trim() &&
-              (!emailRegex.test(
-                getObjectValue(clientData, el.vl).toString().trim()
-              ) ||
-                getObjectValue(clientData, el.vl).toString().trim() ===
-                getObjectValue(clientData, "Company.PrimaryContact.EmailID")
-                  .toString()
-                  .trim())) ||
-            (el.vl === "Company.PrimaryContact.EmailID" &&
-              !emailRegex.test(getObjectValue(clientData, el.vl))) ||
-            (el.vl === "Tenant.Slug" &&
-              !new RegExp(/^[a-z0-9-_]{2,}$/).test(
-                getObjectValue(clientData, el.vl)
-              )) ||
-            (el.vl !== "Company.SecondaryContact.EmailID" &&
-              !getObjectValue(clientData, el.vl).toString().trim()))
+                getObjectValue(clientData, el.vl).toString().trim() &&
+                (!emailRegex.test(
+                  getObjectValue(clientData, el.vl).toString().trim()
+                ) ||
+                  getObjectValue(clientData, el.vl).toString().trim() ===
+                    getObjectValue(clientData, "Company.PrimaryContact.EmailID")
+                      .toString()
+                      .trim())) ||
+              (el.vl === "Company.PrimaryContact.EmailID" &&
+                !emailRegex.test(getObjectValue(clientData, el.vl))) ||
+              (el.vl === "Tenant.Slug" &&
+                !new RegExp(/^[a-z0-9-_]{2,}$/).test(
+                  getObjectValue(clientData, el.vl)
+                )) ||
+              (el.vl !== "Company.SecondaryContact.EmailID" &&
+                !getObjectValue(clientData, el.vl).toString().trim()))
         )
           tempErr = true;
       });
@@ -255,6 +255,7 @@ function Clients({ router, user }) {
         await clientService.editClient(Number(router.query.id), payload);
         setEditing(false);
         setLoading(false);
+        router.push(`/clients`);
         toast.success("Client Updated Successfully");
       } catch (e) {
         if (clientData.logoFile && !url) toast.error("Error Saving Logo");

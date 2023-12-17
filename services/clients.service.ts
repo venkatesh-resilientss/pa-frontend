@@ -11,15 +11,15 @@ import {
   GET_CLIENT_COUNTRIES,
   GET_STATES_BY_COUNTRY,
   UPLOAD_FILE_S3,
-  GET_STAFF_USERS,
+  GET_STAFF_ROLE_USERS,
   GET_CLIENT_USERS,
   GET_CLIENTS_LIST,
   GET_CLIENTS_FILTERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
-  getUsers(queries: any): Promise<any> {
-    return this.get(`${GET_STAFF_USERS}${queries}`)
+  getStaffRoleUsers(queries: any): Promise<any> {
+    return this.get(`${GET_STAFF_ROLE_USERS}${queries}`)
       .then((res) => {
         return res?.data;
       })

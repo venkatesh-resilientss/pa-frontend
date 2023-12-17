@@ -311,7 +311,7 @@ export default function EditUser({ router, user: userData }) {
       .editUser(id, userPayload)
       .then(() => {
         router.push("/settings/users");
-        toast.success("User Updated successfully");
+        toast.success("User updated successfully");
         reset();
         setLoading(false);
       })

@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import Button from "react-bootstrap-button-loader";
-import { ProjectService } from "services";
 import { hasAccess } from "@/commonFunctions/hasAccess";
+import { removeDuplicates } from "@/commonFunctions/common";
 
+import { ClientsService, ProjectService } from "services";
+
+const clientService = new ClientsService();
 const productionService = new ProjectService();
 
 export default function EditProductions({ router, clientData, user }) {
@@ -25,23 +28,37 @@ export default function EditProductions({ router, clientData, user }) {
   const handleAddPurchaseOrderField = () => setPoValues([...poValues, null]);
   const handleAddAccountPayableField = () => setApValues([...apValues, null]);
 
+  const getClientsPayload: any = {
+    dateStart: "",
+    dateEnd: "",
+    clients: [],
+    softwares: [],
+    limit: 10,
+    offset: 0,
+    search: "",
+    status: "true",
+    pageNumber: 1,
+  };
+
   const { data: clientsData } = useSWR("Clients", () =>
-    productionService.getClients({
-      dateStart: "",
-      dateEnd: "",
-      clients: [],
-      softwares: [],
-      limit: 10,
-      offset: 0,
-      search: "",
-      status: "true",
-      pageNumber: 1,
-    })
+    productionService.getClients({ ...getClientsPayload })
   );
   const clients: any = clientsData?.data || [];
   const { data: users, mutate } = useSWR("Users", () =>
     payld.client
-      ? productionService.getClientUsers(payld.client?.value, `?is_active=true`)
+      ? clientService.getClientUsers(payld.client?.value, `?is_active=true`)
+      : null
+  );
+
+  const {
+    data: productionAccountantUsers,
+    mutate: productionAccountantMutate,
+  } = useSWR("Users", () =>
+    payld.client
+      ? clientService.getClientUsers(
+          payld.client?.value,
+          `?is_active=true&role_code=PRODUCTION_ACCOUNTANT`
+        )
       : null
   );
 
@@ -51,6 +68,7 @@ export default function EditProductions({ router, clientData, user }) {
 
   useEffect(() => {
     mutate();
+    productionAccountantMutate();
   }, [payld.client]);
 
   useEffect(() => {
@@ -111,14 +129,20 @@ export default function EditProductions({ router, clientData, user }) {
   }, [router.query.id]);
 
   const getOptions = (lb) => {
-    const getName = (e) =>
-      lb === "users"
-        ? (e?.first_name || "") + " " + (e?.last_name || "")
-        : e?.Name || "";
+    if (["users", "productionAccountantUsers"].includes(lb) && !payld.client)
+      return [];
+    const tempArray: any =
+      lb === "clients"
+        ? clients
+        : lb === "productionAccountantUsers"
+        ? productionAccountantUsers?.data || []
+        : users?.data || [];
+    const tempArr: any = (tempArray || []).map((e) => ({
+      label: e?.name || e?.Name || "",
+      value: e.ID,
+    }));
 
-    if (lb === "users" && !payld.client) return [];
-    const tempArr: any = lb === "clients" ? clients : users?.data || [];
-    return (tempArr || []).map((e) => ({ label: getName(e), value: e.ID }));
+    return removeDuplicates(tempArr, "value");
   };
 
   const hasPermission = hasAccess(
@@ -173,7 +197,8 @@ export default function EditProductions({ router, clientData, user }) {
 
         setEditing(false);
         setLoading(false);
-        toast.success("Production Updated Successfully");
+        toast.success("Production updated successfully");
+        router.replace(`/productions`);
       } catch (e) {
         setLoading(false);
         toast.error(e?.error || e || "Error");
@@ -235,31 +260,30 @@ export default function EditProductions({ router, clientData, user }) {
   const loadOptions: any = (value, lb, opts?: any) => {
     if (lb === "clients") {
       return productionService
-        .getClients({
-          dateStart: "",
-          dateEnd: "",
-          clients: [],
-          softwares: [],
-          limit: 10,
-          offset: 0,
-          search: value,
-          status: "true",
-          pageNumber: 1,
-        })
+        .getClients({ ...getClientsPayload, search: value })
         .then((res) => {
-          return [...(res?.data || [])].map((e) => ({
+          const tempArr: any = [...(res?.data || [])].map((e) => ({
             label: e.Name,
             value: e.ID,
           }));
+          return removeDuplicates(tempArr, "value");
         });
-    } else if (lb === "users" && payld.client) {
-      return productionService
-        .getClientUsers(payld.client?.value, `?search=${value}&is_active=true`)
+    } else if (
+      ["users", "productionAccountantUsers"].includes(lb) &&
+      payld.client
+    ) {
+      return clientService
+        .getClientUsers(
+          payld.client?.value,
+          `?search=${value}&is_active=true${
+            lb === "productionAccountantUsers"
+              ? "&role_code=PRODUCTION_ACCOUNTANT"
+              : ""
+          }`
+        )
         .then((res) => {
-          return [...(res?.data || [])]
-            .map((e) => {
-              return { label: e.Name, value: e.ID };
-            })
+          const tempArr: any = [...(res?.data || [])]
+            .map((e) => ({ label: e.name, value: e.id }))
             .filter(
               (e) =>
                 ![...opts]
@@ -267,6 +291,7 @@ export default function EditProductions({ router, clientData, user }) {
                   .map((el) => el?.value)
                   .includes(e.value)
             );
+          return removeDuplicates(tempArr, "value");
         });
     } else {
       toast.error("Select Client");
@@ -543,11 +568,13 @@ export default function EditProductions({ router, clientData, user }) {
           <div className="col-12 col-md-4 px-4 py-2">
             <label className="form-label">User</label>
             <AsyncSelect
-              instanceId={`react-select-user`}
+              instanceId={`react-select-pauser`}
               styles={selectStyle}
               placeholder={"Select User"}
-              defaultOptions={getOptions("users")}
-              loadOptions={(value) => loadOptions(value, "users", [])}
+              defaultOptions={getOptions("productionAccountantUsers")}
+              loadOptions={(value) =>
+                loadOptions(value, "productionAccountantUsers", [])
+              }
               value={pAUser}
               onChange={(e) => setPAUser(e)}
               isDisabled={!isEditing || false}
