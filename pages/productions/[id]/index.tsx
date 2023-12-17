@@ -19,7 +19,12 @@ export default function EditProductions({ router, clientData, user }) {
 
   const [staffUser, setStaffUser] = useState<any>(false);
   const [err, setErr] = useState<any>(false);
-  const [payld, setPayld] = useState<any>({ name: "", code: "", client: null });
+  const [payld, setPayld] = useState<any>({
+    name: "",
+    code: "",
+    client: null,
+    clientStatus: false,
+  });
   const [loading, setLoading] = useState<any>(false);
   const [pAUser, setPAUser] = useState<any>(null);
   const [poValues, setPoValues] = useState<any>([null, null]);
@@ -53,7 +58,7 @@ export default function EditProductions({ router, clientData, user }) {
   const {
     data: productionAccountantUsers,
     mutate: productionAccountantMutate,
-  } = useSWR("Users", () =>
+  } = useSWR("ProductionUsers", () =>
     payld.client
       ? clientService.getClientUsers(
           payld.client?.value,
@@ -74,6 +79,7 @@ export default function EditProductions({ router, clientData, user }) {
   useEffect(() => {
     const getDetails = async () => {
       try {
+        setLoading(true);
         const resp = await productionService.getProjectDetails(
           Number(router.query.id)
         );
@@ -88,6 +94,7 @@ export default function EditProductions({ router, clientData, user }) {
           client: resp?.data?.Client?.Name
             ? { label: resp?.data?.Client?.Name, value: resp?.data?.Client?.ID }
             : null,
+          clientStatus: resp?.data?.Client?.isActive,
         });
 
         setPAUser(
@@ -121,7 +128,9 @@ export default function EditProductions({ router, clientData, user }) {
 
         setApValues(ap);
         setAPVal(ap.length > 0 ? true : false);
+        setLoading(false);
       } catch (e) {
+        setLoading(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -204,7 +213,9 @@ export default function EditProductions({ router, clientData, user }) {
         toast.error(e?.error || e || "Error");
       }
     } else {
-      if (hasPermission) setEditing(true);
+      if (hasPermission && payld.clientStatus) setEditing(true);
+      else if (hasPermission && !payld.clientStatus)
+        toast.error("Access Denied - Client In-active");
       else toast.error("Access Denied");
     }
   };

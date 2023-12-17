@@ -83,6 +83,7 @@ function Clients({ router, user }) {
   useEffect(() => {
     const getClientDetails = async () => {
       try {
+        setLoading(true);
         const resp = await clientService.getClientDetails(
           Number(router.query.id)
         );
@@ -155,7 +156,9 @@ function Clients({ router, user }) {
         tempObj.MailingAddress.Zipcode = tempObj?.MailingAddress?.Zipcode || "";
 
         setClientData(tempObj);
+        setLoading(false);
       } catch (e) {
+        setLoading(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -270,61 +273,59 @@ function Clients({ router, user }) {
 
   return (
     <>
-      {clientData?.ID && (
-        <div style={{ fontFamily: "Segoe UI" }} className="p-4 text-black">
-          <div className="d-flex justify-content-between">
-            <div className="d-flex gap-1">
-              {clientData?.LogoUrl ? (
-                <img
-                  src={clientData?.LogoUrl || "/endamol.svg"}
-                  width={48}
-                  height={48}
-                  className="rounded-circle"
-                />
-              ) : (
-                <div className="img-div">
-                  {(clientData?.Name || "").charAt(0).toUpperCase()}
-                </div>
-              )}
+      <div className="p-4 text-black">
+        <div className="d-flex justify-content-between">
+          <div className="d-flex gap-1">
+            {clientData?.LogoUrl ? (
+              <img
+                src={clientData?.LogoUrl || "/endamol.svg"}
+                width={48}
+                height={48}
+                className="rounded-circle"
+              />
+            ) : (
+              <div className="img-div">
+                {(clientData?.Name || "").charAt(0).toUpperCase()}
+              </div>
+            )}
 
-              <div>
-                <div className="fw-bold f-20">{clientData?.Name}</div>
-                <div className="f-12">
-                  {clientData?.Tenant?.Slug &&
-                    `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
-                  {/* | Client Admin Name | Client Admin Email */}
-                </div>
+            <div>
+              <div className="fw-bold f-20">{clientData?.Name}</div>
+              <div className="f-12">
+                {clientData?.Tenant?.Slug &&
+                  `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
+                {/* | Client Admin Name | Client Admin Email */}
               </div>
             </div>
-            <div className="my-auto">
-              <button
-                onClick={() => router.push("/clients")}
-                className="btn f-14"
-              >
-                Dismiss
-              </button>
-              <Button
-                size="sm"
-                onClick={handleEdit}
-                loading={loading}
-                disabled={loading}
-                spinColor="#ffffff"
-                className="px-3 py-2"
-              >
-                {isEditing ? "Save" : "Edit"}
-              </Button>
-            </div>
           </div>
-
-          <hr style={{ height: "2px" }} />
-
-          <ClientTabs
-            {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
-            {...{ router }}
-            errors={err}
-          />
+          <div className="my-auto">
+            <button
+              onClick={() => router.push("/clients")}
+              className="btn f-14"
+            >
+              Dismiss
+            </button>
+            <Button
+              size="sm"
+              onClick={handleEdit}
+              loading={loading}
+              disabled={loading}
+              spinColor="#ffffff"
+              className="px-3 py-2"
+            >
+              {isEditing ? "Save" : "Edit"}
+            </Button>
+          </div>
         </div>
-      )}
+
+        <hr />
+
+        <ClientTabs
+          {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
+          {...{ router }}
+          errors={err}
+        />
+      </div>
     </>
   );
 }

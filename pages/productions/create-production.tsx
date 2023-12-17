@@ -52,7 +52,7 @@ export default function CreateProduction({ router, clientData }) {
   const {
     data: productionAccountantUsers,
     mutate: productionAccountantMutate,
-  } = useSWR("Users", () =>
+  } = useSWR("ProductionUsers", () =>
     payld.client
       ? clientService.getClientUsers(
           payld.client?.value,
