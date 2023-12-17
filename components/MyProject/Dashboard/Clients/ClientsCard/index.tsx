@@ -27,23 +27,19 @@ const ClientsCard = ({ data }) => {
           />
         </div>
         <div className="w-100 ms-2">
-          <div className="d-flex justify-content-between">
-            <div className="clientcard_headings">
-              {getLabel(data.name || "-")}
-            </div>
-            <Link href={`/clients/${data.id}`}>
-              <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
-                <div>
-                  <Image
-                    src={carbonDecumentView}
-                    style={{ height: "12px", width: "12px",marginBottom:"5px" }}
-                    alt={"view details"}
-                  />
-                </div>
-                <div className="view_details">View Details</div>
-                <div>
-                  <AiFillCaretRight style={{ marginBottom: "1px" }} />
-                </div>
+          <div className="d-flex flex-wrap justify-content-between gap-2">
+            <h5 className="f-22 fw-bold m-0">{getLabel(data.name || "-")}</h5>
+            <Link href={`/clients/${data.id}`} className="ms-auto">
+              <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
+                <Image
+                  src={carbonDecumentView}
+                  alt={"view details"}
+                  width={12}
+                  height={12}
+                />
+                <div className="f-12 text-nowrap">View Details</div>
+
+                <AiFillCaretRight size={12} />
               </div>
             </Link>
           </div>
@@ -134,7 +130,8 @@ const ClientsCard = ({ data }) => {
             style={{
               backgroundColor: "#B5DEF0",
               borderRadius: "5%",
-            }} className="p-1 px-2 f-12"
+            }}
+            className="p-1 px-2 f-12"
           >
             {software.software_name || "-"}
           </div>
