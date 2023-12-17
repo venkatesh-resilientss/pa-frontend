@@ -7,7 +7,6 @@ import ClientTabs from "@/components/clients/ClientTabs";
 
 import { ClientsService } from "services";
 import { allFields } from "@/commonData";
-import { exclude } from "@/commonFunctions/common";
 import { getClientData, updateClientPayload } from "@/commonFunctions/payloads";
 
 function Clients({ router, user }) {
