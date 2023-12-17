@@ -20,6 +20,11 @@ export const exclude = (data, keys) =>
     Object.entries(data).filter(([key]) => !keys.includes(key))
   );
 
+export const include = (obj, keys) =>
+  Object.fromEntries(
+    keys.filter((key) => key in obj).map((key) => [key, obj[key]])
+  );
+
 export const debounce = (fn, delay?) => {
   let timeoutId;
 

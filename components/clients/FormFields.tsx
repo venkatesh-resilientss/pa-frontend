@@ -6,6 +6,7 @@ import Button from "react-bootstrap-button-loader";
 
 import { ClientsService } from "services";
 import { exclude } from "@/commonFunctions/common";
+import { createClientPayload } from "@/commonFunctions/payloads";
 
 const clientService = new ClientsService();
 
@@ -150,37 +151,7 @@ export default function FormFields(props: any) {
           url = fileUpload.url;
         }
 
-        const payload = { ...exclude(clientData, ["logoFile"]), LogoUrl: url };
-
-        payload["ClientSoftwares"] = clientData.Softwares.map((e) => ({
-          SoftwareID: e,
-        }));
-        if (clientData.clientType)
-          payload["ClientTypeID"] = clientData.clientType.value;
-        if (clientData.clientAdmin)
-          payload["ClientAdminID"] = clientData.clientAdmin.value;
-        if (clientData.rsslSupportUser)
-          payload["RsslSupportUserID"] = clientData.rsslSupportUser.value;
-
-        if (clientData.MailingAddress.country)
-          payload["MailingAddress"]["CountryID"] =
-            clientData.MailingAddress.country.value;
-        if (clientData.MailingAddress.state)
-          payload["MailingAddress"]["StateID"] =
-            clientData.MailingAddress.state.value;
-
-        payload["MailingAddress"]["Zipcode"] =
-          Number(clientData.MailingAddress.Zipcode) || 0;
-
-        if (clientData.PhysicalAddress.country)
-          payload["PhysicalAddress"]["CountryID"] =
-            clientData.PhysicalAddress.country.value;
-        if (clientData.PhysicalAddress.state)
-          payload["PhysicalAddress"]["StateID"] =
-            clientData.PhysicalAddress.state.value;
-
-        payload["PhysicalAddress"]["Zipcode"] =
-          Number(clientData.PhysicalAddress.Zipcode) || 0;
+        const payload = createClientPayload({ ...clientData, LogoUrl: url });
 
         await clientService.createClient(payload);
         router.push(`/clients`);

@@ -55,8 +55,8 @@ class ClientsService extends APIService {
         throw error?.response?.data;
       });
   }
-  getCountries(): Promise<any> {
-    return this.get(`${GET_CLIENT_COUNTRIES}`)
+  getCountries(search: any = ""): Promise<any> {
+    return this.get(`${GET_CLIENT_COUNTRIES(search)}`)
       .then((res) => {
         return res?.data;
       })

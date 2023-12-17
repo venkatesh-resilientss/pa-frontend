@@ -270,7 +270,8 @@ export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdPrEndpoint}/projecttypes/${id}`;
 
 export const GET_CLIENT_TYPES = `${withoutTenantIdEndpoint}/clienttypes/`;
-export const GET_CLIENT_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`;
+export const GET_CLIENT_COUNTRIES = (search: any) =>
+  `${withoutTenantIdEndpoint}/countries/?search=${search}`;
 export const GET_STATES_BY_COUNTRY = (id) =>
   `${withoutTenantIdEndpoint}/countries/${id}/states`;
 
