@@ -60,21 +60,35 @@ export const objectsAreEqual = (obj1, obj2) => {
   return true;
 };
 
-export const groupAndConcatProjects = (data) => {
+export const groupAndConcatProjects = (data, defaultObj) => {
   const groupedData = {};
   data.forEach((entry) => {
     const { id, name: clientName, projects } = entry;
     const groupId = id || 0;
     const client = groupId ? { label: clientName || "", value: groupId } : null;
-    const projectsArr = Array.isArray(projects) ? projects : [];
-    const projectNames = projectsArr;
-    if (!groupedData[groupId])
-      groupedData[groupId] = { id: groupId, client, projects: [] };
+    if (client) {
+      const projectsArr = Array.isArray(projects)
+        ? projects.map((e) => ({ label: e.name, value: e.id }))
+        : [];
 
-    groupedData[groupId].projects.push(...projectNames);
+      if (!groupedData[groupId])
+        groupedData[groupId] = { id: groupId, client, projects: [] };
+
+      groupedData[groupId].projects.push(...projectsArr);
+    }
   });
+  const tempArr: any = Object.values(groupedData);
+  if (tempArr.length === 0) return [{ ...defaultObj }];
 
-  return Object.values(groupedData);
+  return tempArr.map((e: any, id) => ({
+    client: `client_${id + 1}`,
+    production: `production_${id + 1}`,
+    client_id: e.id,
+    production_id: e.projects.map((el) => el.id),
+    productionOptions: [],
+    productions: e.projects,
+    clientData: e.client,
+  }));
 };
 
 export const removeDuplicates = (arr, key) => {

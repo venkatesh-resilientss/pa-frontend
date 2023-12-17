@@ -175,50 +175,26 @@ export default function EditUser({ router, user: userData }) {
         });
         setActiveStatus(resp?.IsActive ? "active" : "inactive");
 
-        if ((resp?.client_data || [])?.length > 0) {
-          setList(
-            groupAndConcatProjects(resp?.client_data || []).map(
-              (e: any, id) => {
-                return {
-                  client: `client_${id + 1}`,
-                  production: `production_${id + 1}`,
-                  client_id: e.id,
-                  production_id: (e?.projects || []).map((el) => el.id),
-                  productionOptions: [],
-                  productions: (e?.projects || []).map((el) => ({
-                    label: el.name,
-                    value: el.id,
-                  })),
-                  clientData: e.client,
-                };
-              }
-            )
-          );
-          setLoading(false);
-          const list = await Promise.all(
-            groupAndConcatProjects(resp?.client_data || []).map(
-              async (e: any, id) => {
-                const productionOptions = await ProductionOptions(e.id);
-                return {
-                  client: `client_${id + 1}`,
-                  production: `production_${id + 1}`,
-                  client_id: e.id,
-                  production_id: (e?.projects || []).map((el) => el.id),
-                  productionOptions,
-                  productions: (e?.projects || []).map((el) => ({
-                    label: el.name,
-                    value: el.id,
-                  })),
-                  clientData: e.client,
-                };
-              }
-            )
-          );
-          setList([...list]);
-        } else {
-          setLoading(false);
-          setList([{ ...defaultListItem }]);
-        }
+        const tempList = groupAndConcatProjects(
+          resp?.client_data || [],
+          defaultListItem
+        );
+        setList(tempList);
+        setLoading(false);
+
+        const tempLt = await Promise.all(
+          tempList.map(async (e: any) => {
+            const optns = await ProductionOptions(e.client_id);
+            return { id: e.client_id, optns };
+          })
+        );
+        setList((pL) =>
+          pL.map((e) => ({
+            ...e,
+            productionOptions:
+              tempLt.find((el) => el.id === e.client_id)?.optns || [],
+          }))
+        );
       } catch (e) {
         setLoading(false);
         toast.error(e?.error || "Error");
