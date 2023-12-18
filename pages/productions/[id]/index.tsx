@@ -26,8 +26,7 @@ export default function EditProductions({ router, clientData, user }) {
     client: null,
     clientStatus: false,
   });
-  const [loading, setLoading] = useState<any>(false);
-  const [load, setLoad] = useState<any>(true);
+  const [loading, setLoading] = useState<any>(true);
   const [pAUser, setPAUser] = useState<any>(null);
   const [poValues, setPoValues] = useState<any>([null, null]);
   const [apValues, setApValues] = useState<any>([null, null]);
@@ -61,7 +60,7 @@ export default function EditProductions({ router, clientData, user }) {
     data: productionAccountantUsers,
     mutate: productionAccountantMutate,
   } = useSWR("ProductionUsers", () =>
-    payld.client
+    payld.client && staffUser
       ? clientService.getClientUsers(
           payld.client?.value,
           `?is_active=true&role_code=PRODUCTION_ACCOUNTANT`
@@ -81,7 +80,6 @@ export default function EditProductions({ router, clientData, user }) {
   useEffect(() => {
     const getDetails = async () => {
       try {
-        setLoad(true);
         const resp = await productionService.getProjectDetails(
           Number(router.query.id)
         );
@@ -113,20 +111,20 @@ export default function EditProductions({ router, clientData, user }) {
 
         const po = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "PO")
-          .map((e) => ({ label: e.name, value: e.UserID }));
+          .map((e) => (e.UserID ? { label: e.name, value: e.UserID } : null));
 
         setPoValues(po);
         setPOVal(po.length > 0 ? true : false);
 
         const ap = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "AP")
-          .map((e) => ({ label: e.name, value: e.UserID }));
+          .map((e) => (e.UserID ? { label: e.name, value: e.UserID } : null));
 
         setApValues(ap);
         setAPVal(ap.length > 0 ? true : false);
-        setLoad(false);
+        setLoading(false);
       } catch (e) {
-        setLoad(false);
+        setLoading(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -143,8 +141,8 @@ export default function EditProductions({ router, clientData, user }) {
         ? productionAccountantUsers?.data || []
         : users?.data || [];
     const tempArr: any = (tempArray || []).map((e) => ({
-      label: e?.name || e?.Name || "",
-      value: e.ID,
+      label: lb === "clients" ? e?.Name || "" : e?.name || "",
+      value: lb === "clients" ? e.ID : e.id,
     }));
 
     return removeDuplicates(tempArr, "value");
@@ -230,7 +228,9 @@ export default function EditProductions({ router, clientData, user }) {
       },
       borderColor:
         err &&
-        state.selectProps.instanceId.includes("client") &&
+        (state.selectProps.instanceId.includes("client") ||
+          state.selectProps.instanceId.includes("po") ||
+          state.selectProps.instanceId.includes("ap")) &&
         !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
@@ -314,9 +314,7 @@ export default function EditProductions({ router, clientData, user }) {
   );
   return (
     <>
-      {load ? (
-        <></>
-      ) : user && !hasViewPermission ? (
+      {user && !hasViewPermission ? (
         <NoProductionPage
           {...{ user }}
           typ={user && !hasViewPermission ? "Access Denied" : ""}
@@ -413,16 +411,9 @@ export default function EditProductions({ router, clientData, user }) {
                     instanceId={`react-select-client`}
                     styles={selectStyle}
                     placeholder={"Select Client"}
-                    defaultOptions={getOptions("clients")}
-                    loadOptions={(value) => loadOptions(value, "clients")}
+                    defaultOptions={[]}
                     value={payld.client}
-                    onChange={(e) => {
-                      setPayld({ ...payld, client: e });
-                      setApValues([null, null]);
-                      setPoValues([null, null]);
-                      setPAUser(null);
-                    }}
-                    isDisabled={!isEditing || false}
+                    isDisabled
                   />
                   {err && !payld?.client && (
                     <span className="text-danger f-12">
@@ -609,47 +600,59 @@ export default function EditProductions({ router, clientData, user }) {
             </>
           )}
 
-          <hr />
-          <div className="fw-600">Production Control</div>
-          <div className="col-12 col-md-4 px-4 py-2">
-            <label className="form-label text-black f-12">Status</label>
+          {staffUser && (
+            <>
+              <hr />
+              <div className="fw-600">Production Control</div>
+              <div className="col-12 col-md-4 px-4 py-2">
+                <label className="form-label text-black f-12">Status</label>
 
-            <div className="">
-              {["Active", "In-active"].map((e, idx) => (
-                <label
-                  className="flex-center d-inline-flex gap-1 m-2"
-                  key={idx}
-                >
+                <div className="">
+                  {["Active", "In-active"].map((e, idx) => (
+                    <label
+                      className="flex-center d-inline-flex gap-1 m-2"
+                      key={idx}
+                    >
+                      <input
+                        name="IsActive"
+                        type="radio"
+                        className=""
+                        checked={!idx ? payld?.IsActive : !payld?.IsActive}
+                        onChange={() =>
+                          setPayld({
+                            ...payld,
+                            IsActive: idx ? false : true,
+                            IsCompleted: idx ? payld.IsCompleted : false,
+                          })
+                        }
+                        disabled={!isEditing || false}
+                      />
+                      <p className="text-nowrap cursor-pointer m-0">{e}</p>
+                    </label>
+                  ))}
+                </div>
+                <label className="flex-center d-inline-flex gap-1 m-2">
                   <input
-                    name="IsActive"
-                    type="radio"
+                    name="IsCompleted"
+                    type="checkbox"
                     className=""
-                    checked={!idx ? payld?.IsActive : !payld?.IsActive}
-                    onChange={() =>
-                      setPayld({ ...payld, IsActive: idx ? false : true })
+                    checked={payld?.IsCompleted || false}
+                    onChange={(e) =>
+                      setPayld({
+                        ...payld,
+                        IsCompleted: e.target.checked,
+                        IsActive: e.target.checked ? false : payld.IsActive,
+                      })
                     }
                     disabled={!isEditing || false}
                   />
-                  <p className="text-nowrap cursor-pointer m-0">{e}</p>
+                  <p className="text-nowrap cursor-pointer m-0">
+                    Mark as Completed
+                  </p>
                 </label>
-              ))}
-            </div>
-            <label className="flex-center d-inline-flex gap-1 m-2">
-              <input
-                name="IsCompleted"
-                type="checkbox"
-                className=""
-                checked={payld?.IsCompleted || false}
-                onChange={(e) =>
-                  setPayld({ ...payld, IsCompleted: e.target.checked })
-                }
-                disabled={!isEditing || false}
-              />
-              <p className="text-nowrap cursor-pointer m-0">
-                Mark as Completed
-              </p>
-            </label>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

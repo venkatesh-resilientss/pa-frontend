@@ -13,8 +13,7 @@ import NoClientPage from "@/components/clients/NoClientPage";
 function Clients({ router, user }) {
   const clientService = new ClientsService();
   const [isEditing, setEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [load, setLoad] = useState<any>(true);
+  const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(false);
 
   const defaultClientData: any = {
@@ -85,14 +84,13 @@ function Clients({ router, user }) {
   useEffect(() => {
     const getClientDetails = async () => {
       try {
-        setLoad(true);
         const resp = await clientService.getClientDetails(
           Number(router.query.id)
         );
         setClientData(getClientData({ ...clientData, ...resp }));
-        setLoad(false);
+        setLoading(false);
       } catch (e) {
-        setLoad(false);
+        setLoading(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -185,9 +183,7 @@ function Clients({ router, user }) {
   );
   return (
     <>
-      {load ? (
-        <></>
-      ) : user && !hasViewPermission ? (
+      {user && !hasViewPermission ? (
         <NoClientPage
           {...{ router, user }}
           typ={user && !hasViewPermission ? "Access Denied" : ""}
