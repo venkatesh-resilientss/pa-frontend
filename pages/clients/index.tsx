@@ -288,7 +288,8 @@ export default function Clients({ router, user }) {
 
   const CustomDatePicker = forwardRef(({ value, onClick }: any, ref: any) => (
     <button className="btn border bg-white" onClick={onClick} ref={ref}>
-      <span className="clr-dblack fw-600">Date</span> {value ? "from " : "is "}
+      <span className="clr-dblack fw-600">Date</span>&nbsp;
+      <span className="clr-lgrey">{value ? "from" : "is"}</span>&nbsp;
       <span className={"clr-dblack fw-600" + (value ? " me-3" : "")}>
         {value
           .split(" - ")
@@ -351,7 +352,7 @@ export default function Clients({ router, user }) {
             placeholderButtonLabel={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Client</span>
-                &nbsp;is&nbsp;
+                &nbsp;<span className="clr-lgrey">is</span>&nbsp;
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }
@@ -391,7 +392,7 @@ export default function Clients({ router, user }) {
             placeholderButtonLabel={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Software</span>
-                &nbsp;is&nbsp;
+                &nbsp;<span className="clr-lgrey">is</span>&nbsp;
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }
@@ -432,7 +433,7 @@ export default function Clients({ router, user }) {
             placeholder={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Status</span>
-                &nbsp;is&nbsp;
+                &nbsp;<span className="clr-lgrey">is</span>&nbsp;
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }

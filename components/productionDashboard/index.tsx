@@ -76,7 +76,9 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    fetchData();
+    if(user?.ID){
+      fetchData();
+    }
   }, [user]);
 
   //all production cards
@@ -93,7 +95,9 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    fetchData();
+    if(user?.ID){
+      fetchData();
+    }
   }, [user]);
 
   const handleViewDetails = (productionId) => {
@@ -230,7 +234,6 @@ export default function ProductionDashboard({ user }) {
                     <div>
                       <div>
                         <span style={{ fontSize: "10px" }}>
-                          <img src="/calender.svg" alt="" />{" "}
                           <img src="/calender.svg" alt="" />{" "}
                           {production?.created_date
                             ? moment(production.created_date).format(

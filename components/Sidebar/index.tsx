@@ -10,6 +10,7 @@ import {
   Tooltip,
   Button,
 } from "react-bootstrap";
+import cookie from "js-cookie";
 
 import {
   sidebarRoutesMaster,
@@ -82,10 +83,13 @@ const Sidebar = ({ props }) => {
     "payments_management",
     "view_all_payments"
   );
-  const hasViewReports = hasPermission("reports_management", "vendor_listing");
+  const hasViewReports = hasPermission(
+    "reports_management",
+    "view_all_reports"
+  );
   const hasViewTranscations = hasPermission(
     "transaction_management",
-    "view_payroll_list"
+    "view_all_transactions"
   );
 
   /**
@@ -100,10 +104,8 @@ const Sidebar = ({ props }) => {
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
-
-    if (routeNames[0] === "production") {
+    if (routeNames[0] === "productions") {
       const lastRoute = routeNames[routeNames.length - 1];
-
       setParentRoute(`/${lastRoute}`);
     } else {
       setParentRoute(`/${routeNames[0]}`);
@@ -118,10 +120,12 @@ const Sidebar = ({ props }) => {
   }, [router.pathname]);
 
   useEffect(() => {
-    clientService.getProductions(searchText).then((res) => {
-      setProductionData(res);
-    });
-  }, [searchText]);
+    if(cookie.get("accessToken")){
+      clientService.getProductions(searchText).then((res) => {
+        setProductionData(res);
+      });
+    }
+  }, [searchText, cookie.get("accessToken")]);
 
   useEffect(() => {
     const storedIndex = localStorage.getItem("clickedItemIndex");
@@ -148,6 +152,8 @@ const Sidebar = ({ props }) => {
   // Function to clear selection and remove from localStorage
   const clearProductionSelection = () => {
     setSelectedProduction(null);
+    setTemp1(null)
+    setTemp2(null)
 
     // Remove the selected production from localStorage
     localStorage.removeItem("selectedProduction");
@@ -161,14 +167,10 @@ const Sidebar = ({ props }) => {
     // Toggle clicked state
     if (index !== clickedItemIndex) {
       setSwitcProduction(!switcProduction);
-      setClickedItemIndex(index);
+      // setClickedItemIndex(index);
 
       // Store the clicked index in localStorage
-      localStorage.setItem("clickedItemIndex", index.toString());
-    } else {
-      // If the same item is clicked again, remove from localStorage
-      localStorage.removeItem("clickedItemIndex");
-      setClickedItemIndex(null);
+      // localStorage.setItem("clickedItemIndex", index.toString());
     }
   };
 
@@ -257,7 +259,7 @@ const Sidebar = ({ props }) => {
               <Link
                 className="d-flex gap-2"
                 href={
-                  clickedItemIndex
+                  temp1
                     ? `/productions/${temp1?.ID}/dashboard`
                     : route.children
                     ? ""
@@ -381,7 +383,7 @@ const Sidebar = ({ props }) => {
                     className="ms-2 cursor-pointer me-2"
                   />
                   <div className="d-flex align-items-start ms-2">
-                    <p
+                    <div
                       id="clicked"
                       className="home cursor-pointer"
                       onClick={() => {
@@ -390,17 +392,13 @@ const Sidebar = ({ props }) => {
                         setClickedItemIndex(null);
                         setSearchText("");
                         clearProductionSelection();
+                        router.push("/dashboard");
                       }}
                     >
-                      <div
-                        onClick={() => {
-                          // Redirect to the dashboard when clicking on "HOME"
-                          router.push("/dashboard");
-                        }}
-                      >
+                      <div>
                         Home
                       </div>
-                    </p>
+                    </div>
                   </div>
                 </div>
                 <Input
@@ -416,7 +414,7 @@ const Sidebar = ({ props }) => {
                       const isClicked = index === clickedItemIndex;
                       return (
                         <div
-                          key={index}
+                          key={`${index}-productions`}
                           className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
                             isClicked ? " clicked" : ""
                           }`}
@@ -631,19 +629,26 @@ const Sidebar = ({ props }) => {
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
-                if (
-                  (!hasViewConfiguration && route?.name !== "Configurations") ||
-                  (!hasViewTranscations && route?.name !== "Transactions") ||
-                  (!hasViewPayments && route?.name !== "Payments")
-                ) {
+                const isSuperAdminWithFullAccess =
+                  userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                  userData?.data?.Role?.AccessType === "full_acceess";
+
+                const isFilteredRoute =
+                  (hasViewConfiguration || route?.name !== "Configurations") &&
+                  (hasViewPayments || route?.name !== "Payments") &&
+                  (hasViewTranscations || route?.name !== "Transactions");
+
+                if (isSuperAdminWithFullAccess || userData?.data?.IsStaffUser) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
                   );
-                } else {
+                } else if (isFilteredRoute) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
                   );
                 }
+
+                return null;
               })}
             </div>
           ) : (
@@ -671,11 +676,11 @@ const Sidebar = ({ props }) => {
                   (userData?.data?.IsStaffUser && hasViewRoles)
                 ) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
                   );
                 } else if (isFilteredRoute) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
                   );
                 }
 
@@ -687,9 +692,9 @@ const Sidebar = ({ props }) => {
           <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesProduction.map((route, i) => {
               if (
-                (!hasViewConfiguration && route?.name !== "Configurations") ||
-                (!hasViewTranscations && route?.name !== "Transactions") ||
-                (!hasViewPayments && route?.name !== "Payments")
+                (hasViewConfiguration && route?.name !== "Configurations") ||
+                (hasViewTranscations && route?.name !== "Transactions") ||
+                (hasViewPayments && route?.name !== "Payments")
               ) {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
@@ -705,22 +710,19 @@ const Sidebar = ({ props }) => {
           <div className="px-3 mt-2 sidebar-body">
             {sidebarRoutesNonStaff.map((route: any, i) => {
               if (
-                (!hasViewReports && route?.name === "Reports") ||
-                (!hasViewProduction && route?.name === "Productions") ||
-                (!hasViewUsers &&
-                  !hasViewRoles &&
+                (hasViewReports && route?.name === "Reports") ||
+                (hasViewProduction && route?.name === "Productions") ||
+                (hasViewUsers &&
                   route?.children?.filter(
-                    (child) =>
-                      child.name !== "User Management" &&
-                      child.name !== "Role Management"
+                    (child) => child.name !== "User Management"
                   ))
               ) {
                 return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
                 );
               } else {
                 return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
                 );
               }
             })}
