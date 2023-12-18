@@ -11,15 +11,15 @@ import {
   GET_CLIENT_COUNTRIES,
   GET_STATES_BY_COUNTRY,
   UPLOAD_FILE_S3,
-  GET_ALL_USERS,
+  GET_STAFF_ROLE_USERS,
   GET_CLIENT_USERS,
   GET_CLIENTS_LIST,
   GET_CLIENTS_FILTERS,
 } from "../lib/endpoints";
 
 class ClientsService extends APIService {
-  getUsers(queries: any): Promise<any> {
-    return this.get(`${GET_ALL_USERS}${queries}`)
+  getStaffRoleUsers(queries: any): Promise<any> {
+    return this.get(`${GET_STAFF_ROLE_USERS}${queries}`)
       .then((res) => {
         return res?.data;
       })
@@ -55,8 +55,8 @@ class ClientsService extends APIService {
         throw error?.response?.data;
       });
   }
-  getCountries(): Promise<any> {
-    return this.get(`${GET_CLIENT_COUNTRIES}`)
+  getCountries(search: any = ""): Promise<any> {
+    return this.get(`${GET_CLIENT_COUNTRIES(search)}`)
       .then((res) => {
         return res?.data;
       })

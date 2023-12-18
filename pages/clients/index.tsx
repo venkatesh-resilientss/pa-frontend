@@ -16,12 +16,14 @@ import GridWithPagination from "@/components/dataTable/GridWithPagination";
 
 import { ClientsService } from "services";
 import Link from "next/link";
-import { getLabel } from "@/commonFunctions/common";
+import { getLabel, objectsAreEqual } from "@/commonFunctions/common";
 import { dateFormat } from "@/commonFunctions/common";
+import { hasAccess } from "@/commonFunctions/hasAccess";
 
 const clientService = new ClientsService();
 
 export default function Clients({ router, user }) {
+  const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState<any>({
     data: [],
     total_records: 0,
@@ -29,7 +31,7 @@ export default function Clients({ router, user }) {
   const [clFilters, setClFilters] = useState<any>([]);
   const [swFilters, setSwFilters] = useState<any>([]);
 
-  const [filters, setFilters] = useState<any>({
+  const defaultFilters: any = {
     dateStart: "",
     dateEnd: "",
     clients: [],
@@ -39,7 +41,9 @@ export default function Clients({ router, user }) {
     search: "",
     status: "",
     pageNumber: 1,
-  });
+  };
+
+  const [filters, setFilters] = useState<any>(defaultFilters);
 
   const selectStyle = {
     control: (base) => ({
@@ -100,21 +104,25 @@ export default function Clients({ router, user }) {
   useEffect(() => {
     const getTableData = async () => {
       try {
+        const dateStart = dateFormat(filters.dateStart);
+        const dateEnd = dateFormat(filters.dateEnd);
+        if ((dateStart && !dateEnd) || (!dateStart && dateEnd)) return;
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
           softwares: filters.softwares.map((e) => e.value),
-          dateStart: dateFormat(filters.dateStart),
-          dateEnd: dateFormat(filters.dateEnd),
+          dateStart,
+          dateEnd,
         };
         const response = await clientService.getClientsList(payload);
         setTableData({
           data: response.data || [],
           total_records: response.total_records || 0,
         });
+        setLoading(false);
         /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
       } catch (e) {
-        //
+        setLoading(false);
       }
     };
     getTableData();
@@ -160,7 +168,7 @@ export default function Clients({ router, user }) {
           <DropdownMenu end container="body">
             <Link href={`/clients/${props.data?.ID}`}>
               <DropdownItem tag="span" className="w-100 cr-p">
-                <Action icon={editIocn} name={"View/Edit Clients"} />
+                <Action icon={editIocn} name={"View/Edit Client"} />
               </DropdownItem>
             </Link>
           </DropdownMenu>
@@ -291,11 +299,16 @@ export default function Clients({ router, user }) {
   ));
 
   const statusOpts = [
-    { label: "All", value: "" },
+    { label: "All", value: "all" },
     { label: "Active", value: "true" },
     { label: "In-active", value: "false" },
   ];
 
+  const hasPermission = hasAccess(
+    user,
+    "client_management",
+    "view_all_clients"
+  );
   return (
     <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
@@ -307,7 +320,7 @@ export default function Clients({ router, user }) {
       </Card>
 
       <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
-        <div className="">
+        <div className="z-index-999">
           <DatePicker
             id="startDatePicker"
             className="w-100 form-control"
@@ -416,13 +429,20 @@ export default function Clients({ router, user }) {
             instanceId={`react-select-status`}
             styles={selectStyle}
             options={statusOpts}
-            value={statusOpts.find((e) => e.value === filters.status)}
+            placeholder={
+              <div className="f-16">
+                <span className="clr-dblack fw-600">Status</span>
+                &nbsp;is&nbsp;
+                <span className="clr-dblack fw-600">All</span>
+              </div>
+            }
+            value={statusOpts.find((e) => e.value === filters.status) || null}
             onChange={(e) =>
               setFilters({
                 ...filters,
                 pageNumber: 1,
                 offset: 0,
-                status: e.value,
+                status: e.value === "all" ? "" : e.value,
               })
             }
           />
@@ -439,8 +459,15 @@ export default function Clients({ router, user }) {
       </div>
 
       <div className="mt-3">
-        {tableData.data.length === 0 ? (
-          <NoClientPage {...{ router, user }} />
+        {loading ? (
+          <></>
+        ) : (tableData.data.length === 0 &&
+            objectsAreEqual(defaultFilters, filters)) ||
+          (user && !hasPermission) ? (
+          <NoClientPage
+            {...{ router, user }}
+            typ={user && !hasPermission ? "Access Denied" : ""}
+          />
         ) : (
           <GridWithPagination
             rowData={tableData}

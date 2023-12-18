@@ -1,56 +1,33 @@
-import { Col, Input, Label, Form, Row } from "reactstrap";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Col, Input, Label, Form, Row } from "reactstrap";
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import { UsersService } from "services";
 import Select from "react-select";
-import { ClientsService, RoleService, AuthService } from "services";
 import Button from "react-bootstrap-button-loader";
-
-const authService = new AuthService();
-
-import useSWR from "swr";
 import AsyncSelect from "react-select/async";
-const roleservice = new RoleService();
 
-function AddUser() {
-  const clientService = new ClientsService();
-  const { control, handleSubmit, reset, formState: { errors }, watch } = useForm();
-  const watchRole = watch('role', '');
+import { ClientsService, RoleService, UsersService } from "services";
+
+const clientService = new ClientsService();
+const roleService = new RoleService();
+const usersService = new UsersService();
+
+export default function AddUser({ router, user: userData }) {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm();
+  const watchRole = watch("role", "");
+
   const [showStaffUser, setShowStaffUser] = useState(true) as any;
-  const [isCheckedStaffUser, setIsCheckedStaffUser] = useState(false);
-
-
-
-  useEffect(() => {
-    if (watchRole?.label == "Client Admin" || !isCheckedStaffUser) {
-      setClientProductionsList([clientProductionsList[0]])
-    }
-    if (["Payroll Accountant", "Production Accountant", "Client Admin"].includes(watchRole?.label)) {
-      setIsCheckedStaffUser(false);
-      setShowStaffUser(false);
-    } else setShowStaffUser(true);
-  }, [watchRole, isCheckedStaffUser])
-  // const watchRole = watch('productions', '');
-
-
-
-  const { data: userData } = useSWR("GET_USER_DETAILS", () =>
-    authService.getUserDetails()
-  );
-  //get cleints
-
-  const [initialClientOptions, setInitialClientOptions] = useState() as any;
-  const router = useRouter();
-  // const [selectedRole, setSelectedRole] = useState(null);
-
-  const [userDetails, setUserDetails] = useState() as any;
-  const [clientDetails, setClientDetails] = useState(null) as any;
-
-  const [roleOptions, setRoleOptions] = useState();
+  const [initialClientOptions, setInitialClientOptions] = useState([]) as any;
+  const [userDetails, setUserDetails] = useState(null) as any;
+  const [roleOptions, setRoleOptions] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
-  const [clientProductionsList, setClientProductionsList] = useState([
+  const [list, setList] = useState([
     {
       client: "client_1",
       production: "production_1",
@@ -58,55 +35,102 @@ function AddUser() {
       production_id: [],
       productionOptions: [],
       productions: [],
-
     },
   ]);
 
   useEffect(() => {
-    roleservice
-      .getRoles({ search: "", limit: 50, offset: 0, is_active: true })
+    if (watchRole?.field) setShowStaffUser(true);
+    else {
+      setShowStaffUser(false);
+      if (watchRole?.label == "Client Admin")
+        setList([{ ...list[0], production_id: [], productions: [] }]);
+      else setList([{ ...list[0] }]);
+    }
+  }, [watchRole]);
+
+  useEffect(() => {
+    roleService
+      .getRoles({ search: "", limit: 100, offset: 0, is_active: true })
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-            ?.filter((e) => e?.IsActive)
-            .map((role) => ({
-              value: role.ID,
-              label: role.RoleName,
-            }))
+              ?.filter((e) => e?.IsActive)
+              .map((role) => ({
+                value: role.ID,
+                label: role.RoleName,
+                field: role.IsStaff,
+              }))
           : [];
         setRoleOptions(temproleOptions);
       });
   }, []);
 
-  useEffect(() => {
-    setUserDetails(userData?.data);
-    if (userData?.data) {
-      const client_id = userData?.data.client_id
-      if (!userData?.data?.IsStaffUser) {
-        const productionOptions = getProductionOptions("client_1", client_id)
-        const listObject: any = [
-          {
-            client: "client_1",
-            production: "production_1",
-            client_id: client_id,
-            production_id: [],
-            productionOptions: productionOptions,
-            // defaultValues: []
-            productions: [],
-          },
-        ]
-        // setValue("productions", [])
-        setClientProductionsList(listObject)
-      }
+  const getProductionOptions = (client, clientId) => {
+    usersService
+      .getProductionsByClient(clientId)
+      .then((res) => {
+        const productions = (res || [])
+          ?.filter((e) => e?.IsActive)
+          .map((pr) => {
+            return {
+              label: pr.Name,
+              value: pr.ID,
+            };
+          });
+        setList((prevList) => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [...productions],
+                client_id: clientId,
+                production_id: [],
+                productions: [],
+              };
+            }
+            return item;
+          });
+        });
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+        setList((prevList) => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [],
+                client_id: clientId,
+              };
+            }
+            return item;
+          });
+        });
+      });
+  };
 
+  useEffect(() => {
+    setUserDetails(userData);
+    if (!userData?.IsStaffUser && userData?.client_id) {
+      const client_id = userData?.client_id;
+      const productionOptions = getProductionOptions("client_1", client_id);
+      const listObject: any = [
+        {
+          client: "client_1",
+          production: "production_1",
+          client_id: client_id,
+          production_id: [],
+          productionOptions: productionOptions,
+          productions: [],
+        },
+      ];
+      setList(listObject);
     }
   }, [userData]);
-
 
   useEffect(() => {
     const fetchInitialClients = async () => {
       try {
-        // const res = await currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 });
         const res = await clientService.getClients({
           is_active: true,
           dateStart: "",
@@ -116,7 +140,7 @@ function AddUser() {
           limit: 250,
           offset: 0,
           search: "",
-          status: "true"
+          status: "true",
         });
         const options = (res?.data || [])
           ?.filter((e) => e?.IsActive)
@@ -141,60 +165,17 @@ function AddUser() {
         offset: 0,
         is_active: true,
       });
-      const options = res?.data.filter(e => ![...clientProductionsList.map(el => el.client_id)].includes(e.ID)).map((item) => ({
-        value: item.ID,
-        label: item.Name
-      }));
+      const options = res?.data
+        .filter((e) => ![...list.map((el) => el.client_id)].includes(e.ID))
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
 
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
     }
-  };
-
-  const getProductionOptions = (client, clientId) => {
-    usersService
-      .getProductionsByClient(clientId)
-      .then((res) => {
-        const productions = (res || [])
-          ?.filter((e) => e?.IsActive)
-          .map((pr) => {
-            return {
-              label: pr.Name,
-              value: pr.ID,
-            };
-          });
-        setClientProductionsList((prevList) => {
-          return prevList.map((item: any) => {
-            if (item.client == client) {
-
-              return {
-                ...item,
-                productionOptions: [...productions],
-                client_id: clientId,
-                production_id: [],
-                productions: [],
-              };
-            }
-            return item;
-          });
-        });
-      })
-      .catch((error) => {
-        toast.error(error?.error);
-        setClientProductionsList((prevList) => {
-          return prevList.map((item: any) => {
-            if (item.client == client) {
-              return {
-                ...item,
-                productionOptions: [],
-                client_id: clientId,
-              };
-            }
-            return item;
-          });
-        });
-      });
   };
 
   const roleSelectStyles = {
@@ -206,19 +187,12 @@ function AddUser() {
     }),
   };
 
-  // console.log(initialClientOptions.filter(e => ![...clientProductionsList.map(el => el.client_id)].includes(e.ID)))
-
-  const usersService = new UsersService();
-  // {
-  //   "lastname": "test",
-  //     "firstname": "user",
-  //       "middlename": "rssl",
-  //         "email": "rssl@gmail.com"
-  // }
-
-
   const onSubmit = async (data) => {
-    if (userDetails?.IsStaffUser && !isCheckedStaffUser && !clientDetails) {
+    if (
+      userDetails?.IsStaffUser &&
+      !data?.role?.field &&
+      list[0].client_id === 0
+    ) {
       toast.error("Select Client");
       return;
     }
@@ -228,27 +202,27 @@ function AddUser() {
       middle_name: data.middlename,
       email: data.email,
       client_id: userDetails?.IsStaffUser
-        ? isCheckedStaffUser
+        ? data?.role?.field
           ? 0
-          : clientDetails?.value
+          : list[0].client_id
         : userDetails.Client.ID,
       roleID: data?.role?.value,
-      IsStaffUser: isCheckedStaffUser,
+      IsStaffUser: data?.role?.field,
       Meta: {
         userCPReference: [],
       },
     };
 
-    if (data?.role?.value === "Client Admin") {
-      const userPreferences = clientProductionsList.map((list) => {
+    if (data?.role?.label === "Client Admin") {
+      const userPreferences = list.map((list) => {
         return {
           ClientID: list.client_id,
-          ProjectIDs: []
+          ProjectIDs: [],
         };
       });
       userPayload.Meta.userCPReference = userPreferences;
     } else {
-      const userPreferences = clientProductionsList.map((list) => {
+      const userPreferences = list.map((list) => {
         return {
           ClientID: list.client_id,
           ProjectIDs: [...list.production_id],
@@ -257,20 +231,18 @@ function AddUser() {
       userPayload.Meta.userCPReference = userPreferences;
     }
 
-    setLoading(true)
+    setLoading(true);
     usersService
       .postUsers(userPayload)
       .then(() => {
         toast.success("User Added successfully");
-        router.push("/settings/usermanagement");
+        router.push("/settings/users");
         reset();
-        setLoading(false)
-
+        setLoading(false);
       })
       .catch((error) => {
         toast.error(error?.error);
-        setLoading(false)
-
+        setLoading(false);
       }) as Promise<any>;
   };
 
@@ -385,7 +357,7 @@ function AddUser() {
                     )} */}
                   </>
                 )}
-              // rules={{ required: "Middle Name is required" }}
+                // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -442,9 +414,9 @@ function AddUser() {
                     options={roleOptions}
                     styles={roleSelectStyles}
 
-                  // onChange={(e) => {
-                  //   setSelectedRole(e.label);
-                  // }}
+                    // onChange={(e) => {
+                    //   setSelectedRole(e.label);
+                    // }}
                   />
                 )}
               />
@@ -453,7 +425,7 @@ function AddUser() {
               )}
             </div>
           </Col>
-          {userDetails?.IsStaffUser && showStaffUser && (
+          {showStaffUser && (
             <Col xl="4">
               <div className="my-auto h-100 py-auto d-flex align-items-end py-1 gap-2">
                 <input
@@ -461,10 +433,8 @@ function AddUser() {
                   name="customSwitch"
                   id="exampleCustomSwitch"
                   className="mb-1"
-                  checked={isCheckedStaffUser}
-                  onChange={(e) => {
-                    setIsCheckedStaffUser(e.target.checked);
-                  }}
+                  checked={showStaffUser}
+                  disabled={true}
                 />
 
                 <Label className="mb-0">Is Staff User</Label>
@@ -475,7 +445,7 @@ function AddUser() {
         <Row className="mt-4 mb-2">
           <label> {"Assign Client(s) & Production(s)"}</label>
         </Row>
-        {userDetails && initialClientOptions && clientProductionsList.map((CPlist, index) => (
+        {list.map((CPlist, index) => (
           <Row key={index}>
             {userDetails?.IsStaffUser ? (
               <Col xl="4">
@@ -491,19 +461,16 @@ function AddUser() {
                         classNamePrefix="select"
                         loadOptions={loadClientOptions}
                         placeholder="Select Client"
-                        defaultOptions={initialClientOptions.filter(e =>
-                          ![...clientProductionsList.map(el => el.client_id)].includes(e.value)
-                        )
-                        }
+                        defaultOptions={initialClientOptions.filter(
+                          (e) =>
+                            ![...list.map((el) => el.client_id)].includes(
+                              e.value
+                            )
+                        )}
                         onChange={(client) => {
-
-
-                          if (index === 0) setClientDetails(client);
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
-
-
                       />
                     )}
                   />
@@ -532,15 +499,12 @@ function AddUser() {
                         placeholder="Select Client"
                         defaultOptions={initialClientOptions}
                         onChange={(client) => {
-                          setClientDetails(client);
                           const clientToUpdate = `client_${index + 1}`;
                           getProductionOptions(clientToUpdate, client.value);
                         }}
-                        defaultValue={() => {
-                          return initialClientOptions?.filter(
-                            (option) => option.value === userDetails.client_id
-                          );
-                        }}
+                        value={initialClientOptions?.filter(
+                          (option) => option.value === userDetails?.client_id
+                        )}
                       />
                     )}
                   />
@@ -565,9 +529,8 @@ function AddUser() {
                       value={CPlist.productions}
                       onChange={(e) => {
                         const temp = e.map((ele) => ele.value);
-                        const productionToUpdate = `production_${index + 1
-                          }`;
-                        setClientProductionsList((prevList) => {
+                        const productionToUpdate = `production_${index + 1}`;
+                        setList((prevList) => {
                           return prevList.map((item: any) => {
                             if (item.production == productionToUpdate) {
                               return {
@@ -581,7 +544,6 @@ function AddUser() {
                         });
                       }}
                     />
-
                   </>
                 ) : (
                   <div>
@@ -606,25 +568,25 @@ function AddUser() {
                       alt=""
                       width={15}
                       onClick={() => {
-                        const updatedData = clientProductionsList.filter(
+                        const updatedData = list.filter(
                           (_, listIndex) => listIndex !== index
                         );
-                        setClientProductionsList([...updatedData]);
+                        setList([...updatedData]);
                       }}
                     />
                   </div>
                 )}
               </Col>
             }
-            {isCheckedStaffUser && (
+            {showStaffUser && (
               <Col xl="3">
-                {index === clientProductionsList.length - 1 && (
+                {index === list.length - 1 && (
                   <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
                     <p className="my-2"></p>
                     <p
                       className="mb-2"
                       onClick={() => {
-                        const id = clientProductionsList.length + 1;
+                        const id = list.length + 1;
                         const tempObj = {
                           client: `client_${id}`,
                           production: `production_${id}`,
@@ -633,10 +595,7 @@ function AddUser() {
                           productionOptions: [],
                           productions: [],
                         };
-                        setClientProductionsList([
-                          ...clientProductionsList,
-                          tempObj,
-                        ]);
+                        setList([...list, tempObj]);
                       }}
                     >
                       {" "}
@@ -653,5 +612,3 @@ function AddUser() {
     </div>
   );
 }
-
-export default AddUser;

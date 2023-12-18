@@ -1,6 +1,6 @@
 import CreateProductionButton from "@/components/productions/CreateProductionButton";
 
-export default function NoProductionPage({ user }) {
+export default function NoProductionPage({ user, typ }: any) {
   return (
     <div className="text-center nodataAvailable">
       <img
@@ -8,12 +8,18 @@ export default function NoProductionPage({ user }) {
         alt="No clients available"
         className="w-m-100"
       />
-      <p className="nodataAvailable">No Data available.</p>
+      <p className="nodataAvailable">
+        {typ === "Access Denied" ? typ : "No Data available."}
+      </p>
       <h6 className="text-sm">
-        Please create your first client to be able to work.
+        {typ === "Access Denied"
+          ? "Please contact support"
+          : "Please create your first client to be able to work."}
       </h6>
 
-      <CreateProductionButton {...{ user }} cls="f-14 mx-auto" />
+      {typ !== "Access Denied" && (
+        <CreateProductionButton {...{ user }} cls="f-14 mx-auto" />
+      )}
     </div>
   );
 }

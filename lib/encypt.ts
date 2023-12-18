@@ -14,7 +14,6 @@ export const encrypt = async (data: object) => {
 
   // Perform our encryption based on our public key - only private key can read it!
   const encrypted = encrypt.encrypt(plainText) || "";
-  // console.log({plainText,encrypted});
   return encrypted;
 };
 

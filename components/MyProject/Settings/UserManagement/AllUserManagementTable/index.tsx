@@ -13,7 +13,7 @@ import Image from "next/image";
 import { UsersService } from "services";
 import moment from "moment";
 import { Plus } from "react-feather";
-import GridTable from "components/grid-tables/gridTable";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import infoImage from "assets/MyImages/info.svg";
@@ -24,19 +24,26 @@ import { useEffect, useState } from "react";
 import { AuthService, ForgotPasswordService } from "services";
 import { toast } from "react-toastify";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-// import GridTable from "@/components/dataTable/GridWithPagination";
 
 const authService = new AuthService();
 const forgotPassword = new ForgotPasswordService();
 
 const AllRoleTable = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [tableData, setTableData] = useState() as any;
-  const [loading, setLoading] = useState() as any;
-  const [pageNumber, setPageNumber] = useState(1) as any;
-  const [userDetails, setUserDetails] = useState() as any;
-  const [pageLimit] = useState(10) as any;
+  const [tableData, setTableData] = useState<any>({
+    data: [],
+    total_records: 0,
+  });
+
+  const defaultFilters: any = {
+    limit: 10,
+    offset: 0,
+    search: "",
+    pageNumber: 1,
+  };
+
+  const [filters, setFilters] = useState<any>(defaultFilters);
+  const [userDetails, setUserDetails] = useState(null) as any;
 
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
@@ -55,25 +62,22 @@ const AllRoleTable = () => {
 
   useEffect(() => {
     if (userDetails) {
-      setLoading(true);
-      const offfset = (pageNumber - 1) * pageLimit;
       const queryParams = {
-        search: searchText,
-        limit: pageLimit,
-        offset: offfset,
+        search: filters.search.trim(),
+        limit: filters.limit,
+        offset: filters.offset,
         name: "asc",
       };
       userService
         .getUsers(queryParams)
         .then((response) => {
           setTableData(response);
-          setLoading(false);
         })
         .catch((e) => {
           console.error(e);
         });
     }
-  }, [searchText, pageNumber, userDetails]);
+  }, [filters, userDetails]);
 
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!isDeleteModalOpen);
@@ -125,10 +129,6 @@ const AllRoleTable = () => {
 
   const userService = new UsersService();
 
-  // const { data: clientData } = useSWR(["LIST_CLIENTS", searchText], () =>
-  //   userService.getUsers({ search: "", pageLimit: 50, offset: 0 })
-  // );
-
   const resendPasswordLink = (data) => {
     const payload = { email: data.email };
     forgotPassword
@@ -176,7 +176,7 @@ const AllRoleTable = () => {
               <DropdownItem
                 tag="a"
                 className="w-100 cursor-pointer"
-                onClick={() => router.push(`/settings/edit-user/${id}`)}
+                onClick={() => router.push(`/settings/users/${id}`)}
               >
                 <Action
                   icon={"/icons/edit_square.svg"}
@@ -225,8 +225,7 @@ const AllRoleTable = () => {
               props?.data?.adminName?.slice(1)}
           </p>
           <p className="mt-1" style={{ fontSize: "14px" }}>
-            {props?.data?.email?.charAt(0).toUpperCase() +
-              props?.data?.email?.slice(1)}
+            {props?.data?.email}
           </p>
         </div>
       </div>
@@ -247,7 +246,7 @@ const AllRoleTable = () => {
         const res = `${
           params?.adminName?.charAt(0).toUpperCase() +
           params?.adminName?.slice(1)
-        }${params?.email?.charAt(0).toUpperCase() + params?.email?.slice(1)}`;
+        }${params?.email}`;
         return res;
       },
     },
@@ -282,7 +281,10 @@ const AllRoleTable = () => {
         if (arrayLength === 0) {
           tooltipContent = ""; // Provide a default message if array is empty
         } else {
-          tooltipContent = clientNames.join(", ");
+          const capitalizedNames = clientNames?.map(
+            (name) => name?.charAt(0).toLocaleUpperCase() + name?.slice(1)
+          );
+          tooltipContent = capitalizedNames.join(", ");
         }
 
         const maxLength = 8; // Adjust the maximum length for ellipsis as needed
@@ -321,7 +323,7 @@ const AllRoleTable = () => {
               placement="bottom"
               overlay={<Tooltip id="tooltip-engine">{tooltipContent}</Tooltip>}
             >
-              <p title={tooltipContent}>{displayContent}</p>
+              <p>{displayContent}</p>
             </OverlayTrigger>
           </>
         );
@@ -398,7 +400,9 @@ const AllRoleTable = () => {
                   <Form>
                     <input
                       className="search mr-2"
-                      onChange={(e) => setSearchText(e.target.value)}
+                      onChange={(e) =>
+                        setFilters({ ...filters, search: e.target.value })
+                      }
                       type="search"
                       placeholder="Search..."
                     />
@@ -406,7 +410,7 @@ const AllRoleTable = () => {
                   {hasCreateUseerPermission && (
                     <button
                       className="btn btn-primary"
-                      onClick={() => router.push("/settings/add-user")}
+                      onClick={() => router.push("/settings/users/create-user")}
                     >
                       <Plus size={16} /> Add User
                     </button>
@@ -418,54 +422,22 @@ const AllRoleTable = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={{}}
-            columnDefs={columnDefs}
-            pageSize={pageLimit}
-            searchText={searchText}
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            setLoading={setLoading}
+      <div className="mt-3">
+        {tableData.data.length === 0 && !filters.search.trim() ? (
+          <NoDataPage
+            buttonName={hasCreateUseerPermission ? "Create User" : "No button"}
+            buttonLink={"/settings/users/create-user"}
           />
-        </div>
-      ) : (
-        <>
-          {tableData?.data?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={tableData}
-                columnDefs={columnDefs}
-                pageSize={pageLimit}
-                searchText={searchText}
-                pageNumber={pageNumber}
-                setPageNumber={setPageNumber}
-                setLoading={setLoading}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Set"}
-                buttonName={
-                  hasCreateUseerPermission ? "Create User" : "No button"
-                }
-                buttonLink={"/settings/add-user"}
-              />
-            </div>
-          )}
-        </>
-      )}
-
-      {/* <div className="mt-3">
-        <GridTable
-          rowData={clientData}
-          columnDefs={columnDefs}
-          pageSize={10}
-          searchText={searchText}
-        />
-      </div> */}
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
+      </div>
 
       <DeleteModal />
     </>

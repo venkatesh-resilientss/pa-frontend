@@ -3,7 +3,8 @@
 
   class SeriesService extends APIService {
     getSeries(params?,data?): Promise<any> {
-      return this.post(`${GET_SERIES}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,data)
+      const queryParams = new URLSearchParams(params).toString();
+      return this.post(`${GET_SERIES}?${queryParams}`,data)
         .then((res) => {
           return res?.data;
         })
@@ -40,9 +41,8 @@
         return response.data;
       })
       .catch((error) => {
-        console.error("Upload failed", error);
-        // Log the entire error response
-        console.log("Error Response:", error.response);
+        
+        
         throw error.response.data;
       });
     }
@@ -71,7 +71,7 @@
     }
 
 
-    seriesDetails(id: string) {
+    seriesDetails(id: any) {
       return this
         .get(SERIES_DETAIL_ENDPOINT(id))
         .then((response) => {

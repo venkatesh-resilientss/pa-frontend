@@ -42,47 +42,51 @@ export default function GridWithPagination(props) {
         {...rowStyles}
       />
 
-      <div className="d-flex gap-3 my-3 align-items-center">
-        <span className="ms-auto">
-          {(pageNumber - 1) * limit + 1} to{" "}
-          {(pageNumber - 1) * limit + rowData?.data?.length || 0} of{" "}
-          {rowData?.total_records || 0}
-        </span>
-        <img
-          src="/previous-page.svg"
-          className={pageNumber > 1 ? "cr-p" : "cr-d op-5"}
-          width={8}
-          alt="previous"
-          onClick={() => {
-            if (pageNumber > 1)
-              setPageNumber((pPN) => ({
-                ...pPN,
-                offset: (pageNumber - 2) * pPN.limit,
-                pageNumber: pageNumber - 1,
-              }));
-          }}
-        />
-        <span className="mb-1">
-          page {pageNumber} of {Math.ceil(rowData?.total_records / limit) || 0}
-        </span>
-        <img
-          src="/previous-page.svg"
-          width={8}
-          className={
-            pageNumber < Math.ceil(rowData?.total_records / limit)
-              ? "cr-p rot-180"
-              : "cr-d op-5 rot-180"
-          }
-          alt="next"
-          onClick={() => {
-            if (pageNumber < Math.ceil(rowData?.total_records / limit))
-              setPageNumber((pPN) => ({
-                ...pPN,
-                offset: pageNumber * pPN.limit,
-                pageNumber: pageNumber + 1,
-              }));
-          }}
-        />
+      <div className="pagination-container">
+        <hr />
+        <div className=" d-flex gap-3 my-3 align-items-center">
+          <span className="ms-auto">
+            {(pageNumber - 1) * limit + 1} to{" "}
+            {(pageNumber - 1) * limit + rowData?.data?.length || 0} of{" "}
+            {rowData?.total_records || 0}
+          </span>
+          <img
+            src="/previous-page.svg"
+            className={pageNumber > 1 ? "cr-p" : "cr-d op-5"}
+            width={8}
+            alt="previous"
+            onClick={() => {
+              if (pageNumber > 1)
+                setPageNumber((pPN) => ({
+                  ...pPN,
+                  offset: (pageNumber - 2) * pPN.limit,
+                  pageNumber: pageNumber - 1,
+                }));
+            }}
+          />
+          <span className="mb-1">
+            page {pageNumber} of{" "}
+            {Math.ceil(rowData?.total_records / limit) || 0}
+          </span>
+          <img
+            src="/previous-page.svg"
+            width={8}
+            className={
+              pageNumber < Math.ceil(rowData?.total_records / limit)
+                ? "cr-p rot-180"
+                : "cr-d op-5 rot-180"
+            }
+            alt="next"
+            onClick={() => {
+              if (pageNumber < Math.ceil(rowData?.total_records / limit))
+                setPageNumber((pPN) => ({
+                  ...pPN,
+                  offset: pageNumber * pPN.limit,
+                  pageNumber: pageNumber + 1,
+                }));
+            }}
+          />
+        </div>
       </div>
     </div>
   );

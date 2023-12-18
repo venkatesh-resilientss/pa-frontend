@@ -1,4 +1,13 @@
-import { Button, Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Form,
+  Input,
+  Label,
+  Row,
+} from "reactstrap";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 import { CountryService, UsersService } from "services";
@@ -9,10 +18,8 @@ import { useSelector } from "react-redux";
 import { UserInfo } from "redux/slices/mySlices/roles";
 import PhoneInput from "react-phone-input-2";
 
-
 export default function Profile() {
   const roleInfo = useSelector(UserInfo);
-
 
   const {
     control,
@@ -33,8 +40,6 @@ export default function Profile() {
   };
 
   const onSubmit = async () => {
-
-
     // After successfully saving, switch back to edit mode
     setEditMode(false);
   };
@@ -48,7 +53,12 @@ export default function Profile() {
   const countryService = new CountryService();
 
   const { data: countryData } = useSWR("LIST_COUNTRIES", () =>
-    countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true })
+    countryService.getCountries({
+      search: "",
+      limit: 25,
+      offset: 0,
+      is_active: true,
+    })
   );
 
   const countrySelectFormat = countryData?.data.map((b) => {
@@ -72,17 +82,13 @@ export default function Profile() {
     usersData?.email && setValue("email", usersData?.email);
     usersData?.Address && setValue("address", usersData?.Address.Line1);
     usersData?.phone && setPhoneNumber(usersData?.phone);
-    usersData?.Address.Zipcode &&
-      setValue("zipCode", usersData?.Address.Zipcode);
+    // usersData?.Address.Zipcode &&
+    //   setValue("zipCode", usersData?.Address.Zipcode);
   }),
     [usersData];
 
-
-
   return (
-
     <>
-
       <Card
         style={{
           backgroundColor: "#E7EFFF",
@@ -100,10 +106,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div
-              className="d-flex align-items-center"
-              style={{ gap: "10px" }}
-            >
+            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
               <Button
                 onClick={toggleEditMode}
                 style={{
@@ -122,7 +125,15 @@ export default function Profile() {
       </Card>
       <Card className="mt-4">
         <CardBody className="d-flex flex-column" style={{ gap: "10px" }}>
-          <div style={{ fontSize: "19px", fontWeight: "600", fontFamily: "Segoe UI Semibold" }}>Profile</div>
+          <div
+            style={{
+              fontSize: "19px",
+              fontWeight: "600",
+              fontFamily: "Segoe UI Semibold",
+            }}
+          >
+            Profile
+          </div>
           <div>
             <img
               alt="profile-img"
@@ -159,7 +170,6 @@ export default function Profile() {
                   />
                 </div>
               </Col>
-
 
               <Col xl="4">
                 <div className="mb-1 mt-1">
@@ -312,7 +322,6 @@ export default function Profile() {
                   )}
                 />
               </Col>
-
             </Row>
           </Form>
 
@@ -326,10 +335,7 @@ export default function Profile() {
           </div>
         </CardBody>
       </Card>
-
     </>
-
-
   );
 }
 

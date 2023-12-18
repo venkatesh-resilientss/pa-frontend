@@ -1,11 +1,19 @@
-import APIService from './api.service';
-import { ALL_PRODUCTIONS, ALL_PRODUCTION_CARDS, GET_DASHBOARD_STATS, GET_ONBOARDED_CLIENTS, GET_RECENT_PRODUCTIONS, ON_BOARDED_PROJECTS, PRODUCTION_DASHBOARD_CARDS } from 'lib/endpoints';
+import APIService from "./api.service";
+import {
+  ALL_PRODUCTIONS,
+  ALL_PRODUCTION_CARDS,
+  GET_DASHBOARD_STATS,
+  GET_ONBOARDED_CLIENTS,
+  GET_RECENT_PRODUCTIONS,
+  ON_BOARDED_PROJECTS,
+  PRODUCTION_DASHBOARD_CARDS,
+} from "lib/endpoints";
 
 class DashboardService extends APIService {
   static getProductionDetails(production_id: string | string[]): any {
     throw new Error("Method not implemented.");
   }
-  
+
   getStats(): Promise<any> {
     return this.get(`${GET_DASHBOARD_STATS}`)
       .then((res) => {
@@ -16,9 +24,8 @@ class DashboardService extends APIService {
       });
   }
 
-
-  getRecentProductions(): Promise<any> {
-    return this.get(`${GET_RECENT_PRODUCTIONS}`)
+  getRecentProductions(search: any): Promise<any> {
+    return this.get(`${GET_RECENT_PRODUCTIONS}?search=${search}`)
       .then((res) => {
         return res?.data;
       })
@@ -47,8 +54,6 @@ class DashboardService extends APIService {
       });
   }
 
-
-
   getOnBoardedClients(): Promise<any> {
     return this.get(`${GET_ONBOARDED_CLIENTS}`)
       .then((res) => {
@@ -59,8 +64,7 @@ class DashboardService extends APIService {
       });
   }
 
-    getProductionDetails(id: any) {
-      console.log(id)
+  getProductionDetails(id: any) {
     return this.get(ON_BOARDED_PROJECTS(id))
       .then((response) => {
         return response.data;
@@ -70,8 +74,7 @@ class DashboardService extends APIService {
       });
   }
 
-    getDashboardCards(id: any) {
-      console.log(id)
+  getDashboardCards(id: any) {
     return this.get(PRODUCTION_DASHBOARD_CARDS(id))
       .then((response) => {
         return response.data;
@@ -80,8 +83,6 @@ class DashboardService extends APIService {
         throw error.response.data;
       });
   }
-
-  
 }
 
 export default DashboardService;

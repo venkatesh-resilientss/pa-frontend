@@ -18,51 +18,56 @@ export default function WorkSpaceDetails(props) {
 
   const fields = [...wFields];
 
-  const { data: users } = useSWR("Users", () =>
+  const { data: clientAdminUsers } = useSWR("Users", () =>
     clientData?.ID
       ? clientService.getClientUsers(
           clientData?.ID,
-          `?limit=50&offset=0&is_active=true`
+          `?limit=50&offset=0&is_active=true&role_code=CLIENT_ADMIN`
         )
       : null
   );
   const { data: supportUsers } = useSWR("Support Users", () =>
-    clientService.getUsers(`?limit=50&offset=0&is_active=true`)
+    clientService.getStaffRoleUsers(
+      `?limit=50&offset=0&is_active=true&role_code=SUPPORT_USER`
+    )
   );
 
-  const data = [...(users?.data || [])]?.filter(
-    (e) => e?.Role?.Code === "CLIENT_ADMIN"
-  );
-  const staffUsers = [...(supportUsers?.data || [])]
-    ?.filter((e) => e.IsStaffUser)
-    .map((e) => ({ Name: e.adminName, ID: e.id }));
+  const data = [...(clientAdminUsers?.data || [])].map((e) => ({
+    Name: e.name,
+    ID: e.id,
+  }));
+  const staffSupportUsers = [...(supportUsers?.data || [])].map((e) => ({
+    Name: e.name,
+    ID: e.id,
+  }));
 
   const loadOptions = (value, vl) => {
     if (vl === "rsslSupportUser")
       return clientService
-        .getUsers(`?limit=50&offset=0&is_active=true&search=${value}`)
+        .getStaffRoleUsers(
+          `?limit=50&offset=0&is_active=true&role_code=SUPPORT_USER&search=${value}`
+        )
         .then((res) => {
-          return [...(res?.data || [])]
-            .filter((e) => e.IsStaffUser)
-            .map((e) => {
-              return { label: e?.adminName, value: e.id };
-            });
+          return [...(res?.data || [])].map((e) => {
+            return { label: e?.name, value: e.id };
+          });
         });
     else
       return clientService
-        .getClientUsers(clientData?.ID, `?limit=50&offset=0&is_active=true`)
-        .then((res) => {
-          const getName = (e) =>
-            (e?.first_name || "") + " " + (e?.last_name || "");
-
-          return [...(res?.data || [])].map((e) => {
-            return { label: getName(e), value: e.ID };
-          });
-        });
+        .getClientUsers(
+          clientData?.ID,
+          `?limit=50&offset=0&is_active=true&role_code=CLIENT_ADMIN`
+        )
+        .then((res) =>
+          [...(res?.data || [])].map((e) => ({
+            label: e.name,
+            value: e.id,
+          }))
+        );
     // return new Promise((resolve) => setTimeout(() => resolve([]), 500));
   };
 
-  const workSpaceProps = { ...props, data, staffUsers, loadOptions };
+  const workSpaceProps = { ...props, data, staffSupportUsers, loadOptions };
 
   if (step !== 5) return <></>;
   return (

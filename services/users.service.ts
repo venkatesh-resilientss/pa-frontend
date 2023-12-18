@@ -4,10 +4,10 @@ import cookie from "js-cookie";
 import {
   CREATE_USERS,
   EDIT_USERS,
-  GET_CLIENT_USERS,
   GET_USERS,
   USERS_DETAIL_ENDPOINT,
-  getProductionByClint,RESEND_RESET_PASSWORD_LINK
+  getProductionByClint,
+  RESEND_RESET_PASSWORD_LINK,
 } from "../lib/endpoints";
 
 class UsersService extends APIService {
@@ -23,18 +23,7 @@ class UsersService extends APIService {
   }
 
   resendResetPasswordLink(data): Promise<any> {
-    return this.post(`${RESEND_RESET_PASSWORD_LINK}`,data)
-      .then((res) => {
-        return res?.data;
-      })
-      .catch((error: any) => {
-        throw error?.response?.data;
-      });
-  }
-
-  getClientUsers(id: any, queries: any): Promise<any> {
-    const queryParams = new URLSearchParams(queries).toString();
-    return this.get(`${GET_CLIENT_USERS(id)}?${queryParams}`)
+    return this.post(`${RESEND_RESET_PASSWORD_LINK}`, data)
       .then((res) => {
         return res?.data;
       })
@@ -66,7 +55,7 @@ class UsersService extends APIService {
   getuserbyid(id): Promise<any> {
     return this.get(`${USERS_DETAIL_ENDPOINT(id)}`)
       .then((res) => {
-        return res?.data;
+        return res?.data?.data;
       })
       .catch((error: any) => {
         throw error?.response?.data;
@@ -75,7 +64,7 @@ class UsersService extends APIService {
   getProductionsByClient(clientId): Promise<any> {
     return this.get(`${getProductionByClint(clientId)}`)
       .then((res) => {
-        return res?.data;
+        return res?.data?.data;
       })
       .catch((error: any) => {
         throw error?.response?.data;

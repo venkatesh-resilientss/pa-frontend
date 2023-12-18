@@ -73,7 +73,6 @@ function VendorAccordion() {
       value: data.State?.Id
     }
     setValue('workState', basicInfoState)
-    // console.log({state : data.State});
     data.TaxID && setValue("taxId", data.TaxID);
     data.DefaultAccount && setValue("defaultAccount", data.DefaultAccount);
     data.AchRoutingNumber && setValue("achRoutingNumber", data.AchRoutingNumber);
