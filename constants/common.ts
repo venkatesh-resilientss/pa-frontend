@@ -374,7 +374,7 @@ export const sidebarRoutesProduction = [
         path: "/budgets",
       },
       {
-        name: "Chart of Accounts (COA)",
+        name: "Chart of Accounts",
         path: "/coaaccounts",
       },
 
