@@ -5,7 +5,7 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService, CountryService } from "services";
 import useSWR from "swr";
 import { formValidationRules } from "constants/common";
-function ContactAddressForm({ onSubmit, control, errors }) {
+function ContactAddressForm({ onSubmit, control, errors,editMode }) {
   const { handleSubmit } = useForm();
   const addressValidationRules = formValidationRules.address;
   const statesService = new StatesService();
@@ -51,6 +51,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Contact Address Line 1"
                   invalid={errors.contactAddress1 && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -79,6 +80,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Contact Address Line 2"
                   invalid={errors.contactAddress2 && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -104,6 +106,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Postal Code"
                   invalid={errors.contactAddressPostalCode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -131,6 +134,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -158,6 +162,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Select State"
                   {...field}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -184,6 +189,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter City"
                   invalid={errors.contactAddressCity && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />

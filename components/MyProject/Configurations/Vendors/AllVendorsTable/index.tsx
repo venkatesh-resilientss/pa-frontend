@@ -8,11 +8,10 @@ import {
   Input,
   Button,
 } from "reactstrap";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { VendorsService } from "services";
 import Image from "next/image";
@@ -21,11 +20,15 @@ import { hasPermission } from "commonFunctions/functions";
 import moment from "moment";
 import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
+import { useEffect, useState } from "react";
+import detailsIocn from "assets/myIcons/list.svg";
+import { TableLoading } from "@/components/Loaders";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import { debounce } from "@/commonFunctions/common";
 
-const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
+const AllVendorsTable = () => {
   const vendorsService = new VendorsService();
   const router = useRouter();
-  const recordsPerPage = 10;
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
@@ -34,34 +37,57 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
     "configuration_management",
     "edit_configuration"
   );
-
-  // const hasDeactivateConfiguration = hasPermission(
-  //   "configuration_management",
-  //   "deactivate_configuration"
-  // );
-
-  const fetchData = async (pageNumber) => {
-    const { clientID, projectID } = getSessionVariables();
-    try {
-      const response = await vendorsService.getVendors(
-        {
-          clientID,
-          projectID,
-        },
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
-      const data = response.result; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    }
+  const [isLoading, setLoader] = useState(true);
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10 ,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
-
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await vendorsService.getVendors(
+          {
+            clientID,
+            projectID,
+          },
+          queryParams
+        );
+        setTableData({
+          data: response.result || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        setLoader(false);
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+      }
+    };
+    fetchData();
+  }, [filters]);
   const StateBadge = (props) => {
     const sateDir = {
       true: "success",
@@ -99,6 +125,14 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(`/configurations/edit-vendor/${props.data?.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
@@ -112,15 +146,6 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {/* {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() => dispatch(openDeleteVendorPopup(props.data?.ID))}
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -246,7 +271,7 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  Vendors
+                {tableData.total_records} {tableData.total_records === 1 ? 'Vendor' : 'Vendors'}
                 </div>
 
                 <Input
@@ -254,47 +279,8 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
                   className="searchConfig"
                   placeholder="Search..."
                   style={{ width: "217px", height: "38px" }}
-                  onChange={(e) => {
-                    setSearchText(e.target.value);
-                  }}
+                  onChange={debounce(handleSearch)}
                 />
-
-                {/* <Button
-                  onClick={() => dispatch(openBulkUploadVendorsPopup("upload"))}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#E7EFFF",
-                    color: "#4C4C61",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    borderColor: "#4C4C61",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Bulk Upload
-                </Button> */}
-
-                {/* <Button
-                  onClick={() => router.push(`/configurations/add-vendor`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Add Vendor
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-vendor`)}
@@ -320,20 +306,22 @@ const AllVendorsTable = ({ rerender, searchText, setSearchText }) => {
         </Card>
       </div>
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create COA" : ""}
-              buttonLink={"/configurations/add-chart-of-accounts"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Vendor" : "No button"}
+            buttonLink={"/configurations/add-vendor"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ export const DEFAULT_APP_STATE = "local";
 export const selectStyles = {
   control: (provided, state) => ({
     ...provided,
-    background: state.isDisabled ? "#e3e3e3" : "#fff",
+    background: state.isDisabled ? "#e9ecef" : "#fff",
     borderColor: "#9e9e9e",
     minHeight: "40px",
     height: "40px",

@@ -1,32 +1,70 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService, CountryService } from "services";
-import useSWR from "swr";
+import {toast} from 'react-toastify';
 import Select from "react-select";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
-function ContactAddressForm({ onSubmit, control, errors }) {
+import { useEffect, useState } from "react";
+function ContactAddressForm({ onSubmit, control, errors, setValue }) {
   const { handleSubmit } = useForm();
   const addressValidationRules = formValidationRules.address;
   const countryService = new CountryService();
-  const { data: countryData } = useSWR("LIST_COUNTRIES", () => countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true }));
-  const countrySelectOptions = countryData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
   const statesService = new StatesService();
-  const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates({ search: "", limit: 25, offset: 0, is_active: true })
-  );
-  const stateSelectOptions = statesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-      countryId: b.CountryID,
+
+  const [initialCountryOptions, setInitialCountryOptions] = useState([]);
+  const [currentCountry, setCurrentCountry] = useState(null);
+  const [initialStateOptions,setInititalStateOptions] = useState([]);
+  useEffect(() => {
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries({
+          search: "",
+          limit: 25,
+          offset: 0,
+        });
+        console.log(res);
+        const options = res?.data?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCountryOptions(options);
+      } catch (error) {
+        console.error("Error fetching Country options:", error);
+      }
     };
-  });
+    fetchInitialCountryOptions();
+  }, []);
+  useEffect(() => {
+    const fetchStateOptions = async () => {
+      
+      try {
+        const response = await statesService.getStatesByCountry(
+          currentCountry.value
+        );
+        const options = response.map((i) => {
+          return {
+            value: i.ID,
+            label: i.Name,
+            countryId: i.CountryID,
+          };
+        });
+        setInititalStateOptions(options);
+      } catch (error) {
+        toast.error(
+          error?.Message ||
+            error?.message ||
+            error?.error ||
+            "Unable to get state options"
+        );
+      }
+    };
+    if(!currentCountry)
+      return
+    setInititalStateOptions([]);
+    setValue("contactAddressState", null);
+    fetchStateOptions();
+  }, [currentCountry]);
   return (
     <div className="text-black">
       <Form
@@ -98,6 +136,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
             <Controller
               name="contactAddressPostalCode"
               control={control}
+              rules={addressValidationRules.zipCode}
               render={({ field }) => (
                 <Input
                   style={{ fontSize: "12px", fontWeight: "400" }}
@@ -127,10 +166,14 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={countrySelectOptions}
+                  options={initialCountryOptions}
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
+                  onChange={(e) => {
+                    setCurrentCountry(e);
+                    setValue("contactAddressCountry", e);
+                  }}
                 />
               )}
             />
@@ -154,7 +197,7 @@ function ContactAddressForm({ onSubmit, control, errors }) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={stateSelectOptions}
+                  options={initialStateOptions}
                   placeholder="Select State"
                   {...field}
                   styles={selectStyles}

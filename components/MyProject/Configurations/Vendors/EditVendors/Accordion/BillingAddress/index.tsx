@@ -5,7 +5,7 @@ import useSWR from "swr";
 import Select from "react-select";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
-function BillingAddressForm({ onSubmit, control, errors }) {
+function BillingAddressForm({ onSubmit, control, errors, editMode }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const { data: statesData } = useSWR("LIST_STATES", () =>
@@ -51,6 +51,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Contact Address Line 1"
                   invalid={errors.billingAddress1 && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -79,6 +80,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Contact Address Line 2"
                   invalid={errors.billingAddress2 && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -107,6 +109,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter Postal Code"
                   invalid={errors.billingAddressPostalCode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -135,6 +138,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -163,6 +167,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Select State"
                   {...field}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -190,6 +195,7 @@ function BillingAddressForm({ onSubmit, control, errors }) {
                   placeholder="Enter City"
                   invalid={errors.billingAddressCity && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
