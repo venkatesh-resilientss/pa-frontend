@@ -12,7 +12,7 @@ const clientService = new ClientsService();
 const roleService = new RoleService();
 const usersService = new UsersService();
 
-export default function AddUser({ router, user: userData }) {
+export default function CreateUser({ router, user: userData }) {
   const {
     control,
     handleSubmit,
@@ -235,7 +235,7 @@ export default function AddUser({ router, user: userData }) {
     usersService
       .postUsers(userPayload)
       .then(() => {
-        toast.success("User Added successfully");
+        toast.success("User created successfully");
         router.push("/settings/users");
         reset();
         setLoading(false);

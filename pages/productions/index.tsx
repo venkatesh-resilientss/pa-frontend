@@ -3,14 +3,10 @@ import Image from "next/image";
 import { Card, UncontrolledDropdown } from "reactstrap";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 import { DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
-import { useDispatch } from "react-redux";
 import DatePicker from "react-datepicker";
-import Select from "react-select";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 
-import { openAssignRSSLPopup } from "@/redux/slices/mySlices/productions";
 import editIocn from "assets/myIcons/edit_square.svg";
-import detailsIocn from "assets/myIcons/list.svg";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
@@ -24,20 +20,21 @@ import {
   getLabel,
   objectsAreEqual,
 } from "@/commonFunctions/common";
+import { hasAccess } from "@/commonFunctions/hasAccess";
 
 const clientService = new ClientsService();
 const projectService = new ProjectService();
 
 const steps = [
-  "All Productions",
-  "Pending Productions",
+  "Active Productions",
+  "Pending Approval Productions",
   "Completed Productions",
 ];
 
 export default function Productions({ router, user }) {
+  const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
 
-  const dispatch = useDispatch();
   const [tableData, setTableData] = useState({
     data: [],
     total_records: 0,
@@ -52,7 +49,7 @@ export default function Productions({ router, user }) {
     limit: 10,
     offset: 0,
     search: "",
-    status: "",
+    status: "true",
     pageNumber: 1,
     isCompleted: "",
   };
@@ -63,51 +60,9 @@ export default function Productions({ router, user }) {
     setFilters({
       ...filters,
       offset: 0,
-      status: "",
-      isCompleted: tab === 1 ? "" : tab === 2 ? "true" : "false",
+      status: tab === 1 ? "true" : tab === 2 ? "false" : "",
+      isCompleted: tab === 1 ? "false" : tab === 2 ? "false" : "true",
     });
-  };
-
-  const selectStyle = {
-    control: (base) => ({
-      ...base,
-      background: "#fff",
-      border: "1px solid #dee2e6",
-      borderRadius: "0.375rem",
-      minHeight: "40px",
-      boxShadow: null,
-      ":hover": {
-        borderColor: "#A2CFFE",
-      },
-    }),
-
-    singleValue: (provided) => ({ ...provided, color: "#212529" }),
-
-    valueContainer: (base) => ({ ...base, padding: "0 6px" }),
-
-    input: (base) => ({ ...base, margin: "0" }),
-
-    placeholder: (base: any) => ({
-      ...base,
-      position: "center",
-      transform: "none",
-      color: "#c9c9c9 !important",
-    }),
-
-    menu: (base: any) => ({ ...base, margin: "0 !important" }),
-    menuList: (base: any) => ({ ...base, padding: "0 !important" }),
-
-    option: (base: any, state: any) => ({
-      ...base,
-      cursor: "pointer",
-      color: "#212529",
-      ":hover": {
-        backgroundColor: "#c9c9c97d",
-      },
-      backgroundColor: state.isSelected ? "#c9c9c97d !important" : "white",
-    }),
-
-    indicatorSeparator: () => ({ display: "none" }),
   };
 
   useEffect(() => {
@@ -127,20 +82,24 @@ export default function Productions({ router, user }) {
   useEffect(() => {
     const getTableData = async () => {
       try {
+        const dateStart = dateFormat(filters.dateStart);
+        const dateEnd = dateFormat(filters.dateEnd);
+        if ((dateStart && !dateEnd) || (!dateStart && dateEnd)) return;
         const payload = {
           ...filters,
           clients: filters.clients.map((e) => e.value),
-          dateStart: dateFormat(filters.dateStart),
-          dateEnd: dateFormat(filters.dateEnd),
+          dateStart,
+          dateEnd,
         };
         const response = await projectService.getAllProjectsList(payload);
         setTableData({
           data: response.data || [],
           total_records: response.total_records || 0,
         });
+        setLoading(false);
         /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
       } catch (e) {
-        //
+        setLoading(false);
       }
     };
     getTableData();
@@ -197,13 +156,13 @@ export default function Productions({ router, user }) {
               />
             </DropdownItem>
 
-            <DropdownItem className="w-100">
+            {/* <DropdownItem className="w-100">
               <Action
                 icon={detailsIocn}
                 name={"Assign RSSL User"}
                 action={() => dispatch(openAssignRSSLPopup(props.data))}
               />
-            </DropdownItem>
+            </DropdownItem> */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -283,7 +242,9 @@ export default function Productions({ router, user }) {
     {
       headerName: "Created On",
       field: "CreatedDate",
-      cellRenderer: (params) => <div>{params.value.split("T")[0]}</div>,
+      cellRenderer: (params) => (
+        <div>{params?.data?.CreatedDate?.split("T")[0]}</div>
+      ),
       sortable: true,
       resizable: true,
       suppressSizeToFit: true,
@@ -308,7 +269,8 @@ export default function Productions({ router, user }) {
 
   const CustomDatePicker = forwardRef(({ value, onClick }: any, ref: any) => (
     <button className="btn border bg-white" onClick={onClick} ref={ref}>
-      <span className="clr-dblack fw-600">Date</span> {value ? "from " : "is "}
+      <span className="clr-dblack fw-600">Date</span>&nbsp;
+      <span className="clr-lgrey">{value ? "from" : "is"}</span>&nbsp;
       <span className={"clr-dblack fw-600" + (value ? " me-3" : "")}>
         {value
           .split(" - ")
@@ -318,17 +280,11 @@ export default function Productions({ router, user }) {
     </button>
   ));
 
-  const statusOpts = [
-    { label: "All", value: "all" },
-    { label: "Active", value: "true" },
-    { label: "In-active", value: "false" },
-  ];
-
-  const completedOpts = [
-    { label: "All", value: "all" },
-    { label: "Pending", value: "false" },
-    { label: "Completed", value: "true" },
-  ];
+  const hasPermission = hasAccess(
+    user,
+    "production_management",
+    "view_all_productions"
+  );
   return (
     <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
@@ -358,8 +314,8 @@ export default function Productions({ router, user }) {
         ))}
       </Nav>
 
-      <div className="d-flex flex-wrap align-items-center gap-2 filters-div">
-        <div className="">
+      <div className="d-flex flex-wrap align-items-center gap-2 filters-div z-index-999">
+        <div className="z-index-999">
           <DatePicker
             id="startDatePicker"
             className="w-100 form-control"
@@ -389,7 +345,7 @@ export default function Productions({ router, user }) {
             placeholderButtonLabel={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Client</span>
-                &nbsp;is&nbsp;
+                &nbsp;<span className="clr-lgrey">is</span>&nbsp;
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }
@@ -429,63 +385,12 @@ export default function Productions({ router, user }) {
             placeholderButtonLabel={
               <div className="f-16">
                 <span className="clr-dblack fw-600">Production Types</span>
-                &nbsp;is&nbsp;
+                &nbsp;<span className="clr-lgrey">is</span>&nbsp;
                 <span className="clr-dblack fw-600">All</span>
               </div>
             }
             options={[]}
           />
-        </div>
-
-        <div className="w-m-150">
-          {step !== 1 ? (
-            <Select
-              instanceId={`react-select-status`}
-              styles={selectStyle}
-              options={statusOpts}
-              placeholder={
-                <div className="f-16">
-                  <span className="clr-dblack fw-600">Status</span>
-                  &nbsp;is&nbsp;
-                  <span className="clr-dblack fw-600">All</span>
-                </div>
-              }
-              value={statusOpts.find((e) => e.value === filters.status) || null}
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  pageNumber: 1,
-                  offset: 0,
-                  status: e.value === "all" ? "" : e.value,
-                })
-              }
-            />
-          ) : (
-            <Select
-              instanceId={`react-select-completed`}
-              styles={selectStyle}
-              options={completedOpts}
-              placeholder={
-                <div className="f-16">
-                  <span className="clr-dblack fw-600">Status</span>
-                  &nbsp;is&nbsp;
-                  <span className="clr-dblack fw-600">All</span>
-                </div>
-              }
-              value={
-                completedOpts.find((e) => e.value === filters.isCompleted) ||
-                null
-              }
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  pageNumber: 1,
-                  offset: 0,
-                  isCompleted: e.value === "all" ? "" : e.value,
-                })
-              }
-            />
-          )}
         </div>
 
         <div className="ms-auto">
@@ -503,15 +408,21 @@ export default function Productions({ router, user }) {
         {[...Array(3)].map((e, id) => (
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
-              {tableData.data.length === 0 &&
-                objectsAreEqual(
-                  {
-                    ...defaultFilters,
-                    isCompleted: id === 0 ? "" : id === 1 ? "true" : "false",
-                  },
-                  filters
-                ) ? (
-                <NoProductionPage {...{ user }} />
+              {loading ? (
+                <></>
+              ) : (tableData.data.length === 0 &&
+                  objectsAreEqual(
+                    {
+                      ...defaultFilters,
+                      isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
+                    },
+                    filters
+                  )) ||
+                (user && !hasPermission) ? (
+                <NoProductionPage
+                  {...{ user }}
+                  typ={user && !hasPermission ? "Access Denied" : ""}
+                />
               ) : (
                 <GridWithPagination
                   rowData={tableData}

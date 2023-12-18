@@ -53,6 +53,7 @@ abstract class APIService {
   }
 
   purgeAuth(): void {
+    localStorage.clear()
     cookie.remove("accessToken");
     cookie.remove("refreshToken");
     cookie.remove("next-auth.callback-url");

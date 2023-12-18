@@ -6,11 +6,9 @@ import {
   CREATE_APPROVERS,
   EDIT_PROJECTS,
   PROJECT_DETAIL_ENDPOINT,
-  CREATE_CLIENT,
   CREATE_PRODUCTION,
   CREATE_PRODUCTION_APPROVER,
   PROJECT_DETAILS,
-  GET_CLIENT_USERS,
   GET_ALL_PROJECTS_LIST,
   GET_CLIENTS_LIST,
   UPDATE_PRODUCTION,
@@ -27,15 +25,7 @@ class ProjectService extends APIService {
         throw error?.response?.data;
       });
   }
-  getClientUsers(id: any, queries: any): Promise<any> {
-    return this.get(`${GET_CLIENT_USERS(id)}${queries}`)
-      .then((res) => {
-        return res?.data;
-      })
-      .catch((error: any) => {
-        throw error?.response?.data;
-      });
-  }
+
   getUsers(queries: any): Promise<any> {
     return this.get(`${GET_ALL_USERS}${queries}`)
       .then((res) => {

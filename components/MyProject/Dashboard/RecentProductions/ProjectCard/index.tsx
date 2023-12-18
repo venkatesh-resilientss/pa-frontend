@@ -10,30 +10,27 @@ import { getLabel } from "@/commonFunctions/common";
 import Link from "next/link";
 
 const ProjectCard = ({ data }) => {
-  
   return (
     <Card className="text-black px-1 h-100">
       <CardBody>
         <div className="d-flex">
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
-              <div className="d-flex justify-content-between">
-                <div style={{ fontSize: "14px", color: "#030229" }}>
+              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <p className="f-14 m-0 clr-dbalck">
                   {getLabel(data?.client_name || "-")}
-                </div>
-                <Link href={`/productions/${data.id}`}>
-                  <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
-                    <div>
-                      <Image
-                        src={carbonDecumentView}
-                        style={{ height: "12px", width: "12px",marginBottom:"5px" }}
-                        alt={"view details"}
-                      />
-                    </div>
-                    <div className="view_details">View Details</div>
-                    <div>
-                      <AiFillCaretRight style={{ marginBottom: "1px" }} />
-                    </div>
+                </p>
+                <Link href={`/productions/${data.id}`} className="ms-auto">
+                  <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
+                    <Image
+                      src={carbonDecumentView}
+                      alt={"view details"}
+                      width={12}
+                      height={12}
+                    />
+                    <div className="f-12 text-nowrap">View Details</div>
+
+                    <AiFillCaretRight size={12} />
                   </div>
                 </Link>
               </div>
@@ -74,7 +71,6 @@ const ProjectCard = ({ data }) => {
             </div>
           </div>
         </div>
-        
 
         <div className="d-flex justify-content-between mt-3">
           <div>
@@ -95,7 +91,8 @@ const ProjectCard = ({ data }) => {
                         backgroundColor: "#B5DEF0",
                         color: "#030229",
                         borderRadius: "5%",
-                      }} className="p-1 px-2 f-12"
+                      }}
+                      className="p-1 px-2 f-12"
                     >
                       {software?.software_name || "-"}
                     </div>

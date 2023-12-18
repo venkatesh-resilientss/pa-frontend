@@ -9,9 +9,10 @@ import detailsIocn from "assets/myIcons/list.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 
 import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import Link from "next/link";
 
 export default function Productions(props) {
-  const { router, clientData } = props;
+  const { clientData } = props;
 
   const [filters, setFilters] = useState<any>({
     dateStart: "",
@@ -63,18 +64,21 @@ export default function Productions(props) {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            <DropdownItem
-              className="w-100"
-              onClick={() => router.push(`/productions/${props.data.ID}`)}
-            >
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                action={() => {
-                  //
-                }}
-              />
-            </DropdownItem>
+            <Link href={`/productions/${props.data.ID}`}>
+              <DropdownItem
+                className="w-100"
+
+              >
+                <Action
+                  icon={detailsIocn}
+                  name={"View Details"}
+                  action={() => {
+                    //
+                  }}
+                />
+              </DropdownItem>
+            </Link>
+
 
             {/* <DropdownItem className="w-100">
               <Action

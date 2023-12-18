@@ -129,7 +129,8 @@ const ClientsCard = ({ data }) => {
             style={{
               backgroundColor: "#B5DEF0",
               borderRadius: "5%",
-            }} className="p-1 px-2 f-12"
+            }}
+            className="p-1 px-2 f-12"
           >
             {software.software_name || "-"}
           </div>

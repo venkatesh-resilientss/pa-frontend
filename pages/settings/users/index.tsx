@@ -1,35 +1,25 @@
-import {
-  Card,
-  CardBody,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Form,
-  Modal,
-  ModalBody,
-} from "reactstrap";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { UsersService } from "services";
+import router from "next/router";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu } from "reactstrap";
+import { DropdownItem, Card, CardBody, Form } from "reactstrap";
+import { toast } from "react-toastify";
 import moment from "moment";
 import { Plus } from "react-feather";
+
+import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
+import { hasPermission } from "commonFunctions/functions";
 import GridWithPagination from "@/components/dataTable/GridWithPagination";
 import CustomBadge from "components/Generic/CustomBadge";
-import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import infoImage from "assets/MyImages/info.svg";
-import router from "next/router";
-import { hasPermission } from "commonFunctions/functions";
 import NoDataPage from "@/components/NoDataPage";
-import { useEffect, useState } from "react";
-import { AuthService, ForgotPasswordService } from "services";
-import { toast } from "react-toastify";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
-const authService = new AuthService();
+import { ForgotPasswordService, UsersService } from "services";
+import { getLabel } from "@/commonFunctions/common";
+
 const forgotPassword = new ForgotPasswordService();
 
-const AllRoleTable = () => {
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+export default function Users({ user: userDetails }) {
   const [tableData, setTableData] = useState<any>({
     data: [],
     total_records: 0,
@@ -43,7 +33,6 @@ const AllRoleTable = () => {
   };
 
   const [filters, setFilters] = useState<any>(defaultFilters);
-  const [userDetails, setUserDetails] = useState(null) as any;
 
   const hasCreateUseerPermission = hasPermission(
     "user_and_role_management",
@@ -53,12 +42,6 @@ const AllRoleTable = () => {
     "user_and_role_management",
     "edit_user"
   );
-
-  useEffect(() => {
-    authService.getUserDetails().then((response) => {
-      setUserDetails(response?.data);
-    });
-  }, []);
 
   useEffect(() => {
     if (userDetails) {
@@ -79,54 +62,6 @@ const AllRoleTable = () => {
     }
   }, [filters, userDetails]);
 
-  const toggleDeleteModal = () => {
-    setDeleteModalOpen(!isDeleteModalOpen);
-  };
-
-  const DeleteModal = () => (
-    <Modal
-      isOpen={isDeleteModalOpen}
-      toggle={toggleDeleteModal}
-      className={"modal-dialog-centered "}
-    >
-      <ModalBody>
-        <div className="d-flex justify-content-center">
-          <Image
-            src={infoImage}
-            style={{ height: "30.93px", width: "30.93px", marginBottom: "8px" }}
-            alt={""}
-          />
-        </div>
-        <div
-          className="text-black text-center"
-          style={{ fontSize: "16px", fontWeight: "600", marginBottom: "8px" }}
-        >
-          Are you sure you want to delete?
-        </div>
-        <div
-          className="text-center"
-          style={{ fontSize: "13px", fontWeight: "400", marginBottom: "8px" }}
-        >
-          This action will delete the information permanently. <br /> You cannot
-          undo this action.
-        </div>
-        <hr />
-        <div
-          className="d-flex justify-content-center text-end"
-          style={{ gap: "8px" }}
-        >
-          <a
-            href="#"
-            onClick={toggleDeleteModal}
-            className="text-decoration-none text-secondary m-2"
-          >
-            Cancel
-          </a>
-        </div>
-      </ModalBody>
-    </Modal>
-  );
-
   const userService = new UsersService();
 
   const resendPasswordLink = (data) => {
@@ -134,7 +69,7 @@ const AllRoleTable = () => {
     forgotPassword
       .forgotPassword(payload)
       .then(() => {
-        toast.success("Password reset link has been sent to registred email.");
+        toast.success("Password reset link has been sent to registered email.");
       })
       .catch((e) => {
         console.error(e);
@@ -274,26 +209,26 @@ const AllRoleTable = () => {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        const clientNames: any = params?.data?.clientNames; // Assuming clientNames is an array
+        const clientNames: any = (params?.data?.clientNames || []).filter(
+          (e) => e !== null
+        );
+
         const arrayLength = clientNames ? clientNames.length : 0;
         let tooltipContent;
 
-        if (arrayLength === 0) {
-          tooltipContent = ""; // Provide a default message if array is empty
-        } else {
-          const capitalizedNames = clientNames?.map(
-            (name) => name?.charAt(0).toLocaleUpperCase() + name?.slice(1)
-          );
+        if (arrayLength === 0) tooltipContent = "";
+        else {
+          const capitalizedNames = clientNames?.map((name) => getLabel(name));
           tooltipContent = capitalizedNames.join(", ");
         }
 
-        const maxLength = 8; // Adjust the maximum length for ellipsis as needed
+        const maxLength = 8;
         let displayContent;
 
         if (arrayLength === 0) {
           displayContent = "";
         } else if (arrayLength === 1) {
-          const firstClientName = clientNames[0] || ""; // Use an empty string if firstClientName is undefined or null
+          const firstClientName = clientNames[0] || "";
 
           displayContent =
             firstClientName.length > maxLength
@@ -438,10 +373,6 @@ const AllRoleTable = () => {
           />
         )}
       </div>
-
-      <DeleteModal />
     </>
   );
-};
-
-export default AllRoleTable;
+}

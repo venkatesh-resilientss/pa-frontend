@@ -4,6 +4,7 @@ import { DashboardService } from "services";
 import { useEffect, useState } from "react";
 import NoClientPage from "@/components/clients/NoClientPage";
 import { CreateClientButton } from "@/components/clients";
+import { removeDuplicates } from "@/commonFunctions/common";
 
 function Clients({ router, user }) {
   const dashboardService = new DashboardService();
@@ -12,11 +13,9 @@ function Clients({ router, user }) {
 
   useEffect(() => {
     const getTenant = async () => {
-      dashboardService.getOnBoardedClients().then((res) => {
-        if (res.data) {
-          setClientsData(res.data.slice(0, 3));
-        }
-      });
+      dashboardService
+        .getOnBoardedClients()
+        .then((res) => setClientsData(removeDuplicates(res?.data || [], "id")));
     };
     getTenant();
   }, []);
