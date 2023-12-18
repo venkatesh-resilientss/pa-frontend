@@ -136,7 +136,7 @@ const Sidebar = ({ props }) => {
 
   useEffect(() => {
     const storedSelectedProduction = localStorage.getItem("selectedProduction");
-    if (storedSelectedProduction) {
+    if (storedSelectedProduction && router.pathname == '/productions/[id]/dashboard') {
       setSelectedProduction(JSON.parse(storedSelectedProduction));
     }
   }, []);
@@ -162,13 +162,13 @@ const Sidebar = ({ props }) => {
     setTemp1(item);
     setTemp2(index);
 
-    // Toggle clicked state
+    // // Toggle clicked state
     if (index !== clickedItemIndex) {
       setSwitcProduction(!switcProduction);
-      setClickedItemIndex(index);
+      // setClickedItemIndex(index);
 
       // Store the clicked index in localStorage
-      localStorage.setItem("clickedItemIndex", index.toString());
+      // localStorage.setItem("clickedItemIndex", index.toString());
     }
   };
 
@@ -416,7 +416,7 @@ const Sidebar = ({ props }) => {
                       const isClicked = index === clickedItemIndex;
                       return (
                         <div
-                          key={index}
+                          key={`${index}-productions`}
                           className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
                             isClicked ? " clicked" : ""
                           }`}
@@ -642,11 +642,11 @@ const Sidebar = ({ props }) => {
 
                 if (isSuperAdminWithFullAccess || userData?.data?.IsStaffUser) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
                   );
                 } else if (isFilteredRoute) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
                   );
                 }
 
@@ -678,11 +678,11 @@ const Sidebar = ({ props }) => {
                   (userData?.data?.IsStaffUser && hasViewRoles)
                 ) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
                   );
                 } else if (isFilteredRoute) {
                   return (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
                   );
                 }
 
@@ -720,11 +720,11 @@ const Sidebar = ({ props }) => {
                   ))
               ) {
                 return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
                 );
               } else {
                 return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
                 );
               }
             })}
@@ -846,6 +846,8 @@ const Sidebar = ({ props }) => {
               sessionStorage.setItem("projectid", temp1?.ID);
               router.push(`/productions/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
+              setTemp1("");
+              setTemp2("");
             }}
             style={{ width: 150 }}
           >
