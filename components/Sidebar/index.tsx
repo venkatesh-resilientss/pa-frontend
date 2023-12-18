@@ -138,12 +138,7 @@ const Sidebar = ({ props }) => {
 
   useEffect(() => {
     // Check if productionData is an array and has exactly one item
-    if (
-      !userData?.data?.IsStaffUser &&
-      userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
-      userData?.data?.Role?.AccessType !== "full_acceess" &&
-      productionData?.length === 1
-    ) {
+    if (!userData?.data?.IsStaffUser && productionData?.length === 1) {
       // Access the first item in the array
       const temp1 = productionData[0];
 
@@ -584,10 +579,7 @@ const Sidebar = ({ props }) => {
               }
             }}
           >
-            {!userData?.data?.IsStaffUser &&
-            userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
-            userData?.data?.Role?.AccessType !== "full_acceess" &&
-            productionData?.length === 1 ? (
+            {!userData?.data?.IsStaffUser && productionData?.length === 1 ? (
               <>
                 {productionData?.map((item, index) => {
                   return (
@@ -720,10 +712,7 @@ const Sidebar = ({ props }) => {
         )}
       </div>
 
-      {!userData?.data?.IsStaffUser &&
-      userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
-      userData?.data?.Role?.AccessType !== "full_acceess" &&
-      productionData?.length === 1 ? (
+      {!userData?.data?.IsStaffUser && productionData?.length === 1 ? (
         <>
           <div className="bd-highlight ms-1">
             {sidebarRoutesProduction
