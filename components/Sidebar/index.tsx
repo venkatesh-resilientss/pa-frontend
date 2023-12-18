@@ -138,7 +138,12 @@ const Sidebar = ({ props }) => {
 
   useEffect(() => {
     // Check if productionData is an array and has exactly one item
-    if (Array.isArray(productionData) && productionData.length === 1) {
+    if (
+      !userData?.data?.IsStaffUser &&
+      userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
+      userData?.data?.Role?.AccessType !== "full_acceess" &&
+      productionData?.length === 1
+    ) {
       // Access the first item in the array
       const temp1 = productionData[0];
 
@@ -579,7 +584,10 @@ const Sidebar = ({ props }) => {
               }
             }}
           >
-            {productionData?.length === 1 ? (
+            {!userData?.data?.IsStaffUser &&
+            userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
+            userData?.data?.Role?.AccessType !== "full_acceess" &&
+            productionData?.length === 1 ? (
               <>
                 {productionData?.map((item, index) => {
                   return (
@@ -712,7 +720,10 @@ const Sidebar = ({ props }) => {
         )}
       </div>
 
-      {productionData?.length === 1 ? (
+      {!userData?.data?.IsStaffUser &&
+      userData?.data?.Role?.Code !== "SUPER_ADMIN" &&
+      userData?.data?.Role?.AccessType !== "full_acceess" &&
+      productionData?.length === 1 ? (
         <>
           <div className="bd-highlight ms-1">
             {sidebarRoutesProduction
@@ -737,6 +748,10 @@ const Sidebar = ({ props }) => {
               <div className="px-2 mt-2 sidebar-body">
                 {sidebarRoutesProduction
                   .filter((route: any) => {
+                    const isSuperAdminWithFullAccess =
+                      userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                      userData?.data?.Role?.AccessType === "full_acceess";
+
                     const filterByName =
                       (hasViewConfiguration ||
                         route?.name !== "Configurations") &&
@@ -744,7 +759,7 @@ const Sidebar = ({ props }) => {
                       (hasViewPayments || route?.name !== "Payments");
 
                     // Include the route only if filterByName is true
-                    return filterByName;
+                    return isSuperAdminWithFullAccess || filterByName;
                   })
                   .map((route: any, i) => (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
