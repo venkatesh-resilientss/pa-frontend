@@ -172,6 +172,7 @@ export default function Users({ user: userDetails }) {
       headerName: "Member",
       field: "adminName",
       sortable: true,
+      width: 300,
       unSortIcon: true,
       cellRenderer: MemberRenderer,
       cellStyle: { fontSize: "16px", fontWeight: "400" },
@@ -299,12 +300,14 @@ export default function Users({ user: userDetails }) {
       headerClass: "custom-header-class",
       unSortIcon: true,
       sortable: true,
+      width:120,
     },
     {
       headerName: "Actions",
       field: "id",
       cellRenderer: ActionsButton,
       headerClass: "custom-header-class",
+      width:50,
     },
   ];
 
