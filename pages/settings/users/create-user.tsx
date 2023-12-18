@@ -235,7 +235,7 @@ export default function CreateUser({ router, user: userData }) {
     usersService
       .postUsers(userPayload)
       .then(() => {
-        toast.success("User Added successfully");
+        toast.success("User created successfully");
         router.push("/settings/users");
         reset();
         setLoading(false);

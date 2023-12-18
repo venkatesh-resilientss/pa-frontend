@@ -15,6 +15,7 @@ import CustomBadge from "components/Generic/CustomBadge";
 import NoDataPage from "@/components/NoDataPage";
 
 import { ForgotPasswordService, UsersService } from "services";
+import { getLabel } from "@/commonFunctions/common";
 
 const forgotPassword = new ForgotPasswordService();
 
@@ -208,26 +209,26 @@ export default function Users({ user: userDetails }) {
       cellStyle: { fontSize: "16px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (params) => {
-        const clientNames: any = params?.data?.clientNames; // Assuming clientNames is an array
+        const clientNames: any = (params?.data?.clientNames || []).filter(
+          (e) => e !== null
+        );
+
         const arrayLength = clientNames ? clientNames.length : 0;
         let tooltipContent;
 
-        if (arrayLength === 0) {
-          tooltipContent = ""; // Provide a default message if array is empty
-        } else {
-          const capitalizedNames = clientNames?.map(
-            (name) => name?.charAt(0).toLocaleUpperCase() + name?.slice(1)
-          );
+        if (arrayLength === 0) tooltipContent = "";
+        else {
+          const capitalizedNames = clientNames?.map((name) => getLabel(name));
           tooltipContent = capitalizedNames.join(", ");
         }
 
-        const maxLength = 8; // Adjust the maximum length for ellipsis as needed
+        const maxLength = 8;
         let displayContent;
 
         if (arrayLength === 0) {
           displayContent = "";
         } else if (arrayLength === 1) {
-          const firstClientName = clientNames[0] || ""; // Use an empty string if firstClientName is undefined or null
+          const firstClientName = clientNames[0] || "";
 
           displayContent =
             firstClientName.length > maxLength

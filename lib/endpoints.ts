@@ -241,7 +241,7 @@ export const PROJECT_DETAILS = (id: any) =>
   `${withoutTenantIdEndpoint}/projects/${id}`;
 
 export const GET_ALL_USERS = `${withoutTenantIdEndpoint}/users/`; //get Users
-export const GET_STAFF_USERS = `${withoutTenantIdEndpoint}/users/staffusers/`; //get Users
+export const GET_STAFF_ROLE_USERS = `${withoutTenantIdEndpoint}/users/staffusers`; //get Users
 export const GET_CLIENT_USERS = (id: any) =>
   `${withoutTenantIdEndpoint}/clients/${id}/users`; //get Users
 
@@ -270,7 +270,8 @@ export const PROJECTTYPES_DETAIL_ENDPOINT = (id: any) =>
   `${withoutTenantIdPrEndpoint}/projecttypes/${id}`;
 
 export const GET_CLIENT_TYPES = `${withoutTenantIdEndpoint}/clienttypes/`;
-export const GET_CLIENT_COUNTRIES = `${withoutTenantIdEndpoint}/countries/`;
+export const GET_CLIENT_COUNTRIES = (search: any) =>
+  `${withoutTenantIdEndpoint}/countries/?search=${search}`;
 export const GET_STATES_BY_COUNTRY = (id) =>
   `${withoutTenantIdEndpoint}/countries/${id}/states`;
 

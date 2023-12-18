@@ -4,7 +4,9 @@ input:focus {
 input::placeholder {
   color: #c9c9c9 !important;
 }
-
+input {
+  outline: 0 !important;
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -89,6 +91,10 @@ input[type="number"] {
 .w-m-150 {
   max-width: 150px;
   min-width: 150px;
+}
+.w-m-190 {
+  max-width: 190px;
+  min-width: 190px;
 }
 .filters-div {
   button {
