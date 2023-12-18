@@ -8,6 +8,7 @@ import { hasAccess } from "@/commonFunctions/hasAccess";
 import { removeDuplicates } from "@/commonFunctions/common";
 
 import { ClientsService, ProjectService } from "services";
+import NoProductionPage from "@/components/productions/NoProductionPage";
 
 const clientService = new ClientsService();
 const productionService = new ProjectService();
@@ -26,6 +27,7 @@ export default function EditProductions({ router, clientData, user }) {
     clientStatus: false,
   });
   const [loading, setLoading] = useState<any>(false);
+  const [load, setLoad] = useState<any>(true);
   const [pAUser, setPAUser] = useState<any>(null);
   const [poValues, setPoValues] = useState<any>([null, null]);
   const [apValues, setApValues] = useState<any>([null, null]);
@@ -79,7 +81,7 @@ export default function EditProductions({ router, clientData, user }) {
   useEffect(() => {
     const getDetails = async () => {
       try {
-        setLoading(true);
+        setLoad(true);
         const resp = await productionService.getProjectDetails(
           Number(router.query.id)
         );
@@ -111,26 +113,20 @@ export default function EditProductions({ router, clientData, user }) {
 
         const po = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "PO")
-          .map((e) => ({
-            label: e.name,
-            value: e.UserID,
-          }));
+          .map((e) => ({ label: e.name, value: e.UserID }));
 
         setPoValues(po);
         setPOVal(po.length > 0 ? true : false);
 
         const ap = (resp?.data?.Meta?.approvers || [])
           .filter((e) => e.TransactionType === "AP")
-          .map((e) => ({
-            label: e.name,
-            value: e.UserID,
-          }));
+          .map((e) => ({ label: e.name, value: e.UserID }));
 
         setApValues(ap);
         setAPVal(ap.length > 0 ? true : false);
-        setLoading(false);
+        setLoad(false);
       } catch (e) {
-        setLoading(false);
+        setLoad(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -159,6 +155,7 @@ export default function EditProductions({ router, clientData, user }) {
     "production_management",
     "edit_production"
   );
+
   const onSubmit = async () => {
     if (isEditing) {
       if (
@@ -310,326 +307,351 @@ export default function EditProductions({ router, clientData, user }) {
     }
   };
 
+  const hasViewPermission = hasAccess(
+    user,
+    "production_management",
+    "view_all_productions"
+  );
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between">
-        <div>
-          <div className="f-12">All Productions</div>
-          <div className="fw-bold f-20">{payld.name || "-"}</div>
-        </div>
+    <>
+      {load ? (
+        <></>
+      ) : user && !hasViewPermission ? (
+        <NoProductionPage
+          {...{ user }}
+          typ={user && !hasViewPermission ? "Access Denied" : ""}
+        />
+      ) : (
+        <div className="p-4">
+          <div className="d-flex justify-content-between">
+            <div>
+              <div className="f-12">All Productions</div>
+              <div className="fw-bold f-20">{payld.name || "-"}</div>
+            </div>
 
-        <div className="my-auto">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="btn f-14"
-          >
-            Dismiss
-          </button>
-          <Button
-            size="sm"
-            type="submit"
-            loading={loading}
-            disabled={loading}
-            className="px-3 py-2"
-            spinColor="#ffffff"
-            onClick={onSubmit}
-          >
-            {isEditing ? "Save" : "Edit"}
-          </Button>
-        </div>
-      </div>
-      <hr />
-
-      <div>
-        <div className="fw-600">Basic Information</div>
-        <div className="row f-14 m-0 mt-2">
-          <div className="col-12 col-sm-4">
-            <label className="form-label">
-              Production Code <span className="text-danger">*</span>
-            </label>
-            <input
-              type="text"
-              name="code"
-              id="code"
-              placeholder="Enter Code"
-              className={
-                "form-control f-12 py-2" +
-                (err && !payld.code && true ? " border-danger" : "")
-              }
-              value={payld.code}
-              onChange={(e) => setPayld({ ...payld, code: e.target.value })}
-              disabled
-            />
-
-            {err && !payld.code && (
-              <span className="text-danger f-12">
-                Production Code is required
-              </span>
-            )}
+            <div className="my-auto">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="btn f-14"
+              >
+                Dismiss
+              </button>
+              <Button
+                size="sm"
+                type="submit"
+                loading={loading}
+                disabled={loading}
+                className="px-3 py-2"
+                spinColor="#ffffff"
+                onClick={onSubmit}
+              >
+                {isEditing ? "Save" : "Edit"}
+              </Button>
+            </div>
           </div>
+          <hr />
 
-          <div className="col-12 col-sm-4">
-            <label className="form-label">
-              Production Name <span className="text-danger">*</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Enter Production Name"
-              className={
-                "form-control f-12 py-2" +
-                (err && !payld.name && true ? " border-danger" : "")
-              }
-              value={payld.name}
-              onChange={(e) => setPayld({ ...payld, name: e.target.value })}
-              disabled={!isEditing || false}
-            />
+          <div>
+            <div className="fw-600">Basic Information</div>
+            <div className="row f-14 m-0 mt-2">
+              <div className="col-12 col-sm-4">
+                <label className="form-label">
+                  Production Code <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="code"
+                  id="code"
+                  placeholder="Enter Code"
+                  className={
+                    "form-control f-12 py-2" +
+                    (err && !payld.code && true ? " border-danger" : "")
+                  }
+                  value={payld.code}
+                  onChange={(e) => setPayld({ ...payld, code: e.target.value })}
+                  disabled
+                />
 
-            {err && !payld.name && (
-              <span className="text-danger f-12">
-                Production Name is required
-              </span>
-            )}
-          </div>
-          {staffUser && (
-            <div className="col-12 col-sm-4">
-              <label className="form-label">
-                Client <span className="text-danger">*</span>
-              </label>
-              <AsyncSelect
-                instanceId={`react-select-client`}
-                styles={selectStyle}
-                placeholder={"Select Client"}
-                defaultOptions={getOptions("clients")}
-                loadOptions={(value) => loadOptions(value, "clients")}
-                value={payld.client}
-                onChange={(e) => {
-                  setPayld({ ...payld, client: e });
-                  setApValues([null, null]);
-                  setPoValues([null, null]);
-                  setPAUser(null);
-                }}
-                isDisabled={!isEditing || false}
-              />
-              {err && !payld?.client && (
-                <span className="text-danger f-12">
-                  Production Client is required
-                </span>
+                {err && !payld.code && (
+                  <span className="text-danger f-12">
+                    Production Code is required
+                  </span>
+                )}
+              </div>
+
+              <div className="col-12 col-sm-4">
+                <label className="form-label">
+                  Production Name <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Enter Production Name"
+                  className={
+                    "form-control f-12 py-2" +
+                    (err && !payld.name && true ? " border-danger" : "")
+                  }
+                  value={payld.name}
+                  onChange={(e) => setPayld({ ...payld, name: e.target.value })}
+                  disabled={!isEditing || false}
+                />
+
+                {err && !payld.name && (
+                  <span className="text-danger f-12">
+                    Production Name is required
+                  </span>
+                )}
+              </div>
+              {staffUser && (
+                <div className="col-12 col-sm-4">
+                  <label className="form-label">
+                    Client <span className="text-danger">*</span>
+                  </label>
+                  <AsyncSelect
+                    instanceId={`react-select-client`}
+                    styles={selectStyle}
+                    placeholder={"Select Client"}
+                    defaultOptions={getOptions("clients")}
+                    loadOptions={(value) => loadOptions(value, "clients")}
+                    value={payld.client}
+                    onChange={(e) => {
+                      setPayld({ ...payld, client: e });
+                      setApValues([null, null]);
+                      setPoValues([null, null]);
+                      setPAUser(null);
+                    }}
+                    isDisabled={!isEditing || false}
+                  />
+                  {err && !payld?.client && (
+                    <span className="text-danger f-12">
+                      Production Client is required
+                    </span>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
-
-      <hr />
-
-      <div>
-        <div className="fw-600">Approval work flow for Transactions</div>
-
-        <div className="d-flex align-items-center p-2">
-          <input
-            type="checkbox"
-            className="mt-1"
-            id={"Purchase Order"}
-            checked={poVal}
-            onChange={(e) => {
-              setPOVal(e.target.checked);
-              if (!e.target.checked) setPoValues([null, null]);
-            }}
-            disabled={!isEditing || false}
-          />
-          <label htmlFor={"Purchase Order"} className="ms-1">
-            {"Purchase Order"}
-          </label>
-        </div>
-
-        {poVal && (
-          <div className="row f-14 mt-2 m-0 px-4">
-            {poValues.map((val, index) => (
-              <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
-                <label className="form-label d-flex justify-content-between">
-                  Level {index + 1} Approver
-                  <span
-                    className={
-                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
-                    }
-                    onClick={() => {
-                      const tempArr = [...poValues];
-                      tempArr.splice(index, 1);
-                      setPoValues(tempArr);
-                    }}
-                  >{`( - )`}</span>
-                </label>
-                <AsyncSelect
-                  instanceId={`react-select-po-${index}`}
-                  styles={selectStyle}
-                  placeholder={"Select User"}
-                  defaultOptions={getOptions("users").filter(
-                    (e) =>
-                      ![...poValues]
-                        .filter((el) => el)
-                        .map((el) => el?.value)
-                        .includes(e.value)
-                  )}
-                  loadOptions={(value) => loadOptions(value, "users", poValues)}
-                  value={val}
-                  onChange={(e) => {
-                    const tempArr = [...poValues];
-                    tempArr[index] = e;
-                    setPoValues(tempArr);
-                  }}
-                  isDisabled={!isEditing || false}
-                />
-                {err && !val && (
-                  <span className="text-danger f-12">Select User</span>
-                )}
-              </div>
-            ))}
-            <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
-              <RButton
-                className={isEditing ? "f-14 py-2" : "d-none"}
-                color="white"
-                onClick={handleAddPurchaseOrderField}
-              >
-                + Approver
-              </RButton>
-            </div>
           </div>
-        )}
 
-        <div className="d-flex align-items-center p-2">
-          <input
-            type="checkbox"
-            className="mt-1"
-            id={"Account Payable"}
-            checked={apVal}
-            onChange={(e) => {
-              setAPVal(e.target.checked);
-              if (!e.target.checked) setApValues([null, null]);
-            }}
-            disabled={!isEditing || false}
-          />
-          <label htmlFor={"Account Payable"} className="ms-1">
-            {"Account Payable"}
-          </label>
-        </div>
-
-        {apVal && (
-          <div className="row f-14 mt-2 m-0 px-4">
-            {apValues.map((val, index) => (
-              <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
-                <label className="form-label d-flex justify-content-between">
-                  Level {index + 1} Approver
-                  <span
-                    className={
-                      isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
-                    }
-                    onClick={() => {
-                      const tempArr = [...apValues];
-                      tempArr.splice(index, 1);
-                      setApValues(tempArr);
-                    }}
-                  >{`( - )`}</span>
-                </label>
-                <AsyncSelect
-                  instanceId={`react-select-ap-${index}`}
-                  styles={selectStyle}
-                  placeholder={"Select User"}
-                  defaultOptions={getOptions("users").filter(
-                    (e) =>
-                      ![...apValues]
-                        .filter((el) => el)
-                        .map((el) => el?.value)
-                        .includes(e.value)
-                  )}
-                  loadOptions={(value) => loadOptions(value, "users", apValues)}
-                  value={val}
-                  onChange={(e) => {
-                    const tempArr = [...apValues];
-                    tempArr[index] = e;
-                    setApValues(tempArr);
-                  }}
-                  isDisabled={!isEditing || false}
-                />
-                {err && !val && (
-                  <span className="text-danger f-12">Select User</span>
-                )}
-              </div>
-            ))}
-
-            <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
-              <RButton
-                className={isEditing ? "f-14 py-2" : "d-none"}
-                color="white"
-                onClick={handleAddAccountPayableField}
-              >
-                + Approver
-              </RButton>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {staffUser && (
-        <>
           <hr />
-          <div className="fw-600">Production Accountant</div>
-          <div className="col-12 col-md-4 px-4 py-2">
-            <label className="form-label">User</label>
-            <AsyncSelect
-              instanceId={`react-select-pauser`}
-              styles={selectStyle}
-              placeholder={"Select User"}
-              defaultOptions={getOptions("productionAccountantUsers")}
-              loadOptions={(value) =>
-                loadOptions(value, "productionAccountantUsers", [])
-              }
-              value={pAUser}
-              onChange={(e) => setPAUser(e)}
-              isDisabled={!isEditing || false}
-            />
-          </div>
-        </>
-      )}
 
-      <hr />
-      <div className="fw-600">Production Control</div>
-      <div className="col-12 col-md-4 px-4 py-2">
-        <label className="form-label text-black f-12">Status</label>
+          <div>
+            <div className="fw-600">Approval work flow for Transactions</div>
 
-        <div className="">
-          {["Active", "In-active"].map((e, idx) => (
-            <label className="flex-center d-inline-flex gap-1 m-2" key={idx}>
+            <div className="d-flex align-items-center p-2">
               <input
-                name="IsActive"
-                type="radio"
+                type="checkbox"
+                className="mt-1"
+                id={"Purchase Order"}
+                checked={poVal}
+                onChange={(e) => {
+                  setPOVal(e.target.checked);
+                  if (!e.target.checked) setPoValues([null, null]);
+                }}
+                disabled={!isEditing || false}
+              />
+              <label htmlFor={"Purchase Order"} className="ms-1">
+                {"Purchase Order"}
+              </label>
+            </div>
+
+            {poVal && (
+              <div className="row f-14 mt-2 m-0 px-4">
+                {poValues.map((val, index) => (
+                  <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
+                    <label className="form-label d-flex justify-content-between">
+                      Level {index + 1} Approver
+                      <span
+                        className={
+                          isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
+                        }
+                        onClick={() => {
+                          const tempArr = [...poValues];
+                          tempArr.splice(index, 1);
+                          setPoValues(tempArr);
+                        }}
+                      >{`( - )`}</span>
+                    </label>
+                    <AsyncSelect
+                      instanceId={`react-select-po-${index}`}
+                      styles={selectStyle}
+                      placeholder={"Select User"}
+                      defaultOptions={getOptions("users").filter(
+                        (e) =>
+                          ![...poValues]
+                            .filter((el) => el)
+                            .map((el) => el?.value)
+                            .includes(e.value)
+                      )}
+                      loadOptions={(value) =>
+                        loadOptions(value, "users", poValues)
+                      }
+                      value={val}
+                      onChange={(e) => {
+                        const tempArr = [...poValues];
+                        tempArr[index] = e;
+                        setPoValues(tempArr);
+                      }}
+                      isDisabled={!isEditing || false}
+                    />
+                    {err && !val && (
+                      <span className="text-danger f-12">Select User</span>
+                    )}
+                  </div>
+                ))}
+                <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
+                  <RButton
+                    className={isEditing ? "f-14 py-2" : "d-none"}
+                    color="white"
+                    onClick={handleAddPurchaseOrderField}
+                  >
+                    + Approver
+                  </RButton>
+                </div>
+              </div>
+            )}
+
+            <div className="d-flex align-items-center p-2">
+              <input
+                type="checkbox"
+                className="mt-1"
+                id={"Account Payable"}
+                checked={apVal}
+                onChange={(e) => {
+                  setAPVal(e.target.checked);
+                  if (!e.target.checked) setApValues([null, null]);
+                }}
+                disabled={!isEditing || false}
+              />
+              <label htmlFor={"Account Payable"} className="ms-1">
+                {"Account Payable"}
+              </label>
+            </div>
+
+            {apVal && (
+              <div className="row f-14 mt-2 m-0 px-4">
+                {apValues.map((val, index) => (
+                  <div className="col-12 col-md-4 col-lg-3 p-2" key={index}>
+                    <label className="form-label d-flex justify-content-between">
+                      Level {index + 1} Approver
+                      <span
+                        className={
+                          isEditing ? "f-12 text-danger ms-auto cr-p" : "d-none"
+                        }
+                        onClick={() => {
+                          const tempArr = [...apValues];
+                          tempArr.splice(index, 1);
+                          setApValues(tempArr);
+                        }}
+                      >{`( - )`}</span>
+                    </label>
+                    <AsyncSelect
+                      instanceId={`react-select-ap-${index}`}
+                      styles={selectStyle}
+                      placeholder={"Select User"}
+                      defaultOptions={getOptions("users").filter(
+                        (e) =>
+                          ![...apValues]
+                            .filter((el) => el)
+                            .map((el) => el?.value)
+                            .includes(e.value)
+                      )}
+                      loadOptions={(value) =>
+                        loadOptions(value, "users", apValues)
+                      }
+                      value={val}
+                      onChange={(e) => {
+                        const tempArr = [...apValues];
+                        tempArr[index] = e;
+                        setApValues(tempArr);
+                      }}
+                      isDisabled={!isEditing || false}
+                    />
+                    {err && !val && (
+                      <span className="text-danger f-12">Select User</span>
+                    )}
+                  </div>
+                ))}
+
+                <div className="col-12 col-md-4 col-lg-3 d-flex align-items-end p-2">
+                  <RButton
+                    className={isEditing ? "f-14 py-2" : "d-none"}
+                    color="white"
+                    onClick={handleAddAccountPayableField}
+                  >
+                    + Approver
+                  </RButton>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {staffUser && (
+            <>
+              <hr />
+              <div className="fw-600">Production Accountant</div>
+              <div className="col-12 col-md-4 px-4 py-2">
+                <label className="form-label">User</label>
+                <AsyncSelect
+                  instanceId={`react-select-pauser`}
+                  styles={selectStyle}
+                  placeholder={"Select User"}
+                  defaultOptions={getOptions("productionAccountantUsers")}
+                  loadOptions={(value) =>
+                    loadOptions(value, "productionAccountantUsers", [])
+                  }
+                  value={pAUser}
+                  onChange={(e) => setPAUser(e)}
+                  isDisabled={!isEditing || false}
+                />
+              </div>
+            </>
+          )}
+
+          <hr />
+          <div className="fw-600">Production Control</div>
+          <div className="col-12 col-md-4 px-4 py-2">
+            <label className="form-label text-black f-12">Status</label>
+
+            <div className="">
+              {["Active", "In-active"].map((e, idx) => (
+                <label
+                  className="flex-center d-inline-flex gap-1 m-2"
+                  key={idx}
+                >
+                  <input
+                    name="IsActive"
+                    type="radio"
+                    className=""
+                    checked={!idx ? payld?.IsActive : !payld?.IsActive}
+                    onChange={() =>
+                      setPayld({ ...payld, IsActive: idx ? false : true })
+                    }
+                    disabled={!isEditing || false}
+                  />
+                  <p className="text-nowrap cursor-pointer m-0">{e}</p>
+                </label>
+              ))}
+            </div>
+            <label className="flex-center d-inline-flex gap-1 m-2">
+              <input
+                name="IsCompleted"
+                type="checkbox"
                 className=""
-                checked={!idx ? payld?.IsActive : !payld?.IsActive}
-                onChange={() =>
-                  setPayld({ ...payld, IsActive: idx ? false : true })
+                checked={payld?.IsCompleted || false}
+                onChange={(e) =>
+                  setPayld({ ...payld, IsCompleted: e.target.checked })
                 }
                 disabled={!isEditing || false}
               />
-              <p className="text-nowrap cursor-pointer m-0">{e}</p>
+              <p className="text-nowrap cursor-pointer m-0">
+                Mark as Completed
+              </p>
             </label>
-          ))}
+          </div>
         </div>
-        <label className="flex-center d-inline-flex gap-1 m-2">
-          <input
-            name="IsCompleted"
-            type="checkbox"
-            className=""
-            checked={payld?.IsCompleted || false}
-            onChange={(e) =>
-              setPayld({ ...payld, IsCompleted: e.target.checked })
-            }
-            disabled={!isEditing || false}
-          />
-          <p className="text-nowrap cursor-pointer m-0">Mark as Completed</p>
-        </label>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

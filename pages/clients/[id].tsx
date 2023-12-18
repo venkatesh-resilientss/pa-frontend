@@ -8,11 +8,13 @@ import ClientTabs from "@/components/clients/ClientTabs";
 import { ClientsService } from "services";
 import { allFields } from "@/commonData";
 import { getClientData, updateClientPayload } from "@/commonFunctions/payloads";
+import NoClientPage from "@/components/clients/NoClientPage";
 
 function Clients({ router, user }) {
   const clientService = new ClientsService();
   const [isEditing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [load, setLoad] = useState<any>(true);
   const [err, setErr] = useState(false);
 
   const defaultClientData: any = {
@@ -83,15 +85,14 @@ function Clients({ router, user }) {
   useEffect(() => {
     const getClientDetails = async () => {
       try {
-        setLoading(true);
+        setLoad(true);
         const resp = await clientService.getClientDetails(
           Number(router.query.id)
         );
-
         setClientData(getClientData({ ...clientData, ...resp }));
-        setLoading(false);
+        setLoad(false);
       } catch (e) {
-        setLoading(false);
+        setLoad(false);
         toast.error(e?.error || e || "Error");
       }
     };
@@ -177,61 +178,75 @@ function Clients({ router, user }) {
     }
   };
 
+  const hasViewPermission = hasAccess(
+    user,
+    "client_management",
+    "view_all_clients"
+  );
   return (
     <>
-      <div className="p-4 text-black">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex gap-1">
-            {clientData?.LogoUrl ? (
-              <img
-                src={clientData?.LogoUrl || "/endamol.svg"}
-                width={48}
-                height={48}
-                className="rounded-circle"
-              />
-            ) : (
-              <div className="img-div">
-                {(clientData?.Name || "").charAt(0).toUpperCase()}
-              </div>
-            )}
+      {load ? (
+        <></>
+      ) : user && !hasViewPermission ? (
+        <NoClientPage
+          {...{ router, user }}
+          typ={user && !hasViewPermission ? "Access Denied" : ""}
+        />
+      ) : (
+        <div className="p-4 text-black">
+          <div className="d-flex justify-content-between">
+            <div className="d-flex gap-1">
+              {clientData?.LogoUrl ? (
+                <img
+                  src={clientData?.LogoUrl || "/endamol.svg"}
+                  width={48}
+                  height={48}
+                  className="rounded-circle"
+                />
+              ) : (
+                <div className="img-div">
+                  {(clientData?.Name || "").charAt(0).toUpperCase()}
+                </div>
+              )}
 
-            <div>
-              <div className="fw-bold f-20">{clientData?.Name}</div>
-              <div className="f-12">
-                {clientData?.Tenant?.Slug &&
-                  `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
-                {/* | Client Admin Name | Client Admin Email */}
+              <div>
+                <div className="fw-bold f-20">{clientData?.Name}</div>
+                <div className="f-12">
+                  {clientData?.Tenant?.Slug &&
+                    `${clientData?.Tenant?.Slug}.${process.env.NEXT_PUBLIC_REDIRECT}`}
+                  {/* | Client Admin Name | Client Admin Email */}
+                </div>
               </div>
             </div>
+            <div className="my-auto">
+              <button
+                onClick={() => router.push("/clients")}
+                className="btn f-14"
+              >
+                Dismiss
+              </button>
+              <Button
+                size="sm"
+                onClick={handleEdit}
+                loading={loading}
+                disabled={loading}
+                spinColor="#ffffff"
+                className="px-3 py-2"
+              >
+                {isEditing ? "Save" : "Edit"}
+              </Button>
+            </div>
           </div>
-          <div className="my-auto">
-            <button
-              onClick={() => router.push("/clients")}
-              className="btn f-14"
-            >
-              Dismiss
-            </button>
-            <Button
-              size="sm"
-              onClick={handleEdit}
-              loading={loading}
-              disabled={loading}
-              spinColor="#ffffff"
-              className="px-3 py-2"
-            >
-              {isEditing ? "Save" : "Edit"}
-            </Button>
-          </div>
+
+          <hr />
+
+          <ClientTabs
+            {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
+            {...{ router }}
+            errors={err}
+          />
         </div>
-
-        <hr />
-
-        <ClientTabs
-          {...{ clientData, setClientData, disabled: !isEditing, isEditing }}
-          {...{ router }}
-          errors={err}
-        />
-      </div>
+      )}
     </>
   );
 }

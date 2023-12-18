@@ -24,6 +24,7 @@ import {
   getLabel,
   objectsAreEqual,
 } from "@/commonFunctions/common";
+import { hasAccess } from "@/commonFunctions/hasAccess";
 
 const clientService = new ClientsService();
 const projectService = new ProjectService();
@@ -35,6 +36,7 @@ const steps = [
 ];
 
 export default function Productions({ router, user }) {
+  const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
 
   // const dispatch = useDispatch();
@@ -141,9 +143,10 @@ export default function Productions({ router, user }) {
           data: response.data || [],
           total_records: response.total_records || 0,
         });
+        setLoading(false);
         /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
       } catch (e) {
-        //
+        setLoading(false);
       }
     };
     getTableData();
@@ -335,6 +338,11 @@ export default function Productions({ router, user }) {
     { label: "Completed", value: "true" },
   ];
 
+  const hasPermission = hasAccess(
+    user,
+    "production_management",
+    "view_all_productions"
+  );
   return (
     <div className="py-4">
       <Card className="w-100 p-3 client-card-bg my-3">
@@ -509,15 +517,21 @@ export default function Productions({ router, user }) {
         {[...Array(3)].map((e, id) => (
           <TabPane tabId={id + 1} key={id}>
             <div className="mt-3">
-              {tableData.data.length === 0 &&
-              objectsAreEqual(
-                {
-                  ...defaultFilters,
-                  isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
-                },
-                filters
-              ) ? (
-                <NoProductionPage {...{ user }} />
+              {loading ? (
+                <></>
+              ) : (tableData.data.length === 0 &&
+                  objectsAreEqual(
+                    {
+                      ...defaultFilters,
+                      isCompleted: id === 0 ? "" : id === 1 ? "false" : "true",
+                    },
+                    filters
+                  )) ||
+                (user && !hasPermission) ? (
+                <NoProductionPage
+                  {...{ user }}
+                  typ={user && !hasPermission ? "Access Denied" : ""}
+                />
               ) : (
                 <GridWithPagination
                   rowData={tableData}
