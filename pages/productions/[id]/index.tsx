@@ -595,6 +595,7 @@ export default function EditProductions({ router, clientData, user }) {
                   value={pAUser}
                   onChange={(e) => setPAUser(e)}
                   isDisabled={!isEditing || false}
+                  isClearable
                 />
               </div>
             </>

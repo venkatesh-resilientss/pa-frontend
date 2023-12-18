@@ -16,7 +16,7 @@ const clientService = new ClientsService();
 const productionService = new ProjectService();
 
 export default function CreateProduction({ user, router, clientData }) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [poVal, setPOVal] = useState(false);
   const [apVal, setAPVal] = useState(false);
 
@@ -146,7 +146,7 @@ export default function CreateProduction({ user, router, clientData }) {
       };
       await productionService.createProject(payload);
       toast.success("Production created successfully");
-      dispatch(refetchProductions(true))
+      dispatch(refetchProductions(true));
       router.replace(`/productions`);
     } catch (e) {
       setLoading(false);
@@ -527,6 +527,7 @@ export default function CreateProduction({ user, router, clientData }) {
                   }
                   value={pAUser}
                   onChange={(e) => setPAUser(e)}
+                  isClearable
                   // isDisabled={disabled || false}
                 />
               </div>
