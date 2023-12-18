@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
-import useSWR from "swr";
 import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
 import { COAAccountsService, EntitiesService } from "services";
@@ -15,7 +14,6 @@ import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
 import { toast } from  'react-toastify'; 
-import { resolve } from "path";
 function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
   const {
     // control,
@@ -77,14 +75,13 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
           limit: 25,
           offset: 0,
         });
-        console.log(res)
         const options = res?.data?.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialCountryOptions(options);
       } catch (error) {
-        console.error("Error fetching Country options:", error);
+        // console.error("Error fetching Country options:", error);
       }
     };
 

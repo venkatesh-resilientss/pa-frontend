@@ -1,5 +1,4 @@
 import AllVendorsTable from "./AllVendorsTable";
-import DeleteVendorPopup from "./DeleteVendorPopup";
 
 function Vendors() {
   return (

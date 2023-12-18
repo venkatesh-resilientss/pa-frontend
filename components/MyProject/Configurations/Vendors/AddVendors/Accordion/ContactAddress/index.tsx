@@ -23,14 +23,13 @@ function ContactAddressForm({ onSubmit, control, errors, setValue }) {
           limit: 25,
           offset: 0,
         });
-        console.log(res);
         const options = res?.data?.map((item) => ({
           value: item.ID,
           label: item.Name,
         }));
         setInitialCountryOptions(options);
       } catch (error) {
-        console.error("Error fetching Country options:", error);
+        // console.error("Error fetching Country options:", error);
       }
     };
     fetchInitialCountryOptions();

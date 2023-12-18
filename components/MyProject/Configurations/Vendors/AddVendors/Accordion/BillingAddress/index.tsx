@@ -22,7 +22,7 @@ function BillingAddressForm({ onSubmit, control, errors,setValue }) {
           limit: 25,
           offset: 0,
         });
-        console.log(res);
+        // console.log(res);
         const options = res?.data?.map((item) => ({
           value: item.ID,
           label: item.Name,
