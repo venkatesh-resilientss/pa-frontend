@@ -6,6 +6,7 @@ import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
 import { getLabel } from "@/commonFunctions/common";
+import { Col, Row } from "react-bootstrap";
 
 const ClientsCard = ({ data }) => {
   return (
@@ -42,45 +43,39 @@ const ClientsCard = ({ data }) => {
                 </div>
                 <div className="view_details">View Details</div>
                 <div>
-                  <AiFillCaretRight style={{ marginBottom: "1px" }} />
+                  <AiFillCaretRight className="mb-1" />
                 </div>
               </div>
             </Link>
           </div>
 
-          <div className="d-flex gap-4 justify-content-between mt-3">
+        
+           <div className="d-flex gap-4 justify-content-between mt-3">
             <div className="text-black d-flex align-items-center f-10 mb-1">
-              <img
-                src="user.svg"
-                alt="user"
-                style={{ marginRight: "5px", width: "15px" }}
-              />
-              <p className="f-12 f-clamp-2">
+              <div className="custom-margin">
+                <img src="user.svg" alt="user" className="img-fluid" style={{ width: "15px" }} />
+              </div>
+              <div className="f-12 f-clamp-2">
                 {getLabel(data.client_admin.name || "-")}
-              </p>
+              </div>
             </div>
             <div className="f-12 clr-dblack">
-              No. of Active Productions:{" "}
-              {data.projects_count ? data.projects_count : "0"}
+              <div>
+                No. of Active Productions:{' '}
+                {data.projects_count ? data.projects_count : '0'}
+              </div>
             </div>
           </div>
-          <div className="d-flex gap-4 justify-content-between mt-1">
-            <div
-              className="text-black d-flex align-items-center"
-              style={{
-                fontSize: "10px",
-                fontWeight: "400",
-                marginBottom: "4px",
-              }}
-            >
-              <img
-                src="mail.svg"
-                alt="user"
-                style={{ marginRight: "5px", width: "15px" }}
-              />
-              <p className="f-12">
+          
+
+           <div className="d-flex gap-4 justify-content-between mt-1">
+            <div className="text-black d-flex align-items-center fs-10 fw-400 mb-1">
+              <div className="custom-margin">
+                <img src="mail.svg" alt="mail" className="img-fluid" style={{ width: "14px" }} />
+              </div>
+              <div className="f-12">
                 {data.client_admin.email ? data.client_admin.email : "-"}
-              </p>
+              </div>
             </div>
           </div>
 
@@ -116,8 +111,8 @@ const ClientsCard = ({ data }) => {
       <hr className="mt-2 mb-0" />
 
       <div
-        className="text-black d-flex align-items-center"
-        style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}
+        className="text-black d-flex align-items-center fw-400 f-12"
+        style={{  color: "#030229"}}
       >
         <Image
           src={fluentEmoji}

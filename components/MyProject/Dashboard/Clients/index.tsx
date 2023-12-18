@@ -25,8 +25,7 @@ function Clients({ router, user }) {
     <div className="h-100 d-flex gap-2 flex-column">
       <div className="d-flex justify-content-between">
         <div
-          style={{ fontSize: "16px", fontWeight: "600", color: "#030229" }}
-          className="mt-2"
+          className="mt-2 f-16 fw-600" style={{color:"#030229"}}
         >
           Newly Onboarded Clients
         </div>
