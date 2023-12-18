@@ -82,10 +82,13 @@ const Sidebar = ({ props }) => {
     "payments_management",
     "view_all_payments"
   );
-  const hasViewReports = hasPermission("reports_management", "vendor_listing");
+  const hasViewReports = hasPermission(
+    "reports_management",
+    "view_all_reports"
+  );
   const hasViewTranscations = hasPermission(
     "transaction_management",
-    "view_payroll_list"
+    "view_all_transactions"
   );
 
   /**
@@ -100,10 +103,8 @@ const Sidebar = ({ props }) => {
   useEffect(() => {
     /**get route names */
     const routeNames = router.pathname.split("/").filter((name) => name != "");
-
-    if (routeNames[0] === "production") {
+    if (routeNames[0] === "productions") {
       const lastRoute = routeNames[routeNames.length - 1];
-
       setParentRoute(`/${lastRoute}`);
     } else {
       setParentRoute(`/${routeNames[0]}`);
@@ -165,10 +166,6 @@ const Sidebar = ({ props }) => {
 
       // Store the clicked index in localStorage
       localStorage.setItem("clickedItemIndex", index.toString());
-    } else {
-      // If the same item is clicked again, remove from localStorage
-      localStorage.removeItem("clickedItemIndex");
-      setClickedItemIndex(null);
     }
   };
 
@@ -257,7 +254,7 @@ const Sidebar = ({ props }) => {
               <Link
                 className="d-flex gap-2"
                 href={
-                  clickedItemIndex
+                  temp1
                     ? `/productions/${temp1?.ID}/dashboard`
                     : route.children
                     ? ""
@@ -631,19 +628,26 @@ const Sidebar = ({ props }) => {
           selectedProduction ? (
             <div className="px-2 mt-2 sidebar-body">
               {sidebarRoutesProduction.map((route, i) => {
-                if (
-                  (!hasViewConfiguration && route?.name !== "Configurations") ||
-                  (!hasViewTranscations && route?.name !== "Transactions") ||
-                  (!hasViewPayments && route?.name !== "Payments")
-                ) {
+                const isSuperAdminWithFullAccess =
+                  userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                  userData?.data?.Role?.AccessType === "full_acceess";
+
+                const isFilteredRoute =
+                  (hasViewConfiguration || route?.name !== "Configurations") &&
+                  (hasViewPayments || route?.name !== "Payments") &&
+                  (hasViewTranscations || route?.name !== "Transactions");
+
+                if (isSuperAdminWithFullAccess || userData?.data?.IsStaffUser) {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );
-                } else {
+                } else if (isFilteredRoute) {
                   return (
                     <SideBarRoute route={route} key={`sidebar-route-${i}`} />
                   );
                 }
+
+                return null;
               })}
             </div>
           ) : (
@@ -687,9 +691,9 @@ const Sidebar = ({ props }) => {
           <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesProduction.map((route, i) => {
               if (
-                (!hasViewConfiguration && route?.name !== "Configurations") ||
-                (!hasViewTranscations && route?.name !== "Transactions") ||
-                (!hasViewPayments && route?.name !== "Payments")
+                (hasViewConfiguration && route?.name !== "Configurations") ||
+                (hasViewTranscations && route?.name !== "Transactions") ||
+                (hasViewPayments && route?.name !== "Payments")
               ) {
                 return (
                   <SideBarRoute route={route} key={`sidebar-route-${i}`} />
@@ -705,14 +709,11 @@ const Sidebar = ({ props }) => {
           <div className="px-3 mt-2 sidebar-body">
             {sidebarRoutesNonStaff.map((route: any, i) => {
               if (
-                (!hasViewReports && route?.name === "Reports") ||
-                (!hasViewProduction && route?.name === "Productions") ||
-                (!hasViewUsers &&
-                  !hasViewRoles &&
+                (hasViewReports && route?.name === "Reports") ||
+                (hasViewProduction && route?.name === "Productions") ||
+                (hasViewUsers &&
                   route?.children?.filter(
-                    (child) =>
-                      child.name !== "User Management" &&
-                      child.name !== "Role Management"
+                    (child) => child.name !== "User Management"
                   ))
               ) {
                 return (
