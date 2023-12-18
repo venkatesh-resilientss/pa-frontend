@@ -76,7 +76,7 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    if(user?.ID){
+    if (user?.ID) {
       fetchData();
     }
   }, [user]);
@@ -95,13 +95,13 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    if(user?.ID){
+    if (user?.ID) {
       fetchData();
     }
   }, [user]);
 
   const handleViewDetails = (productionId) => {
-    router.push(`/edit-production/${productionId}`);
+    router.push(`/productions/${productionId}`);
   };
 
   // Function to create a card
