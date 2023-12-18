@@ -93,6 +93,7 @@ const AllChartOfAccountsTable = ({ rerender}) => {
             error?.message ||
             "Unable to get data"
         );
+        setLoader(false);
       }
     };
     fetchData();
