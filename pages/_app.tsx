@@ -19,8 +19,8 @@ const authService = new AuthService();
 function MyApp({ Component, pageProps, err }) {
   const router = useRouter();
   const [clientData, setClient] = useState<any>({
-    staffUser: false,
-    name: "",
+    staffUser: true,
+    name: "app",
     id: "",
   });
 
@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps, err }) {
         const name = window.location.hostname.split(".")[0];
         if (name === "app") {
           cookie.set("tenant_id", "1");
-          setClient({ staffUser: true, name: "", id: "" });
+          setClient({ staffUser: true, name: "app", id: "" });
         } else {
           const tenant = await authService.checkTenant({ name });
           if (Number(tenant?.ID)) cookie.set("tenant_id", tenant.ID);
@@ -97,7 +97,10 @@ function MyApp({ Component, pageProps, err }) {
       <Head>
         <title>RSSL</title>
         <link rel="icon" href="/favicon.ico" />
-        <link href="https://db.onlinewebfonts.com/c/860a62f61e94367696df249678cf8efc?family=Segoe+Bold" rel="stylesheet"></link>
+        <link
+          href="https://db.onlinewebfonts.com/c/860a62f61e94367696df249678cf8efc?family=Segoe+Bold"
+          rel="stylesheet"
+        ></link>
       </Head>
 
       <Provider store={store}>

@@ -55,7 +55,7 @@ export default function CreateProduction({ user, router, clientData }) {
     data: productionAccountantUsers,
     mutate: productionAccountantMutate,
   } = useSWR("ProductionUsers", () =>
-    payld.client
+    payld.client && staffUser
       ? clientService.getClientUsers(
           payld.client?.value,
           `?is_active=true&role_code=PRODUCTION_ACCOUNTANT`
@@ -64,14 +64,15 @@ export default function CreateProduction({ user, router, clientData }) {
   );
 
   useEffect(() => {
-    setPayld({
-      ...payld,
-      client: payld.client
-        ? payld.client
-        : clientData?.id
-        ? { label: clientData?.name, value: clientData?.id }
-        : null,
-    });
+    if (clientData?.name !== "app")
+      setPayld({
+        ...payld,
+        client: payld.client
+          ? payld.client
+          : clientData?.id
+          ? { label: clientData?.name, value: clientData?.id }
+          : null,
+      });
     setStaffUser(clientData?.staffUser);
   }, [clientData]);
 
@@ -90,13 +91,12 @@ export default function CreateProduction({ user, router, clientData }) {
         ? productionAccountantUsers?.data || []
         : users?.data || [];
     const tempArr: any = (tempArray || []).map((e) => ({
-      label: e?.name || e?.Name || "",
-      value: e.ID,
+      label: lb === "clients" ? e?.Name || "" : e?.name || "",
+      value: lb === "clients" ? e.ID : e.id,
     }));
 
     return removeDuplicates(tempArr, "value");
   };
-
   const onSubmit = async () => {
     if (
       !payld.name ||
@@ -163,7 +163,9 @@ export default function CreateProduction({ user, router, clientData }) {
       },
       borderColor:
         err &&
-        state.selectProps.instanceId.includes("client") &&
+        (state.selectProps.instanceId.includes("client") ||
+          state.selectProps.instanceId.includes("po") ||
+          state.selectProps.instanceId.includes("ap")) &&
         !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
@@ -328,6 +330,7 @@ export default function CreateProduction({ user, router, clientData }) {
                   </span>
                 )}
               </div>
+
               {staffUser && (
                 <div className="col-12 col-sm-4">
                   <label className="form-label">
