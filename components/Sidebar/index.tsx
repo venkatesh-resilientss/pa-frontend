@@ -140,7 +140,6 @@ const Sidebar = ({ props }) => {
 
   useEffect(() => {
     if (refetch) {
-      console.log('Refetch ---> ', refetch)
       getProductionsList(searchText)
 
       // Reset refresh status
