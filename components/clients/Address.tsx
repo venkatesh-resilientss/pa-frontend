@@ -11,6 +11,8 @@ const clientService = new ClientsService();
 export default function Address(props) {
   const { step, clientData, errors } = props;
   const [err, setErr] = useState(false);
+  const [pStates, setPStates] = useState<any>([]);
+  const [iStates, setIStates] = useState<any>([]);
 
   useEffect(() => {
     if (errors) setErr(errors);
@@ -28,25 +30,23 @@ export default function Address(props) {
   };
 
   const { data } = useSWR("Countries", () => clientService.getCountries());
-  const { data: pStates, mutate: pMutate } = useSWR("States", () =>
-    clientService.getStates(
-      getObjectValue(clientData, "PhysicalAddress.country")?.value || 0
-    )
-  );
-  const { data: iStates, mutate: iMutate } = useSWR("States", () =>
-    clientService.getStates(
-      getObjectValue(clientData, "MailingAddress.country")?.value || 0
-    )
-  );
 
   useEffect(() => {
-    pMutate();
+    clientService
+      .getStates(
+        getObjectValue(clientData, "PhysicalAddress.country")?.value || 0
+      )
+      .then((res) => setPStates(res));
   }, [clientData?.PhysicalAddress?.country]);
+
   useEffect(() => {
-    iMutate();
+    clientService
+      .getStates(
+        getObjectValue(clientData, "MailingAddress.country")?.value || 0
+      )
+      .then((res) => setIStates(res));
   }, [clientData?.MailingAddress?.country]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
     if (vl.includes(".country"))
       return clientService.getCountries(value).then((res) => {

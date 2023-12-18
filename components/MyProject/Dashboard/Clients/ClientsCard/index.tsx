@@ -7,7 +7,6 @@ import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
 import { getLabel } from "@/commonFunctions/common";
 
-
 const ClientsCard = ({ data }) => {
   return (
     <Card
@@ -33,27 +32,29 @@ const ClientsCard = ({ data }) => {
               {getLabel(data.name || "-")}
             </div>
             <Link href={`/clients/${data.id}`}>
-              <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
-                <div>
-                  <Image
-                    src={carbonDecumentView}
-                    style={{ height: "12px", width: "12px",marginBottom:"5px" }}
-                    alt={"view details"}
-                  />
-                </div>
-                <div className="view_details">View Details</div>
-                <div>
-                  <AiFillCaretRight className="mb-1" />
-                </div>
+              <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
+                <Image
+                  src={carbonDecumentView}
+                  alt={"view details"}
+                  width={12}
+                  height={12}
+                />
+                <div className="f-12 text-nowrap">View Details</div>
+
+                <AiFillCaretRight size={12} />
               </div>
             </Link>
           </div>
 
-        
-           <div className="d-flex gap-4 justify-content-between mt-3">
+          <div className="d-flex gap-4 justify-content-between mt-3">
             <div className="text-black d-flex align-items-center f-10 mb-1">
               <div className="custom-margin">
-                <img src="user.svg" alt="user" className="img-fluid" style={{ width: "15px" }} />
+                <img
+                  src="user.svg"
+                  alt="user"
+                  className="img-fluid"
+                  style={{ width: "15px" }}
+                />
               </div>
               <div className="f-12 f-clamp-2">
                 {getLabel(data.client_admin.name || "-")}
@@ -61,17 +62,21 @@ const ClientsCard = ({ data }) => {
             </div>
             <div className="f-12 clr-dblack">
               <div>
-                No. of Active Productions:{' '}
-                {data.projects_count ? data.projects_count : '0'}
+                No. of Active Productions:{" "}
+                {data.projects_count ? data.projects_count : "0"}
               </div>
             </div>
           </div>
-          
 
-           <div className="d-flex gap-4 justify-content-between mt-1">
+          <div className="d-flex gap-4 justify-content-between mt-1">
             <div className="text-black d-flex align-items-center fs-10 fw-400 mb-1">
               <div className="custom-margin">
-                <img src="mail.svg" alt="mail" className="img-fluid" style={{ width: "14px" }} />
+                <img
+                  src="mail.svg"
+                  alt="mail"
+                  className="img-fluid"
+                  style={{ width: "14px" }}
+                />
               </div>
               <div className="f-12">
                 {data.client_admin.email ? data.client_admin.email : "-"}
@@ -112,7 +117,7 @@ const ClientsCard = ({ data }) => {
 
       <div
         className="text-black d-flex align-items-center fw-400 f-12"
-        style={{  color: "#030229"}}
+        style={{ color: "#030229" }}
       >
         <Image
           src={fluentEmoji}

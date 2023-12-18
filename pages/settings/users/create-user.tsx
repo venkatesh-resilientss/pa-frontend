@@ -411,7 +411,9 @@ export default function CreateUser({ router, user: userData }) {
                 render={({ field }) => (
                   <Select
                     {...field}
-                    options={roleOptions}
+                    options={roleOptions.filter((e) =>
+                      userData?.IsStaffUser ? e : !e.field
+                    )}
                     styles={roleSelectStyles}
 
                     // onChange={(e) => {
