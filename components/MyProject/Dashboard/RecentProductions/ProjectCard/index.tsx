@@ -36,7 +36,7 @@ const ProjectCard = ({ data }) => {
               </div>
 
               <div className="d-flex justify-content-between mt-1">
-                <div className="fw-600 clr-dblack">
+                <div className="fw-600 clr-dblack clientcard_headings">
                   {getLabel(data?.project_name || "-")}
                 </div>
               </div>

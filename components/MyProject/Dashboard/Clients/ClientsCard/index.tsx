@@ -6,7 +6,7 @@ import carbonDecumentView from "assets/DashboardIcons/carbonDecumentView.svg";
 
 import fluentEmoji from "assets/DashboardIcons/fluentEmoji.svg";
 import { getLabel } from "@/commonFunctions/common";
-import { Col, Row } from "react-bootstrap";
+
 
 const ClientsCard = ({ data }) => {
   return (
