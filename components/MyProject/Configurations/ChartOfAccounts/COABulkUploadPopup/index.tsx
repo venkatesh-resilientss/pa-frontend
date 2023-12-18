@@ -175,8 +175,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
             onClick={() => dispatch(closeBulkUploadCOAPopup("close"))}
             color="white"
             style={{
-              height: "26px",
-              fontSize: "10px",
+              fontSize: "14px",
               fontWeight: "400",
             }}
           >
@@ -185,8 +184,7 @@ const COABulkUploadPopup = ({setRerender, rerender }) => {
           <Button
           onClick={handleUpload}
             style={{
-              height: "26px",
-              fontSize: "10px",
+              fontSize: "14px",
               fontWeight: "400",
               backgroundColor: "#00AEEF",
               border: "none",
