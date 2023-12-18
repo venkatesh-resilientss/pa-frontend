@@ -10,6 +10,7 @@ import {
   Tooltip,
   Button,
 } from "react-bootstrap";
+import cookie from "js-cookie";
 
 import {
   sidebarRoutesMaster,
@@ -119,10 +120,12 @@ const Sidebar = ({ props }) => {
   }, [router.pathname]);
 
   useEffect(() => {
-    clientService.getProductions(searchText).then((res) => {
-      setProductionData(res);
-    });
-  }, [searchText]);
+    if(cookie.get("accessToken")){
+      clientService.getProductions(searchText).then((res) => {
+        setProductionData(res);
+      });
+    }
+  }, [searchText, cookie.get("accessToken")]);
 
   useEffect(() => {
     const storedIndex = localStorage.getItem("clickedItemIndex");

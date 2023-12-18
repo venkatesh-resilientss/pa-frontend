@@ -76,7 +76,9 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    fetchData();
+    if(user?.ID){
+      fetchData();
+    }
   }, [user]);
 
   //all production cards
@@ -93,7 +95,9 @@ export default function ProductionDashboard({ user }) {
       }
     };
 
-    fetchData();
+    if(user?.ID){
+      fetchData();
+    }
   }, [user]);
 
   const handleViewDetails = (productionId) => {
