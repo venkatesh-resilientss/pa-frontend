@@ -68,10 +68,10 @@ function RecentProductions() {
           ) : (
             <div className="text-center mt-3 nodataAvailable">
               <img
-                src="./no_client_data_available.svg"
-                alt="No clients available"
-                style={{ maxWidth: "100%" }}
-              />
+                  src="/no_client_data_available.svg"
+                  alt="No clients available"
+                  style={{ maxWidth: '100%' }}
+                />
               <p className="nodataAvailable">No Data available.</p>
               {!searchInput?.trim() && (
                 <>

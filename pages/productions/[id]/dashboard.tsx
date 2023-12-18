@@ -8,8 +8,39 @@ import { useRouter } from "next/router";
 import { DashboardService } from "services";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { AiFillCaretRight } from "react-icons/ai";
+import { Line } from 'react-chartjs-2';
+import { Chart, LinearScale, CategoryScale, PointElement, LineElement, BarElement, ArcElement } from 'chart.js';
+
+
+Chart.register(LinearScale, CategoryScale, PointElement, LineElement, BarElement, ArcElement);
+
+
 
 export default function ProductionDashboard() {
+
+  
+  const data = {
+    labels: ['January 23', 'February 23', 'March 23', 'April 23', 'May 23', 'June 23', 'July 23'],
+    datasets: [
+      {
+        label: 'Example Line Chart',
+        data: [0, 29, 42, 44, 82, 101, 120],
+        fill: true,
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        borderColor: 'rgba(75,192,192,1)',
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   const router = useRouter();
   const { id } = router.query;
   const productionService = new DashboardService();
@@ -21,7 +52,9 @@ export default function ProductionDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await productionService.getProductionDetails(id);
+        const result = await productionService.getProductionDetails(
+          id
+        );
         const projectDetailsData = result?.data?.[0];
         // Set project details state
         setProjectDetails(projectDetailsData);
@@ -105,6 +138,9 @@ export default function ProductionDashboard() {
     },
   ];
 
+
+
+
   return (
     <>
       <div className="rounded mt-3">
@@ -113,19 +149,19 @@ export default function ProductionDashboard() {
             "Total Active Productions",
             "/active_productions.png",
             null,
-            <h4>{dashboardCards?.TotalActiveProductions || "-"}</h4>
+            <h4>{dashboardCards?.TotalActiveProductions || "0"}</h4>
           )}
           {createCard(
             "Total Budget Vs Actual Spending",
             "/total_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.TotalBudget || "-"}</p>
+            <p className="fw-600 f-16">$ {dashboardCards?.TotalBudget || "0"}</p>
           )}
           {createCard(
             "Remaining Budget Allocation",
             "/remaining_budget.svg",
             "The Lost Heirloom",
-            <p>{dashboardCards?.RemainingBudgetAllocation || "-"}</p>
+            <p className="fw-600">$ {dashboardCards?.RemainingBudgetAllocation || "0"}</p>
           )}
           {createCard(
             "Pending Approval Items",
@@ -134,33 +170,33 @@ export default function ProductionDashboard() {
             <div className="row">
               <div className="col-md-6 text-nowrap">
                 <h6 className="text-center ">Purchase Order</h6>
-                <p className="text-center font-size-16 ">
-                  {dashboardCards?.PendingApprovalItems?.PettyCash || "-"}
+                <p className="text-center fw-600  f-16">
+                  {dashboardCards?.PendingApprovalItems?.PettyCash || "0"}
                 </p>
               </div>
               <div className="col-md-6">
                 <h6 className="text-center ">Account Payable</h6>
-                <p className="text-center ">
-                  {dashboardCards?.PendingApprovalItems?.AccountPayable || "-"}
+                <p className="text-center fw-600 f-16">
+                  {dashboardCards?.PendingApprovalItems?.AccountPayable || "0"}
                 </p>
               </div>
             </div>
           )}
         </Row>
       </div>
-
-      <div className="d-flex align-items-center w-100 justify-content-center col-md-6 mt-3">
+      <Row className="d-flex flex-wrap">
+        <div className="col-md-6 mt-3 d-flex">
         {error || !projectDetails ? (
           <div className="text-center nodataAvailable">
             <img src="/no_client_data_available.svg" alt="Error" />
             <p>No Data available.</p>
           </div>
         ) : (
-          <Card style={{ borderRadius: "10px" }} className="p-3">
+          <Card style={{ borderRadius: "10px" }} className="p-3 w-100">
             <Col>
               <div className="d-flex justify-content-between">
                 <div>
-                  <h4 className="text-nowrap fw-bold">
+                  <h4 className="text-nowrap productionDashboardCard">
                     {projectDetails?.name || "-"}
                   </h4>
                 </div>
@@ -177,12 +213,14 @@ export default function ProductionDashboard() {
                     <img src="/view_details.svg" alt="" />
                   </div>{" "}
                   <p style={{ fontSize: "14px" }}>View Details</p>
+                      <AiFillCaretRight />
                 </div>
+                 
               </div>
-              <div className="d-flex justify-content-between mt-2">
+              <div className="d-flex justify-content-between mt-1">
                 <div>
-                  <p>
-                    Payroll Coordinator :{" "}
+                  <p className="fw-600">
+                    Production Accountant :{" "}
                     {projectDetails?.PayrollCoordinator || "-"}
                   </p>
                 </div>
@@ -202,64 +240,119 @@ export default function ProductionDashboard() {
               <div className="d-flex justify-content-between mt-4">
                 <div>
                   <div>
-                    <span style={{ fontSize: "18px" }}>
+                    <span className="f-18">
                       <img src="/budget_allocated.svg" /> Budget Allocated
                     </span>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <span style={{ fontSize: "18px" }}>
+                    <span className="f-18">
                       <img src="/budget_spend.svg" alt="" /> Budget Spend
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-between mt-3">
+              <div className="d-flex justify-content-between mt-2">
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }} >$500,000</p>
                   </div>
                 </div>
                 <div>
                   <div>
-                    <p style={{ fontSize: "21px", fontWeight: "600" }}>-</p>
+                    <p style={{ fontSize: "21px", fontWeight: "600" }} >$350,190</p>
                   </div>
                 </div>
               </div>
             </Col>
-            <div className="row mt-2">
+            <div className="row mt-4">
               <div className="col-md-4">
-                <h6 className="text-center">Project Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
-                  {projectDetails?.projectType?.name || "-"}
+                <h6 className="text-center"> <img
+                    src="/production_type.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  /> Project Type</h6>
+                <p className="text-center fw-600" >
+                  {projectDetails?.projectType?.name || "TV Show"}
                 </p>
               </div>
+             
               <div className="col-md-4 text-nowrap">
-                <h6 className="text-center">Last Payroll Date</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
+                <h6 className="text-center">
+                  <img
+                    src="/calender.svg"
+                    alt="custom production"
+                    style={{ width: "15px" }}
+                  />{' '} {/* Non-breaking space added here */}
+                  Last Payroll Date
+                </h6>
+                <p className="text-center fw-600">
                   {projectDetails?.LastPayrollDate || "-"}
                 </p>
               </div>
+
               <div className="col-md-4">
-                <h6 className="text-center">Labour Type</h6>
-                <p className="text-center" style={{ fontWeight: "600" }}>
-                  {projectDetails?.LabourType || "-"}
-                </p>
-              </div>
+              <h6 className="text-center">
+                <img
+                  src="/Vector.svg"
+                  alt="custom production"
+                  style={{ width: "15px" }}
+                />{' '} {/* Non-breaking space added here */}
+                Labour Type
+              </h6>
+              <p className="text-center fw-600">
+                {projectDetails?.LabourType || "-"}
+              </p>
             </div>
-            <div className="mt-2">
+
+            </div>
+            <div className="mt-4">
               <p>
-                <img src="/software_subscribed.svg" alt="" /> Softwares
-                Subscribed
+                <img src="/software_subscribed.svg" alt="" /> Softwares Subscribed
               </p>
             </div>
             <div className="d-flex mt-3">
-              <p className="mr-4 productionBorder">-</p>
+              <div>
+               
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ fontSize: "10px" }}
+                >
+                  <div className="d-flex gap-2 mt-2 f-12">
+                    {projectDetails.softwares?.map((software, i) => {
+                      return (
+                        <div
+                          key={`software-card-${i}`}
+                          style={{
+                            backgroundColor: "#B5DEF0",
+                            color: "#030229",
+                            borderRadius: "5%",
+                          }} className="p-1 px-2 f-12"
+                        >
+                          {software?.software_name || "-"}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
         )}
       </div>
+
+      <div className="col-md-6 mt-3">
+          
+        <Card className="h-100"> 
+          <div className="px-4 pb-5">
+            <h6 className="productionDashboardCard p-1">Expense Trends Over Time</h6>
+                <Line data={data} options={options} height={100}/>
+              </div>
+        </Card>
+      </div>
+      </Row>
+      
       <div
         className="my-1 mt-3 mb-2"
         style={{ fontSize: "18px", fontWeight: "600", color: "#030229" }}

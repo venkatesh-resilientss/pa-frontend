@@ -49,7 +49,7 @@ export default function Address(props) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadOptions = (value, vl) => {
     if (vl.includes(".country"))
-      return clientService.getCountries().then((res) => {
+      return clientService.getCountries(value).then((res) => {
         return [...(res?.data || [])].map((e) => {
           return { label: e.Name, value: e.ID };
         });

@@ -16,23 +16,21 @@ const ProjectCard = ({ data }) => {
         <div className="d-flex">
           <div className="w-100 " style={{ marginLeft: "3px" }}>
             <div className="">
-              <div className="d-flex justify-content-between">
-                <div style={{ fontSize: "14px", color: "#030229" }}>
+              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <p className="f-14 m-0 clr-dbalck">
                   {getLabel(data?.client_name || "-")}
-                </div>
-                <Link href={`/productions/${data.id}`}>
-                  <div className="border rounded cr-p text-black text-center d-flex gap-1 px-1 p-1 f-14">
-                    <div>
-                      <Image
-                        src={carbonDecumentView}
-                        style={{ height: "11px", width: "11px" }}
-                        alt={"view details"}
-                      />
-                    </div>
-                    <div>View Details</div>
-                    <div>
-                      <AiFillCaretRight style={{ marginBottom: "1px" }} />
-                    </div>
+                </p>
+                <Link href={`/productions/${data.id}`} className="ms-auto">
+                  <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
+                    <Image
+                      src={carbonDecumentView}
+                      alt={"view details"}
+                      width={12}
+                      height={12}
+                    />
+                    <div className="f-12 text-nowrap">View Details</div>
+
+                    <AiFillCaretRight size={12} />
                   </div>
                 </Link>
               </div>
@@ -58,13 +56,12 @@ const ProjectCard = ({ data }) => {
               <span>Budget Allocated</span>
               <div className="fw-bold font-size-14">{data?.budget || 0}</div>
             </div>
-
             <div className="d-flex gap-2 iconsSpace">
               <Image
                 src={budgetSpend}
                 alt=""
                 style={{
-                  width: "15px",
+                  width: "12px",
                 }}
               />
               <div>
@@ -85,18 +82,17 @@ const ProjectCard = ({ data }) => {
               className="d-flex justify-content-between"
               style={{ fontSize: "10px" }}
             >
-              <div className="d-flex gap-2 mt-1 font-size-14 fw-400">
+              <div className="d-flex gap-2 mt-2 f-12">
                 {data.softwares?.map((software, i) => {
                   return (
                     <div
                       key={`software-card-${i}`}
                       style={{
                         backgroundColor: "#B5DEF0",
-                        width: "auto",
                         color: "#030229",
-                        padding: "4px",
                         borderRadius: "5%",
                       }}
+                      className="p-1 px-2 f-12"
                     >
                       {software?.software_name || "-"}
                     </div>
@@ -122,7 +118,7 @@ const ProjectCard = ({ data }) => {
               </div>
             </div>
             <div>
-              <div className="f-12 fw-bold">
+              <div className="f-14 fw-bold text-end">
                 <p>Custom Design</p>
               </div>
             </div>

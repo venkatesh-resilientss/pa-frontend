@@ -4,10 +4,12 @@ import PayrollCreateClient from "components/MyProject/Clients/CreateClient";
 import CreateClient from "@/components/clients/CreateClient";
 
 import { ClientsService } from "services";
+import { hasAccess } from "@/commonFunctions/hasAccess";
+import NoClientPage from "@/components/clients/NoClientPage";
 
 const clientService = new ClientsService();
 
-export default function CreateClientPage({ router }) {
+export default function CreateClientPage({ router, user }) {
   const { isReady, query } = router;
   const defaultClientData: any = {
     logoFile: null,
@@ -99,10 +101,16 @@ export default function CreateClientPage({ router }) {
       router.replace("/clients");
   }, [isReady, query, query.softwares]);
 
+  const hasPermission = hasAccess(user, "client_management", "create_client");
   return (
     <div>
-      {clientData.Softwares.length === 0 ||
-      (clientData.Softwares.length === 1 && clientData.Softwares[0] === 1) ? (
+      {user && !hasPermission ? (
+        <NoClientPage
+          {...{ router, user }}
+          typ={user && !hasPermission ? "Access Denied" : ""}
+        />
+      ) : clientData.Softwares.length === 0 ||
+        (clientData.Softwares.length === 1 && clientData.Softwares[0] === 1) ? (
         <CreateClient {...{ router, clientData, setClientData }} />
       ) : (
         <PayrollCreateClient />

@@ -7,12 +7,17 @@ import Button from "react-bootstrap-button-loader";
 import AsyncSelect from "react-select/async";
 
 import { ClientsService, RoleService, UsersService } from "services";
+import { groupAndConcatProjects } from "@/commonFunctions/common";
 
 const clientService = new ClientsService();
 const roleService = new RoleService();
 const usersService = new UsersService();
 
-export default function AddUser({ router, user: userData }) {
+export default function EditUser({ router, user: userData }) {
+  const { id } = router.query;
+  const [editMode, setEditMode] = useState(false);
+  const handleToggleEditMode = () => setEditMode(!editMode);
+
   const {
     control,
     handleSubmit,
@@ -27,16 +32,16 @@ export default function AddUser({ router, user: userData }) {
   const [userDetails, setUserDetails] = useState(null) as any;
   const [roleOptions, setRoleOptions] = useState<any>([]);
   const [loading, setLoading] = useState<any>(false);
-  const [list, setList] = useState([
-    {
-      client: "client_1",
-      production: "production_1",
-      client_id: 0,
-      production_id: [],
-      productionOptions: [],
-      productions: [],
-    },
-  ]);
+  const defaultListItem = {
+    client: "client_1",
+    production: "production_1",
+    client_id: 0,
+    production_id: [],
+    productionOptions: [],
+    productions: [],
+    clientData: null,
+  };
+  const [list, setList] = useState([{ ...defaultListItem }]);
 
   useEffect(() => {
     if (watchRole?.field) setShowStaffUser(true);
@@ -63,72 +68,6 @@ export default function AddUser({ router, user: userData }) {
           : [];
         setRoleOptions(temproleOptions);
       });
-  }, []);
-
-  const getProductionOptions = (client, clientId) => {
-    usersService
-      .getProductionsByClient(clientId)
-      .then((res) => {
-        const productions = (res || [])
-          ?.filter((e) => e?.IsActive)
-          .map((pr) => {
-            return {
-              label: pr.Name,
-              value: pr.ID,
-            };
-          });
-        setList((prevList) => {
-          return prevList.map((item: any) => {
-            if (item.client == client) {
-              return {
-                ...item,
-                productionOptions: [...productions],
-                client_id: clientId,
-                production_id: [],
-                productions: [],
-              };
-            }
-            return item;
-          });
-        });
-      })
-      .catch((error) => {
-        toast.error(error?.error);
-        setList((prevList) => {
-          return prevList.map((item: any) => {
-            if (item.client == client) {
-              return {
-                ...item,
-                productionOptions: [],
-                client_id: clientId,
-              };
-            }
-            return item;
-          });
-        });
-      });
-  };
-
-  useEffect(() => {
-    setUserDetails(userData);
-    if (!userData?.IsStaffUser && userData?.client_id) {
-      const client_id = userData?.client_id;
-      const productionOptions = getProductionOptions("client_1", client_id);
-      const listObject: any = [
-        {
-          client: "client_1",
-          production: "production_1",
-          client_id: client_id,
-          production_id: [],
-          productionOptions: productionOptions,
-          productions: [],
-        },
-      ];
-      setList(listObject);
-    }
-  }, [userData]);
-
-  useEffect(() => {
     const fetchInitialClients = async () => {
       try {
         const res = await clientService.getClients({
@@ -155,7 +94,120 @@ export default function AddUser({ router, user: userData }) {
     };
 
     fetchInitialClients();
-  }, [userDetails]);
+  }, []);
+
+  const getProductionOptions = (client, clientData) => {
+    usersService
+      .getProductionsByClient(clientData.value)
+      .then((res) => {
+        const productions = (res || [])
+          ?.filter((e) => e?.IsActive)
+          .map((pr) => {
+            return {
+              label: pr.Name,
+              value: pr.ID,
+            };
+          });
+        setList((prevList) => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [...productions],
+                client_id: clientData.value,
+                clientData: clientData,
+                production_id: [],
+                productions: [],
+              };
+            }
+            return item;
+          });
+        });
+      })
+      .catch((error) => {
+        toast.error(error?.error);
+        setList((prevList) => {
+          return prevList.map((item: any) => {
+            if (item.client == client) {
+              return {
+                ...item,
+                productionOptions: [],
+                client_id: clientData.value,
+                clientData: clientData,
+              };
+            }
+            return item;
+          });
+        });
+      });
+  };
+
+  const [activeStatus, setActiveStatus] = useState("inactive");
+
+  const ProductionOptions = (clientId) => {
+    if (clientId === 0) return [];
+    return usersService
+      .getProductionsByClient(clientId)
+      .then((res) =>
+        (res || [])
+          ?.filter((e) => e?.IsActive)
+          .map((pr) => ({ label: pr.Name, value: pr.ID }))
+      )
+      .catch(() => []);
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        setLoading(true);
+        const resp = await usersService.getuserbyid(id);
+        reset({
+          lastname: resp?.last_name || "",
+          firstname: resp?.first_name || "",
+          middlename: resp?.middle_name || "",
+          email: resp?.email || "",
+          IsActive: resp?.IsActive ? "active" : "inactive",
+          role: {
+            value: resp?.role_id || "",
+            label: resp?.role_name || "",
+            field: resp?.is_staff_role || false,
+          },
+        });
+        setActiveStatus(resp?.IsActive ? "active" : "inactive");
+
+        const tempList = groupAndConcatProjects(
+          resp?.client_data || [],
+          defaultListItem
+        );
+        setList(tempList);
+        setLoading(false);
+
+        const tempLt = await Promise.all(
+          tempList.map(async (e: any) => {
+            const optns = await ProductionOptions(e.client_id);
+            return { id: e.client_id, optns };
+          })
+        );
+        setList((pL) =>
+          pL.map((e) => ({
+            ...e,
+            productionOptions:
+              tempLt.find((el) => el.id === e.client_id)?.optns || [],
+          }))
+        );
+      } catch (e) {
+        setLoading(false);
+        toast.error(e?.error || "Error");
+        setList([{ ...defaultListItem }]);
+      }
+    };
+
+    if (router.isReady && Number(id)) getData();
+  }, [id, router.isReady, reset]);
+
+  useEffect(() => {
+    setUserDetails(userData);
+  }, [userData]);
 
   const loadClientOptions: any = async (inputValue, callback) => {
     try {
@@ -196,6 +248,7 @@ export default function AddUser({ router, user: userData }) {
       toast.error("Select Client");
       return;
     }
+
     const userPayload: any = {
       first_name: data.firstname,
       last_name: data.lastname,
@@ -214,29 +267,27 @@ export default function AddUser({ router, user: userData }) {
     };
 
     if (data?.role?.label === "Client Admin") {
-      const userPreferences = list.map((list) => {
-        return {
-          ClientID: list.client_id,
-          ProjectIDs: [],
-        };
-      });
+      const userPreferences = list.map((lt) => ({
+        ClientID: lt.client_id,
+        ProjectIDs: [],
+      }));
       userPayload.Meta.userCPReference = userPreferences;
     } else {
-      const userPreferences = list.map((list) => {
-        return {
-          ClientID: list.client_id,
-          ProjectIDs: [...list.production_id],
-        };
-      });
+      const userPreferences = list
+        .map((lt) => ({
+          ClientID: lt.client_id,
+          ProjectIDs: [...lt.production_id],
+        }))
+        .filter((e) => e.ClientID);
       userPayload.Meta.userCPReference = userPreferences;
     }
 
     setLoading(true);
     usersService
-      .postUsers(userPayload)
+      .editUser(id, userPayload)
       .then(() => {
-        toast.success("User Added successfully");
         router.push("/settings/users");
+        toast.success("User updated successfully");
         reset();
         setLoading(false);
       })
@@ -251,7 +302,7 @@ export default function AddUser({ router, user: userData }) {
       <div className="text-black font-size-16 fw-600">User Management</div>
 
       <div className="d-flex justify-content-between">
-        <div className="text-black font-size-32 fw-600">Add New User</div>
+        <div className="text-black font-size-32 fw-600">Edit User</div>
         <div className="d-flex gap-1">
           <a
             href="#"
@@ -266,9 +317,12 @@ export default function AddUser({ router, user: userData }) {
             disabled={loading}
             className="px-3 py-2"
             spinColor="#ffffff"
-            onClick={handleSubmit(onSubmit)}
+            onClick={() => {
+              if (editMode) handleSubmit(onSubmit)();
+              else handleToggleEditMode();
+            }}
           >
-            Save
+            {editMode ? "Save" : "Edit"}
           </Button>
         </div>
       </div>
@@ -293,6 +347,7 @@ export default function AddUser({ router, user: userData }) {
                       placeholder="Enter Last Name"
                       invalid={errors.lastname && true}
                       {...field}
+                      disabled={!editMode}
                     />
                     {errors.lastname && (
                       <div className="text-danger">
@@ -322,6 +377,7 @@ export default function AddUser({ router, user: userData }) {
                       invalid={errors.firstname && true}
                       {...field}
                       required={true}
+                      disabled={!editMode}
                     />
                     {errors.firstname && (
                       <div className="text-danger">
@@ -349,6 +405,7 @@ export default function AddUser({ router, user: userData }) {
                       placeholder="Enter Middle Name"
                       // invalid={errors.middlename && true}
                       {...field}
+                      disabled={!editMode}
                     />
                     {/* {errors.middlename && (
                       <div className="text-danger">
@@ -377,6 +434,7 @@ export default function AddUser({ router, user: userData }) {
                       placeholder="Enter Email Id"
                       invalid={errors.email && true}
                       {...field}
+                      disabled={!editMode}
                     />
                     {errors.email && (
                       <div className="text-danger">
@@ -413,6 +471,7 @@ export default function AddUser({ router, user: userData }) {
                     {...field}
                     options={roleOptions}
                     styles={roleSelectStyles}
+                    isDisabled={!editMode}
 
                     // onChange={(e) => {
                     //   setSelectedRole(e.label);
@@ -467,10 +526,12 @@ export default function AddUser({ router, user: userData }) {
                               e.value
                             )
                         )}
+                        value={CPlist.clientData || null}
                         onChange={(client) => {
                           const clientToUpdate = `client_${index + 1}`;
-                          getProductionOptions(clientToUpdate, client.value);
+                          getProductionOptions(clientToUpdate, client);
                         }}
+                        isDisabled={!editMode}
                       />
                     )}
                   />
@@ -500,7 +561,7 @@ export default function AddUser({ router, user: userData }) {
                         defaultOptions={initialClientOptions}
                         onChange={(client) => {
                           const clientToUpdate = `client_${index + 1}`;
-                          getProductionOptions(clientToUpdate, client.value);
+                          getProductionOptions(clientToUpdate, client);
                         }}
                         value={initialClientOptions?.filter(
                           (option) => option.value === userDetails?.client_id
@@ -543,6 +604,7 @@ export default function AddUser({ router, user: userData }) {
                           });
                         });
                       }}
+                      isDisabled={!editMode}
                     />
                   </>
                 ) : (
@@ -561,7 +623,7 @@ export default function AddUser({ router, user: userData }) {
             </Col>
             {
               <Col xl="1">
-                {index !== 0 && (
+                {index !== 0 && editMode && (
                   <div className="d-flex align-items-end h-100 py-2 cursor-pointer">
                     <img
                       src="/deletebin.svg"
@@ -583,8 +645,8 @@ export default function AddUser({ router, user: userData }) {
                 {index === list.length - 1 && (
                   <div className="d-flex align-items-end h-100 justify-content-center cursor-pointer">
                     <p className="my-2"></p>
-                    <p
-                      className="mb-2"
+                    <button
+                      className="btn border-0"
                       onClick={() => {
                         const id = list.length + 1;
                         const tempObj = {
@@ -594,20 +656,59 @@ export default function AddUser({ router, user: userData }) {
                           production_id: [],
                           productionOptions: [],
                           productions: [],
+                          clientData: null,
                         };
                         setList([...list, tempObj]);
                       }}
+                      disabled={!editMode}
                     >
-                      {" "}
-                      <img src="/add-client-icon.svg" alt="" width={15} /> Add
-                      Client
-                    </p>
+                      <img src="/add-client-icon.svg" alt="add" width={15} />{" "}
+                      Add Client
+                    </button>
                   </div>
                 )}
               </Col>
             )}
           </Row>
         ))}
+        <div className="d-flex flex-column mt-2">
+          <Label
+            className="text-black"
+            style={{ fontSize: "16px", fontWeight: "400" }}
+          >
+            Status
+          </Label>
+          <div className="d-flex gap-1">
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                id="ex1-active"
+                name="ex1"
+                value="active"
+                checked={activeStatus === "active"}
+                onChange={() => {
+                  setActiveStatus("active");
+                }}
+                disabled={!editMode}
+              />
+              <div>Active</div>
+            </div>
+            <div className="d-flex gap-1">
+              <input
+                type="radio"
+                name="ex1"
+                id="ex1-inactive"
+                value="inactive"
+                checked={activeStatus === "inactive"}
+                onChange={() => {
+                  setActiveStatus("inactive");
+                }}
+                disabled={!editMode}
+              />
+              <div>Inactive</div>
+            </div>
+          </div>
+        </div>
       </Form>
     </div>
   );

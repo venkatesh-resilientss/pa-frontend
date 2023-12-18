@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
 // import { checkTenant } from "constants/function";
-import moment from "moment";
 import { Image } from "react-bootstrap";
 import { useState } from "react";
 import AGGridTable from "@/components/grid-tables/AGGridTable";
@@ -99,10 +98,7 @@ const AllRoleTable = () => {
       sortable: true,
       field: "CreatedDate",
       cellRenderer: (params) => {
-        const formattedDate = moment(params.CreatedDate).format(
-          "MM/DD/YYYY, HH:mm"
-        );
-        return <span>{formattedDate}</span>;
+        return <span>{params?.data?.CreatedDate?.split("T")[0]}</span>;
       },
     },
     {
