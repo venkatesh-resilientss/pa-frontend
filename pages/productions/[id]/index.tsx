@@ -96,7 +96,7 @@ export default function EditProductions({ router, clientData, user }) {
           client: resp?.data?.Client?.Name
             ? { label: resp?.data?.Client?.Name, value: resp?.data?.Client?.ID }
             : null,
-          clientStatus: resp?.data?.Client?.isActive,
+          clientStatus: resp?.data?.Client?.IsActive,
         });
 
         setPAUser(

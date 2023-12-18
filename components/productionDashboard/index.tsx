@@ -231,7 +231,6 @@ export default function ProductionDashboard({ user }) {
                       <div>
                         <span style={{ fontSize: "10px" }}>
                           <img src="/calender.svg" alt="" />{" "}
-                          <img src="/calender.svg" alt="" />{" "}
                           {production?.created_date
                             ? moment(production.created_date).format(
                                 "MMMM D, YYYY"
