@@ -59,12 +59,12 @@ export default function EditUser({ router, user: userData }) {
       .then((res) => {
         const temproleOptions = Array.isArray(res?.result)
           ? res?.result
-              ?.filter((e) => e?.IsActive)
-              .map((role) => ({
-                value: role.ID,
-                label: role.RoleName,
-                field: role.IsStaff,
-              }))
+            ?.filter((e) => e?.IsActive)
+            .map((role) => ({
+              value: role.ID,
+              label: role.RoleName,
+              field: role.IsStaff,
+            }))
           : [];
         setRoleOptions(temproleOptions);
       });
@@ -264,6 +264,7 @@ export default function EditUser({ router, user: userData }) {
       Meta: {
         userCPReference: [],
       },
+      IsActive: activeStatus === "active" ? true : false
     };
 
     if (data?.role?.label === "Client Admin") {
@@ -414,7 +415,7 @@ export default function EditUser({ router, user: userData }) {
                     )} */}
                   </>
                 )}
-                // rules={{ required: "Middle Name is required" }}
+              // rules={{ required: "Middle Name is required" }}
               />
             </div>
           </Col>
@@ -473,9 +474,9 @@ export default function EditUser({ router, user: userData }) {
                     styles={roleSelectStyles}
                     isDisabled={!editMode}
 
-                    // onChange={(e) => {
-                    //   setSelectedRole(e.label);
-                    // }}
+                  // onChange={(e) => {
+                  //   setSelectedRole(e.label);
+                  // }}
                   />
                 )}
               />
@@ -678,7 +679,7 @@ export default function EditUser({ router, user: userData }) {
           >
             Status
           </Label>
-          <div className="d-flex gap-1">
+          <div className="d-flex gap-3">
             <div className="d-flex gap-1">
               <input
                 type="radio"
