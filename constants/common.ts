@@ -245,14 +245,13 @@ export const sidebarRoutesMaster = [
         name: "Countries",
         path: "/countries",
       },
-
-      {
-        name: "Legislative Types",
-        path: "/legislative-type",
-      },
       {
         name: "Employee Types",
         path: "/employee-type",
+      },
+      {
+        name: "Legislative Types",
+        path: "/legislative-type",
       },
       {
         name: "States",
@@ -277,6 +276,22 @@ export const sidebarRoutesMaster = [
       {
         name: "WC Class Codes",
         path: "/wcclasscodes",
+      },
+      {
+        name: "Company",
+        path: "/company",
+      },
+      {
+        name: "Project Types",
+        path: "/project-type",
+      },
+      {
+        name: "Occupation Codes",
+        path: "/OccupationCodes",
+      },
+      {
+        name: "MPIPHP Production code",
+        path: "/MPIPHP",
       },
     ],
   },
@@ -351,10 +366,6 @@ export const sidebarRoutesProduction = [
     path: "/configurations",
     children: [
       {
-        name: "Agents",
-        path: "/agent",
-      },
-      {
         name: "Banks",
         path: "/banks",
       },
@@ -363,12 +374,8 @@ export const sidebarRoutesProduction = [
         path: "/budgets",
       },
       {
-        name: "Chart of Accounts (COA)",
+        name: "Chart of Accounts",
         path: "/coaaccounts",
-      },
-      {
-        name: "Employee Types",
-        path: "/employee-type",
       },
 
       {
@@ -388,10 +395,6 @@ export const sidebarRoutesProduction = [
         path: "/locations",
       },
       {
-        name: "Legislative Types",
-        path: "/legislative-type",
-      },
-      {
         name: "Periods",
         path: "/periods",
       },
@@ -406,23 +409,6 @@ export const sidebarRoutesProduction = [
       {
         name: "Vendors",
         path: "/vendors",
-      },
-
-      {
-        name: "Company",
-        path: "/company",
-      },
-      {
-        name: "Project Types",
-        path: "/project-type",
-      },
-      {
-        name: "Occupation Codes",
-        path: "/OccupationCodes",
-      },
-      {
-        name: "MPIPHP Production code",
-        path: "/MPIPHP",
       },
     ],
   },

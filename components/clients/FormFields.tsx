@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import Button from "react-bootstrap-button-loader";
 
@@ -188,7 +189,41 @@ export default function FormFields(props: any) {
                 <span className="ms-1 text-danger">*</span>
               )}
             </label>
-            {el.typ === "select" ? (
+            {el.vl === "PhysicalAddress.state" ? (
+              <Select
+                instanceId={`react-select-PhysicalState-${idx}`}
+                styles={selectStyle}
+                className="f-16"
+                placeholder={el.ph}
+                options={getOptions(el.lb, el.vl)}
+                value={getObjectValue(clientData, el.vl)}
+                onChange={(e) => updateValue(clientData, el.vl, e)}
+                isDisabled={
+                  disabled ||
+                  (getObjectValue(clientData, "PhysicalAddress.country")?.value
+                    ? false
+                    : true) ||
+                  false
+                }
+              />
+            ) : el.vl === "MailingAddress.state" ? (
+              <Select
+                instanceId={`react-select-MailingAddressState-${idx}`}
+                styles={selectStyle}
+                className="f-16"
+                placeholder={el.ph}
+                options={getOptions(el.lb, el.vl)}
+                value={getObjectValue(clientData, el.vl)}
+                onChange={(e) => updateValue(clientData, el.vl, e)}
+                isDisabled={
+                  disabled ||
+                  (getObjectValue(clientData, "MailingAddress.country")?.value
+                    ? false
+                    : true) ||
+                  false
+                }
+              />
+            ) : el.typ === "select" ? (
               <AsyncSelect
                 instanceId={`react-select-${(el?.vl || "")?.replaceAll(
                   ".",
@@ -263,6 +298,29 @@ export default function FormFields(props: any) {
                   {process.env.NEXT_PUBLIC_REDIRECT}
                 </span>
               </div>
+            ) : el.typ === "number" ? (
+              <input
+                className={`form-control ${
+                  err &&
+                  el.err &&
+                  !getObjectValue(clientData, el.vl).toString().trim()
+                    ? "border-danger"
+                    : ""
+                }`}
+                placeholder={el.ph}
+                type={el.typ}
+                name={(el?.lb || "")?.replaceAll(" ", "") + idx}
+                value={getObjectValue(clientData, el.vl)}
+                onChange={(e) =>
+                  updateValue(
+                    clientData,
+                    el.vl,
+                    Math.abs(Number(e.target.value)) || ""
+                  )
+                }
+                disabled={disabled || false}
+                min={0}
+              />
             ) : (
               <input
                 className={`form-control ${

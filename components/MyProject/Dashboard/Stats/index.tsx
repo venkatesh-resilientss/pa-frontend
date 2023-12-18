@@ -7,6 +7,7 @@ import fluentMoneyHand from "assets/DashboardIcons/fluentMoneyHand.svg";
 import prospectClientIcon from "assets/DashboardIcons/prospectClientsIcon.svg";
 import { DashboardService } from "services";
 import useSWR from "swr";
+import Link from "next/link";
 
 function Stats() {
   const statsService = new DashboardService();
@@ -34,7 +35,11 @@ function Stats() {
             icon={svg1}
             renderStats={
               <h2 className="fw-bolder mb-75  ">
-                {statsData?.TotalActiveClients}
+                {statsData?.TotalActiveClients ? (
+                  <Link href={`/clients`}>{statsData?.TotalActiveClients}</Link>
+                ) : (
+                  statsData?.TotalActiveClients
+                )}
               </h2>
             }
             stats={statsData?.TotalActiveClients}
@@ -48,7 +53,13 @@ function Stats() {
             icon={user}
             renderStats={
               <h2 className="fw-bolder mb-75  ">
-                {statsData?.NewClientsThisMonth}
+                {statsData?.NewClientsThisMonth ? (
+                  <Link href={`/clients`}>
+                    {statsData?.NewClientsThisMonth}
+                  </Link>
+                ) : (
+                  statsData?.NewClientsThisMonth
+                )}
               </h2>
             }
             stats={statsData?.NewClientsThisMonth}
@@ -61,7 +72,13 @@ function Stats() {
             icon={activeProject}
             statTooltip="Displays the number of ongoing projects actively managed within the system."
             renderStats={
-              <h2 className="fw-bolder mb-75  ">{statsData?.ActiveProjects}</h2>
+              <h2 className="fw-bolder mb-75  ">
+                {statsData?.ActiveProjects ? (
+                  <Link href={`/productions`}>{statsData?.ActiveProjects}</Link>
+                ) : (
+                  statsData?.ActiveProjects
+                )}
+              </h2>
             }
             stats={statsData?.ActiveProjects}
           />
@@ -73,7 +90,11 @@ function Stats() {
             statTooltip="Indicates the number of potential clients or leads being actively considered for engagement."
             renderStats={
               <h2 className="fw-bolder mb-75  ">
-                {statsData?.ProspectClients}
+                {statsData?.ProspectClients ? (
+                  <Link href={`/clients`}>{statsData?.ProspectClients}</Link>
+                ) : (
+                  statsData?.ProspectClients
+                )}
               </h2>
             }
             stats={statsData?.ProspectClients}

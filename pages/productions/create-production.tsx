@@ -5,15 +5,18 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 import Button from "react-bootstrap-button-loader";
 import { removeDuplicates } from "@/commonFunctions/common";
+import { useDispatch } from "react-redux";
 
 import { ClientsService, ProjectService } from "services";
 import { hasAccess } from "@/commonFunctions/hasAccess";
 import NoProductionPage from "@/components/productions/NoProductionPage";
+import { refetchProductions } from "redux/slices/mySlices/productions";
 
 const clientService = new ClientsService();
 const productionService = new ProjectService();
 
 export default function CreateProduction({ user, router, clientData }) {
+  const dispatch = useDispatch();
   const [poVal, setPOVal] = useState(false);
   const [apVal, setAPVal] = useState(false);
 
@@ -143,6 +146,7 @@ export default function CreateProduction({ user, router, clientData }) {
       };
       await productionService.createProject(payload);
       toast.success("Production created successfully");
+      dispatch(refetchProductions(true));
       router.replace(`/productions`);
     } catch (e) {
       setLoading(false);
@@ -523,6 +527,7 @@ export default function CreateProduction({ user, router, clientData }) {
                   }
                   value={pAUser}
                   onChange={(e) => setPAUser(e)}
+                  isClearable
                   // isDisabled={disabled || false}
                 />
               </div>

@@ -27,9 +27,11 @@ const ClientsCard = ({ data }) => {
           />
         </div>
         <div className="w-100 ms-2">
-          <div className="d-flex flex-wrap justify-content-between gap-2">
-            <h5 className="f-22 fw-bold m-0">{getLabel(data.name || "-")}</h5>
-            <Link href={`/clients/${data.id}`} className="ms-auto">
+          <div className="d-flex justify-content-between">
+            <div className="clientcard_headings">
+              {getLabel(data.name || "-")}
+            </div>
+            <Link href={`/clients/${data.id}`}>
               <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
                 <Image
                   src={carbonDecumentView}
@@ -46,37 +48,39 @@ const ClientsCard = ({ data }) => {
 
           <div className="d-flex gap-4 justify-content-between mt-3">
             <div className="text-black d-flex align-items-center f-10 mb-1">
-              <img
-                src="user.svg"
-                alt="user"
-                style={{ marginRight: "5px", width: "15px" }}
-              />
-              <p className="f-12 f-clamp-2">
+              <div className="custom-margin">
+                <img
+                  src="user.svg"
+                  alt="user"
+                  className="img-fluid"
+                  style={{ width: "15px" }}
+                />
+              </div>
+              <div className="f-12 f-clamp-2">
                 {getLabel(data.client_admin.name || "-")}
-              </p>
+              </div>
             </div>
             <div className="f-12 clr-dblack">
-              No. of Active Productions:{" "}
-              {data.projects_count ? data.projects_count : "0"}
+              <div>
+                No. of Active Productions:{" "}
+                {data.projects_count ? data.projects_count : "0"}
+              </div>
             </div>
           </div>
+
           <div className="d-flex gap-4 justify-content-between mt-1">
-            <div
-              className="text-black d-flex align-items-center"
-              style={{
-                fontSize: "10px",
-                fontWeight: "400",
-                marginBottom: "4px",
-              }}
-            >
-              <img
-                src="mail.svg"
-                alt="user"
-                style={{ marginRight: "5px", width: "15px" }}
-              />
-              <p className="f-12">
+            <div className="text-black d-flex align-items-center fs-10 fw-400 mb-1">
+              <div className="custom-margin">
+                <img
+                  src="mail.svg"
+                  alt="mail"
+                  className="img-fluid"
+                  style={{ width: "14px" }}
+                />
+              </div>
+              <div className="f-12">
                 {data.client_admin.email ? data.client_admin.email : "-"}
-              </p>
+              </div>
             </div>
           </div>
 
@@ -112,8 +116,8 @@ const ClientsCard = ({ data }) => {
       <hr className="mt-2 mb-0" />
 
       <div
-        className="text-black d-flex align-items-center"
-        style={{ fontWeight: "400", color: "#030229", fontSize: "12px" }}
+        className="text-black d-flex align-items-center fw-400 f-12"
+        style={{ color: "#030229" }}
       >
         <Image
           src={fluentEmoji}

@@ -80,7 +80,7 @@ const ActiveProductionsCard = () => {
 
             <DropdownItem
               className="w-100"
-              onClick={() => router.push(`/edit-production/${props.data.id}`)}
+              onClick={() => router.push(`/productions/${props.data.id}`)}
             >
               <Action
                 icon={editIocn}
