@@ -136,7 +136,7 @@ const Sidebar = ({ props }) => {
 
   useEffect(() => {
     const storedSelectedProduction = localStorage.getItem("selectedProduction");
-    if (storedSelectedProduction && router.pathname == '/productions/[id]/dashboard') {
+    if (storedSelectedProduction) {
       setSelectedProduction(JSON.parse(storedSelectedProduction));
     }
   }, []);
@@ -152,6 +152,8 @@ const Sidebar = ({ props }) => {
   // Function to clear selection and remove from localStorage
   const clearProductionSelection = () => {
     setSelectedProduction(null);
+    setTemp1(null)
+    setTemp2(null)
 
     // Remove the selected production from localStorage
     localStorage.removeItem("selectedProduction");
@@ -162,7 +164,7 @@ const Sidebar = ({ props }) => {
     setTemp1(item);
     setTemp2(index);
 
-    // // Toggle clicked state
+    // Toggle clicked state
     if (index !== clickedItemIndex) {
       setSwitcProduction(!switcProduction);
       // setClickedItemIndex(index);
@@ -381,7 +383,7 @@ const Sidebar = ({ props }) => {
                     className="ms-2 cursor-pointer me-2"
                   />
                   <div className="d-flex align-items-start ms-2">
-                    <p
+                    <div
                       id="clicked"
                       className="home cursor-pointer"
                       onClick={() => {
@@ -390,17 +392,13 @@ const Sidebar = ({ props }) => {
                         setClickedItemIndex(null);
                         setSearchText("");
                         clearProductionSelection();
+                        router.push("/dashboard");
                       }}
                     >
-                      <div
-                        onClick={() => {
-                          // Redirect to the dashboard when clicking on "HOME"
-                          router.push("/dashboard");
-                        }}
-                      >
+                      <div>
                         Home
                       </div>
-                    </p>
+                    </div>
                   </div>
                 </div>
                 <Input
@@ -846,8 +844,6 @@ const Sidebar = ({ props }) => {
               sessionStorage.setItem("projectid", temp1?.ID);
               router.push(`/productions/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
-              setTemp1("");
-              setTemp2("");
             }}
             style={{ width: 150 }}
           >
