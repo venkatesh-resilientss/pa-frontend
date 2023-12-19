@@ -168,6 +168,18 @@ const AllCurrencyTable = ({ rerender }) => {
       },
     },
     {
+      headerName: "Is Base Currency",
+      field: "BaseCurrency",
+      sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (row) => {
+        return row.value ? 'Yes' : 'No'
+      },
+    },
+    {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
@@ -238,7 +250,7 @@ const AllCurrencyTable = ({ rerender }) => {
                   style={{ gap: "10px" }}
                 >
                   <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                    Currencies
+                  {tableData.total_records} {tableData.total_records === 1 ? 'Currencie' : 'Currencies'}
                   </div>
 
                   <Input
