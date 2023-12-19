@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { formValidationRules } from "constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { useEffect, useState } from "react";
+import { LoaderButton } from "@/components/Loaders";
 function AddBudget() {
   const router = useRouter();
   const budgetValidationRules = formValidationRules.budgets;
@@ -25,7 +26,10 @@ function AddBudget() {
   const [initialSeriesOptions, setInitialSeriesOptions] = useState([]);
   const [initialLocationOptions, setInitialLocationOptions] = useState([]);
   const [inititalSetOptions, setInitialSetOptions] = useState([]);
-
+  const [isLoading, setLoader] = useState(false);
+  const [customErrors, setCustomErrors] = useState({
+    budgetFile: null,
+  });
   /** Load Initial Options */
   useEffect(() => {
     const { clientID, projectID } = getSessionVariables();
@@ -37,10 +41,12 @@ function AddBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result.filter(item => item.IsActive).map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        const options = res?.result
+          .filter((item) => item.IsActive)
+          .map((item) => ({
+            value: item.ID,
+            label: item.Name,
+          }));
         setInitialCurrencyOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -62,10 +68,12 @@ function AddBudget() {
             projectId: projectID,
           }
         );
-        const options = res?.data.filter(item => item.IsActive).map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        const options = res?.data
+          .filter((item) => item.IsActive)
+          .map((item) => ({
+            value: item.ID,
+            label: item.Name,
+          }));
         setInitialSeriesOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -76,25 +84,28 @@ function AddBudget() {
     /** Locations */
     const fetchLocationsOptions = async () => {
       try {
-        const res = await locationService.getLocations({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        },
+        const res = await locationService.getLocations(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          },
           {
             clientId: clientID,
             projectId: projectID,
           }
         );
-        const options = res?.result.filter(item => item.IsActive).map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        const options = res?.result
+          .filter((item) => item.IsActive)
+          .map((item) => ({
+            value: item.ID,
+            label: item.Name,
+          }));
         setInitialLocationOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
       }
-    }
+    };
 
     fetchLocationsOptions();
 
@@ -102,27 +113,30 @@ function AddBudget() {
     const fetchSetsOptions = async () => {
       const { clientID, projectID } = getSessionVariables();
       try {
-        const res = await setsService.getSets({
-          search: "",
-          pageLimit: 25,
-          offset: 0,
-        },
+        const res = await setsService.getSets(
+          {
+            search: "",
+            pageLimit: 25,
+            offset: 0,
+          },
           {
             clientId: clientID,
-            projectID: projectID
-          });
-        const options = res?.data.filter(item => item.IsActive).map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+            projectID: projectID,
+          }
+        );
+        const options = res?.data
+          .filter((item) => item.IsActive)
+          .map((item) => ({
+            value: item.ID,
+            label: item.Name,
+          }));
         setInitialSetOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
       }
-    }
+    };
 
     fetchSetsOptions();
-
   }, []);
 
   /**Currencies */
@@ -133,10 +147,12 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
-        value: item.ID,
-        label: item.Name,
-      }));
+      const options = res?.result
+        .filter((item) => item.IsActive)
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
 
       callback(options);
     } catch (error) {
@@ -159,10 +175,12 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
-        value: item.ID,
-        label: item.Name,
-      }));
+      const options = res?.result
+        .filter((item) => item.IsActive)
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -173,20 +191,23 @@ function AddBudget() {
   const loadLocationsOptions: any = async (inputValue, callback) => {
     const { clientID, projectID } = getSessionVariables();
     try {
-      const res = await locationService.getLocations({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      },
+      const res = await locationService.getLocations(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        },
         {
           clientId: clientID,
           projectId: projectID,
         }
       );
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
-        value: item.ID,
-        label: item.Name,
-      }));
+      const options = res?.result
+        .filter((item) => item.IsActive)
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -197,61 +218,85 @@ function AddBudget() {
   const loadSetsOptions: any = async (inputValue, callback) => {
     const { clientID, projectID } = getSessionVariables();
     try {
-      const res = await setsService.getSets({
-        search: inputValue.toString(),
-        pageLimit: 25,
-        offset: 0,
-      },
+      const res = await setsService.getSets(
+        {
+          search: inputValue.toString(),
+          pageLimit: 25,
+          offset: 0,
+        },
         {
           clientId: clientID,
-          projectID: projectID
-        });
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
-        value: item.ID,
-        label: item.Name,
-      }));
+          projectID: projectID,
+        }
+      );
+      const options = res?.result
+        .filter((item) => item.IsActive)
+        .map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
     }
-  }
-
+  };
 
   const budgetService = new BudgetService();
 
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
   const [budgetFile, setBudgetFile] = useState(null);
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      Code: data?.code,
-      Name: data?.name,
-      CurrencyID: parseInt(data?.currency?.value),
-      SeriesID: parseInt(data?.series?.value),
-      SetID: parseInt(data?.set?.value),
-      LocationID: parseInt(data?.location?.value),
-      file: budgetFile,
-      clientID,
-      projectID,
-    };
-
-
-
-    budgetService
-      .createBudget(backendFormat)
-      .then(() => {
-        toast.success("Budget Added successfully");
-        router.back();
-        reset();
-      })
-      .catch((error) => {
-        toast.error(error?.error || error?.Message || "Unable to add Budget");
+  const onSubmit = async (data) => {
+    if(!budgetFile){
+      setCustomErrors({
+        ...customErrors,
+        budgetFile : 'Budget file is required'
       });
+      return;
+    }else if( budgetFile.type !== 'text/plain'){
+      setCustomErrors({
+        ...customErrors,
+        budgetFile : 'Only .txt files are allowed'
+      });
+      return;
+    }
+    setCustomErrors({
+      ...customErrors,
+      budgetFile : null
+    })
+    setLoader(true);
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      if (!clientID || !projectID) {
+        throw new Error("Client and Project not found");
+      }
+      const payload = {
+        Code: data?.code,
+        Name: data?.name,
+        CurrencyID: parseInt(data?.currency?.value),
+        SeriesID: parseInt(data?.series?.value),
+        SetID: parseInt(data?.set?.value),
+        LocationID: parseInt(data?.location?.value),
+        file: budgetFile,
+        clientID,
+        projectID,
+      };
+      await budgetService.createBudget(payload);
+      toast.success("Budget Added successfully");
+      setLoader(false);
+      router.push("/configurations/budgets");
+    } catch (error) {
+      toast.error(
+        error?.error ||
+          error?.Message ||
+          error?.message ||
+          "Unable to add Budget"
+      );
+      setLoader(false);
+    }
   };
   return (
     <div className="mt-4">
@@ -269,7 +314,7 @@ function AddBudget() {
         >
           Add New Budget
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -283,17 +328,11 @@ function AddBudget() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton
+            handleClick={handleSubmit(onSubmit)}
+            buttonText={"Save"}
+            isLoading={isLoading}
+          />
         </div>
       </div>
 
@@ -315,12 +354,12 @@ function AddBudget() {
                   placeholder="Budget Name"
                   invalid={errors.name && true}
                   {...field}
-                  style={{ fontSize: '1rem' }}
+                  style={{ fontSize: "1rem" }}
                 />
               )}
             />
             {errors.name && (
-              <span className="text-danger">
+              <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
                 {errors.name.message as React.ReactNode}
               </span>
             )}
@@ -338,12 +377,12 @@ function AddBudget() {
                   placeholder="Budget Code"
                   invalid={errors.code && true}
                   {...field}
-                  style={{ fontSize: '1rem' }}
+                  style={{ fontSize: "1rem" }}
                 />
               )}
             />
             {errors.code && (
-              <span className="text-danger">
+              <span style={{ fontSize: "12px", fontWeight: "400", color: "red" }}>
                 {errors.code.message as React.ReactNode}
               </span>
             )}
@@ -482,11 +521,11 @@ function AddBudget() {
               )}
             />
             <br />
-            {!budgetFile && (
+            {customErrors.budgetFile && (
               <span
                 style={{ fontSize: "12px", fontWeight: "400", color: "red" }}
               >
-                Budget file is required
+                {customErrors.budgetFile}
               </span>
             )}
           </Col>

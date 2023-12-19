@@ -15,12 +15,12 @@ const ProjectCard = ({ data }) => {
       <CardBody>
         <div className="d-flex">
           <div className="w-100 " style={{ marginLeft: "3px" }}>
-            <div className="">
+            <div>
               <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
                 <p className="f-14 m-0 clr-dbalck">
                   {getLabel(data?.client_name || "-")}
                 </p>
-                <Link href={`/productions/${data.id}`} className="ms-auto">
+                <Link href={`/productions/${data?.id}`} className="ms-auto">
                   <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
                     <Image
                       src={carbonDecumentView}
@@ -83,7 +83,7 @@ const ProjectCard = ({ data }) => {
               style={{ fontSize: "10px" }}
             >
               <div className="d-flex gap-2 mt-2 f-12">
-                {data.softwares?.map((software, i) => {
+                {(data?.softwares || []).map((software, i) => {
                   return (
                     <div
                       key={`software-card-${i}`}
