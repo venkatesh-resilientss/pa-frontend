@@ -1,5 +1,5 @@
-import { Plus, Users } from "react-feather";
-
+import { Plus } from "react-feather";
+import { BsCameraVideo } from "react-icons/bs";
 import { hasAccess } from "@/commonFunctions/hasAccess";
 import Link from "next/link";
 
@@ -20,7 +20,12 @@ export default function CreateProductionButton({ user, cls }) {
               cls
             }
           >
-            {cls ? <Plus size={14} /> : <Users size={14} />} Create Production
+            {cls ? (
+              <Plus size={14} />
+            ) : (
+              <BsCameraVideo size={14} className="mt-2px" />
+            )}{" "}
+            Create Production
           </button>
         </Link>
       )}

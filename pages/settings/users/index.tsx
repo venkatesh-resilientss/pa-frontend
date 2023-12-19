@@ -300,14 +300,14 @@ export default function Users({ user: userDetails }) {
       headerClass: "custom-header-class",
       unSortIcon: true,
       sortable: true,
-      width:120,
+      width: 120,
     },
     {
       headerName: "Actions",
       field: "id",
       cellRenderer: ActionsButton,
       headerClass: "custom-header-class",
-      width:50,
+      width: 50,
     },
   ];
 
@@ -347,10 +347,10 @@ export default function Users({ user: userDetails }) {
                   </Form>
                   {hasCreateUseerPermission && (
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-primary d-flex justify-content-between align-items-center gap-2"
                       onClick={() => router.push("/settings/users/create-user")}
                     >
-                      <Plus size={16} /> Add User
+                      <Plus size={14} /> Create User
                     </button>
                   )}
                 </div>
