@@ -122,8 +122,8 @@ const CreatePurchaseOrder = () => {
   useEffect(() => {
     const retrieveSessionData = () => {
       // Retrieve data from sessionStorage
-      const clientID = parseInt(sessionStorage.getItem("clientid"));
-      const projectID = parseInt(sessionStorage.getItem("projectid"));
+      const clientID = parseInt(localStorage.getItem("clientid"));
+      const projectID = parseInt(localStorage.getItem("projectid"));
 
       if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
         clearInterval(intervalIdRef.current);

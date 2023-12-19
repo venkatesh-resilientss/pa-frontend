@@ -854,8 +854,8 @@ const Sidebar = ({ props }) => {
               setClickedItemIndex(temp2);
               setSelectedProduction(temp1);
               handleProductionSelection(temp1);
-              sessionStorage.setItem("clientid", temp1?.Client?.ID);
-              sessionStorage.setItem("projectid", temp1?.ID);
+              localStorage.setItem("clientid", temp1?.Client?.ID);
+              localStorage.setItem("projectid", temp1?.ID);
               router.push(`/productions/${temp1.ID}/dashboard`);
               setSwitcProduction(!switcProduction);
             }}
