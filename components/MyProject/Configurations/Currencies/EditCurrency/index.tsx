@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { Button, Col, Form, Input, Label } from "reactstrap";
+import { Modal } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -9,12 +10,14 @@ import { formValidationRules } from "@/constants/common";
 import { getLabel } from "@/commonFunctions/common";
 import { hasPermission } from "@/commonFunctions/functions";
 import { LoaderButton } from "@/components/Loaders";
+
 function EditCurrency() {
   const router = useRouter();
   const currencyValidationRules = formValidationRules.currencies;
   const { id } = router.query;
   const currencyService = new CurrencyService();
   const [isBaseCurrency, setIsBaseCurrency] = useState(false);
+  const [initalBaseCurrency,setIintialbaseCurrency] = useState(false);
   const fetchCurrencyDetails = (id) => currencyService.currencyDetails(id);
   const hasEditConfigurationPermission = hasPermission(
     "configuration_management",
@@ -48,15 +51,23 @@ function EditCurrency() {
 
     setActiveStatus(currencyData?.IsActive);
     setIsBaseCurrency(currencyData?.BaseCurrency);
+    setIintialbaseCurrency(currencyData?.BaseCurrency); /**To track base currency value change */
   }, [currencyData]);
-
+  
   const { mutate: currencyMutate } = useSWR("LIST_CURRENCY", () =>
     currencyService.getCurrencies({ search: "", pageLimit: 25, offset: 0 })
   );
 
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
   const [isLoading, setLoader] = useState(false);
+  const [changeBaseCurrencyPopUp,setChangeBaseCurrencyPopUp] = useState(false);
+  const [currencyChangeFlag,setCurrencyChangeFlag] = useState(false);
   const onSubmit = (data) => {
+    /**Base curency confirmation */
+    if(initalBaseCurrency !== isBaseCurrency && !currencyChangeFlag){
+      setChangeBaseCurrencyPopUp(true);
+      return;
+    }
     const backendFormat = {
       name: getLabel(data.currencyname),
       code: data.currencycode,
@@ -84,6 +95,7 @@ function EditCurrency() {
       });
   };
 
+  
   return (
     <div className="section mt-4 configuration-add">
       <div className="overflow-auto">
@@ -325,6 +337,50 @@ function EditCurrency() {
           </div>
         </Form>
       </div>
+      {/* Base currency Pop Up */}
+      <Modal
+        show={changeBaseCurrencyPopUp}
+        onHide={
+          ()=>{
+            setChangeBaseCurrencyPopUp(false);
+          }
+        }
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 pt-2 pb-0 ps-4">
+          <Modal.Title className="mb-0 fw-bold">Are you sure?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="mb-0 mt-0 pb-0 pt-4 d-flex justify-content-center align-items-center">
+          <div className="d-flex flex-column">
+            <p className="d-flex justify-content-center mb-0 align-items-center">
+              Do you want to change Base Currency!!
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0 mt-4 mb-4 pb-0 d-flex justify-content-center align-items-center">
+          <button
+            className="btn ms-3 bg-white"
+            onClick={() => {
+              setChangeBaseCurrencyPopUp(false);
+            }}
+          >
+            Cancel
+          </button>
+
+          <button
+            className="btn btn-primary text-white"
+            onClick={() => {
+              setCurrencyChangeFlag(true);
+              setChangeBaseCurrencyPopUp(false);
+            }}
+            style={{ width: 150 }}
+          >
+            Yes, Confirm
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
