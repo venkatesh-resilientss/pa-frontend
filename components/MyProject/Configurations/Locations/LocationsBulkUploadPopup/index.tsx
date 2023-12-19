@@ -62,7 +62,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
       })
       .catch((error) => {
         setLoader(false)
-        toast.error(error.Message|| error.error || "Failed to insert data.");
+        toast.error(error?.error || error?.Message || error?.message || "Unable to add Location");
       });
   };
   const handleDownload = () => {

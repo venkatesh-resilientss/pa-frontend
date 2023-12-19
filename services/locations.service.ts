@@ -31,7 +31,7 @@ class LocationsService extends APIService {
 
       // Append the file name to the FormData object with the specified field name
       formData.append("file", fileName);
-      formData.append("cientId",clientId);
+      formData.append("clientId",clientId);
       formData.append("projectId",projectId);
 
       return this.post(UPLOAD_LOCATION_LIST, formData,  {
