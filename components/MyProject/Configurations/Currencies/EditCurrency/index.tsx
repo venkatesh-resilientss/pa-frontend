@@ -70,7 +70,7 @@ function EditCurrency() {
     currencyService
       .editCurrency(id, backendFormat)
       .then(() => {
-        toast.success("Currency Edited successfully");
+        toast.success("Currency updated successfully");
         mutate(currencyMutate());
         router.push("/configurations/currencies");
         reset();
@@ -78,7 +78,7 @@ function EditCurrency() {
       })
       .catch((error) => {
         toast.error(
-          error?.error || error?.Message || "Unable to edit Currency"
+          error?.error || error?.Message || "Unable to update Currency"
         );
         setLoader(false);
       });

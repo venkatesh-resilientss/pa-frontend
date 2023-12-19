@@ -3,23 +3,20 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { SetsService } from "services";
-import useSWR from "swr";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 function EditSet() {
   const router = useRouter();
   const setsValidationRules = formValidationRules.sets;
   const setService = new SetsService();
   const { id } = router.query;
-
-  const fetchSetDetails = (id) => setService.setsDetails(id);
-
-  const { data: setData } = useSWR(id ? ["SETS_DETAILS", id] : null, () =>
-    fetchSetDetails(id)
-  );
-
+  const [editMode,setEditMode] = useState(false);
+  const [isLoading,setLoader] = useState(false);
+  const [activeStatus, setActiveStatus] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -27,41 +24,55 @@ function EditSet() {
     control,
     reset,
   } = useForm();
-
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
   useEffect(() => {
-    if (!setData) return;
+    const fetchData = async (id : any)=>{
+      try{
+        const response = await setService.setsDetails(id);
+        const data = response;
+        /**Set form values */
+        setValue("setname", data?.Name);
+        setValue("setcode", data?.Code);
+        setValue("description", data?.Description);
+        setActiveStatus(data.IsActive);
+      }catch(error){
+        toast.error(error?.message || error?.Message || error?.error || 'Unable to fetch data');
+      }
+    }
+    const {id} = router.query;
+    if(id)
+      fetchData(id);
+  }, [router.query]);
 
-    setData?.Name && setValue("setname", setData?.Name);
-    setData?.Code && setValue("setcode", setData?.Code);
+  
 
-    setData?.Description && setValue("description", setData?.Description);
-    setActiveStatus(setData?.IsActive);
-  }, [setData]);
-
-  const [activeStatus, setActiveStatus] = useState(setData?.IsActive);
-
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.setname),
-      description: data.description,
-      isActive: activeStatus,
-      code: data.setcode,
-      clientID,
-      projectID,
-    };
-
-    setService
-      .editSet(id, backendFormat)
-      .then(() => {
-        toast.success("Set Edited successfully");
-        router.push("/configurations/sets");
-
-        reset();
-      })
-      .catch((error) => {
-        toast.error(error?.Message);
-      });
+  const onSubmit = async (data) => {
+    setLoader(true);
+    try{
+      const { clientID, projectID } = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const payload = {
+        name: getLabel(data.setname),
+        description: data.description,
+        isActive: activeStatus,
+        code: data.setcode,
+        clientID,
+        projectID,
+      };
+      await setService.editSet(id, payload);
+      setLoader(false);
+      toast.success("Set Edited successfully");
+      router.push("/configurations/sets");
+      reset();
+    }catch(error){
+      setLoader(false);
+      toast.error(error?.error || error?.message || error?.Message || "Unable to update Set");
+    }
   };
 
   return (
@@ -81,7 +92,7 @@ function EditSet() {
           Edit Set
         </div>
 
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -95,17 +106,19 @@ function EditSet() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
         </div>
       </div>
 
@@ -131,6 +144,7 @@ function EditSet() {
                   placeholder="Set Name"
                   invalid={errors.setname && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -156,6 +170,7 @@ function EditSet() {
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   invalid={errors.setcode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -186,6 +201,7 @@ function EditSet() {
                   type="textarea"
                   invalid={errors.description && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -214,6 +230,7 @@ function EditSet() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -227,6 +244,7 @@ function EditSet() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>

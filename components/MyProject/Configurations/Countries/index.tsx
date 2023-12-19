@@ -1,6 +1,5 @@
 import AllCountriesTable from "./AllCountriesTable";
 import CountriesBulkUploadPopup from "./CountriesBulkUploadPopup";
-import DeleteCountryPopup from "./DeleteCountryPopup";
 import { useState } from "react";
 
 function Countries() {
@@ -9,7 +8,6 @@ function Countries() {
   return (
     <div>
       <CountriesBulkUploadPopup {...{ setRerender, rerender }}/>
-      <DeleteCountryPopup />
       <AllCountriesTable {...{ rerender, searchText, setSearchText }}/>
     </div>
   );

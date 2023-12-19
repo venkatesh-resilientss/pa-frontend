@@ -9,7 +9,7 @@ const authService = new AuthService();
 function useUser(): any {
   const { data, error, mutate } = useSWR("GET_USER_DETAILS", async () => {
     if (!cookie.get("accessToken")) {
-      return {}
+      throw { data: "No accessToken" };
     }
     return await authService.getUserDetails();
   });
@@ -19,8 +19,8 @@ function useUser(): any {
       error || data?.data?.ID === 0
         ? ("loggedOut" as const)
         : !data
-          ? ("loading" as const)
-          : ("loggedIn" as const),
+        ? ("loading" as const)
+        : ("loggedIn" as const),
     error: error?.data?.error || error?.data,
     user: data?.data,
     mutate,

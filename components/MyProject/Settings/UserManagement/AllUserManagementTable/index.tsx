@@ -412,7 +412,7 @@ const AllRoleTable = () => {
                       className="btn btn-primary"
                       onClick={() => router.push("/settings/users/create-user")}
                     >
-                      <Plus size={16} /> Add User
+                      <Plus size={16} /> Create User
                     </button>
                   )}
                 </div>

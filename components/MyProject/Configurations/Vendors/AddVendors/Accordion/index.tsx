@@ -15,9 +15,10 @@ import { VendorsService } from "services";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { getSessionVariables } from "@/constants/function";
+import { LoaderButton } from "@/components/Loaders";
 function VendorAccordion() {
   const { reset } = useForm();
-
+  const [isLoading,setLoader] = useState(false);
   const [open, setOpen] = useState("1");
   
   const vendorService = new VendorsService();
@@ -31,7 +32,12 @@ function VendorAccordion() {
   };
 
   const onSubmit = (data) => {
+    setLoader(true);
     const {clientID, projectID} = getSessionVariables();
+    if(!clientID || !projectID){
+      toast.error('Client and Project not found');
+      return;
+    }
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
       countryID: data.contactAddressCountry?.value,
@@ -69,7 +75,7 @@ function VendorAccordion() {
       StateID : data.workState.value,
       PettyCashPCardEnabled : data.isPettyCashEnabled,
       PettyCashAccountID : data.pettyCashAccount,
-      DefaultAccount : data.defaultAccount,
+      DefaultAccount : data.defaultAccount?.value,
       DefaultAddress : data.defaultAddress.value,
       AchBankAccountNUmber : parseInt(data.achAccountNumber),
       AchRoutingNumber : parseInt(data.achRoutingNumber),
@@ -87,9 +93,11 @@ function VendorAccordion() {
     vendorService.createVendor(vendorsPayload).then(()=>{
       toast.success("Vendors Added successfully");
         reset();
-        router.back();
+        setLoader(false);
+        router.push(`/configurations/vendors`);
     }).catch(error=>{
       toast.error(error.Message || error.error || 'Unable to add Vendor');
+      setLoader(false);
     });
 };
 
@@ -99,6 +107,7 @@ function VendorAccordion() {
     control,
     handleSubmit,
     formState: { errors },
+    setValue
   } = useForm();
 
   return (
@@ -116,7 +125,7 @@ function VendorAccordion() {
         >
           Add New Vendor
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -130,17 +139,7 @@ function VendorAccordion() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
         </div>
       </div>
 
@@ -154,6 +153,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>
@@ -165,6 +165,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                setValue={setValue}
               />{" "}
             </AccordionBody>
           </AccordionItem>
@@ -176,6 +177,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>
@@ -187,6 +189,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>

@@ -142,7 +142,7 @@ export default function CreateProduction({ user, router, clientData }) {
         name: payld.name || "",
         ProjectAccountantID: pAUser?.value || 0,
         clientID: payld.client?.value,
-        meta: { approvers, data },
+        meta: { approvers },
       };
       await productionService.createProject(payload);
       toast.success("Production created successfully");

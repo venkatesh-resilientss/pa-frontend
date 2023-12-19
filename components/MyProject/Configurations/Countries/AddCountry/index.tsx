@@ -5,11 +5,13 @@ import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { formValidationRules } from "@/constants/common";
 import { getLabel } from "@/commonFunctions/common";
+import { useState } from "react";
+import { LoaderButton } from "@/components/Loaders";
 function AddCountry() {
   const router = useRouter();
   const countryValidations = formValidationRules.countries;
   const countryService = new CountryService();
-
+  const [isLoading,setLoader] = useState(false);
   const {
     control,
     handleSubmit,
@@ -18,21 +20,23 @@ function AddCountry() {
   } = useForm();
 
   const onSubmit = (data) => {
+    setLoader(true);
     const backendFormat = {
       name: getLabel(data.countryname),
       description: data.description,
       code: data.countrycode,
     };
-
     countryService
       .createCountry(backendFormat)
       .then(() => {
         toast.success("Country Added successfully");
         router.back();
+        setLoader(false);
         reset();
       })
       .catch((error) => {
         toast.error(error?.error || error?.Message || "Unable to add Country");
+        setLoader(false);
       });
   };
 
@@ -53,7 +57,7 @@ function AddCountry() {
             >
               Add Country
             </div>
-            <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
               <Button
                 onClick={() => router.back()}
                 style={{
@@ -67,17 +71,7 @@ function AddCountry() {
               >
                 Dismiss
               </Button>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                color="primary"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  height: "34px",
-                }}
-              >
-                Save
-              </Button>
+              <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
             </div>
           </div>
           <hr style={{ height: "2px" }} />

@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker"; // Import the CSS
 import moment from "moment";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { LoaderButton } from "@/components/Loaders";
 
 function AddPeriod() {
   const [startDate, setStartDate] = useState(null);
@@ -15,6 +16,10 @@ function AddPeriod() {
   const periodValidationRules = formValidationRules.periods;
   const router = useRouter();
   const periodsService = new PeriodsService();
+  const [isLoading, setLoader] = useState(false);
+  const [customErrors,setCustomErrors] = useState({
+    startDate : null
+  });
   const handleStartDateChange = (date) => {
     setStartDate(moment(date).toDate());
   };
@@ -30,36 +35,57 @@ function AddPeriod() {
     formState: { errors },
   } = useForm();
 
-  const compareDates = (startDate : string,endDate : string)=>{
+  const compareDates = (startDate: string, endDate: string) => {
     const isAfter = moment(endDate).isAfter(startDate);
     return isAfter;
-  }
+  };
 
-  const onSubmit = (data) => {
-    if(startDate && endDate && !compareDates(startDate,endDate)){
-      toast.warning('End Date must be greater than Start Date');
+  const onSubmit = async (data) => {  
+    /**Custom validations */
+    if(startDate === null){
+      setCustomErrors({
+        ...customErrors,
+        startDate : 'Start date is required'
+      });
+      null;
       return;
     }
-    const {clientID,projectID} = getSessionVariables();
-    const backendFormat = {
-      name: data.periodname,
-      description: data.description,
-      start: startDate,
-      endDate: endDate,
-      clientID,
-      projectID
-    };
-
-    periodsService
-      .createPeriod(backendFormat)
-      .then(() => {
-        toast.success("Period Added successfully");
-        reset();
-        router.back();
-      })
-      .catch((error) => {
-        toast.error(error?.error || error?.Message || 'Unable to add Period');
-      });
+    setCustomErrors({
+      startDate : null
+    });
+      
+    if (startDate && endDate && !compareDates(startDate, endDate)) {
+      toast.warning("End Date must be greater than Start Date");
+      return;
+    }
+    setLoader(true);
+    try {
+      const { clientID, projectID } = getSessionVariables();
+      if (!clientID || !projectID) {
+        throw new Error("Client and Project not found");
+      }
+      const payload = {
+        name: data.periodname,
+        description: data.description,
+        start: startDate,
+        endDate: endDate,
+        clientID,
+        projectID,
+      };
+      await periodsService.createPeriod(payload);
+      toast.success("Period Added successfully");
+      reset();
+      setLoader(false);
+      router.push('/configurations/periods')
+    } catch (error) {
+      toast.error(
+        error?.error ||
+          error?.Message ||
+          error?.message ||
+          "Unable to add Period"
+      );
+      setLoader(false);
+    }
   };
 
   return (
@@ -80,7 +106,10 @@ function AddPeriod() {
             >
               Add New Period
             </div>
-            <div className="d-flex me-2 " style={{ gap: "10px" }}>
+            <div
+              className="d-flex me-2 align-items-center"
+              style={{ gap: "10px" }}
+            >
               <Button
                 onClick={() => router.back()}
                 style={{
@@ -94,17 +123,11 @@ function AddPeriod() {
               >
                 Dismiss
               </Button>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                color="primary"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  height: "34px",
-                }}
-              >
-                Save
-              </Button>
+              <LoaderButton
+                handleClick={handleSubmit(onSubmit)}
+                buttonText={"Save"}
+                isLoading={isLoading}
+              />
             </div>
           </div>
 
@@ -115,7 +138,9 @@ function AddPeriod() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Col xl="4" className="d-flex flex-column">
-              <Label className="form-lable-font">Start Date<span className="required" >*</span></Label>
+              <Label className="form-lable-font">
+                Start Date<span className="required">*</span>
+              </Label>
               <Controller
                 name="startdate"
                 control={control}
@@ -131,11 +156,11 @@ function AddPeriod() {
                   />
                 )}
               />
-              {/* {errors.startdate && (
+              {customErrors.startDate && (
                   <span style={{ color: "red" }}>
-                    {errors.startdate.message as React.ReactNode}
+                    {customErrors.startDate as React.ReactNode}
                   </span>
-                )} */}
+                )}
             </Col>
 
             <Col xl="4" className="d-flex flex-column">

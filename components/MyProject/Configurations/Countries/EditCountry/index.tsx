@@ -7,12 +7,19 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 import { getLabel } from "@/commonFunctions/common";
+import { LoaderButton } from "@/components/Loaders";
+import { hasPermission } from "@/commonFunctions/functions";
 function EditCountry() {
   const router = useRouter();
   const { id } = router.query;
   const countryValidations = formValidationRules.countries;
   const fetchCountryDetails = (id) => countryService.countryDetails(id);
-
+  const countryService = new CountryService();
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
+  const [editMode,setEditMode] = useState(false);
   const { data: countryData } = useSWR(
     id ? ["COUNTRY_DETAILS", id] : null,
     () => fetchCountryDetails(id)
@@ -39,13 +46,14 @@ function EditCountry() {
     setActiveStatus(countryData?.IsActive);
   }, [countryData]);
 
-  const countryService = new CountryService();
+  
 
   const { mutate: countryMutate } = useSWR("LIST_PERIODS", () =>
     countryService.getCountries()
   );
-
+  const [isLoading,setLoader] = useState(false);
   const onSubmit = (data) => {
+    setLoader(true);
     const backendFormat = {
       name: getLabel(data.countryname),
       code: data.countrycode,
@@ -59,11 +67,12 @@ function EditCountry() {
         toast.success("Country Edited successfully");
         mutate(countryMutate());
         router.push("/configurations/countries");
-
+        setLoader(false)
         reset();
       })
       .catch((error) => {
         toast.error(error?.error || error?.Message || "Unable to edit Country");
+        setLoader(false);
       });
   };
 
@@ -84,7 +93,7 @@ function EditCountry() {
           >
             Edit Country
           </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}
               style={{
@@ -98,17 +107,21 @@ function EditCountry() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
+            {
+              hasEditConfigurationPermission && (
+                <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+              )
+            }
           </div>
         </div>
 
@@ -133,6 +146,7 @@ function EditCountry() {
                     placeholder="Country Name"
                     invalid={errors.countryname && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -158,6 +172,7 @@ function EditCountry() {
                     placeholder="Country Code"
                     invalid={errors.countrycode && true}
                     {...field}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -185,6 +200,7 @@ function EditCountry() {
                     placeholder="Description"
                     invalid={errors.description && true}
                     {...field}
+                    disabled={!editMode}
                     type="textarea"
                   />
                 )}
@@ -214,6 +230,7 @@ function EditCountry() {
                   onChange={() => {
                     setActiveStatus(true);
                   }}
+                  disabled={!editMode}
                 />
                 <div>Active</div>
               </div>
@@ -226,6 +243,7 @@ function EditCountry() {
                   onChange={() => {
                     setActiveStatus(false);
                   }}
+                  disabled={!editMode}
                 />
                 <div>In-Active</div>
               </div>

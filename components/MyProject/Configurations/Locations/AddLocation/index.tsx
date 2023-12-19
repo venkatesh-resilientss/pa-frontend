@@ -6,12 +6,14 @@ import { LocationsService } from "services";
 import { formValidationRules } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
 import { getLabel } from "@/commonFunctions/common";
+import { LoaderButton } from "@/components/Loaders";
+import { useState } from "react";
 
 function AddLocation() {
   const router = useRouter();
   const locationValidationRules = formValidationRules.locations;
   const locationService = new LocationsService();
-
+  const [isLoading,setLoader] = useState(false);
   const {
     control,
     handleSubmit,
@@ -19,27 +21,30 @@ function AddLocation() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: getLabel(data.locationname),
-      code: data.locationcode,
-      description: data.description,
-      IsActive: false,
-      clientID,
-      projectID,
-    };
-
-    locationService
-      .createLocation(backendFormat)
-      .then(() => {
-        toast.success("Location Added successfully");
-        reset();
-        router.back();
-      })
-      .catch((error) => {
-        toast.error(error?.error || error?.Message || "Unable to add Location");
-      });
+  const onSubmit = async (data) => {
+    setLoader(true);
+    try{
+      const { clientID, projectID } = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const backendFormat = {
+        name: getLabel(data.locationname),
+        code: data.locationcode,
+        description: data.description,
+        IsActive: false,
+        clientID,
+        projectID,
+      };
+      await locationService.createLocation(backendFormat);
+      toast.success("Location Added successfully");
+      reset();
+      router.push('/configurations/locations');
+      setLoader(false);
+    }catch(error){
+      toast.error(error?.error || error?.Message || error?.message || "Unable to add Location");
+      setLoader(false);
+    }
   };
 
   return (
@@ -48,7 +53,7 @@ function AddLocation() {
 
       <div className="d-flex justify-content-between">
         <div className="title">Add New Location</div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -62,17 +67,7 @@ function AddLocation() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
         </div>
       </div>
       <hr style={{ height: "2px" }} />

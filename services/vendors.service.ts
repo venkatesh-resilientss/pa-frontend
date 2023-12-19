@@ -10,9 +10,10 @@ import {
 
 class VendorsService extends APIService {
   getVendors(data,params?): Promise<any> {
+    const queryParams = new URLSearchParams(params).toString();
     return this.post(
       params ? 
-      `${GET_VENDORS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+      `${GET_VENDORS}?${queryParams}` :
       `${GET_VENDORS}`,
       data
       )

@@ -1,4 +1,4 @@
-import { Button, Col, Input, Label, Form, Spinner } from "reactstrap";
+import { Button, Col, Input, Label, Form } from "reactstrap";
 import { useRouter } from "next/router";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ import { selectStyles } from "constants/common";
 import { useEffect, useState } from "react";
 import { COAAccountyTypeOptions } from "@/constants/common";
 import { getSessionVariables } from "@/constants/function";
+import { LoaderButton } from "@/components/Loaders";
 import AsyncSelect from "react-select/async";
 function AddChartOfAccounts() {
   const router = useRouter();
@@ -32,7 +33,7 @@ function AddChartOfAccounts() {
         );
         const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
-          label: `${item.Name} - ${item.Code}`,
+          label: `${item.Code} - ${item.Name}`,
         }));
         setInitialcoaOptions(options);
       } catch (error) {
@@ -56,7 +57,7 @@ function AddChartOfAccounts() {
       );
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: `${item.Name} - ${item.Code}`,
+        label: `${item.Code} - ${item.Name}`,
       }));
 
       callback(options);
@@ -117,7 +118,7 @@ function AddChartOfAccounts() {
           >
             Add New Chart Of Accounts
           </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}
               style={{
@@ -131,22 +132,7 @@ function AddChartOfAccounts() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-              <Spinner animation="border" role="status" size="sm" />
-            ) : (
-              "Save"
-            )}
-            </Button>
+            <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
           </div>
         </div>
 

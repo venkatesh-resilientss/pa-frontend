@@ -58,6 +58,7 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
         toast.success("Data inserted successfully.");
         dispatch(closeBulkUploadLocationsPopup("close"));
         setLoader(false)
+        setUploadedFiles([]);
       })
       .catch((error) => {
         setLoader(false)
@@ -176,7 +177,10 @@ const LocationsBulkUploadPopup = ({ setRerender, rerender }) => {
 
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
-            onClick={() => dispatch(closeBulkUploadLocationsPopup("close"))}
+            onClick={() => {
+              dispatch(closeBulkUploadLocationsPopup("close"));
+              setUploadedFiles([]);
+            }}
             color="white"
             style={{
               fontSize: "14px",

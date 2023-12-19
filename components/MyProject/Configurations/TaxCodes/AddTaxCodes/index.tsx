@@ -9,6 +9,7 @@ import { selectStyles } from "@/constants/common";
 import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { getLabel } from "@/commonFunctions/common";
+import { LoaderButton } from "@/components/Loaders";
 function AddTaxCode() {
   const {
     control,
@@ -47,6 +48,7 @@ function AddTaxCode() {
   const loadCountryOptions = (callback) => {
     callback(initialCountryOptions);
   };
+  const [isLoading,setLoader] = useState(false);
   const onSubmit = (data) => {
     const backendFormat = {
       name: getLabel(data.taxcodename),
@@ -54,14 +56,17 @@ function AddTaxCode() {
       description: data.description,
       countryID: parseInt(data.country?.value),
     };
+    setLoader(true);
     taxCodeService
       .createTaxCode(backendFormat)
       .then(() => {
         toast.success("TaxCode Added successfully");
         reset();
-        router.back();
+        setLoader(false);
+        router.push('/configurations/taxcodes');
       })
       .catch((error) => {
+        setLoader(false);
         toast.error(error?.error || error?.Message || "Unable to add TaxCode");
       });
   };
@@ -81,7 +86,7 @@ function AddTaxCode() {
         >
           Add New Tax Code
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -95,17 +100,7 @@ function AddTaxCode() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
         </div>
       </div>
 
