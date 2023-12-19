@@ -64,8 +64,8 @@ const AllBanksTable = () => {
   useEffect(() => {
     const getTableData = async () => {
       try {
-        const clientId = sessionStorage.getItem("clientid");
-        const projectId = sessionStorage.getItem("projectid");
+        const clientId = localStorage.getItem("clientid");
+        const projectId = localStorage.getItem("projectid");
         const data = { clientId: parseInt(clientId), projectId: parseInt(projectId) }
 
         const response = await bankService.getBanksNew(filters, data);
