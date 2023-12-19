@@ -287,6 +287,8 @@ const Sidebar = ({ props }) => {
     hasViewPC,
     hasViewPL,
     hasViewPO,
+    hasViewUsers,
+    hasViewRoles,
     childRoute,
   }) => {
     const isChildVisible = (child) => {
@@ -296,7 +298,9 @@ const Sidebar = ({ props }) => {
           (child.name === "Account Payable" && !hasViewAP) ||
           (child.name === "Journal Entry" && !hasViewJE) ||
           (child.name === "Petty Cash" && !hasViewPC) ||
-          (child.name === "Payroll" && !hasViewPL);
+          (child.name === "Payroll" && !hasViewPL) ||
+          (child.name === "User Management" && !hasViewUsers) ||
+          (child.name === "Role Management" && !hasViewRoles);
 
         return !isVisible; // Negate to return true for children not specified
       }
@@ -773,6 +777,8 @@ const Sidebar = ({ props }) => {
                   hasViewPC={hasViewPC}
                   hasViewJE={hasViewJE}
                   hasViewAP={hasViewAP}
+                  hasViewRoles={hasViewRoles}
+                  hasViewUsers={hasViewUsers}
                   childRoute={route.children}
                 />
               ))}
@@ -808,6 +814,8 @@ const Sidebar = ({ props }) => {
                       hasViewPC={hasViewPC}
                       hasViewJE={hasViewJE}
                       hasViewAP={hasViewAP}
+                      hasViewRoles={hasViewRoles}
+                      hasViewUsers={hasViewUsers}
                       childRoute={route.children}
                     />
                   ))}
@@ -848,6 +856,8 @@ const Sidebar = ({ props }) => {
                       hasViewPL={hasViewPL}
                       hasViewPC={hasViewPC}
                       hasViewJE={hasViewJE}
+                      hasViewRoles={hasViewRoles}
+                      hasViewUsers={hasViewUsers}
                       hasViewAP={hasViewAP}
                       childRoute={route.children}
                     />
@@ -877,6 +887,8 @@ const Sidebar = ({ props }) => {
                     hasViewPC={hasViewPC}
                     hasViewJE={hasViewJE}
                     hasViewAP={hasViewAP}
+                    hasViewRoles={hasViewRoles}
+                    hasViewUsers={hasViewUsers}
                     childRoute={route.children}
                   />
                 ))}
@@ -908,6 +920,8 @@ const Sidebar = ({ props }) => {
                     hasViewPC={hasViewPC}
                     hasViewJE={hasViewJE}
                     hasViewAP={hasViewAP}
+                    hasViewRoles={hasViewRoles}
+                    hasViewUsers={hasViewUsers}
                     childRoute={route.children}
                   />
                 ))}
