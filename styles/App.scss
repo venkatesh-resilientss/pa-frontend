@@ -7,6 +7,7 @@
 @import "react-toastify/dist/ReactToastify.css";
 
 // Custom Styles
+@import "./scss/accordions.scss";
 @import "./scss/buttons";
 @import "./scss/grids";
 @import "./scss/typography";
@@ -281,26 +282,25 @@ input::placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.popover-arrow{
+.popover-arrow {
   display: none !important;
 }
-.popover-side{
+.popover-side {
   max-width: 220px;
 }
-.ressl{
+.ressl {
   color: #777777;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.01em;
   text-align: center;
 }
-.ressl1{
+.ressl1 {
   color: #777777;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.01em;
   text-align: center;
-  
 }
 .clicked {
   background-color: #d0f2ff;
@@ -858,19 +858,18 @@ input::placeholder {
   justify-content: left;
   text-align: center;
 }
-.clientcard_headings{
+.clientcard_headings {
   font-family: "Segoe Bold";
   font-size: 22px;
 }
-.productionDashboardCard{
+.productionDashboardCard {
   font-family: "Segoe Bold";
   font-size: 26px;
 }
-.view_details{
-
+.view_details {
   font-size: 12px;
 }
-.productionBudgetAllocated{
+.productionBudgetAllocated {
   width: 12px;
   margin: -2px 0px 0px 0px;
 }
