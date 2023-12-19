@@ -40,7 +40,7 @@ export default function BankAccordion({ router }) {
     const primaryContactPhone =
       data.basicInfoCountryCode && data.basicInfoContactNumber
         ? `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
-        : "";
+        : null;
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
