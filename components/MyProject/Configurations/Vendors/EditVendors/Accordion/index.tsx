@@ -289,6 +289,7 @@ function VendorAccordion() {
                 activeStatus={activeStatus}
                 setActiveStatus={setActiveStatus}
                 editMode={editMode}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>
@@ -301,6 +302,7 @@ function VendorAccordion() {
                 onSubmit={onSubmit}
                 errors={errors}
                 editMode={editMode}
+                setValue={setValue}
               />{" "}
             </AccordionBody>
           </AccordionItem>
@@ -313,6 +315,7 @@ function VendorAccordion() {
                 onSubmit={onSubmit}
                 errors={errors}
                 editMode={editMode}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>
@@ -325,6 +328,7 @@ function VendorAccordion() {
                 onSubmit={onSubmit}
                 errors={errors}
                 editMode={editMode}
+                setValue={setValue}
               />
             </AccordionBody>
           </AccordionItem>

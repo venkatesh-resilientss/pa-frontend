@@ -158,7 +158,7 @@ const AllCurrencyTable = ({ rerender }) => {
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
       cellRenderer: (row) => {
-        return row.value ? 'Yes' : 'No'
+        return row.value ? "Yes" : "No";
       },
     },
     {
@@ -166,9 +166,9 @@ const AllCurrencyTable = ({ rerender }) => {
       field: "Created",
       cellRenderer: (params) => {
         return getLabel(
-          params?.data?.Created?.first_name +
-          " " +
-          params?.data?.Created?.first_name
+          params?.data?.Created?.last_name +
+            " " +
+            params?.data?.Created?.first_name
         );
       },
       sortable: true,
@@ -232,7 +232,8 @@ const AllCurrencyTable = ({ rerender }) => {
                   style={{ gap: "10px" }}
                 >
                   <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {tableData.total_records} {tableData.total_records === 1 ? 'Currencie' : 'Currencies'}
+                    {tableData.total_records}{" "}
+                    {tableData.total_records === 1 ? "Currencie" : "Currencies"}
                   </div>
 
                   <Input
