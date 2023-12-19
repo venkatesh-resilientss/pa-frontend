@@ -57,7 +57,7 @@ const ClientsCard = ({ data }) => {
                 />
               </div>
               <div className="f-12 f-clamp-2">
-                {getLabel(data.client_admin.name || "-")}
+                {getLabel(data.client_admin?.name || "-")}
               </div>
             </div>
             <div className="f-12 clr-dblack">

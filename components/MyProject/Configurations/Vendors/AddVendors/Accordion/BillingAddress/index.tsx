@@ -61,7 +61,7 @@ function BillingAddressForm({ onSubmit, control, errors,setValue }) {
     if(!currentCountry)
       return
     setInititalStateOptions([]);
-    setValue("mailingAddressState", null);
+    setValue("billingAddressState", null);
     fetchStateOptions();
   }, [currentCountry]);
   return (
@@ -174,7 +174,7 @@ function BillingAddressForm({ onSubmit, control, errors,setValue }) {
                   styles={selectStyles}
                   onChange={(e) => {
                     setCurrentCountry(e);
-                    setValue("mailingAddressCountry", e);
+                    setValue("billingAddressCountry", e);
                   }}
                 />
               )}
