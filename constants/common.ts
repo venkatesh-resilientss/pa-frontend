@@ -47,7 +47,6 @@ export const roleCreationData1 = {
         state: false,
         value: "approve_or_reject_purchase_order",
       },
-      "View All Transcation": { state: false, value: "view_all_transactions" },
       "Create Account Pay": { state: false, value: "create_account_pay" },
       "Edit Account Pay": { state: false, value: "edit_account_pay" },
       "View Account Pay List": { state: false, value: "view_account_pay_list" },
@@ -439,7 +438,6 @@ export const sidebarRoutesNonStaff = [
         name: "Banks",
         path: "/banks",
       },
-
       {
         name: "Departments",
         path: "/departments",
