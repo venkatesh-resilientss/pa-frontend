@@ -135,7 +135,7 @@ const AllBanksTable = () => {
                   // const additionalData = {
                   //   rowData: JSON.stringify(props.data),
                   // };
-                  router.push(`/configurations/edit-bank/${props.data?.ID}`);
+                  router.push(`/configurations/banks/${props.data?.ID}`);
                 }}
               >
                 <Action

@@ -4,3 +4,5 @@ export { default as PhysicalAddress } from "./PhysicalAddress";
 export { default as DefaultAccount } from "./DefaultAccount";
 export { default as OtherDetails } from "./OtherDetails";
 export { default as CheckEFT } from "./CheckEFT";
+export { default as NoBankPage } from "./NoBankPage";
+export { default as CreateBankButton } from "./CreateBankButton";
