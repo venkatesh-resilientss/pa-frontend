@@ -49,7 +49,7 @@ function RecentProductions() {
           {hasCreateProductionPermission && (
             <Link href={`/productions/create-production`}>
               <button className="btn btn-primary d-flex justify-content-between align-items-center gap-2 ">
-                <BsCameraVideo />
+                <BsCameraVideo size={14} className="mt-2px" />
                 <span className="f-14">Create Production</span>
               </button>
             </Link>
@@ -68,10 +68,10 @@ function RecentProductions() {
           ) : (
             <div className="text-center mt-3 nodataAvailable">
               <img
-                  src="/no_client_data_available.svg"
-                  alt="No clients available"
-                  style={{ maxWidth: '100%' }}
-                />
+                src="/no_client_data_available.svg"
+                alt="No clients available"
+                style={{ maxWidth: "100%" }}
+              />
               <p className="nodataAvailable">No Data available.</p>
               {!searchInput?.trim() && (
                 <>
