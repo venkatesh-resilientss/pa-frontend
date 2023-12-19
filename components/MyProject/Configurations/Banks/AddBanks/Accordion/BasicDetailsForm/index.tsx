@@ -25,7 +25,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         });
         const options = res?.result.map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`,
         }));
         setInitialCurrencyOptions(options);
       } catch (error) {
@@ -46,7 +46,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
       });
       const options = res?.result.map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`,
       }));
 
       callback(options);

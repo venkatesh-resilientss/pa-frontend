@@ -41,12 +41,10 @@ function AddBudget() {
           pageLimit: 25,
           offset: 0,
         });
-        const options = res?.result
-          .filter((item) => item.IsActive)
-          .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+        const options = res?.result.filter(item => item.IsActive).map((item) => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`
+        }));
         setInitialCurrencyOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -68,12 +66,10 @@ function AddBudget() {
             projectId: projectID,
           }
         );
-        const options = res?.data
-          .filter((item) => item.IsActive)
-          .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+        const options = res?.data.filter(item => item.IsActive).map((item) => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`
+        }));
         setInitialSeriesOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -95,12 +91,10 @@ function AddBudget() {
             projectId: projectID,
           }
         );
-        const options = res?.result
-          .filter((item) => item.IsActive)
-          .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+        const options = res?.result.filter(item => item.IsActive).map((item) => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`
+        }));
         setInitialLocationOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -121,15 +115,12 @@ function AddBudget() {
           },
           {
             clientId: clientID,
-            projectID: projectID,
-          }
-        );
-        const options = res?.data
-          .filter((item) => item.IsActive)
-          .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+            projectID: projectID
+          });
+        const options = res?.data.filter(item => item.IsActive).map((item) => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`
+        }));
         setInitialSetOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -147,12 +138,10 @@ function AddBudget() {
         pageLimit: 25,
         offset: 0,
       });
-      const options = res?.result
-        .filter((item) => item.IsActive)
-        .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+        value: item.ID,
+        label: `${item.Code} - ${item.Name}`
+      }));
 
       callback(options);
     } catch (error) {
@@ -175,12 +164,10 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result
-        .filter((item) => item.IsActive)
-        .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+        value: item.ID,
+        label: `${item.Code} - ${item.Name}`
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -202,12 +189,10 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result
-        .filter((item) => item.IsActive)
-        .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+        value: item.ID,
+        label: `${item.Code} - ${item.Name}`
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -226,15 +211,12 @@ function AddBudget() {
         },
         {
           clientId: clientID,
-          projectID: projectID,
-        }
-      );
-      const options = res?.result
-        .filter((item) => item.IsActive)
-        .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+          projectID: projectID
+        });
+      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+        value: item.ID,
+        label: `${item.Code} - ${item.Name}`
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
