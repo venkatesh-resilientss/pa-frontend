@@ -138,7 +138,7 @@ export default function BankAccordion({ router }) {
         bankPayload.Meta.BankAch.push(positivepayPayload);
       }
     }
-    console.log(data, bankPayload, "DATA_ADD_SUBMIT");
+
     bankService
       .createBank(bankPayload)
       .then(() => {

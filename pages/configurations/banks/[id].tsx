@@ -31,15 +31,8 @@ export default function BankAccordion({ user, router }) {
     { name: "Set/Series/Location Information", toggle: false },
   ]);
 
-  const {
-    control,
-    handleSubmit,
-    formState,
-    watch,
-    trigger,
-    getValues,
-    setValue,
-  } = useForm();
+  const { control, handleSubmit, formState, watch, trigger, setValue } =
+    useForm();
   const { errors, isSubmitted } = formState;
 
   const [eft, setEft] = useState(false);
@@ -60,7 +53,7 @@ export default function BankAccordion({ user, router }) {
     { label: "XML", value: "xml" },
     { label: "CSV", value: "csv" },
   ];
-  console.log(getValues(), "DATA");
+
   useEffect(() => {
     if (BankId) {
       bankService
@@ -446,8 +439,6 @@ export default function BankAccordion({ user, router }) {
                   className="px-3 py-2"
                   spinColor="#ffffff"
                   onClick={() => {
-                    console.log("DATA-HIT");
-
                     if (hasPermission) setEditing(true);
                     else toast.error("Access Denied");
                   }}
