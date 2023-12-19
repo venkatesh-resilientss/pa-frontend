@@ -44,9 +44,9 @@ function AddBudget() {
         const options = res?.result
           .filter((item) => item.IsActive)
           .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+          value: item.ID,
+          label: item.Name,
+        }));
         setInitialCurrencyOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -71,9 +71,9 @@ function AddBudget() {
         const options = res?.data
           .filter((item) => item.IsActive)
           .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+          value: item.ID,
+          label: item.Name,
+        }));
         setInitialSeriesOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -98,9 +98,9 @@ function AddBudget() {
         const options = res?.result
           .filter((item) => item.IsActive)
           .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+          value: item.ID,
+          label: item.Name,
+        }));
         setInitialLocationOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -127,9 +127,9 @@ function AddBudget() {
         const options = res?.data
           .filter((item) => item.IsActive)
           .map((item) => ({
-            value: item.ID,
-            label: item.Name,
-          }));
+          value: item.ID,
+          label: item.Name,
+        }));
         setInitialSetOptions(options);
       } catch (error) {
         console.error("Error fetching initial options:", error);
@@ -150,9 +150,9 @@ function AddBudget() {
       const options = res?.result
         .filter((item) => item.IsActive)
         .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        value: item.ID,
+        label: item.Name,
+      }));
 
       callback(options);
     } catch (error) {
@@ -178,9 +178,9 @@ function AddBudget() {
       const options = res?.result
         .filter((item) => item.IsActive)
         .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        value: item.ID,
+        label: item.Name,
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -205,9 +205,9 @@ function AddBudget() {
       const options = res?.result
         .filter((item) => item.IsActive)
         .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        value: item.ID,
+        label: item.Name,
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -232,9 +232,9 @@ function AddBudget() {
       const options = res?.result
         .filter((item) => item.IsActive)
         .map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
+        value: item.ID,
+        label: item.Name,
+      }));
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
@@ -404,6 +404,12 @@ function AddBudget() {
                   loadOptions={loadCurrencyOptions}
                   placeholder="Select Currency"
                   defaultOptions={initialCurrencyOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.currency ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -433,6 +439,12 @@ function AddBudget() {
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
                   defaultOptions={initialSeriesOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.series ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -462,6 +474,12 @@ function AddBudget() {
                   loadOptions={loadLocationsOptions}
                   placeholder="Select Location"
                   defaultOptions={initialLocationOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.location ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -491,6 +509,12 @@ function AddBudget() {
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
                   defaultOptions={inititalSetOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.set ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
