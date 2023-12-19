@@ -16,7 +16,7 @@ const ClientsCard = ({ data }) => {
       <div className="d-flex">
         <div className={` rounded-circle  ${"bg-light-secondary"}`}>
           <img
-            src={data.logo_url || "/default.svg"}
+            src={data?.logo_url || "/default.svg"}
             alt="logo"
             style={{
               height: "37px",
@@ -29,9 +29,9 @@ const ClientsCard = ({ data }) => {
         <div className="w-100 ms-2">
           <div className="d-flex justify-content-between">
             <div className="clientcard_headings">
-              {getLabel(data.name || "-")}
+              {getLabel(data?.name || "-")}
             </div>
-            <Link href={`/clients/${data.id}`}>
+            <Link href={`/clients/${data?.id}`}>
               <div className="border rounded cr-p text-black text-center d-flex align-items-center gap-1 px-1 p-1 f-14">
                 <Image
                   src={carbonDecumentView}
@@ -57,13 +57,12 @@ const ClientsCard = ({ data }) => {
                 />
               </div>
               <div className="f-12 f-clamp-2">
-                {getLabel(data.client_admin.name || "-")}
+                {getLabel(data?.client_admin?.name || "-")}
               </div>
             </div>
             <div className="f-12 clr-dblack">
               <div>
-                No. of Active Productions:{" "}
-                {data.projects_count ? data.projects_count : "0"}
+                No. of Active Productions: {data?.projects_count || "0"}
               </div>
             </div>
           </div>
@@ -78,9 +77,7 @@ const ClientsCard = ({ data }) => {
                   style={{ width: "14px" }}
                 />
               </div>
-              <div className="f-12">
-                {data.client_admin.email ? data.client_admin.email : "-"}
-              </div>
+              <div className="f-12">{data?.client_admin?.email || "-"}</div>
             </div>
           </div>
 
@@ -128,7 +125,7 @@ const ClientsCard = ({ data }) => {
       </div>
 
       <div className="d-flex gap-1">
-        {data.softwares.map((software, i) => (
+        {(data?.softwares || []).map((software, i) => (
           <div
             key={i}
             style={{
