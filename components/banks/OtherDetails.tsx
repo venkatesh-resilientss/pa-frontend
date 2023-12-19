@@ -5,7 +5,9 @@ import { LocationsService, SeriesService, SetsService } from "services";
 import { useEffect, useState } from "react";
 import { getSessionVariables } from "constants/function";
 
-export default function OtherDetails({ onSubmit, control, errors }) {
+export default function OtherDetails(props) {
+  const { control, onSubmit, errors, isEditing } = props;
+  const { edit, activeStatus, setActiveStatus } = props;
   const { handleSubmit } = useForm();
 
   const seriesService = new SeriesService();
@@ -215,6 +217,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -244,6 +247,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -273,6 +277,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -294,6 +299,35 @@ export default function OtherDetails({ onSubmit, control, errors }) {
             )}
           </Col>
         </Row>
+        {edit && (
+          <div className="d-flex flex-column mt-1">
+            <Label className="form-lable-font">Status </Label>
+            <div className="d-flex gap-4">
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  id="ex1-active"
+                  checked={activeStatus}
+                  name="ex1"
+                  onChange={() => setActiveStatus(true)}
+                  disabled={!isEditing || false}
+                />
+                <div>Active</div>
+              </div>
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  checked={activeStatus === false}
+                  name="ex1"
+                  id="ex1-inactive"
+                  onChange={() => setActiveStatus(false)}
+                  disabled={!isEditing || false}
+                />
+                <div>In-Active</div>
+              </div>
+            </div>
+          </div>
+        )}
       </Form>
     </div>
   );

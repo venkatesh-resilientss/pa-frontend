@@ -6,23 +6,13 @@ import AsyncSelect from "react-select/async";
 import { useEffect, useState } from "react";
 import { formValidationRules } from "@/constants/common";
 
-export default function MailingAddress({ onSubmit, control, errors }) {
+export default function MailingAddress(props) {
+  const { control, onSubmit, errors, isEditing } = props;
   const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
   const [initialStateOptions, setInitialStateOptions] = useState([]);
 
   const stateService = new StatesService();
-  // const { data: states } = useSWR("LIST_STATES", () =>
-  //   stateService.getStates()
-  // );
-
-  // const statesDropdownoptions = states?.data.map((b) => {
-  //   return {
-  //     value: b.ID,
-  //     label: b.Name,
-  //     country: b.Country,
-  //   };
-  // });
 
   useEffect(() => {
     const fetchInitialStates = async () => {
@@ -140,6 +130,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Mailing Address Line 1"
                   invalid={errors.mailingAddress1 && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -168,6 +159,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Mailing Address Line 2"
                   invalid={errors.mailingAddress2 && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -195,6 +187,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter City"
                   invalid={errors.mailingAddressCity && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -220,6 +213,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -254,6 +248,8 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Postal Code"
                   invalid={errors.mailingAddressPostalCode && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -285,6 +281,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Phone Number"
                   invalid={errors.mailingPhoneNumber && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -313,6 +310,8 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                       placeholder="00"
                       invalid={errors.mailingCountryCode && true}
                       {...field}
+                      disabled={!isEditing || false}
+                      type="number"
                     />
                   )}
                 />
@@ -328,6 +327,8 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                       placeholder="Enter Phone Number"
                       invalid={errors.mailingPhoneNumber && true}
                       {...field}
+                      disabled={!isEditing || false}
+                      type="number"
                     />
                   )}
                 />
@@ -362,6 +363,8 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Fax"
                   invalid={errors.mailingFax && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -390,6 +393,7 @@ export default function MailingAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Email"
                   invalid={errors.mailingEmail && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />

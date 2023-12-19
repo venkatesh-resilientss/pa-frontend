@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion } from "reactstrap";
 import { AccordionBody, AccordionHeader, AccordionItem } from "reactstrap";
 import { useForm } from "react-hook-form";
@@ -32,7 +32,9 @@ export default function BankAccordion({ router }) {
   const [positivePay, setPositivePay] = useState(false);
   const [ACHExport, setACHExport] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const addressService = new AddressService();
+
+  const [wireTransfer, setWireTransfer] = useState(false);
+  const [check, setCheck] = useState(false);
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -40,7 +42,7 @@ export default function BankAccordion({ router }) {
     const primaryContactPhone =
       data.basicInfoCountryCode && data.basicInfoContactNumber
         ? `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
-        : "";
+        : null;
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -150,6 +152,13 @@ export default function BankAccordion({ router }) {
       });
   };
 
+  useEffect(() => {
+    if (isSubmitted)
+      setSteps([...steps].map((el) => ({ name: el.name, toggle: true })));
+  }, [isSubmitted]);
+
+  const isEditing = true;
+
   return (
     <div className="p-4">
       <div className="d-flex justify-content-between">
@@ -197,22 +206,28 @@ export default function BankAccordion({ router }) {
             <AccordionHeader targetId={"true"}>{e.name}</AccordionHeader>
             <AccordionBody accordionId={"true"}>
               {e.name === "Basic Information" ? (
-                <BasicDetails {...{ control, onSubmit, errors }} />
+                <BasicDetails {...{ control, onSubmit, errors, isEditing }} />
               ) : e.name === "Physical Address" ? (
-                <PhysicalAddress {...{ control, onSubmit, errors }} />
+                <PhysicalAddress
+                  {...{ control, onSubmit, errors, isEditing }}
+                />
               ) : e.name === "Mailing Address" ? (
-                <MailingAddress {...{ control, onSubmit, errors }} />
+                <MailingAddress {...{ control, onSubmit, errors, isEditing }} />
               ) : e.name === "Check/EFT/Wiretransfer Details" ? (
                 <CheckEFT
                   {...{ eft, setEft, control, onSubmit, errors }}
-                  {...{ watch, trigger, setValue, isSubmitted }}
+                  {...{ watch, trigger, setValue, isSubmitted, isEditing }}
                   {...{ positivePay, setPositivePay, ACHExport, setACHExport }}
+                  {...{ wireTransfer, setWireTransfer, check, setCheck }}
                 />
               ) : e.name === "Default Accounts" ? (
-                <DefaultAccount {...{ control, onSubmit, errors }} />
+                <DefaultAccount {...{ control, onSubmit, errors, isEditing }} />
               ) : (
                 e.name === "Set/Series/Location Information" && (
-                  <OtherDetails {...{ control, onSubmit, errors }} />
+                  <OtherDetails
+                    {...{ control, onSubmit, errors, isEditing }}
+                    edit={false}
+                  />
                 )
               )}
             </AccordionBody>

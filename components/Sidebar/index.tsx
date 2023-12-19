@@ -98,9 +98,25 @@ const Sidebar = ({ props }) => {
     "reports_management",
     "view_all_reports"
   );
-  const hasViewTranscations = hasPermission(
+  const hasViewPO = hasPermission(
     "transaction_management",
-    "view_all_transactions"
+    "view_purchase_order_list"
+  );
+  const hasViewAP = hasPermission(
+    "transaction_management",
+    "view_account_pay_list"
+  );
+  const hasViewJE = hasPermission(
+    "transaction_management",
+    "view_journal_entry_list"
+  );
+  const hasViewPC = hasPermission(
+    "transaction_management",
+    "view_petty_cash_list"
+  );
+  const hasViewPL = hasPermission(
+    "transaction_management",
+    "view_payroll_list"
   );
 
   /**
@@ -264,7 +280,34 @@ const Sidebar = ({ props }) => {
    * }
    * @returns route button
    */
-  const SideBarRoute = ({ route }) => {
+  const SideBarRoute = ({
+    route,
+    hasViewAP,
+    hasViewJE,
+    hasViewPC,
+    hasViewPL,
+    hasViewPO,
+    hasViewUsers,
+    hasViewRoles,
+    childRoute,
+  }) => {
+    const isChildVisible = (child) => {
+      if (child) {
+        const isVisible =
+          (child.name === "Purchase Order" && !hasViewPO) ||
+          (child.name === "Account Payable" && !hasViewAP) ||
+          (child.name === "Journal Entry" && !hasViewJE) ||
+          (child.name === "Petty Cash" && !hasViewPC) ||
+          (child.name === "Payroll" && !hasViewPL) ||
+          (child.name === "User Management" && !hasViewUsers) ||
+          (child.name === "Role Management" && !hasViewRoles);
+
+        return !isVisible; // Negate to return true for children not specified
+      }
+
+      return false;
+    };
+
     return (
       <div
         className={`route-button my-2 ${
@@ -273,7 +316,7 @@ const Sidebar = ({ props }) => {
       >
         {showSidebar ? (
           <div
-            className="d-flex align-items-center justify-content-between  cursor-pointer select-btn"
+            className="d-flex align-items-center justify-content-between cursor-pointer select-btn"
             onClick={() => {
               if (route.children) {
                 handleDropDownChange((prev) =>
@@ -341,13 +384,7 @@ const Sidebar = ({ props }) => {
               }
             }}
           >
-            <IconLink
-              // handleClick={() => {
-              //   router.push(route.path);
-              // }}
-              title={route.name}
-              placement={"right"}
-            >
+            <IconLink title={route.name} placement={"right"}>
               {route.children ? (
                 <img src={route.icon} alt="" width={14} />
               ) : (
@@ -358,33 +395,34 @@ const Sidebar = ({ props }) => {
             </IconLink>
           </div>
         )}
-        {/* Route children */}
 
         {route.children && activeDropDown === route.path ? (
           <div className="sidebar-list mx-2">
             <div className="ps-3">
               <ul>
-                {route.children.map((child, i) => {
-                  const fullPath = `${route.path}${child.path}`;
-                  return (
-                    <li
-                      className="py-1 cursor-pointer"
-                      // onClick={() => {
-                      //   router.push(child.path);
-                      // }}
-                      key={`sidebar-list-child-${child.name}-${i}`}
-                    >
-                      <Link
-                        href={fullPath}
-                        className={` child-route-name ${
-                          child.path === childRoute ? "active" : ""
-                        }`}
+                {route.children
+                  .filter((child) => {
+                    const isVisible = isChildVisible(child);
+                    return isVisible; // Adjusted to return boolean value
+                  })
+                  .map((child, i) => {
+                    const fullPath = `${route.path}${child.path}`;
+                    return (
+                      <li
+                        className="py-1 cursor-pointer"
+                        key={`sidebar-list-child-${child.name}-${i}`}
                       >
-                        {child.name}
-                      </Link>
-                    </li>
-                  );
-                })}
+                        <Link
+                          href={fullPath}
+                          className={` child-route-name ${
+                            child.path === childRoute ? "active" : ""
+                          }`}
+                        >
+                          {child.name}
+                        </Link>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           </div>
@@ -724,14 +762,25 @@ const Sidebar = ({ props }) => {
                 const filterByName =
                   route.name === "Dashboard" ||
                   (hasViewConfiguration && route?.name === "Configurations") ||
-                  (hasViewTranscations && route?.name === "Transactions") ||
+                  route?.name === "Transactions" ||
                   (hasViewPayments && route?.name === "Payments");
 
                 // Include the route only if filterByName is true
                 return isSuperAdminWithFullAccess || filterByName;
               })
               .map((route: any, i) => (
-                <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                <SideBarRoute
+                  route={route}
+                  key={`sidebar-route-${i}`}
+                  hasViewPO={hasViewPO}
+                  hasViewPL={hasViewPL}
+                  hasViewPC={hasViewPC}
+                  hasViewJE={hasViewJE}
+                  hasViewAP={hasViewAP}
+                  hasViewRoles={hasViewRoles}
+                  hasViewUsers={hasViewUsers}
+                  childRoute={route.children}
+                />
               ))}
           </div>
         </>
@@ -750,14 +799,25 @@ const Sidebar = ({ props }) => {
                       route.name === "Dashboard" ||
                       (hasViewConfiguration &&
                         route?.name === "Configurations") ||
-                      (hasViewTranscations && route?.name === "Transactions") ||
+                      route?.name === "Transactions" ||
                       (hasViewPayments && route?.name === "Payments");
 
                     // Include the route only if filterByName is true
                     return isSuperAdminWithFullAccess || filterByName;
                   })
                   .map((route: any, i) => (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute
+                      route={route}
+                      key={`sidebar-route-${i}`}
+                      hasViewPO={hasViewPO}
+                      hasViewPL={hasViewPL}
+                      hasViewPC={hasViewPC}
+                      hasViewJE={hasViewJE}
+                      hasViewAP={hasViewAP}
+                      hasViewRoles={hasViewRoles}
+                      hasViewUsers={hasViewUsers}
+                      childRoute={route.children}
+                    />
                   ))}
               </div>
             ) : (
@@ -789,7 +849,18 @@ const Sidebar = ({ props }) => {
                   })
 
                   .map((route: any, i) => (
-                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                    <SideBarRoute
+                      route={route}
+                      key={`sidebar-route-${i}`}
+                      hasViewPO={hasViewPO}
+                      hasViewPL={hasViewPL}
+                      hasViewPC={hasViewPC}
+                      hasViewJE={hasViewJE}
+                      hasViewRoles={hasViewRoles}
+                      hasViewUsers={hasViewUsers}
+                      hasViewAP={hasViewAP}
+                      childRoute={route.children}
+                    />
                   ))}
               </div>
             )
@@ -801,14 +872,25 @@ const Sidebar = ({ props }) => {
                     route.name === "Dashboard" ||
                     (hasViewConfiguration &&
                       route?.name === "Configurations") ||
-                    (hasViewTranscations && route?.name === "Transactions") ||
+                    route?.name === "Transactions" ||
                     (hasViewPayments && route?.name === "Payments");
 
                   // Include the route only if filterByName is true
                   return filterByName;
                 })
                 .map((route: any, i) => (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute
+                    route={route}
+                    key={`sidebar-route-${i}`}
+                    hasViewPO={hasViewPO}
+                    hasViewPL={hasViewPL}
+                    hasViewPC={hasViewPC}
+                    hasViewJE={hasViewJE}
+                    hasViewAP={hasViewAP}
+                    hasViewRoles={hasViewRoles}
+                    hasViewUsers={hasViewUsers}
+                    childRoute={route.children}
+                  />
                 ))}
             </div>
           ) : (
@@ -830,7 +912,18 @@ const Sidebar = ({ props }) => {
                   return filterByName;
                 })
                 .map((route: any, i) => (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  <SideBarRoute
+                    route={route}
+                    key={`sidebar-route-${i}`}
+                    hasViewPO={hasViewPO}
+                    hasViewPL={hasViewPL}
+                    hasViewPC={hasViewPC}
+                    hasViewJE={hasViewJE}
+                    hasViewAP={hasViewAP}
+                    hasViewRoles={hasViewRoles}
+                    hasViewUsers={hasViewUsers}
+                    childRoute={route.children}
+                  />
                 ))}
             </div>
           )}

@@ -47,7 +47,6 @@ export const roleCreationData1 = {
         state: false,
         value: "approve_or_reject_purchase_order",
       },
-      "View All Transcation": { state: false, value: "view_all_transactions" },
       "Create Account Pay": { state: false, value: "create_account_pay" },
       "Edit Account Pay": { state: false, value: "edit_account_pay" },
       "View Account Pay List": { state: false, value: "view_account_pay_list" },
@@ -439,7 +438,6 @@ export const sidebarRoutesNonStaff = [
         name: "Banks",
         path: "/banks",
       },
-
       {
         name: "Departments",
         path: "/departments",
@@ -540,6 +538,7 @@ const ALPHA_NUMERIC = /^[A-Za-z0-9_ ]+$/i;
 const ADDRESS_LINE = /^[A-Za-z0-9_ ,-;'#]+$/i;
 const CODE_PATTERN = /^[A-Za-z0-9]+$/i;
 const NUMERIC = /^[0-9.]+[ ]*$/i;
+const POSITIVE_INTEGERS = /^[0-9]+[ ]*$/i;
 const EMAIL_PATTERN = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
 const TAX_ID_PATTERN = /^\d{2}-\d{7}$/i;
 const ZIP_CODE_PATTERN = /^[0-9]+$/i;
@@ -1188,7 +1187,7 @@ export const formValidationRules = {
         message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Account Number must contain only numbers",
       },
     },
@@ -1199,7 +1198,7 @@ export const formValidationRules = {
         message: `Routing Number must contain less than ${ROUTING_NUMBER_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Routing Number must contain only numbers",
       },
     },
@@ -1223,14 +1222,14 @@ export const formValidationRules = {
         message: `Phone Number must contain less than ${PHONE_NUMBER} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Phone Number must contain only numbers",
       },
     },
     branchNumber: {
       // required: "Branch Number is required",
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Branch Number must contain only numbers",
       },
       maxLength: {
@@ -1296,7 +1295,7 @@ export const formValidationRules = {
       },
       pattern: {
         value: ZIP_CODE_PATTERN,
-        message: "POstal Code cannot contain special characters",
+        message: "Postal Code cannot contain special characters",
       },
     },
     mailingAddressLine1: {
@@ -1343,7 +1342,7 @@ export const formValidationRules = {
       },
       pattern: {
         value: ZIP_CODE_PATTERN,
-        message: "POstal Code cannot contain special characters",
+        message: "Postal Code cannot contain special characters",
       },
     },
     mailingAddressCountryCode: {
@@ -1353,7 +1352,7 @@ export const formValidationRules = {
         message: `Country Code must contain less than ${COUNTRY_CODE} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Phone Number must contain only numbers",
       },
     },
@@ -1364,7 +1363,7 @@ export const formValidationRules = {
         message: `Phone Number must contain less than ${PHONE_NUMBER} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Phone Number must contain only numbers",
       },
     },
@@ -1374,7 +1373,7 @@ export const formValidationRules = {
         message: `Fax must contain less than ${FAX_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Fax must contain only numbers",
       },
     },
@@ -1405,7 +1404,7 @@ export const formValidationRules = {
         message: `Range Copies must contain less than ${CHECK_RANGE_START_END_COPIES_MAXLENGTH} characters`,
       },
       pattern: {
-        value: NUMERIC,
+        value: POSITIVE_INTEGERS,
         message: "Range Copies must contain only numbers",
       },
     },
@@ -1451,6 +1450,10 @@ export const formValidationRules = {
       },
     },
     eftPort: {
+      pattern: {
+        value: POSITIVE_INTEGERS,
+        message: "Port must contain only numbers",
+      },
       maxLength: {
         value: EFT_PORT_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_PORT_MAX_LENGTH} characters`,
