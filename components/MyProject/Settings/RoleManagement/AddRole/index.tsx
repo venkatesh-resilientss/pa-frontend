@@ -36,6 +36,7 @@ function AddRole() {
   const [permissionSet1, setPermissionSet1]: any = useState(roleCreationData1);
   const [permissionSet2, setPermissionSet2]: any = useState(roleCreationData2);
 
+  //auto check view
   const handlePermissionChange = (category, permission, newValue) => {
     setPermissionSet((prevPermissionSet) => {
       const updatedPermissionSet = { ...prevPermissionSet };
