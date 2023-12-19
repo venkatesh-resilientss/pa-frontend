@@ -228,9 +228,9 @@ export default function EditProductions({ router, clientData, user }) {
       },
       borderColor:
         err &&
-        (state.selectProps.instanceId.includes("client") ||
-          state.selectProps.instanceId.includes("po") ||
-          state.selectProps.instanceId.includes("ap")) &&
+        ((state.selectProps.instanceId || "").includes("client") ||
+          (state.selectProps.instanceId || "").includes("po") ||
+          (state.selectProps.instanceId || "").includes("ap")) &&
         !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
