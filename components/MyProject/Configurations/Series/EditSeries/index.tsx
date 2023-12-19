@@ -60,7 +60,7 @@ function EditSeries() {
         name: getLabel(data.seriesname),
         code: data.Seriescode,
         description: data.description,
-        IsActive: false,
+        IsActive: activeStatus,
         clientID,
         projectID,
       };
