@@ -32,7 +32,7 @@ export default function FormFields(props: any) {
       borderColor:
         err &&
         !(
-          state.selectProps.instanceId.includes("MailingAddress") ||
+          (state.selectProps.instanceId || "").includes("MailingAddress") ||
           state.selectProps.placeholder === "Select Admin"
         ) &&
         !state.hasValue
