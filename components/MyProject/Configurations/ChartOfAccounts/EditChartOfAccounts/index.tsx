@@ -42,7 +42,7 @@ function EditChartOfAccounts() {
           .filter((item) => item.IsActive)
           .filter((item) => item.ID != id)
           .map((item) => ({
-            value: item.ID,
+            value: item.Code,
             label: `${item.Code} - ${item.Name}`,
           }));
         setInitialcoaOptions(options);
@@ -69,7 +69,7 @@ function EditChartOfAccounts() {
         .filter((item) => item.IsActive)
         .filter((item) => item.ID != id)
         .map((item) => ({
-          value: item.ID,
+          value: item.Code,
           label: `${item.Name} - ${item.Code}`,
         }));
 
@@ -103,10 +103,10 @@ function EditChartOfAccounts() {
           "AccountType",
           COAAccountyTypeOptions.find((item) => item.value === data.AccountType)
         ); /** Find and assign a/c to value */
-        if (data.Parent)
+        if (data.ParentID)
           setValue("COAParent", {
-            label: data.Parent.Name,
-            id: data.Parent.ID,
+            label: data.ParentID,
+            id: data.ParentID,
           });
         setActiveStatus(data.IsActive);
         setPostableActiveStatus(data.Postable)
@@ -136,7 +136,7 @@ function EditChartOfAccounts() {
         description: data.Description,
         IsActive: activeStatus,
         code: data.COACode,
-        parentID: data.COAParent ? parseInt(data.COAParent) : null,
+        parentID: data.COAParent.value,
         accountType: data.AccountType.value,
         postable: postableActiveStatus,
         clientID,
