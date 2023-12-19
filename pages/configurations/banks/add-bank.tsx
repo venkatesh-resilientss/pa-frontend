@@ -37,7 +37,10 @@ export default function BankAccordion({ router }) {
   const onSubmit = (data) => {
     setLoading(true);
     const { clientID, projectID } = getSessionVariables();
-    const primaryContactPhone = `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`;
+    const primaryContactPhone =
+      data.basicInfoCountryCode && data.basicInfoContactNumber
+        ? `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
+        : "";
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,

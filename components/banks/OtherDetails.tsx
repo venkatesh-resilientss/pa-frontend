@@ -158,6 +158,47 @@ export default function OtherDetails({ onSubmit, control, errors }) {
   // const loadSetsOptions = (values, callBack) => {
   //   callBack(setsSelectFormat);
   // };
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      background: state.isDisabled ? "#e9ecef" : "#fff",
+      border: "1px solid #dee2e6",
+      borderRadius: "0.375rem",
+      minHeight: "40px",
+      boxShadow: null,
+      ":hover": {
+        borderColor: "#A2CFFE",
+      },
+    }),
+
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
+
+    valueContainer: (base) => ({ ...base, padding: "0 6px" }),
+
+    input: (base) => ({ ...base, margin: "0" }),
+
+    placeholder: (base: any) => ({
+      ...base,
+      position: "center",
+      transform: "none",
+      color: "#c9c9c9 !important",
+    }),
+
+    menu: (base: any) => ({ ...base, margin: "0 !important" }),
+    menuList: (base: any) => ({ ...base, padding: "0 !important" }),
+
+    option: (base: any, state: any) => ({
+      ...base,
+      cursor: "pointer",
+      color: "#212529",
+      ":hover": {
+        backgroundColor: "#c9c9c97d",
+      },
+      backgroundColor: state.isSelected ? "#c9c9c97d !important" : "white",
+    }),
+
+    indicatorSeparator: () => ({ display: "none" }),
+  };
 
   return (
     <div className="text-black">
@@ -181,6 +222,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
                   placeholder="Select Series"
                   defaultOptions={initialSeries}
                   menuPlacement="top"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -209,6 +251,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
                   placeholder="Select Location"
                   defaultOptions={initialLocations}
                   menuPlacement="top"
+                  styles={selectStyles}
                 />
               )}
             />
@@ -237,6 +280,7 @@ export default function OtherDetails({ onSubmit, control, errors }) {
                   placeholder="Select Set"
                   defaultOptions={initialSets}
                   menuPlacement="top"
+                  styles={selectStyles}
                 />
               )}
             />
