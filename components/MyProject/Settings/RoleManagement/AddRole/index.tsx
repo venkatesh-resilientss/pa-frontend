@@ -31,6 +31,7 @@ function AddRole() {
   const [IsStaff, setIsStaff] = useState(false);
   const [viewmode, setViewmode] = useState(false);
   const [activeStatus, setActiveStatus] = useState(true);
+  const [edit, setEdit] = useState(false);
   const [permissionSet, setPermissionSet]: any = useState(roleCreationData);
   const [permissionSet1, setPermissionSet1]: any = useState(roleCreationData1);
   const [permissionSet2, setPermissionSet2]: any = useState(roleCreationData2);
@@ -461,11 +462,12 @@ function AddRole() {
               size="sm"
               color="primary"
               className="px-3"
-              onClick={() =>
+              onClick={() => {
                 router.push(
                   `/settings/roles?q=edit_role&role_id=${router.query.role_id}`
-                )
-              }
+                );
+                setEdit(true);
+              }}
             >
               Edit
             </Button>
@@ -549,42 +551,46 @@ function AddRole() {
         </div>
       </div>
 
-      <div className="d-flex flex-column mt-2">
-        <Label
-          className="text-black"
-          style={{ fontSize: "16px", fontWeight: "400" }}
-        >
-          Status
-        </Label>
-        <div className="d-flex gap-4">
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              id="active"
-              name="active"
-              checked={activeStatus}
-              onChange={() => {
-                setActiveStatus(true);
-              }}
-              disabled={viewmode} // Disable based on the edit mode
-            />
-            <div>Active</div>
+      {viewmode || edit ? (
+        <>
+          <div className="d-flex flex-column mt-2">
+            <Label
+              className="text-black"
+              style={{ fontSize: "16px", fontWeight: "400" }}
+            >
+              Status
+            </Label>
+            <div className="d-flex gap-4">
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  id="active"
+                  name="active"
+                  checked={activeStatus}
+                  onChange={() => {
+                    setActiveStatus(true);
+                  }}
+                  disabled={viewmode} // Disable based on the edit mode
+                />
+                <div>Active</div>
+              </div>
+              <div className="d-flex gap-1">
+                <input
+                  type="radio"
+                  name="in-active"
+                  id="active"
+                  checked={!activeStatus}
+                  onChange={() => {
+                    setActiveStatus(false);
+                  }}
+                  disabled={viewmode} // Disable based on the edit mode
+                />
+                <div>Inactive</div>
+              </div>
+            </div>
           </div>
-          <div className="d-flex gap-1">
-            <input
-              type="radio"
-              name="in-active"
-              id="active"
-              checked={!activeStatus}
-              onChange={() => {
-                setActiveStatus(false);
-              }}
-              disabled={viewmode} // Disable based on the edit mode
-            />
-            <div>Inactive</div>
-          </div>
-        </div>
-      </div>
+        </>
+      ) : null}
 
       <div className="d-flex flex-column mt-2">
         <Label for="access">Access</Label>
@@ -606,7 +612,7 @@ function AddRole() {
             <div style={{ fontSize: "15px" }}>Restricted Access</div>
 
             {userData?.data?.Role?.AccessType === "full_access" ||
-              userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
+            userData?.data?.Role?.Code === "SUPER_ADMIN" ? (
               <>
                 <div className="d-flex gap-1 cursor-pointer ms-3">
                   <input

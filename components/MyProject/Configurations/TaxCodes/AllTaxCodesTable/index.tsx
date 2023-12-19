@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { TaxCodesService } from "services";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
@@ -35,10 +34,6 @@ const AllTaxCodesTable = ({ rerender }) => {
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
-  );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
   );
 
   const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
@@ -128,19 +123,6 @@ const AllTaxCodesTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/configurations/edit-taxcode/${props.data.ID}`);
-                }}
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

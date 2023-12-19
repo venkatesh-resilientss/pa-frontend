@@ -67,7 +67,7 @@ function EditTaxCode() {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 200,
           offset: 0,
           is_active: true,
         });
@@ -84,9 +84,6 @@ function EditTaxCode() {
     };
     fetchInitialCountryOptions();
   }, []);
-  const loadCountryOptions = (callback) => {
-    callback(initialCountryOptions);
-  };
   const onSubmit = (data) => {
     const backendFormat = {
       name: getLabel(data.taxcodename),
@@ -230,7 +227,6 @@ function EditTaxCode() {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  loadOptions={loadCountryOptions}
                   placeholder="Select Country"
                   defaultOptions={initialCountryOptions}
                   styles={selectStyles}

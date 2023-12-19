@@ -20,7 +20,7 @@ function ContactAddressForm({ onSubmit, control, errors, setValue }) {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 200,
           offset: 0,
         });
         const options = res?.data?.map((item) => ({
