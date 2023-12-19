@@ -61,12 +61,15 @@ function EditCurrency() {
   const [activeStatus, setActiveStatus] = useState(currencyData?.IsActive);
   const [isLoading, setLoader] = useState(false);
   const [changeBaseCurrencyPopUp,setChangeBaseCurrencyPopUp] = useState(false);
-  const [currencyChangeFlag,setCurrencyChangeFlag] = useState(false);
-  const onSubmit = (data) => {
+  const [currencyDataTemp,setCurrencyDataTemp] = useState({});
+  const onSubmit = (data,confirmed?) => {
+    setCurrencyDataTemp(data);
     /**Base curency confirmation */
-    if(initalBaseCurrency !== isBaseCurrency && !currencyChangeFlag){
-      setChangeBaseCurrencyPopUp(true);
-      return;
+    if(initalBaseCurrency !== isBaseCurrency){
+      if(!confirmed){
+        setChangeBaseCurrencyPopUp(true);
+        return;
+      }
     }
     const backendFormat = {
       name: getLabel(data.currencyname),
@@ -140,7 +143,7 @@ function EditCurrency() {
         <Form
           style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
           className=" mt-2 d-flex flex-column"
-          onSubmit={handleSubmit(onSubmit)}
+          // onSubmit={handleSubmit(onSubmit)}
         >
           {" "}
           <Col xl="5">
@@ -355,7 +358,7 @@ function EditCurrency() {
         <Modal.Body className="mb-0 mt-0 pb-0 pt-4 d-flex justify-content-center align-items-center">
           <div className="d-flex flex-column">
             <p className="d-flex justify-content-center mb-0 align-items-center">
-              Do you want to change Base Currency!!
+              Do you want to change Base Currency!
             </p>
           </div>
         </Modal.Body>
@@ -372,8 +375,8 @@ function EditCurrency() {
           <button
             className="btn btn-primary text-white"
             onClick={() => {
-              setCurrencyChangeFlag(true);
               setChangeBaseCurrencyPopUp(false);
+              onSubmit(currencyDataTemp,true);
             }}
             style={{ width: 150 }}
           >
