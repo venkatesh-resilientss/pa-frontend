@@ -386,6 +386,12 @@ function AddBudget() {
                   loadOptions={loadCurrencyOptions}
                   placeholder="Select Currency"
                   defaultOptions={initialCurrencyOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.currency ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -415,6 +421,12 @@ function AddBudget() {
                   loadOptions={loadSeriesOptions}
                   placeholder="Select Series"
                   defaultOptions={initialSeriesOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.series ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -444,6 +456,12 @@ function AddBudget() {
                   loadOptions={loadLocationsOptions}
                   placeholder="Select Location"
                   defaultOptions={initialLocationOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.location ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />
@@ -473,6 +491,12 @@ function AddBudget() {
                   loadOptions={loadSetsOptions}
                   placeholder="Select Set"
                   defaultOptions={inititalSetOptions}
+                  styles={{
+                    control : (base :any)=> ({
+                      ...base,
+                      borderColor : errors.set ? '#f00' : '#dee2e6'
+                    }),
+                  }}
                 />
               )}
             />

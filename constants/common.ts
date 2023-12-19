@@ -533,13 +533,14 @@ export const VendorsAddressTypes = [
 ];
 
 /**Form Validation Rules */
+const ALPHA_NUMERIC_WITH_LETTER = /^[A-Za-z0-9_ ]*[A-Za-z][A-Za-z0-9_ ]*$/;
 const ALPHA_NUMERIC = /^[A-Za-z0-9_ ]+$/i;
 const ADDRESS_LINE = /^[A-Za-z0-9_ ,-;'#]+$/i;
 const CODE_PATTERN = /^[A-Za-z0-9]+$/i;
 const NUMERIC = /^[0-9.]+[ ]*$/i;
 const EMAIL_PATTERN = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
 const TAX_ID_PATTERN = /^\d{2}-\d{7}$/i;
-const ZIP_CODE_PATTERN = /^[0-9-]+$/i;
+const ZIP_CODE_PATTERN = /^[0-9]+$/i;
 const PHONE_NUMBER_PATTERN =
   /(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/i;
 const FULL_NAME_PATTERN = /^[A-Za-z0-9_. ]+$/i;
@@ -550,6 +551,7 @@ const CODE_MAX_LENGTH = 10;
 const DESCRIPTION_MAX_LENGTH = 250;
 const ADDRESS_LINE_MAX_LENGTH = 50;
 const ZIP_CODE_MAX_LENGTH = 12;
+const ACCOUNT_NUMBER_MIN_LENGTH = 9;
 const ACCOUNT_NUMBER_MAX_LENGTH = 12;
 const ROUTING_NUMBER_MAX_LENGTH = 9;
 const EMAIL_MAX_LENGTH = 30;
@@ -1151,8 +1153,9 @@ export const formValidationRules = {
         message: `Bank Name must be contain less than ${NAME_MAX_LENGTH} characters`,
       },
       pattern: {
-        value: ALPHA_NUMERIC,
-        message: "Special characters are not allowed",
+        value: ALPHA_NUMERIC_WITH_LETTER,
+        message:
+          "Special characters are not allowed. Please include at least one letter",
       },
     },
     code: {
@@ -1174,6 +1177,10 @@ export const formValidationRules = {
     },
     accountNumber: {
       required: "Account Number is required",
+      minLength: {
+        value: ACCOUNT_NUMBER_MIN_LENGTH,
+        message: `Account Number must contain more than ${ACCOUNT_NUMBER_MIN_LENGTH} characters`,
+      },
       maxLength: {
         value: ACCOUNT_NUMBER_MAX_LENGTH,
         message: `Account Number must contain less than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`,
@@ -1231,9 +1238,24 @@ export const formValidationRules = {
     },
     accountFraction: {
       required: "Account Fraction is required",
+      pattern: {
+        value: NUMERIC,
+        message: "Account Fraction must contain only numbers",
+      },
     },
     email: contactValidationRules.email,
-    contactName: contactValidationRules.fullName,
+    contactName: {
+      required: "Name is required",
+      maxLength: {
+        value: FULL_NAME_MAX_LENGTH,
+        message: `Name must not contain more than ${FULL_NAME_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ALPHA_NUMERIC_WITH_LETTER,
+        message:
+          "Name cannot contain special characters. Please include at least one letter",
+      },
+    },
     physicalAddressLine1: {
       maxLength: {
         value: ADDRESS_LINE_MAX_LENGTH,
@@ -1260,8 +1282,9 @@ export const formValidationRules = {
         message: `city cannot have more than ${cityMaxLength} characters`,
       },
       pattern: {
-        value: ALPHA_NUMERIC,
-        message: "Special characters are not allowed",
+        value: ALPHA_NUMERIC_WITH_LETTER,
+        message:
+          "Special characters are not allowed. Please include at least one letter",
       },
     },
     physicalAddressPostalCode: {
@@ -1302,8 +1325,9 @@ export const formValidationRules = {
         message: `city cannot have more than ${cityMaxLength} characters`,
       },
       pattern: {
-        value: ALPHA_NUMERIC,
-        message: "Special characters are not allowed",
+        value: ALPHA_NUMERIC_WITH_LETTER,
+        message:
+          "Special characters are not allowed. Please include at least one letter",
       },
     },
     mailingAddressState: {
@@ -1393,6 +1417,11 @@ export const formValidationRules = {
       maxLength: {
         value: EFT_USERNAME_MAX_LENGTH,
         message: `User Name must contain less than ${EFT_USERNAME_MAX_LENGTH} characters`,
+      },
+      pattern: {
+        value: ALPHA_NUMERIC_WITH_LETTER,
+        message:
+          "Special characters are not allowed. Please include at least one letter",
       },
     },
     eftPassword: {
