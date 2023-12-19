@@ -39,7 +39,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
           { clientID, projectID },
           {
             search: "",
-            limit: 200,
+            limit: 500,
             offset: 0,
           }
         );
