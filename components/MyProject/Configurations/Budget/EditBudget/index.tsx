@@ -14,7 +14,8 @@ import {
 import AsyncSelect from "react-select/async";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
-
+import { LoaderButton } from "@/components/Loaders";
+import { hasPermission } from "@/commonFunctions/functions";
 function EditBudget() {
   const [activeStatus, setActiveStatus] = useState(false);
 
@@ -27,11 +28,17 @@ function EditBudget() {
   const setsService = new SetsService();
   const budgetService = new BudgetService();
 
+  const [isLoading,setLoader] = useState(false);
+  const [editMode,setEditMode] = useState(false);
   const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
   const [initialSeriesOptions, setInitialSeriesOptions] = useState([]);
   const [initialLocationOptions, setInitialLocationOptions] = useState([]);
   const [inititalSetOptions, setInitialSetOptions] = useState([]);
   const [budgetFileUrl, setBudgetFileUrl] = useState(null);
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
   /** Load Initial Options */
   useEffect(() => {
     /**Currencies */
@@ -252,31 +259,22 @@ function EditBudget() {
     setBudgetFileUrl(budgetData?.BudgetFile);
   }, [budgetData]);
 
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
+  const onSubmit = () => {
     const backendFormat = {
-      Code: data?.code,
-      Name: data?.name,
-      CurrencyID: parseInt(data?.currency?.value),
-      SeriesID: parseInt(data?.series?.value),
-      SetID: parseInt(data?.set?.value),
-      LocationID: parseInt(data?.location?.value),
-      // file: budgetFile,
-      clientID,
-      projectID,
       IsActive: activeStatus,
     };
-
-
+    setLoader(true);
     budgetService
       .editBudget(id, backendFormat)
       .then(() => {
         toast.success("Budget updated successfully");
-        router.back();
+        router.push('/configurations/budgets');
         reset();
+        setLoader(false);
       })
       .catch((error) => {
         toast.error(error?.error || error?.Message || "Unable to edit Budget");
+        setLoader(false);
       });
   };
   return (
@@ -295,7 +293,7 @@ function EditBudget() {
         >
           Edit Budget
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -309,17 +307,19 @@ function EditBudget() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
         </div>
       </div>
 
@@ -526,6 +526,7 @@ function EditBudget() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -538,6 +539,7 @@ function EditBudget() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>

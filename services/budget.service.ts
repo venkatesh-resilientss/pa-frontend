@@ -3,9 +3,10 @@ import {  BUDGETS_DETAIL_ENDPOINT, CREATE_BUDGET, DELETE_BUDGET, EDIT_BUDGET, GE
 
 class BudgetService extends APIService {
   getBudgets(data,params?): Promise<any> {
+    const queryParams = new URLSearchParams(params).toString();
     return this.post(
       params ?
-      `${GET_BUDGETS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+      `${GET_BUDGETS}?${queryParams}` :
       `${GET_BUDGETS}`,
       data
     )

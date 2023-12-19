@@ -19,11 +19,15 @@ import CustomBadge from "components/Generic/CustomBadge";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { getSessionVariables } from "@/constants/function";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
-import { getLabel } from "@/commonFunctions/common";
-const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
+import { debounce, getLabel } from "@/commonFunctions/common";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { TableLoading } from "@/components/Loaders";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import detailsIocn from "assets/myIcons/list.svg";
+
+const AllBudgetTable = () => {
   const router = useRouter();
-  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -35,28 +39,57 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
   );
 
   const budgetService = new BudgetService();
-
-  const fetchData = async (pageNumber) => {
-    try {
-      const { clientID, projectID } = getSessionVariables();
-      const response = await budgetService.getBudgets(
-        {
-          clientID,
-          projectID,
-        },
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
-      const data = response.data; // Adjust based on the actual structure of the response
-      const totalRecords = response.totalCount; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    }
+  const [isLoading, setLoader] = useState(true);
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await budgetService.getBudgets(
+          {
+            clientID,
+            projectID,
+          },
+          queryParams
+        );
+        setTableData({
+          data: response.data,
+          total_records: response.totalCount,
+        });
+        setLoader(false);
+      } catch (error) {
+        setLoader(false);
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+      }
+    };
+    fetchData();
+  }, [filters]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -95,13 +128,14 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(`/configurations/edit-budget/${props.data?.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
@@ -250,11 +284,11 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
                 style={{ gap: "10px" }}
               >
                 <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  Budgets
+                {tableData.total_records} {tableData.total_records === 1 ? 'Budget' : 'Budgets'}
                 </div>
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -302,22 +336,23 @@ const AllBudgetTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Add Budget"}
-              buttonName={hasCreateConfiguration ? "Create Budget" : ""}
-              buttonLink={"/configurations/add-budget"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Budget" : "No button"}
+            buttonLink={"/configurations/add-budget"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

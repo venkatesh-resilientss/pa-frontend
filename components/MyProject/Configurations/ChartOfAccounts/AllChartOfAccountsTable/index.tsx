@@ -200,7 +200,7 @@ const AllChartOfAccountsTable = ({ rerender}) => {
     // },
     {
       headerName: "COA Parent",
-      field: "Parent.Name",
+      field: "ParentID",
       sortable: true,
       unSortIcon: true,
       resizable: true,
