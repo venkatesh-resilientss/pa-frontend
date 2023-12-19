@@ -351,11 +351,19 @@ export const sidebarRoutesProduction = [
     children: [
       {
         name: "All Payments",
-        path: "",
+        path: "/all-payments",
+      },
+      {
+        name: "Check-payment",
+        path: "/check-payment",
       },
       {
         name: "Payment Processing",
-        path: "",
+        path: "/payment-processing",
+      },
+      {
+        name: "Print Check",
+        path: "/print-check",
       },
     ],
   },
