@@ -136,7 +136,7 @@ function EditChartOfAccounts() {
         description: data.Description,
         IsActive: activeStatus,
         code: data.COACode,
-        parentID: data.COAParent.value,
+        parentID: data.COAParent?.value,
         accountType: data.AccountType.value,
         postable: postableActiveStatus,
         clientID,
