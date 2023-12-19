@@ -1181,7 +1181,7 @@ export const formValidationRules = {
       required: "Account Number is required",
       minLength: {
         value: ACCOUNT_NUMBER_MIN_LENGTH,
-        message: `Account Number must contain more than ${ACCOUNT_NUMBER_MAX_LENGTH} characters`,
+        message: `Account Number must contain more than ${ACCOUNT_NUMBER_MIN_LENGTH} characters`,
       },
       maxLength: {
         value: ACCOUNT_NUMBER_MAX_LENGTH,

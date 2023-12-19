@@ -80,12 +80,26 @@ export default function DefaultAccount({ onSubmit, control, errors }) {
         borderColor: "#A2CFFE",
       },
       borderColor:
-        ((errors.ACHdataFormat &&
-          errors.ACHdataFormat?.message &&
-          (state.selectProps.instanceId || "").includes("ACHdataFormat")) ||
-          (errors.PPdataFormat &&
-            errors.PPdataFormat?.message &&
-            (state.selectProps.instanceId || "").includes("PPdataFormat"))) &&
+        ((errors.defaultAccountCash &&
+          errors.defaultAccountCash?.message &&
+          (state.selectProps.instanceId || "").includes(
+            "defaultAccountCash"
+          )) ||
+          (errors.defaultAccountClearing &&
+            errors.defaultAccountClearing?.message &&
+            (state.selectProps.instanceId || "").includes(
+              "defaultAccountClearing"
+            )) ||
+          (errors.defaultAccountDeposit &&
+            errors.defaultAccountDeposit?.message &&
+            (state.selectProps.instanceId || "").includes(
+              "defaultAccountDeposit"
+            )) ||
+          (errors.defaultAccountDiscount &&
+            errors.defaultAccountDiscount?.message &&
+            (state.selectProps.instanceId || "").includes(
+              "defaultAccountDiscount"
+            ))) &&
         !state.hasValue
           ? "#e50000 !important"
           : "#dee2e6",
