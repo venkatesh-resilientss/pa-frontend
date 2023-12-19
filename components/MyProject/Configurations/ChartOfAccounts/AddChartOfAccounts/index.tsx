@@ -32,7 +32,7 @@ function AddChartOfAccounts() {
           }
         );
         const options = res?.result.filter(item=>item.IsActive).map((item) => ({
-          value: item.ID,
+          value: item.Code,
           label: `${item.Code} - ${item.Name}`,
         }));
         setInitialcoaOptions(options);
@@ -56,7 +56,7 @@ function AddChartOfAccounts() {
         }
       );
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
-        value: item.ID,
+        value: item.Code,
         label: `${item.Code} - ${item.Name}`,
       }));
 
@@ -80,7 +80,7 @@ function AddChartOfAccounts() {
     const backendFormat = {
       name: data.COAName,
       code: data.COACode,
-      parentID: parseInt(data.COAParent?.value),
+      parentID: data.COAParent?.value || "",
       description: data.Description,
       accountType: data.AccountType.value,
       postable: postableActiveStatus,

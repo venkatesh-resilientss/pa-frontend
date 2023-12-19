@@ -36,7 +36,7 @@ function EditTaxCode() {
     reset,
   } = useForm();
   const [editMode, setEditMode] = useState(false);
-  const [isLoading,setLoader] = useState(false);
+  const [isLoading, setLoader] = useState(false);
   useEffect(() => {
     if (!taxcodesData) return;
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
@@ -67,7 +67,7 @@ function EditTaxCode() {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 500,
           offset: 0,
           is_active: true,
         });
@@ -84,9 +84,6 @@ function EditTaxCode() {
     };
     fetchInitialCountryOptions();
   }, []);
-  const loadCountryOptions = (callback) => {
-    callback(initialCountryOptions);
-  };
   const onSubmit = (data) => {
     const backendFormat = {
       name: getLabel(data.taxcodename),
@@ -142,18 +139,18 @@ function EditTaxCode() {
             Dismiss
           </Button>
           {hasEditConfigurationPermission && (
-              <LoaderButton
-                buttonText={editMode ? "Save" : "Edit"}
-                isLoading={isLoading}
-                handleClick={() => {
-                  if (!editMode) {
-                    setEditMode(true);
-                    return;
-                  }
-                  handleSubmit(onSubmit)();
-                }}
-              />
-            )}
+            <LoaderButton
+              buttonText={editMode ? "Save" : "Edit"}
+              isLoading={isLoading}
+              handleClick={() => {
+                if (!editMode) {
+                  setEditMode(true);
+                  return;
+                }
+                handleSubmit(onSubmit)();
+              }}
+            />
+          )}
         </div>
       </div>
 
@@ -230,7 +227,6 @@ function EditTaxCode() {
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
-                  loadOptions={loadCountryOptions}
                   placeholder="Select Country"
                   defaultOptions={initialCountryOptions}
                   styles={selectStyles}

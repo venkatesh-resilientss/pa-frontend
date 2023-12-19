@@ -9,7 +9,6 @@ import {
   Input,
 } from "reactstrap";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import { hasPermission } from "commonFunctions/functions";
@@ -36,10 +35,7 @@ const AllDepartmentsTable = ({ rerender }) => {
     "configuration_management",
     "create_configuration"
   );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
+  
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
 
@@ -141,21 +137,6 @@ const AllDepartmentsTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push({
-                    pathname: `/configurations/edit-department/${props.data?.ID}`,
-                  });
-                }}
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

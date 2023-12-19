@@ -4,10 +4,9 @@ import AsyncSelect from "react-select/async";
 import { CurrencyService } from "services";
 // import useSWR from "swr";
 import { useEffect, useState } from "react";
-import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
 
-function BasicDetailsForm({ control, onSubmit, errors }) {
+export default function BasicDetails({ control, onSubmit, errors }) {
   const { handleSubmit } = useForm();
   const bankValidationRules = formValidationRules.banks;
   const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
@@ -21,11 +20,11 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
           search: "",
           limit: 25,
           offset: 0,
-          is_active: true
+          is_active: true,
         });
         const options = res?.result.map((item) => ({
           value: item.ID,
-          label: `${item.Code} - ${item.Name}`,
+          label: item.Name,
         }));
         setInitialCurrencyOptions(options);
       } catch (error) {
@@ -42,17 +41,63 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         search: inputValue.toString(),
         limit: 25,
         offset: 0,
-        is_active: true
+        is_active: true,
       });
       const options = res?.result.map((item) => ({
         value: item.ID,
-        label: `${item.Code} - ${item.Name}`,
+        label: item.Name,
       }));
 
       callback(options);
     } catch (error) {
       console.error("Error loading options:", error);
     }
+  };
+
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      background: state.isDisabled ? "#e9ecef" : "#fff",
+      border: "1px solid #dee2e6",
+      borderRadius: "0.375rem",
+      minHeight: "40px",
+      boxShadow: null,
+      ":hover": {
+        borderColor: "#A2CFFE",
+      },
+      borderColor:
+        errors.currency && errors.currency?.message && !state.hasValue
+          ? "#e50000 !important"
+          : "#dee2e6",
+    }),
+
+    singleValue: (provided) => ({ ...provided, color: "#212529" }),
+
+    valueContainer: (base) => ({ ...base, padding: "0 6px" }),
+
+    input: (base) => ({ ...base, margin: "0" }),
+
+    placeholder: (base: any) => ({
+      ...base,
+      position: "center",
+      transform: "none",
+      color: "#c9c9c9 !important",
+    }),
+
+    menu: (base: any) => ({ ...base, margin: "0 !important" }),
+    menuList: (base: any) => ({ ...base, padding: "0 !important" }),
+
+    option: (base: any, state: any) => ({
+      ...base,
+      cursor: "pointer",
+      color: "#212529",
+      ":hover": {
+        backgroundColor: "#c9c9c97d",
+      },
+      backgroundColor: state.isSelected ? "#c9c9c97d !important" : "white",
+    }),
+
+    indicatorSeparator: () => ({ display: "none" }),
   };
 
   return (
@@ -62,7 +107,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Row>
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -89,7 +134,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -117,7 +162,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             {" "}
             <Label
               className="text-black"
@@ -146,7 +191,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -163,7 +208,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
-                // type="textarea"
+                  // type="textarea"
                 />
               )}
             />
@@ -174,7 +219,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -201,7 +246,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -228,7 +273,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="form-lable-font"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -262,7 +307,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -289,7 +334,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
             )}
           </Col>
 
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -309,8 +354,13 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
                 />
               )}
             />
+            {errors.branchNumber && (
+              <span className="text-danger">
+                {errors.branchNumber.message as React.ReactNode}
+              </span>
+            )}
           </Col>
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -336,7 +386,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               </span>
             )}
           </Col>
-          <Col xl="4" className="my-2">
+          <Col lg="4" className="my-2">
             <Label
               className="text-black"
               style={{ fontSize: "12px", fontWeight: "400" }}
@@ -404,5 +454,3 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
     </div>
   );
 }
-
-export default BasicDetailsForm;

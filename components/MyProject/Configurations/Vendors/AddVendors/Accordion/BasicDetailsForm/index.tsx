@@ -13,8 +13,8 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-import { toast } from  'react-toastify'; 
-function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
+import { toast } from 'react-toastify';
+function BasicDetailsForm({ control, onSubmit, errors, setValue }) {
   const {
     // control,
     handleSubmit,
@@ -29,8 +29,8 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
   const [initialcoaOptions, setInitialcoaOptions] = useState([]);
   const [initialEntityOptions, setInitialEntityOptions] = useState([]);
   const [initialCountryOptions, setInitialCountryOptions] = useState([]);
-  const [initialStateOptions,setInititalStateOptions] = useState([]);
-  const [currentCountry,setCurrentCountry] = useState(null);
+  const [initialStateOptions, setInititalStateOptions] = useState([]);
+  const [currentCountry, setCurrentCountry] = useState(null);
   useEffect(() => {
     const fetchInitialcoaOptions = async () => {
       const { clientID, projectID } = getSessionVariables();
@@ -39,7 +39,7 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
           { clientID, projectID },
           {
             search: "",
-            limit: 200,
+            limit: 500,
             offset: 0,
           }
         );
@@ -72,7 +72,7 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 500,
           offset: 0,
         });
         const options = res?.data?.map((item) => ({
@@ -90,29 +90,29 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
     fetchInitialCountryOptions();
   }, []);
 
-  useEffect(()=>{
-    
-    const fetchStateOptions = async ()=>{
-      try{
+  useEffect(() => {
+
+    const fetchStateOptions = async () => {
+      try {
         const response = await statesService.getStatesByCountry(currentCountry.value);
-        const options = response.map(i=>{
+        const options = response.map(i => {
           return {
-            value : i.ID,
-            label : i.Name,
-            countryId : i.CountryID
+            value: i.ID,
+            label: i.Name,
+            countryId: i.CountryID
           }
         })
         setInititalStateOptions(options);
-      }catch(error){
+      } catch (error) {
         toast.error(error?.Message || error?.message || error?.error || 'Unable to get state options');
       }
     }
-    if(!currentCountry)
+    if (!currentCountry)
       return
     setInititalStateOptions([]);
-    setValue('workState',null)
+    setValue('workState', null)
     fetchStateOptions();
-  },[currentCountry]);
+  }, [currentCountry]);
 
   const loadCoaOptions: any = async (inputValue, callback) => {
     const { clientID, projectID } = getSessionVariables();
@@ -373,9 +373,9 @@ function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
                   options={initialCountryOptions}
                   placeholder="Select Country"
                   styles={selectStyles}
-                  onChange={(e)=>{
+                  onChange={(e) => {
                     setCurrentCountry(e);
-                    setValue("vendorcountry",e)
+                    setValue("vendorcountry", e)
                   }}
                 />
               )}

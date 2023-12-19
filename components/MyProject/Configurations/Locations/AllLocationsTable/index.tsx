@@ -10,7 +10,6 @@ import {
 } from "reactstrap";
 import { useDispatch } from "react-redux";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { hasPermission } from "commonFunctions/functions";
 import { useRouter } from "next/router";
@@ -36,11 +35,6 @@ const AllLocationsTable = ({ rerender}) => {
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
-  );
-
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
   );
 
   const hasUploadConfigurationPermission =
@@ -141,17 +135,6 @@ const AllLocationsTable = ({ rerender}) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  router.push(`/configurations/edit-location/${props.data.ID}`)
-                }
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

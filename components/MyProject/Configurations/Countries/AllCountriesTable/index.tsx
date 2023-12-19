@@ -11,7 +11,6 @@ import {
 import moment from "moment";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import CountryService from "services/country.service";
 import Image from "next/image";
@@ -35,11 +34,7 @@ const AllCountriesTable = ({ rerender}) => {
     "configuration_management",
     "create_configuration"
   );
-
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
+  
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
 
@@ -127,17 +122,6 @@ const AllCountriesTable = ({ rerender}) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  router.push(`/configurations/edit-country/${props.data?.ID}`)
-                }
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

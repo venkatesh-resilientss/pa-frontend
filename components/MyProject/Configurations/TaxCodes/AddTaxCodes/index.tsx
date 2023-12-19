@@ -28,7 +28,7 @@ function AddTaxCode() {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 500,
           offset: 0,
           is_active: true,
         });
@@ -45,10 +45,7 @@ function AddTaxCode() {
     };
     fetchInitialCountryOptions();
   }, []);
-  const loadCountryOptions = (callback) => {
-    callback(initialCountryOptions);
-  };
-  const [isLoading,setLoader] = useState(false);
+  const [isLoading, setLoader] = useState(false);
   const onSubmit = (data) => {
     const backendFormat = {
       name: getLabel(data.taxcodename),
@@ -100,7 +97,7 @@ function AddTaxCode() {
           >
             Dismiss
           </Button>
-          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading}/>
+          <LoaderButton handleClick={handleSubmit(onSubmit)} buttonText={'Save'} isLoading={isLoading} />
         </div>
       </div>
 
@@ -177,7 +174,6 @@ function AddTaxCode() {
                   className="react-select"
                   classNamePrefix="select"
                   placeholder="Select Country"
-                  loadOptions={loadCountryOptions}
                   defaultOptions={initialCountryOptions}
                   styles={selectStyles}
                 />

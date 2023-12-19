@@ -1,34 +1,69 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import { StatesService, CountryService } from "services";
-import useSWR from "swr";
 import Select from "react-select";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
-function MailingAddressForm({ onSubmit, control, errors ,editMode}) {
+import { useEffect, useState } from "react";
+import {toast} from 'react-toastify';
+
+function MailingAddressForm({ onSubmit, control, errors ,editMode , setValue}) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const addressValidationRules = formValidationRules.address;
-  const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates({ search: "", limit: 25, offset: 0, is_active: true })
-  );
-
-  const stateSelectOptions = statesData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-      countryId: b.CountryID,
-    };
-  });
-
   const countryService = new CountryService();
-  const { data: countryData } = useSWR("LIST_COUNTRIES", () => countryService.getCountries({ search: "", limit: 25, offset: 0, is_active: true }));
-  const countrySelectOptions = countryData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  const [initialCountryOptions, setInitialCountryOptions] = useState([]);
+  const [currentCountry, setCurrentCountry] = useState(null);
+  const [initialStateOptions,setInititalStateOptions] = useState([]);
+  useEffect(() => {
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries({
+          search: "",
+          limit: 200,
+          offset: 0,
+        });
+        const options = res?.data?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCountryOptions(options);
+      } catch (error) {
+        console.error("Error fetching Country options:", error);
+      }
     };
-  });
+    fetchInitialCountryOptions();
+  }, []);
+  useEffect(() => {
+    const fetchStateOptions = async () => {
+      
+      try {
+        const response = await statesService.getStatesByCountry(
+          currentCountry.value
+        );
+        const options = response.map((i) => {
+          return {
+            value: i.ID,
+            label: i.Name,
+            countryId: i.CountryID,
+          };
+        });
+        setInititalStateOptions(options);
+      } catch (error) {
+        toast.error(
+          error?.Message ||
+            error?.message ||
+            error?.error ||
+            "Unable to get state options"
+        );
+      }
+    };
+    if(!currentCountry)
+      return
+    setInititalStateOptions([]);
+    setValue("mailingAddressState", null);
+    fetchStateOptions();
+  }, [currentCountry]);
   return (
     <div className="text-black">
       <Form
@@ -136,11 +171,15 @@ function MailingAddressForm({ onSubmit, control, errors ,editMode}) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={countrySelectOptions}
+                  options={initialCountryOptions}
                   placeholder="Select Country"
                   {...field}
                   styles={selectStyles}
                   isDisabled={!editMode}
+                  onChange={(e) => {
+                    setCurrentCountry(e);
+                    setValue("mailingAddressCountry", e);
+                  }}
                 />
               )}
             />
@@ -164,7 +203,7 @@ function MailingAddressForm({ onSubmit, control, errors ,editMode}) {
               control={control}
               render={({ field }) => (
                 <Select
-                  options={stateSelectOptions}
+                  options={initialStateOptions}
                   placeholder="Enter State"
                   {...field}
                   styles={selectStyles}

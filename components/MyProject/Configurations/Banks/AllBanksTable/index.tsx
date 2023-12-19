@@ -45,8 +45,6 @@ const AllBanksTable = () => {
     pageNumber: 1,
   });
 
-
-
   const bankService = new BankService();
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -64,9 +62,12 @@ const AllBanksTable = () => {
   useEffect(() => {
     const getTableData = async () => {
       try {
-        const clientId = sessionStorage.getItem("clientid");
-        const projectId = sessionStorage.getItem("projectid");
-        const data = { clientId: parseInt(clientId), projectId: parseInt(projectId) }
+        const clientId = localStorage.getItem("clientid");
+        const projectId = localStorage.getItem("projectid");
+        const data = {
+          clientId: parseInt(clientId),
+          projectId: parseInt(projectId),
+        };
 
         const response = await bankService.getBanksNew(filters, data);
         setTableData({
@@ -75,12 +76,11 @@ const AllBanksTable = () => {
         });
         /*  eslint-disable-next-line @typescript-eslint/no-unused-vars */
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     };
     getTableData();
   }, [filters]);
-
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -182,7 +182,7 @@ const AllBanksTable = () => {
           return <>{row.value}</>;
         } else if (typeof row.value === "string") {
           // If it's a string, display the uppercase version
-          return getLabel(row.value)
+          return getLabel(row.value);
         } else {
           // Handle other types if needed
           return null;
@@ -204,7 +204,11 @@ const AllBanksTable = () => {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
-        return getLabel(params?.data?.Created?.first_name + " " + params?.data?.Created?.last_name);
+        return getLabel(
+          params?.data?.Created?.first_name +
+            " " +
+            params?.data?.Created?.last_name
+        );
       },
       sortable: true,
       resizable: true,
@@ -274,7 +278,9 @@ const AllBanksTable = () => {
                 </div> */}
 
                 <Input
-                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, search: e.target.value })
+                  }
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -327,7 +333,9 @@ const AllBanksTable = () => {
                       fontWeight: "600",
                       border: "none",
                     }}
-                    onClick={() => router.push(`/configurations/add-bank`)}
+                    onClick={() =>
+                      router.push(`/configurations/banks/add-bank`)
+                    }
                   >
                     <Image
                       style={{ width: "14px", height: "14px" }}
@@ -347,7 +355,7 @@ const AllBanksTable = () => {
         {tableData.data.length === 0 ? (
           <NoDataPage
             buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
-            buttonLink={"/configurations/add-bank"}
+            buttonLink={"/configurations/banks/add-bank"}
           />
         ) : (
           <GridWithPagination
@@ -371,7 +379,7 @@ const AllBanksTable = () => {
         noDataPage={() => (
           <NoDataPage
             buttonName={hasCreateConfiguration ? "Create Bank" : "No button"}
-            buttonLink={"/configurations/add-bank"}
+            buttonLink={"/configurations/banks/add-bank"}
           />
         )}
       /> */}

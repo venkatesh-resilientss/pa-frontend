@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { CurrencyService } from "services";
 import moment from "moment";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
@@ -34,10 +33,6 @@ const AllCurrencyTable = ({ rerender }) => {
     "create_configuration"
   );
 
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
 
@@ -127,19 +122,6 @@ const AllCurrencyTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  router.push(
-                    `/configurations/edit-currencies/${props.data?.ID}`
-                  )
-                }
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -168,13 +150,25 @@ const AllCurrencyTable = ({ rerender }) => {
       },
     },
     {
+      headerName: "Is Base Currency",
+      field: "BaseCurrency",
+      sortable: true,
+      unSortIcon: true,
+      resizable: true,
+      cellStyle: { fontSize: "14px", fontWeight: "400" },
+      headerClass: "custom-header-class",
+      cellRenderer: (row) => {
+        return row.value ? "Yes" : "No";
+      },
+    },
+    {
       headerName: "Created By",
       field: "Created",
       cellRenderer: (params) => {
         return getLabel(
-          params?.data?.Created?.first_name +
-          " " +
-          params?.data?.Created?.first_name
+          params?.data?.Created?.last_name +
+            " " +
+            params?.data?.Created?.first_name
         );
       },
       sortable: true,
@@ -238,7 +232,8 @@ const AllCurrencyTable = ({ rerender }) => {
                   style={{ gap: "10px" }}
                 >
                   <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                    Currencies
+                    {tableData.total_records}{" "}
+                    {tableData.total_records === 1 ? "Currencie" : "Currencies"}
                   </div>
 
                   <Input

@@ -11,7 +11,6 @@ import {
 // import GridTable from "components/grid-tables/gridTable";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import { SeriesService } from "services";
 import moment from "moment";
@@ -38,10 +37,7 @@ const AllSeriesTable = ({ rerender }) => {
     "configuration_management",
     "create_configuration"
   );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
+   
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
   const seriesService = new SeriesService();
@@ -140,17 +136,6 @@ const AllSeriesTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  router.push(`/configurations/edit-series/${props.data?.ID}`)
-                }
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

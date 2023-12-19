@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import moment from "moment";
 import { COAAccountsService } from "services";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import Image from "next/image";
 import CustomBadge from "components/Generic/CustomBadge";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
@@ -37,10 +36,6 @@ const AllChartOfAccountsTable = ({ rerender}) => {
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
-  );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
   );
 
   const hasUploadConfigurationPermission =
@@ -146,18 +141,6 @@ const AllChartOfAccountsTable = ({ rerender}) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                onClick={() =>
-                  router.push(
-                    `/configurations/edit-chartofaccounts/${props.data.ID}`
-                  )
-                }
-                className="w-100"
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

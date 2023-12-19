@@ -1,46 +1,46 @@
 import React, { useState } from "react";
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
-} from "reactstrap";
-import BasicDetailsForm from "./BasicDetailsForm";
-import MailingAddressForm from "./MailingAddress";
+import { Accordion } from "reactstrap";
+import { AccordionBody, AccordionHeader, AccordionItem } from "reactstrap";
 import { useForm } from "react-hook-form";
-import { BankService } from "services";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import PhysicalAddressForm from "./PhysicalAddress";
-import DefaultAccountForm from "./DefaultAccount";
-import OtherDetailsForm from "./OtherDetails";
-import CheckEFTForm from "./CheckEftForm";
-import { getSessionVariables } from "@/constants/function";
 import Button from "react-bootstrap-button-loader";
 
-function BankAccordion() {
-  const { reset } = useForm();
+import { getSessionVariables } from "@/constants/function";
+import { BasicDetails, MailingAddress } from "@/components/banks";
+import { PhysicalAddress, DefaultAccount } from "@/components/banks";
+import { OtherDetails, CheckEFT } from "@/components/banks";
 
-  const [open, setOpen] = useState("");
+import { BankService } from "services";
+
+const bankService = new BankService();
+
+export default function BankAccordion({ router }) {
+  const [steps, setSteps] = useState<any>([
+    { name: "Basic Information", toggle: true },
+    { name: "Physical Address", toggle: false },
+    { name: "Mailing Address", toggle: false },
+    { name: "Check/EFT/Wiretransfer Details", toggle: false },
+    { name: "Default Accounts", toggle: false },
+    { name: "Set/Series/Location Information", toggle: false },
+  ]);
+
+  const { control, handleSubmit, formState, watch, trigger, setValue } =
+    useForm();
+  const { errors, isSubmitted } = formState;
+
   const [eft, setEft] = useState(false);
   const [positivePay, setPositivePay] = useState(false);
   const [ACHExport, setACHExport] = useState(false);
-  const [loading, setLoading] = useState(false)
-  const bankService = new BankService();
+  const [loading, setLoading] = useState(false);
   // const addressService = new AddressService();
-  const toggle = (id) => {
-    if (open === id) {
-      reset();
-      setOpen(""); // Close the accordion if it's already open
-    } else {
-      setOpen(id);
-    }
-  };
 
   const onSubmit = (data) => {
-    setLoading(true)
+    setLoading(true);
     const { clientID, projectID } = getSessionVariables();
-    const primaryContactPhone = `${data.basicInfoCountryCode || ""}-${data.basicInfoContactNumber || ""}`
+    const primaryContactPhone =
+      data.basicInfoCountryCode && data.basicInfoContactNumber
+        ? `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
+        : "";
     const bankPayload: any = {
       Name: data.bankName,
       Code: data.bankCode,
@@ -140,47 +140,32 @@ function BankAccordion() {
     bankService
       .createBank(bankPayload)
       .then(() => {
-        setLoading(false)
+        setLoading(false);
         toast.success("Bank created successfully");
         router.back();
       })
       .catch((error) => {
-        setLoading(false)
+        setLoading(false);
         toast.error(error?.error || error?.Message || "Unable to add Bank");
       });
   };
 
-  const router = useRouter();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
   return (
-    <div className="mt-4">
-      <div
-        className="text-black"
-        style={{ fontSize: "16px", fontWeight: "600" }}
-      >
-        All Banks
-      </div>
+    <div className="p-4">
       <div className="d-flex justify-content-between">
-        <div
-          className="text-black"
-          style={{ fontSize: "32px", fontWeight: "600" }}
-        >
-          Add New Bank
+        <div>
+          <div className="text-black fw-600">All Banks</div>
+          <div className="f-32 fw-600">Add New Bank</div>
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
-          <a
-            href="#"
+
+        <div className="my-auto">
+          <button
+            type="button"
             onClick={() => router.back()}
-            className="text-decoration-none text-secondary m-2"
+            className="btn f-14"
           >
             Dismiss
-          </a>
+          </button>
           <Button
             type="submit"
             loading={loading}
@@ -191,94 +176,49 @@ function BankAccordion() {
           >
             Save
           </Button>
-
         </div>
       </div>
+      <hr />
 
-      <hr style={{ height: "2px" }} />
-      <div className="m-2">
-        <Accordion open={open} toggle={toggle}>
+      {steps.map((e, id) => (
+        <Accordion
+          open={String(e.toggle)}
+          toggle={() =>
+            setSteps(
+              [...steps].map((el) =>
+                el.name === e.name ? { name: el.name, toggle: !el.toggle } : el
+              )
+            )
+          }
+          key={id}
+          className="bank-accordion border-bottom"
+        >
           <AccordionItem>
-            <AccordionHeader targetId="1">Basic Information</AccordionHeader>
-            <AccordionBody accordionId="1">
-              <BasicDetailsForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-              />
-            </AccordionBody>
-          </AccordionItem>
-
-          <AccordionItem>
-            <AccordionHeader targetId="2">Physical Address</AccordionHeader>
-            <AccordionBody accordionId="2">
-              <PhysicalAddressForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-              />{" "}
-            </AccordionBody>
-          </AccordionItem>
-
-          <AccordionItem>
-            <AccordionHeader targetId="3">Mailing Address</AccordionHeader>
-            <AccordionBody accordionId="3">
-              <MailingAddressForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-              />
-            </AccordionBody>
-          </AccordionItem>
-
-          <AccordionItem>
-            <AccordionHeader targetId="4">
-              Check/EFT/Wiretransfer Details
-            </AccordionHeader>
-            <AccordionBody accordionId="4">
-              <CheckEFTForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-                {...{
-                  eft,
-                  setEft,
-                  positivePay,
-                  setPositivePay,
-                  ACHExport,
-                  setACHExport,
-                }}
-              />
-            </AccordionBody>
-          </AccordionItem>
-
-          <AccordionItem>
-            <AccordionHeader targetId="5">Default Accounts</AccordionHeader>
-            <AccordionBody accordionId="5">
-              <DefaultAccountForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-              />
-            </AccordionBody>
-          </AccordionItem>
-
-          <AccordionItem>
-            <AccordionHeader targetId="6">
-              Set/Series/Location Information
-            </AccordionHeader>
-            <AccordionBody accordionId="6">
-              <OtherDetailsForm
-                control={control}
-                onSubmit={onSubmit}
-                errors={errors}
-              />
+            <AccordionHeader targetId={"true"}>{e.name}</AccordionHeader>
+            <AccordionBody accordionId={"true"}>
+              {e.name === "Basic Information" ? (
+                <BasicDetails {...{ control, onSubmit, errors }} />
+              ) : e.name === "Physical Address" ? (
+                <PhysicalAddress {...{ control, onSubmit, errors }} />
+              ) : e.name === "Mailing Address" ? (
+                <MailingAddress {...{ control, onSubmit, errors }} />
+              ) : e.name === "Check/EFT/Wiretransfer Details" ? (
+                <CheckEFT
+                  {...{ eft, setEft, control, onSubmit, errors }}
+                  {...{ watch, trigger, setValue, isSubmitted }}
+                  {...{ positivePay, setPositivePay, ACHExport, setACHExport }}
+                />
+              ) : e.name === "Default Accounts" ? (
+                <DefaultAccount {...{ control, onSubmit, errors }} />
+              ) : (
+                e.name === "Set/Series/Location Information" && (
+                  <OtherDetails {...{ control, onSubmit, errors }} />
+                )
+              )}
             </AccordionBody>
           </AccordionItem>
         </Accordion>
-      </div>
+      ))}
     </div>
   );
 }
-
-export default BankAccordion;

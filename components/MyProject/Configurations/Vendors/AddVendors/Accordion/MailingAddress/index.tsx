@@ -4,23 +4,23 @@ import Select from "react-select";
 import { StatesService, CountryService } from "services";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
-import { useEffect,useState } from "react";
-import {toast} from 'react-toastify';
+import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
 
-function MailingAddressForm({ onSubmit, control, errors,setValue }) {
+function MailingAddressForm({ onSubmit, control, errors, setValue }) {
   const { handleSubmit } = useForm();
   const addressValidationRules = formValidationRules.address;
   const statesService = new StatesService();
   const countryService = new CountryService();
   const [initialCountryOptions, setInitialCountryOptions] = useState([]);
   const [currentCountry, setCurrentCountry] = useState(null);
-  const [initialStateOptions,setInititalStateOptions] = useState([]);
+  const [initialStateOptions, setInititalStateOptions] = useState([]);
   useEffect(() => {
     const fetchInitialCountryOptions = async () => {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 25,
+          limit: 500,
           offset: 0,
         });
         const options = res?.data?.map((item) => ({
@@ -36,7 +36,7 @@ function MailingAddressForm({ onSubmit, control, errors,setValue }) {
   }, []);
   useEffect(() => {
     const fetchStateOptions = async () => {
-      
+
       try {
         const response = await statesService.getStatesByCountry(
           currentCountry.value
@@ -52,13 +52,13 @@ function MailingAddressForm({ onSubmit, control, errors,setValue }) {
       } catch (error) {
         toast.error(
           error?.Message ||
-            error?.message ||
-            error?.error ||
-            "Unable to get state options"
+          error?.message ||
+          error?.error ||
+          "Unable to get state options"
         );
       }
     };
-    if(!currentCountry)
+    if (!currentCountry)
       return
     setInititalStateOptions([]);
     setValue("mailingAddressState", null);
