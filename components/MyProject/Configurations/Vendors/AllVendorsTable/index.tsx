@@ -10,7 +10,6 @@ import {
 } from "reactstrap";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { VendorsService } from "services";
@@ -33,10 +32,7 @@ const AllVendorsTable = () => {
     "configuration_management",
     "create_configuration"
   );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
+  
   const [isLoading, setLoader] = useState(true);
   const [filters, setFilters] = useState({
     search: "",
@@ -133,19 +129,6 @@ const AllVendorsTable = () => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/configurations/edit-vendor/${props.data.ID}`);
-                }}
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

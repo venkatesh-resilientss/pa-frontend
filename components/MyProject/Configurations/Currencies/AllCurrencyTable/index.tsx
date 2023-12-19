@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { CurrencyService } from "services";
 import moment from "moment";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import CustomBadge from "components/Generic/CustomBadge";
 import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
@@ -34,10 +33,6 @@ const AllCurrencyTable = ({ rerender }) => {
     "create_configuration"
   );
 
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
 
@@ -127,19 +122,6 @@ const AllCurrencyTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  router.push(
-                    `/configurations/edit-currencies/${props.data?.ID}`
-                  )
-                }
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>

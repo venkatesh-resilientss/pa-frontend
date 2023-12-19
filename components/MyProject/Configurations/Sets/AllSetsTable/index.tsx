@@ -9,7 +9,6 @@ import {
   Input,
 } from "reactstrap";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
-import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
 import { SetsService } from "services";
 import moment from "moment";
@@ -37,10 +36,7 @@ const AllSetsTable = ({ rerender }) => {
     "configuration_management",
     "create_configuration"
   );
-  const hasEditConfigurationPermission = hasPermission(
-    "configuration_management",
-    "edit_configuration"
-  );
+  
   const dispatch = useDispatch();
 
   const [filters, setFilters] = useState({
@@ -139,17 +135,6 @@ const AllSetsTable = ({ rerender }) => {
             >
               <Action icon={detailsIocn} name={"View Details"} />
             </DropdownItem>
-            {hasEditConfigurationPermission && (
-              <DropdownItem
-                onClick={() =>
-                  router.push(`/configurations/edit-set/${props.data.ID}`)
-                }
-                tag="a"
-                className="w-100 cursor-pointer"
-              >
-                <Action icon={editIocn} name={"Edit"} />
-              </DropdownItem>
-            )}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
