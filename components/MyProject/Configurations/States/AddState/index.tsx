@@ -28,7 +28,7 @@ function AddState() {
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
     countryService.getCountries({
       search: "",
-      limit: 10,
+      limit: 200,
       offset: 0,
       is_active: true,
     })
@@ -41,9 +41,6 @@ function AddState() {
     };
   });
 
-  const loadCountryOptions = (values, callBack) => {
-    callBack(countrySelectFormat);
-  };
 
   const onSubmit = (data) => {
     const backendFormat = {
@@ -183,7 +180,6 @@ function AddState() {
                     isClearable={true}
                     className="react-select"
                     classNamePrefix="select"
-                    loadOptions={loadCountryOptions}
                     placeholder="Select Country"
                     defaultOptions={countrySelectFormat}
                     styles={selectStyles}
