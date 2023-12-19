@@ -36,7 +36,7 @@ function EditTaxCode() {
     reset,
   } = useForm();
   const [editMode, setEditMode] = useState(false);
-  const [isLoading,setLoader] = useState(false);
+  const [isLoading, setLoader] = useState(false);
   useEffect(() => {
     if (!taxcodesData) return;
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
@@ -67,7 +67,7 @@ function EditTaxCode() {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 200,
+          limit: 500,
           offset: 0,
           is_active: true,
         });
@@ -139,18 +139,18 @@ function EditTaxCode() {
             Dismiss
           </Button>
           {hasEditConfigurationPermission && (
-              <LoaderButton
-                buttonText={editMode ? "Save" : "Edit"}
-                isLoading={isLoading}
-                handleClick={() => {
-                  if (!editMode) {
-                    setEditMode(true);
-                    return;
-                  }
-                  handleSubmit(onSubmit)();
-                }}
-              />
-            )}
+            <LoaderButton
+              buttonText={editMode ? "Save" : "Edit"}
+              isLoading={isLoading}
+              handleClick={() => {
+                if (!editMode) {
+                  setEditMode(true);
+                  return;
+                }
+                handleSubmit(onSubmit)();
+              }}
+            />
+          )}
         </div>
       </div>
 

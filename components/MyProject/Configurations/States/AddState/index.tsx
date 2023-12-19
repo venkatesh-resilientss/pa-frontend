@@ -28,7 +28,7 @@ function AddState() {
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
     countryService.getCountries({
       search: "",
-      limit: 200,
+      limit: 500,
       offset: 0,
       is_active: true,
     })
