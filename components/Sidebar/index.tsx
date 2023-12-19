@@ -148,7 +148,7 @@ const Sidebar = ({ props }) => {
         router.push(`/productions/${temp1.ID}/dashboard`);
       }
     }
-  }, [productionData, router]);
+  }, [productionData]);
   useEffect(() => {
     if (cookie.get("accessToken")) {
       getProductionsList(searchText);
@@ -714,16 +714,21 @@ const Sidebar = ({ props }) => {
 
       {!userData?.data?.IsStaffUser && productionData?.length === 1 ? (
         <>
-          <div className="bd-highlight ms-1">
+          <div className="px-2 mt-2 sidebar-body">
             {sidebarRoutesProduction
               .filter((route: any) => {
+                const isSuperAdminWithFullAccess =
+                  userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                  userData?.data?.Role?.AccessType === "full_acceess";
+
                 const filterByName =
-                  (hasViewConfiguration || route?.name !== "Configurations") &&
-                  (hasViewTranscations || route?.name !== "Transactions") &&
-                  (hasViewPayments || route?.name !== "Payments");
+                  route.name === "Dashboard" ||
+                  (hasViewConfiguration && route?.name === "Configurations") ||
+                  (hasViewTranscations && route?.name === "Transactions") ||
+                  (hasViewPayments && route?.name === "Payments");
 
                 // Include the route only if filterByName is true
-                return filterByName;
+                return isSuperAdminWithFullAccess || filterByName;
               })
               .map((route: any, i) => (
                 <SideBarRoute route={route} key={`sidebar-route-${i}`} />
@@ -742,10 +747,11 @@ const Sidebar = ({ props }) => {
                       userData?.data?.Role?.AccessType === "full_acceess";
 
                     const filterByName =
-                      (hasViewConfiguration ||
-                        route?.name !== "Configurations") &&
-                      (hasViewTranscations || route?.name !== "Transactions") &&
-                      (hasViewPayments || route?.name !== "Payments");
+                      route.name === "Dashboard" ||
+                      (hasViewConfiguration &&
+                        route?.name === "Configurations") ||
+                      (hasViewTranscations && route?.name === "Transactions") ||
+                      (hasViewPayments && route?.name === "Payments");
 
                     // Include the route only if filterByName is true
                     return isSuperAdminWithFullAccess || filterByName;
@@ -792,10 +798,11 @@ const Sidebar = ({ props }) => {
               {sidebarRoutesProduction
                 .filter((route: any) => {
                   const filterByName =
-                    (hasViewConfiguration ||
-                      route?.name !== "Configurations") &&
-                    (hasViewTranscations || route?.name !== "Transactions") &&
-                    (hasViewPayments || route?.name !== "Payments");
+                    route.name === "Dashboard" ||
+                    (hasViewConfiguration &&
+                      route?.name === "Configurations") ||
+                    (hasViewTranscations && route?.name === "Transactions") ||
+                    (hasViewPayments && route?.name === "Payments");
 
                   // Include the route only if filterByName is true
                   return filterByName;
@@ -809,15 +816,16 @@ const Sidebar = ({ props }) => {
               {sidebarRoutesNonStaff
                 .filter((route: any) => {
                   const filterByName =
-                    (hasViewConfiguration ||
-                      route?.name !== "Configurations") &&
-                    (hasViewProduction || route?.name !== "Productions") &&
-                    (hasViewReports || route?.name !== "Reports") &&
-                    (hasViewUsers ||
-                      !route?.children?.some(
+                    route.name === "Dashboard" ||
+                    (hasViewConfiguration &&
+                      route?.name === "Configurations") ||
+                    (hasViewProduction && route?.name === "Productions") ||
+                    (hasViewReports && route?.name === "Reports") ||
+                    (route.name === "Settings" &&
+                      hasViewUsers &&
+                      route.children?.some(
                         (child) => child.name === "User Management"
                       ));
-
                   // Include the route only if filterByName is true
                   return filterByName;
                 })
