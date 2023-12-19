@@ -8,7 +8,6 @@ import {
   Button,
   Input,
 } from "reactstrap";
-
 import { useRouter } from "next/router";
 import moment from "moment";
 import { COAAccountsService } from "services";
@@ -22,14 +21,18 @@ import { useDispatch } from "react-redux";
 import { hasPermission } from "commonFunctions/functions";
 import { openBulkUploadCOAPopup } from "redux/slices/mySlices/configurations";
 import NoDataPage from "components/NoDataPage";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
+import detailsIocn from "assets/myIcons/list.svg";
 import { getSessionVariables } from "@/constants/function";
+import { TableLoading } from "@/components/Loaders";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { debounce, getLabel } from "@/commonFunctions/common";
 
-const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
+const AllChartOfAccountsTable = ({ rerender}) => {
   const dispatch = useDispatch();
   const coasService = new COAAccountsService();
   const router = useRouter();
-  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -43,27 +46,58 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
   const hasUploadConfigurationPermission =
     hasPermission("", "bulk_upload") && hasCreateConfiguration;
 
-  const fetchData = async (pageNumber) => {
-    const { clientID, projectID } = getSessionVariables();
-    try {
-      const response = await coasService.getCoasAccounts(
-        {
-          clientID,
-          projectID,
-        },
-        {
-          search: searchText,
-          pageLimit: recordsPerPage,
-          offset: pageNumber,
-        }
-      );
-      const data = response.result; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    }
+  const [isLoading, setLoader] = useState(true);
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await coasService.getCoasAccounts(
+          {
+            clientID,
+            projectID,
+          },
+          queryParams
+        );
+        setTableData({
+          data: response.result || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+        setLoader(false);
+      }
+    };
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -102,13 +136,16 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(
+                  `/configurations/edit-chartofaccounts/${props.data.ID}`
+                )
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 onClick={() =>
@@ -132,6 +169,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       headerName: "COA Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -140,6 +178,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       headerName: "COA Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -154,6 +193,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
     //   headerName: "Postable",
     //   field: "Postable",
     //   sortable: true,
+    // unSortIcon: true,
     //   resizable: true,
     //   cellStyle: { fontSize: "14px", fontWeight: "400" },
     //   headerClass: "custom-header-class",
@@ -162,16 +202,14 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       headerName: "COA Parent",
       field: "Parent.Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
-      cellRenderer: (params: any) => {
-        return (
-          <>
-            {params?.data?.Parent?.Name.charAt(0).toUpperCase() +
-              params?.data?.Parent?.Name.slice(1)}
-          </>
-        );
+      cellRenderer: (row: any) => {
+        if (row.value) {
+          return getLabel(row.value);
+        } else return "";
       },
     },
     {
@@ -189,6 +227,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
         );
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -202,6 +241,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
         return <div>{formattedDate}</div>;
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -211,6 +251,7 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -250,10 +291,8 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                <div style={{ fontSize: "16px", fontWeight: "400" }}>COAs</div>
-
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -280,26 +319,6 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
                     Bulk Upload
                   </Button>
                 )}
-
-                {/* <Button
-                  onClick={() =>
-                    router.push(`/configurations/add-chart-of-accounts`)
-                  }
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Create COA
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() =>
@@ -326,52 +345,23 @@ const AllChartOfAccountsTable = ({ rerender, searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      {/* {coasLoading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={dataSource}
-            columnDefs={columnDefs}
-            pageSize={10}
-            searchText={searchText}
-          />
-        </div>
-      ) : (
-        <>
-          {coasData?.result.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={dataSource}
-                columnDefs={columnDefs}
-                pageSize={9}
-                searchText={searchText}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create COA"}
-                buttonName={hasCreateConfiguration ? "Create COA" : ""}
-                buttonLink={"/configurations/add-chart-of-accounts"}
-              />
-            </div>
-          )}
-        </>
-      )} */}
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create COA" : ""}
-              buttonLink={"/configurations/add-chart-of-accounts"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create COA" : "No button"}
+            buttonLink={"/configurations/add-chart-of-accounts"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

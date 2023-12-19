@@ -32,7 +32,7 @@ function AddCurrency() {
     currencyService
       .createCurrency(backendFormat)
       .then(() => {
-        toast.success("Currency Added successfully");
+        toast.success("Currency added successfully");
         reset();
         setLoader(false);
         router.back();

@@ -8,8 +8,6 @@ import {
   Button,
   Input,
 } from "reactstrap";
-
-// import GridTable from "components/grid-tables/gridTable";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
 import { useRouter } from "next/router";
@@ -23,22 +21,18 @@ import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
 import { hasPermission } from "commonFunctions/functions";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getSessionVariables } from "@/constants/function";
+import { debounce } from "@/commonFunctions/common";
+import { TableLoading } from "@/components/Loaders";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import detailsIocn from "assets/myIcons/list.svg";
 
-import GridTable from "@/components/grid-tables/gridTable";
-import { useEffect, useRef, useState } from "react";
 const setsService = new SetsService();
 
-const AllSetsTable = ({ searchText, setSearchText }) => {
-  // const setsService = new SetsService();
+const AllSetsTable = ({ rerender }) => {
   const router = useRouter();
-  // const [searchText, setSearchText] = useState("");
-
-  const [tableData, setTableData] = useState() as any;
-  const [loading, setLoading] = useState() as any;
-  const [pageNumber, setPageNumber] = useState(1) as any;
-  const [pageLimit] = useState(10) as any;
-  const [sessionData, setSessionData] = useState() as any;
-
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
     "create_configuration"
@@ -49,62 +43,56 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
   );
   const dispatch = useDispatch();
 
-  const intervalIdRef = useRef(null);
-  const attemptsCountRef = useRef(0);
-  const maxAttempts = 10;
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
+  };
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  const [isLoading, setLoader] = useState(true);
 
   useEffect(() => {
-    const retrieveSessionData = () => {
-      // Retrieve data from sessionStorage
-      const clientID = parseInt(sessionStorage.getItem("clientid"));
-      const projectID = parseInt(sessionStorage.getItem("projectid"));
-
-      if ((clientID && projectID) || attemptsCountRef.current >= maxAttempts) {
-        clearInterval(intervalIdRef.current);
-        if (clientID && projectID) {
-          setSessionData({ clientID: clientID, projectID: projectID });
-        }
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const { clientID, projectID } = getSessionVariables();
+        if (!clientID || !projectID)
+          throw new Error("Client and Project not found");
+        const response = await setsService.getSets(queryParams, {
+          clientID,
+          projectID,
+        });
+        setTableData({
+          data: response.data || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(
+          error?.error ||
+            error?.Message ||
+            error?.message ||
+            "Unable to get data"
+        );
+        setLoader(false);
       }
-
-      // Increment the attempts count
-      attemptsCountRef.current += 1;
     };
 
-    // Retrieve session data initially
-    retrieveSessionData();
-
-    // Set up interval to check for session data every 1 second
-    intervalIdRef.current = setInterval(retrieveSessionData, 1000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalIdRef.current);
-  }, []);
-
-  useEffect(() => {
-    if (sessionData) {
-      setLoading(true);
-      // const pageNumber = 1
-      const offfset = (pageNumber - 1) * pageLimit;
-      const queryParams = {
-        search: searchText,
-        pageLimit: pageLimit,
-        offset: offfset,
-      };
-      const payload = {
-        clientId: sessionData.clientID,
-        projectId: sessionData.projectID,
-      };
-      setsService
-        .getSets(queryParams, payload)
-        .then((response) => {
-          setTableData(response);
-          setLoading(false);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    }
-  }, [sessionData, searchText, pageNumber]);
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -143,13 +131,14 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={() =>
+                router.push(`/configurations/edit-set/${props.data.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 onClick={() =>
@@ -172,6 +161,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       headerName: "Set Code",
       field: "Code",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -180,6 +170,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       headerName: "Set Name",
       field: "Name",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -194,6 +185,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       headerName: "Description",
       field: "Description",
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -219,6 +211,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
         );
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -234,6 +227,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
         }
       },
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -243,6 +237,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
       field: "IsActive",
       cellRenderer: StateBadge,
       sortable: true,
+      unSortIcon: true,
       resizable: true,
       cellStyle: { fontSize: "14px", fontWeight: "400" },
       headerClass: "custom-header-class",
@@ -282,12 +277,8 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
                 className="d-flex align-items-center"
                 style={{ gap: "10px" }}
               >
-                {/* <div style={{ fontSize: "16px", fontWeight: "400" }}>
-                  {setsData?.result.length} Sets
-                </div> */}
-
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -312,24 +303,6 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
                   />{" "}
                   Bulk Upload
                 </Button>
-
-                {/* <Button
-                  onClick={() => router.push(`/configurations/add-set`)}
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Create Set
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     onClick={() => router.push(`/configurations/add-set`)}
@@ -346,7 +319,7 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
                       src={plusWhiteIcon}
                       alt="plus-icon"
                     />{" "}
-                    Create Sets
+                    Create Set
                   </Button>
                 )}
               </div>
@@ -354,56 +327,24 @@ const AllSetsTable = ({ searchText, setSearchText }) => {
           </CardBody>
         </Card>
       </div>
-      {loading ? (
-        <div className="mt-3">
-          <GridTable
-            rowData={{}}
-            columnDefs={columnDefs}
-            pageSize={pageLimit}
-            searchText={searchText}
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            setLoading={setLoading}
-          />
-        </div>
-      ) : (
-        <>
-          {tableData?.data?.length > 0 ? (
-            <div className="mt-3">
-              <GridTable
-                rowData={tableData}
-                columnDefs={columnDefs}
-                pageSize={pageLimit}
-                searchText={searchText}
-                pageNumber={pageNumber}
-                setPageNumber={setPageNumber}
-                setLoading={setLoading}
-              />
-            </div>
-          ) : (
-            <div>
-              <NoDataPage
-                // buttonName={"Create Set"}
-                buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-                buttonLink={"/configurations/add-set"}
-              />
-            </div>
-          )}
-        </>
-      )}
-      {/* <AGGridTable
-        rerender={rerender}
-        columnDefs={columnDefs}
-        searchText={searchText}
-        fetchData={fetchData1}
-        pageSize={pageLimit}
-        noDataPage={() => (
+      <div className="mt-3">
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
           <NoDataPage
             buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
             buttonLink={"/configurations/add-set"}
           />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
         )}
-      /> */}
+      </div>
     </div>
   );
 };

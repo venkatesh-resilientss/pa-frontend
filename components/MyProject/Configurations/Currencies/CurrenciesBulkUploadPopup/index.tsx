@@ -177,7 +177,8 @@ const CurrenciesBulkUploadPopup = ({setRerender, rerender }) => {
           <Button
             onClick={() => {
               dispatch(closeBulkUploadCurrenciesPopup("close"));
-              setUploadedFiles([])
+              setUploadedFiles([]);
+              setLoader(false);
             }}
             color="white"
             style={{

@@ -9,8 +9,6 @@ import {
 } from "../lib/endpoints";
 
 class COAAccountsService extends APIService {
-  /** data => {clientId : 0, projectId : 0} */
-  /** params : {pageLimit : 10, search  : "", offset : 0 } */
   getCoasAccounts(data, params?): Promise<any> {
     const queryParams = new URLSearchParams(params).toString();
     return this.post(`${GET_COAACCOUNTS}?${queryParams}`, data)

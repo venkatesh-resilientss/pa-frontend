@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveStatus }) {
+function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveStatus,editMode }) {
   const {
     // control,
     handleSubmit,
@@ -159,6 +159,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Vendor Name"
                   invalid={errors.vendorName && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -187,6 +188,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Vendor Code ex:102910381"
                   invalid={errors.vendorCode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -215,6 +217,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   options={PaymentOptions}
                   placeholder="Select an option"
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -243,6 +246,8 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Legal Name"
                   invalid={errors.legalName && true}
                   {...field}
+                  disabled={!editMode}
+
                 />
               )}
             />
@@ -271,6 +276,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Email"
                   invalid={errors.vendorEmail && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -302,6 +308,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Select Entity"
                   defaultOptions={initialEntityOptions}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -329,6 +336,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   options={VendorsAddressTypes}
                   placeholder="Select Default Address"
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -356,6 +364,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   options={countrySelectOptions}
                   placeholder="Select Country"
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -383,6 +392,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   options={stateSelectOptions}
                   placeholder="Select State"
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -410,6 +420,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder=" Enter Tax Id"
                   invalid={errors.taxId && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -441,6 +452,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Select COA Parent"
                   defaultOptions={initialcoaOptions}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -467,6 +479,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Routing Number"
                   invalid={errors.achRoutingNumber && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -493,6 +506,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder=" Enter Account Number"
                   invalid={errors.achAccountNumber && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -520,6 +534,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder=" Enter Payee Name"
                   invalid={errors.payeeName && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -543,6 +558,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                     onChange={() => {
                       setPettyCashEnabled(!isPettyCashEnabled);
                     }}
+                    disabled={!editMode}
                   />
                 )}
               />
@@ -572,6 +588,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                     options={[]}
                     placeholder="Select an option"
                     styles={selectStyles}
+                    isDisabled={!editMode}
                   />
                 )}
               />
@@ -600,6 +617,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder=" Enter Payee Name"
                   invalid={errors.contactName && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -627,6 +645,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   placeholder="Enter Contact Number"
                   invalid={errors.contactNumber && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -656,6 +675,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   onChange={() => {
                     setActiveStatus(true);
                   }}
+                  disabled={!editMode}
                 />
                 <div>Active</div>
               </div>
@@ -668,6 +688,7 @@ function BasicDetailsForm({ control, onSubmit, errors, activeStatus, setActiveSt
                   onChange={() => {
                     setActiveStatus(false);
                   }}
+                  disabled={!editMode}
                 />
                 <div>In-Active</div>
               </div>

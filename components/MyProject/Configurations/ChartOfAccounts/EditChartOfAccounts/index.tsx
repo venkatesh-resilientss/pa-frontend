@@ -1,9 +1,8 @@
-import { Button, Col, Form, Input, Label,Spinner } from "reactstrap";
+import { Button, Col, Form, Input, Label } from "reactstrap";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import useSWR from "swr";
 import { COAAccountsService } from "services";
 import { COAAccountyTypeOptions } from "@/constants/common";
 import { formValidationRules } from "@/constants/common";
@@ -11,14 +10,21 @@ import { selectStyles } from "constants/common";
 import Select from "react-select";
 import { getSessionVariables } from "@/constants/function";
 import AsyncSelect from "react-select/async";
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 
 function EditChartOfAccounts() {
   const router = useRouter();
   const { id } = router.query;
-  const [isLoading,setLoader] = useState(false);
+  const [isLoading, setLoader] = useState(false);
   const coaValidationRules = formValidationRules.chartofaccounts;
   const coaAccountsService = new COAAccountsService();
   const [initialcoaOptions, setInitialcoaOptions] = useState([]);
+  const [editMode,setEditMode] = useState(false);
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
 
   useEffect(() => {
     const fetchInitialcoaOptions = async () => {
@@ -34,10 +40,10 @@ function EditChartOfAccounts() {
         );
         const options = res?.result
           .filter((item) => item.IsActive)
-          .filter(item => item.ID != id)
+          .filter((item) => item.ID != id)
           .map((item) => ({
             value: item.ID,
-          label: `${item.Name} - ${item.Code}`,
+            label: `${item.Code} - ${item.Name}`,
           }));
         setInitialcoaOptions(options);
       } catch (error) {
@@ -61,7 +67,7 @@ function EditChartOfAccounts() {
       );
       const options = res?.result
         .filter((item) => item.IsActive)
-        .filter(item => item.ID != id)
+        .filter((item) => item.ID != id)
         .map((item) => ({
           value: item.ID,
           label: `${item.Name} - ${item.Code}`,
@@ -74,12 +80,6 @@ function EditChartOfAccounts() {
   };
   const [postableActiveStatus, setPostableActiveStatus] = useState(false);
 
-  const fetchCOADetails = (id) => coaAccountsService.coaDetails(id);
-
-  const { data: coaData } = useSWR(id ? ["COA_DETAILS", id] : null, () =>
-    fetchCOADetails(id)
-  );
-
   const {
     handleSubmit,
     formState: { errors },
@@ -88,56 +88,69 @@ function EditChartOfAccounts() {
     reset,
   } = useForm();
 
-  const [activeStatus, setActiveStatus] = useState(coaData?.IsActive);
+  const [activeStatus, setActiveStatus] = useState(false);
 
   useEffect(() => {
-    if (!coaData) return;
-
-    coaData?.Name && setValue("COAName", coaData?.Name);
-    coaData?.Code && setValue("COACode", coaData?.Code);
-
-    coaData?.Description && setValue("Description", coaData?.Description);
-    coaData?.Type && setValue("AccountType", coaData?.Type);
-    const COAParent = {
-      label : coaData?.Parent?.Name,
-      value  : coaData?.Parent?.ID
-    }
-    const defaultAccount = COAAccountyTypeOptions.find(item=> item.value === coaData.AccountType);
-    setValue("AccountType",defaultAccount)
-    setPostableActiveStatus(coaData?.Postable)
-    setValue("COAParent",COAParent)
-    setActiveStatus(coaData?.IsActive);
-  }, [coaData]);
-
-  const cOAAccountsService = new COAAccountsService();
-
-  const onSubmit = (data) => {
-    const { clientID, projectID } = getSessionVariables();
-    const backendFormat = {
-      name: data.COAName,
-      description: data.Description,
-      IsActive: activeStatus,
-      code: data.COACode,
-      parentID: parseInt(data.COAParent.value),
-      accountType: data.AccountType.value,
-      postable: coaData?.IsActive,
-      clientID,
-      projectID,
+    const fetchData = async (id: any) => {
+      try {
+        const response = await coaAccountsService.coaDetails(id);
+        const data = response;
+        /**Set form value */
+        setValue("COAName", data.Name);
+        setValue("COACode", data.Code);
+        setValue("Description", data.Description);
+        setValue(
+          "AccountType",
+          COAAccountyTypeOptions.find((item) => item.value === data.AccountType)
+        ); /** Find and assign a/c to value */
+        if (data.Parent)
+          setValue("COAParent", {
+            label: data.Parent.Name,
+            id: data.Parent.ID,
+          });
+        setActiveStatus(data.IsActive);
+        setPostableActiveStatus(data.Postable)
+      } catch (error) {
+        toast.error(
+          error?.message ||
+            error?.Message ||
+            error?.error ||
+            "Unable to fetch data"
+        );
+      }
     };
-    setLoader(true)
-    cOAAccountsService
-      .editCOA(id, backendFormat)
-      .then(() => {
-        toast.success("COA Edited successfully");
-        router.push('/configurations/coaaccounts');
-        setLoader(false);
-        reset();
-      })
-      .catch(() => {
-        // toast.error(error.error || error.Message || "Unable to insert data");
-        toast.error('Duplicate COA key'); // customize and edit later
-        setLoader(false);
-      });
+    const { id } = router.query;
+    if (id) fetchData(id);
+  }, [router.query]);
+
+
+  const onSubmit = async (data) => {
+    setLoader(true);
+    try{
+      const { clientID, projectID} = getSessionVariables();
+      if( !clientID || !projectID){
+        throw new Error('Client and Project not found');
+      }
+      const payload = {
+        name: data.COAName,
+        description: data.Description,
+        IsActive: activeStatus,
+        code: data.COACode,
+        parentID: data.COAParent ? parseInt(data.COAParent) : null,
+        accountType: data.AccountType.value,
+        postable: postableActiveStatus,
+        clientID,
+        projectID,
+      };
+      await coaAccountsService.editCOA(id,payload);
+      toast.success('COA updated successfully');
+      router.push('/configurations/coaaccounts');
+      reset();
+      setLoader(false);
+    }catch(error){
+      setLoader(false);
+      toast.error(error?.error || error?.Message || error?.message || 'Unable to edit COA');
+    }
   };
 
   return (
@@ -156,7 +169,7 @@ function EditChartOfAccounts() {
         >
           Edit Chart Of Accounts
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -170,28 +183,26 @@ function EditChartOfAccounts() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            {isLoading ? (
-              <Spinner animation="border" role="status" size="sm" />
-            ) : (
-              "Save"
+          {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
             )}
-          </Button>
         </div>
       </div>
 
       <hr style={{ height: "2px" }} />
       <Form
         style={{ fontSize: "12px", fontWeight: "400", gap: "10px" }}
-        className=" mt-2 d-flex flex-column"
+        className=" mt-2 mb-4 d-flex flex-column"
         onSubmit={handleSubmit(onSubmit)}
       >
         {" "}
@@ -210,6 +221,7 @@ function EditChartOfAccounts() {
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   invalid={errors.COAName && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -235,6 +247,7 @@ function EditChartOfAccounts() {
                   invalid={errors.COACode && true}
                   style={{ fontSize: "12px", fontWeight: "400" }}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -262,6 +275,7 @@ function EditChartOfAccounts() {
                   placeholder="Select COA Parent"
                   defaultOptions={initialcoaOptions}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -288,6 +302,7 @@ function EditChartOfAccounts() {
                   options={COAAccountyTypeOptions}
                   placeholder="Select an option"
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -316,6 +331,7 @@ function EditChartOfAccounts() {
                     height: "81px",
                   }}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -341,6 +357,7 @@ function EditChartOfAccounts() {
                   onChange={() => {
                     setPostableActiveStatus(true);
                   }}
+                  disabled={!editMode}
                 />
                 <div>Yes</div>
               </div>
@@ -353,6 +370,7 @@ function EditChartOfAccounts() {
                   onChange={() => {
                     setPostableActiveStatus(false);
                   }}
+                  disabled={!editMode}
                 />
                 <div>No</div>
               </div>
@@ -372,6 +390,7 @@ function EditChartOfAccounts() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -384,6 +403,7 @@ function EditChartOfAccounts() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>

@@ -3,7 +3,8 @@ import {CREATE_LOCATIONS, DELETE_LOCATION, EDIT_LOCATION, GET_LOCATIONS, LOCATIO
 
 class LocationsService extends APIService {
   getLocations(params?,data?): Promise<any> {
-    return this.post(`${GET_LOCATIONS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`,data)
+    const queryParams = new URLSearchParams(params).toString();
+    return this.post(`${GET_LOCATIONS}?${queryParams}`,data)
       .then((res) => {
         return res?.data;
       })

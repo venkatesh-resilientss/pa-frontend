@@ -3,9 +3,10 @@
 
   class PeriodsService extends APIService {
     getPeriods(data,params?): Promise<any> {
+      const queryParams = new URLSearchParams(params).toString();
       return this.post(
         params ? 
-        `${GET_PERIODS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}` :
+        `${GET_PERIODS}?${queryParams}` :
         `${GET_PERIODS}`,
         data
         )

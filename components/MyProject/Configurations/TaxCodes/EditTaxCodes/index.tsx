@@ -9,14 +9,18 @@ import { formValidationRules } from "@/constants/common";
 import AsyncSelect from "react-select/async";
 import { selectStyles } from "@/constants/common";
 import { getLabel } from "@/commonFunctions/common";
-
+import { hasPermission } from "@/commonFunctions/functions";
+import { LoaderButton } from "@/components/Loaders";
 function EditTaxCode() {
   const router = useRouter();
   const { id } = router.query;
   const taxCodeValidationRules = formValidationRules.taxCodes;
   const taxCodeService = new TaxCodesService();
   const countryService = new CountryService();
-
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
+  );
   const fetchTaxCodeDetails = (id) => taxCodeService.taxCodeDetails(id);
 
   const { data: taxcodesData } = useSWR(
@@ -31,7 +35,8 @@ function EditTaxCode() {
     control,
     reset,
   } = useForm();
-
+  const [editMode, setEditMode] = useState(false);
+  const [isLoading,setLoader] = useState(false);
   useEffect(() => {
     if (!taxcodesData) return;
     taxcodesData?.Code && setValue("taxcode", taxcodesData?.Code);
@@ -56,24 +61,31 @@ function EditTaxCode() {
   );
 
   const [activeStatus, setActiveStatus] = useState(taxcodesData?.IsActive);
-  const { data: countryData } = useSWR("LIST_COUNTRY", () =>
-    countryService.getCountries({
-      search: "",
-      limit: 25,
-      offset: 0,
-      is_active: true,
-    })
-  );
-
-  const countrySelectFormat = countryData?.data.map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
+  const [initialCountryOptions, setInitialCountryOptions] = useState([]);
+  useEffect(() => {
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries({
+          search: "",
+          limit: 25,
+          offset: 0,
+          is_active: true,
+        });
+        const options = res?.data.map((item) => ({
+          value: item.ID,
+          label: `${item.Code} - ${item.Name}`,
+        }));
+        setInitialCountryOptions(options);
+      } catch (error) {
+        toast.error(
+          error?.Message || error?.error || "Error while fetching countries"
+        );
+      }
     };
-  });
-
-  const loadCountryOptions = (callBack) => {
-    callBack(countrySelectFormat);
+    fetchInitialCountryOptions();
+  }, []);
+  const loadCountryOptions = (callback) => {
+    callback(initialCountryOptions);
   };
   const onSubmit = (data) => {
     const backendFormat = {
@@ -83,17 +95,18 @@ function EditTaxCode() {
       countryID: parseInt(data.country.value),
       IsActive: activeStatus,
     };
-
+    setLoader(true);
     taxCodeService
       .editTaxCode(id, backendFormat)
       .then(() => {
         toast.success("TaxCode Edited successfully");
         mutate(taxCodeMutate());
         router.push("/configurations/taxcodes");
-
+        setLoader(false);
         reset();
       })
       .catch((error) => {
+        setLoader(false);
         toast.error(error?.error || error?.Message || "Unable to edit TaxCode");
       });
   };
@@ -114,7 +127,7 @@ function EditTaxCode() {
         >
           Edit Tax Code
         </div>
-        <div className="d-flex me-2 " style={{ gap: "10px" }}>
+        <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
           <Button
             onClick={() => router.back()}
             style={{
@@ -128,17 +141,19 @@ function EditTaxCode() {
           >
             Dismiss
           </Button>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            color="primary"
-            style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              height: "34px",
-            }}
-          >
-            Save
-          </Button>
+          {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
         </div>
       </div>
 
@@ -163,6 +178,7 @@ function EditTaxCode() {
                   placeholder="Tax Code"
                   invalid={errors.taxcode && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -188,6 +204,7 @@ function EditTaxCode() {
                   placeholder="Tax Code"
                   invalid={errors.taxcodename && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -215,8 +232,9 @@ function EditTaxCode() {
                   classNamePrefix="select"
                   loadOptions={loadCountryOptions}
                   placeholder="Select Country"
-                  defaultOptions={countrySelectFormat}
+                  defaultOptions={initialCountryOptions}
                   styles={selectStyles}
+                  isDisabled={!editMode}
                 />
               )}
             />
@@ -247,6 +265,7 @@ function EditTaxCode() {
                   type="textarea"
                   invalid={errors.description && true}
                   {...field}
+                  disabled={!editMode}
                 />
               )}
             />
@@ -274,6 +293,7 @@ function EditTaxCode() {
                 onChange={() => {
                   setActiveStatus(true);
                 }}
+                disabled={!editMode}
               />
               <div>Active</div>
             </div>
@@ -286,6 +306,7 @@ function EditTaxCode() {
                 onChange={() => {
                   setActiveStatus(false);
                 }}
+                disabled={!editMode}
               />
               <div>In-Active</div>
             </div>

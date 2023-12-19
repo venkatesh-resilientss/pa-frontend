@@ -21,12 +21,16 @@ import Image from "next/image";
 import plusIcon from "assets/myIcons/plusIcon1.svg";
 import plusWhiteIcon from "assets/myIcons/plus.svg";
 import NoDataPage from "components/NoDataPage";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import { debounce } from "@/commonFunctions/common";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { TableLoading } from "@/components/Loaders";
+import detailsIocn from "assets/myIcons/list.svg";
 
-const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
+const AllTaxCodesTable = ({ rerender }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const recordLimit = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -40,24 +44,43 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
   const hasBulkUploadConfiguration = hasPermission("", "bulk_upload");
 
   const taxcodesService = new TaxCodesService();
-
-  const fetchData = async (pageNumber) => {
-    try {
-      const response = await taxcodesService.getTaxCodes({
-        search: searchText,
-        limit: recordLimit,
-        offset: pageNumber,
-      });
-      const data = response.data; // Adjust based on the actual structure of the response
-
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    } finally {
-      // setBankLoading(false)
-    }
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: 0,
+  });
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
+  const [isLoading, setLoader] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const response = await taxcodesService.getTaxCodes(queryParams);
+        setTableData({
+          data: response.data || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(error?.error || error?.Message || "Unable to get data");
+        setLoader(false);
+      }
+    };
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -96,13 +119,15 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem className="w-100">
-            <Action
-              icon={detailsIocn}
-              name={"View Details"}
-              
-            />
-          </DropdownItem> */}
+            <DropdownItem
+              className="w-100"
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(`/configurations/edit-taxcode/${props.data.ID}`);
+              }}
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
@@ -116,17 +141,6 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
                 <Action icon={editIocn} name={"Edit"} />
               </DropdownItem>
             )}
-            {/* {hasDeactivateConfiguration && (
-              <DropdownItem
-                tag="a"
-                className="w-100 cursor-pointer"
-                onClick={() =>
-                  dispatch(openDeleteTaxCodesPopup(props.data?.ID))
-                }
-              >
-                <Action icon={deleteIcon} name={"Delete"} />
-              </DropdownItem>
-            )} */}
           </DropdownMenu>
         </UncontrolledDropdown>
       </div>
@@ -259,7 +273,7 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
                 </div>
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   className="searchConfig"
                   type="search"
                   placeholder="Search..."
@@ -289,23 +303,6 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
                   </Button>
                 )}
 
-                {/* <Button
-                  style={{
-                    height: "38px",
-                    backgroundColor: "#00AEEF",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    border: "none",
-                  }}
-                  onClick={() => router.push(`/configurations/add-tax-code`)}
-                >
-                  <Image
-                    style={{ width: "14px", height: "14px" }}
-                    src={plusWhiteIcon}
-                    alt="plus-icon"
-                  />{" "}
-                  Add Tax Code
-                </Button> */}
                 {hasCreateConfiguration && (
                   <Button
                     style={{
@@ -332,19 +329,24 @@ const AllTaxCodesTable = ({ rerender, searchText, setSearchText }) => {
       </div>
 
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordLimit}
-          noDataPage={() => (
-            <NoDataPage
-              buttonName={hasCreateConfiguration ? "Create Set" : "No button"}
-              buttonLink={"/configurations/add-set"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={
+              hasCreateConfiguration ? "Create Tax Code" : "No button"
+            }
+            buttonLink={"/configurations/add-tax-code"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

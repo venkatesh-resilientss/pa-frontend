@@ -8,9 +8,13 @@ import useSWR from "swr";
 import { selectStyles } from "@/constants/common";
 import { formValidationRules } from "@/constants/common";
 import { getLabel } from "@/commonFunctions/common";
+import { useState } from "react";
+import { LoaderButton } from "@/components/Loaders/";
+
 function AddState() {
   const router = useRouter();
   const statesValidationRules = formValidationRules.states;
+  const [isLoading, setLoader] = useState(false);
   const {
     control,
     handleSubmit,
@@ -24,7 +28,7 @@ function AddState() {
   const { data: countryData } = useSWR("LIST_COUNTRY", () =>
     countryService.getCountries({
       search: "",
-      limit: 25,
+      limit: 10,
       offset: 0,
       is_active: true,
     })
@@ -48,15 +52,17 @@ function AddState() {
       Description: data.description,
       CountryID: data.country?.value,
     };
-
+    setLoader(true);
     statesService
       .createState(backendFormat)
       .then(() => {
         toast.success("State Added successfully");
         reset();
-        router.back();
+        router.push("/configurations/states");
+        setLoader(false);
       })
       .catch((error) => {
+        setLoader(false);
         toast.error(error?.error || error?.Message || "Unable to add State");
       });
   };
@@ -78,9 +84,12 @@ function AddState() {
           >
             Add New State
           </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div
+            className="d-flex me-2 align-items-center"
+            style={{ gap: "10px" }}
+          >
             <Button
-              onClick={() => router.back()}
+              onClick={() => router.push("/configurations/states")}
               style={{
                 fontSize: "14px",
                 fontWeight: "400",
@@ -92,17 +101,11 @@ function AddState() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
+            <LoaderButton
+              handleClick={handleSubmit(onSubmit)}
+              buttonText={"Save"}
+              isLoading={isLoading}
+            />
           </div>
         </div>
 

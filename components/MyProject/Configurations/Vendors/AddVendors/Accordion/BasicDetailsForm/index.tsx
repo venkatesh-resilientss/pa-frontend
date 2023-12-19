@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
-import useSWR from "swr";
 import { CountryService, StatesService } from "services";
 import { selectStyles } from "constants/common";
 import { COAAccountsService, EntitiesService } from "services";
@@ -14,19 +13,24 @@ import { useEffect } from "react";
 import { getSessionVariables } from "@/constants/function";
 import { useState } from "react";
 import AsyncSelect from "react-select/async";
-function BasicDetailsForm({ control, onSubmit, errors }) {
+import { toast } from  'react-toastify'; 
+function BasicDetailsForm({ control, onSubmit, errors,setValue }) {
   const {
     // control,
     handleSubmit,
   } = useForm();
   const [isPettyCashEnabled, setPettyCashEnabled] = useState(false);
+  const vendorsValidationRules = formValidationRules.vendors;
   const statesService = new StatesService();
   const countryService = new CountryService();
-  const vendorsValidationRules = formValidationRules.vendors;
+  const entityServices = new EntitiesService();
   const coaAccountsService = new COAAccountsService();
 
   const [initialcoaOptions, setInitialcoaOptions] = useState([]);
-
+  const [initialEntityOptions, setInitialEntityOptions] = useState([]);
+  const [initialCountryOptions, setInitialCountryOptions] = useState([]);
+  const [initialStateOptions,setInititalStateOptions] = useState([]);
+  const [currentCountry,setCurrentCountry] = useState(null);
   useEffect(() => {
     const fetchInitialcoaOptions = async () => {
       const { clientID, projectID } = getSessionVariables();
@@ -35,7 +39,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
           { clientID, projectID },
           {
             search: "",
-            pageLimit: 25,
+            limit: 200,
             offset: 0,
           }
         );
@@ -45,12 +49,70 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
         }));
         setInitialcoaOptions(options);
       } catch (error) {
-        console.error("Error fetching initial options:", error);
+        console.error("Error fetching COA options:", error);
+      }
+    };
+    const fetchInitialEntityOptions = async () => {
+      try {
+        const res = await entityServices.getEntities({
+          search: "",
+          limit: 25,
+          offset: 0,
+        });
+        const options = res?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialEntityOptions(options);
+      } catch (error) {
+        console.error("Error fetching Entity options:", error);
+      }
+    };
+    const fetchInitialCountryOptions = async () => {
+      try {
+        const res = await countryService.getCountries({
+          search: "",
+          limit: 25,
+          offset: 0,
+        });
+        const options = res?.data?.map((item) => ({
+          value: item.ID,
+          label: item.Name,
+        }));
+        setInitialCountryOptions(options);
+      } catch (error) {
+        // console.error("Error fetching Country options:", error);
       }
     };
 
+    fetchInitialEntityOptions();
     fetchInitialcoaOptions();
+    fetchInitialCountryOptions();
   }, []);
+
+  useEffect(()=>{
+    
+    const fetchStateOptions = async ()=>{
+      try{
+        const response = await statesService.getStatesByCountry(currentCountry.value);
+        const options = response.map(i=>{
+          return {
+            value : i.ID,
+            label : i.Name,
+            countryId : i.CountryID
+          }
+        })
+        setInititalStateOptions(options);
+      }catch(error){
+        toast.error(error?.Message || error?.message || error?.error || 'Unable to get state options');
+      }
+    }
+    if(!currentCountry)
+      return
+    setInititalStateOptions([]);
+    setValue('workState',null)
+    fetchStateOptions();
+  },[currentCountry]);
 
   const loadCoaOptions: any = async (inputValue, callback) => {
     const { clientID, projectID } = getSessionVariables();
@@ -74,69 +136,22 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
     }
   };
 
-  const [initialEntityOptions, setInitialEntityOptions] = useState([]);
-  const entityServices = new EntitiesService();
-  useEffect(() => {
-    const fetchInitialEntityOptions = async () => {
-      try {
-        const res = await entityServices.getEntities(
-          {
-            search: "",
-            pageLimit: 25,
-            offset: 0,
-          }
-        );
-        const options = res?.map((item) => ({
-          value: item.ID,
-          label: item.Name,
-        }));
-        setInitialEntityOptions(options);
-      } catch (error) {
-        console.error("Error fetching initial options:", error);
-      }
-    };
-
-    fetchInitialEntityOptions();
-  }, [])
-
   const loadEntityOptions: any = async (inputValue, callback) => {
     try {
-      const res = await entityServices.getEntities(
-        {
-          search: inputValue.toString(),
-          pageLimit: 25,
-          offset: 0,
-        }
-      );
+      const res = await entityServices.getEntities({
+        search: inputValue.toString(),
+        limit: 25,
+        offset: 0,
+      });
       const options = res?.map((item) => ({
         value: item.ID,
         label: item.Name,
       }));
-      setInitialEntityOptions(options);
       callback(options);
     } catch (error) {
       console.error("Error fetching initial options:", error);
     }
   };
-  const { data: statesData } = useSWR("LIST_STATES", () =>
-    statesService.getStates({ search: "", limit: 25, offset: 0, is_active: true })
-  );
-  const stateSelectOptions = statesData?.data.filter(item => item.IsActive).map((b) => {
-    return {
-      value: b.ID,
-      label: b.Name,
-    };
-  });
-
-  const { data: countryData } = useSWR("LIST_COUNTRIES", () => countryService.getCountries({
-    search: "", limit: 25, offset: 0, is_active: true
-  }));
-  const countrySelectOptions = countryData?.data.filter(item => item.IsActive).map((item) => {
-    return {
-      value: item.ID,
-      label: item.Name,
-    };
-  });
   return (
     <div className="text-black">
       <Form
@@ -355,15 +370,19 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={countrySelectOptions}
+                  options={initialCountryOptions}
                   placeholder="Select Country"
                   styles={selectStyles}
+                  onChange={(e)=>{
+                    setCurrentCountry(e);
+                    setValue("vendorcountry",e)
+                  }}
                 />
               )}
             />
-            {errors.country && (
+            {errors.vendorcountry && (
               <span className="text-danger">
-                {errors.country.message as React.ReactNode}
+                {errors.vendorcountry.message as React.ReactNode}
               </span>
             )}
           </Col>
@@ -382,7 +401,7 @@ function BasicDetailsForm({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={stateSelectOptions}
+                  options={initialStateOptions}
                   placeholder="Select State"
                   styles={selectStyles}
                 />

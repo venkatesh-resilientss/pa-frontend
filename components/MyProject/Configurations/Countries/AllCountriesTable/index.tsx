@@ -12,7 +12,6 @@ import moment from "moment";
 import CustomBadge from "components/Generic/CustomBadge";
 import actionIcon from "assets/MyImages/charm_menu-kebab.svg";
 import editIocn from "assets/myIcons/edit_square.svg";
-import AGGridTable from "@/components/grid-tables/AGGridTable";
 import { useRouter } from "next/router";
 import CountryService from "services/country.service";
 import Image from "next/image";
@@ -22,11 +21,15 @@ import { hasPermission } from "commonFunctions/functions";
 import { openBulkUploadCountriesPopup } from "redux/slices/mySlices/configurations";
 import { useDispatch } from "react-redux";
 import NoDataPage from "components/NoDataPage";
-
-const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { TableLoading } from "@/components/Loaders";
+import GridWithPagination from "@/components/dataTable/GridWithPagination";
+import detailsIocn from "assets/myIcons/list.svg";
+import { debounce } from "@/commonFunctions/common";
+const AllCountriesTable = ({ rerender}) => {
   const countryService = new CountryService();
   const router = useRouter();
-  const recordsPerPage = 10;
 
   const hasCreateConfiguration = hasPermission(
     "configuration_management",
@@ -42,22 +45,43 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
 
   const dispatch = useDispatch();
 
-  const fetchData = async (pageNumber) => {
-    try {
-      const response = await countryService.getCountries({
-        search: searchText,
-        limit: recordsPerPage,
-        offset: pageNumber,
-      });
-      const data = response.data; // Adjust based on the actual structure of the response
-      const totalRecords = response.total_records; // Adjust based on the actual structure of the response
-      return { data, totalRecords };
-    } catch (error) {
-      return { data: null, totalRecords: 0 };
-    }
+  const [tableData, setTableData] = useState({
+    data: [],
+    total_records: [],
+  });
+  const [filters, setFilters] = useState({
+    search: "",
+    limit: 10,
+    offset: 0,
+    pageNumber: 1,
+  });
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    setFilters({
+      ...filters,
+      search: searchText,
+    });
   };
-
-
+  const [isLoading, setLoader] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const queryParams = {
+          ...filters,
+        };
+        const response = await countryService.getCountries(queryParams);
+        setTableData({
+          data: response.data || [],
+          total_records: response.total_records,
+        });
+        setLoader(false);
+      } catch (error) {
+        toast.error(error?.error || error?.Message || "Unable to get data");
+        setLoader(false);
+      }
+    };
+    fetchData();
+  }, [filters, rerender]);
 
   const StateBadge = (props) => {
     const sateDir = {
@@ -96,17 +120,17 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
             />
           </DropdownToggle>
           <DropdownMenu end container="body">
-            {/* <DropdownItem>
-              <Action
-                icon={detailsIocn}
-                name={"View Details"}
-                
-              />
-            </DropdownItem> */}
+            <DropdownItem
+              onClick={() =>
+                router.push(`/configurations/edit-country/${props.data?.ID}`)
+              }
+            >
+              <Action icon={detailsIocn} name={"View Details"} />
+            </DropdownItem>
             {hasEditConfigurationPermission && (
               <DropdownItem
                 tag="a"
-                className="w-100"
+                className="w-100 cursor-pointer"
                 onClick={() =>
                   router.push(`/configurations/edit-country/${props.data?.ID}`)
                 }
@@ -227,7 +251,7 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
                 </div>
 
                 <Input
-                  onChange={(e) => setSearchText(e.target.value)}
+                  onChange={debounce(handleSearch)}
                   type="search"
                   className="searchConfig"
                   placeholder="Search..."
@@ -282,20 +306,22 @@ const AllCountriesTable = ({ rerender, searchText, setSearchText }) => {
         </Card>
       </div>
       <div className="mt-3">
-        <AGGridTable
-          rerender={rerender}
-          columnDefs={columnDefs}
-          searchText={searchText}
-          fetchData={fetchData}
-          pageSize={recordsPerPage}
-          noDataPage={() => (
-            <NoDataPage
-              // buttonName={"Create COA"}
-              buttonName={hasCreateConfiguration ? "Create Country" : ""}
-              buttonLink={"/configurations/add-country"}
-            />
-          )}
-        />
+        {isLoading ? (
+          <TableLoading />
+        ) : tableData.data.length === 0 ? (
+          <NoDataPage
+            buttonName={hasCreateConfiguration ? "Create Country" : "No button"}
+            buttonLink={"/configurations/add-country"}
+          />
+        ) : (
+          <GridWithPagination
+            rowData={tableData}
+            columnDefs={columnDefs}
+            limit={filters.limit}
+            pageNumber={filters.pageNumber}
+            setPageNumber={setFilters}
+          />
+        )}
       </div>
     </div>
   );

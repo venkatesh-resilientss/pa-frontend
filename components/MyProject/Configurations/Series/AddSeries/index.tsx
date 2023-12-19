@@ -36,7 +36,7 @@ function AddSeries() {
       };
       await seriesService.createSeries(payload);
       setLoader(false);
-      toast.success("Series Added successfully");
+      toast.success("Series added successfully");
       reset();
       router.back();
     }catch(error){

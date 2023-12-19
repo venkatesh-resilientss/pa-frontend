@@ -173,7 +173,11 @@ const TaxCodesBulkUploadPopup = ({ setRerender, rerender }) => {
 
         <div className="d-flex justify-content-center" style={{ gap: "8px" }}>
           <Button
-            onClick={() => dispatch(closeBulkUploadTaxCodesPopup("close"))}
+            onClick={() => {
+              dispatch(closeBulkUploadTaxCodesPopup("close"));
+              setLoader(false);
+              setUploadedFiles([]);
+            }}
             color="white"
             style={{
               fontSize: "14px",

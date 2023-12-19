@@ -10,12 +10,8 @@ import {
 
 class DepartmentsService extends APIService {
   getDepartments(data, params?): Promise<any> {
-    return this.post(
-      params
-        ? `${GET_DEPARTMENTS}?limit=${params.pageLimit}&offset=${params.offset}&search=${params.search}`
-        : `${GET_DEPARTMENTS}`,
-      data
-    )
+    const queryParams = new URLSearchParams(params).toString();
+    return this.post(`${GET_DEPARTMENTS}?${queryParams}`, data)
       .then((res) => {
         return res?.data;
       })
@@ -34,13 +30,13 @@ class DepartmentsService extends APIService {
       });
   }
 
-  uploaddepartmentlist(fileName: any,clientId : any) {
+  uploaddepartmentlist(fileName: any, clientId: any) {
     // Create a FormData object
     const formData = new FormData();
 
     // Append the file name to the FormData object with the specified field name
     formData.append("file", fileName);
-    formData.append("clientId",clientId)
+    formData.append("clientId", clientId);
 
     return this.post(UPLOAD_DEPARTMENT_LIST, formData, {
       "Content-Type": "multipart/form-data",
@@ -49,8 +45,6 @@ class DepartmentsService extends APIService {
         return response.data;
       })
       .catch((error) => {
-        
-        
         throw error.response.data;
       });
   }

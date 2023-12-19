@@ -16,11 +16,15 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { VendorsAddressTypes,PaymentOptions } from "@/constants/common";
+import { LoaderButton } from "@/components/Loaders";
+import { hasPermission } from "@/commonFunctions/functions";
 
 function VendorAccordion() {
   const { reset } = useForm();
   const router = useRouter();
   const { id } = router.query;
+  const [editMode,setEditMode] = useState(false);
+  const [isLoading,setLoader] = useState(false);
   const vendorService = new VendorsService();
   const [open, setOpen] = useState("1");
   const fetchVendorData = (id) => vendorService.getVendorDetails(id);
@@ -42,6 +46,10 @@ function VendorAccordion() {
   const { data: vendorData, error: fetchError } = useSWR(
     id ? ["STATE_DETAILS", id] : null,
     () => fetchVendorData(id)
+  );
+  const hasEditConfigurationPermission = hasPermission(
+    "configuration_management",
+    "edit_configuration"
   );
   const [activeStatus, setActiveStatus] = useState(vendorData?.IsActive);
   const setBasicInformation = (data) => {
@@ -157,6 +165,7 @@ function VendorAccordion() {
       toast.error("Data fetch failed");
       return;
     }
+    setLoader(true);
     const contactAddressPaylaod = {
       cityName: data.contactAddressCity,
       countryID: data.contactAddressCountry?.value,
@@ -194,7 +203,7 @@ function VendorAccordion() {
       StateID: data.workState.value,
       PettyCashPCardEnabled: data.isPettyCashEnabled,
       PettyCashAccountID: data.pettyCashAccount,
-      DefaultAccount: data.defaultAccount,
+      DefaultAccountID: data.defaultAccount?.value,
       DefaultAddress: data.defaultAddress.value,
       AchBankAccountNUmber: parseInt(data.achAccountNumber),
       AchRoutingNumber: parseInt(data.achRoutingNumber),
@@ -212,14 +221,16 @@ function VendorAccordion() {
       toast.success("Vendor Edited successfully");
       reset();
       router.push('/configurations/vendors');
+      setLoader(false);
     }).catch(error => {
       toast.error(error.Message || error.error || 'Unable to edit vendor');
+      setLoader(false);
     });
   };
 
   return (
     <div>
-      <div>
+      <div className="mt-4">
         {" "}
         <div
           className="text-black"
@@ -234,7 +245,7 @@ function VendorAccordion() {
           >
             Edit Vendor
           </div>
-          <div className="d-flex me-2 " style={{ gap: "10px" }}>
+          <div className="d-flex me-2 align-items-center" style={{ gap: "10px" }}>
             <Button
               onClick={() => router.back()}
               style={{
@@ -248,17 +259,19 @@ function VendorAccordion() {
             >
               Dismiss
             </Button>
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              color="primary"
-              style={{
-                fontSize: "14px",
-                fontWeight: "600",
-                height: "34px",
-              }}
-            >
-              Save
-            </Button>
+            {hasEditConfigurationPermission && (
+              <LoaderButton
+                buttonText={editMode ? "Save" : "Edit"}
+                isLoading={isLoading}
+                handleClick={() => {
+                  if (!editMode) {
+                    setEditMode(true);
+                    return;
+                  }
+                  handleSubmit(onSubmit)();
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -275,6 +288,7 @@ function VendorAccordion() {
                 errors={errors}
                 activeStatus={activeStatus}
                 setActiveStatus={setActiveStatus}
+                editMode={editMode}
               />
             </AccordionBody>
           </AccordionItem>
@@ -286,6 +300,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                editMode={editMode}
               />{" "}
             </AccordionBody>
           </AccordionItem>
@@ -297,6 +312,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                editMode={editMode}
               />
             </AccordionBody>
           </AccordionItem>
@@ -308,6 +324,7 @@ function VendorAccordion() {
                 control={control}
                 onSubmit={onSubmit}
                 errors={errors}
+                editMode={editMode}
               />
             </AccordionBody>
           </AccordionItem>
