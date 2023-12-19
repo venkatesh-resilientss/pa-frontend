@@ -23,13 +23,16 @@ import useSWR from "swr";
 import { hasPermission } from "commonFunctions/functions";
 import { useDispatch, useSelector } from "react-redux";
 
-import { productionsRefetch, refetchProductions } from "@/redux/slices/mySlices/productions";
+import {
+  productionsRefetch,
+  refetchProductions,
+} from "@/redux/slices/mySlices/productions";
 
 const Sidebar = ({ props }) => {
   const router = useRouter();
 
-  const refetch = useSelector(productionsRefetch)
-  const dispatch = useDispatch()
+  const refetch = useSelector(productionsRefetch);
+  const dispatch = useDispatch();
 
   const [showSidebar, setSidebar] = useState(true); // min - full;
   const toggleSidebar = () => {
@@ -83,8 +86,9 @@ const Sidebar = ({ props }) => {
   );
   const hasViewRoles = hasPermission(
     "user_and_role_management",
-    "view_all_roles"
+    "view_all_Roles"
   );
+
   const hasViewClients = hasPermission("client_management", "view_all_clients");
   const hasViewPayments = hasPermission(
     "payments_management",
@@ -130,22 +134,35 @@ const Sidebar = ({ props }) => {
     clientService.getProductions(searchText).then((res) => {
       setProductionData(res);
     });
-  }
+  };
 
   useEffect(() => {
+    // Check if productionData is an array and has exactly one item
+    if (!userData?.data?.IsStaffUser && productionData?.length === 1) {
+      // Access the first item in the array
+      const temp1 = productionData[0];
+
+      // Check if temp1 is defined and has an ID property
+      if (temp1 && temp1.ID) {
+        // Redirect to the dashboard of the single production
+        router.push(`/productions/${temp1.ID}/dashboard`);
+      }
+    }
+  }, [productionData]);
+  useEffect(() => {
     if (cookie.get("accessToken")) {
-      getProductionsList(searchText)
+      getProductionsList(searchText);
     }
   }, [searchText, cookie.get("accessToken")]);
 
   useEffect(() => {
     if (refetch) {
-      getProductionsList(searchText)
+      getProductionsList(searchText);
 
       // Reset refresh status
-      dispatch(refetchProductions(false))
+      dispatch(refetchProductions(false));
     }
-  }, [refetch])
+  }, [refetch]);
 
   useEffect(() => {
     const storedIndex = localStorage.getItem("clickedItemIndex");
@@ -172,8 +189,8 @@ const Sidebar = ({ props }) => {
   // Function to clear selection and remove from localStorage
   const clearProductionSelection = () => {
     setSelectedProduction(null);
-    setTemp1(null)
-    setTemp2(null)
+    setTemp1(null);
+    setTemp2(null);
 
     // Remove the selected production from localStorage
     localStorage.removeItem("selectedProduction");
@@ -250,8 +267,9 @@ const Sidebar = ({ props }) => {
   const SideBarRoute = ({ route }) => {
     return (
       <div
-        className={`route-button my-2 ${parentRoute === route.path ? "active" : ""
-          }`}
+        className={`route-button my-2 ${
+          parentRoute === route.path ? "active" : ""
+        }`}
       >
         {showSidebar ? (
           <div
@@ -278,11 +296,11 @@ const Sidebar = ({ props }) => {
               <Link
                 className="d-flex gap-2"
                 href={
-                  temp1
-                    ? `/productions/${temp1?.ID}/dashboard`
+                  selectedProduction
+                    ? `/productions/${selectedProduction?.ID}/dashboard`
                     : route.children
-                      ? ""
-                      : route.path
+                    ? ""
+                    : route.path
                 }
               >
                 <img
@@ -300,10 +318,11 @@ const Sidebar = ({ props }) => {
                   src="/icons/arrow-left.svg"
                   alt=""
                   style={{
-                    transform: `${activeDropDown === route.path
-                      ? "rotate(90deg)"
-                      : "rotate(-90deg)"
-                      }`,
+                    transform: `${
+                      activeDropDown === route.path
+                        ? "rotate(90deg)"
+                        : "rotate(-90deg)"
+                    }`,
                     transformOrigin: "center center",
                   }}
                 />
@@ -357,8 +376,9 @@ const Sidebar = ({ props }) => {
                     >
                       <Link
                         href={fullPath}
-                        className={` child-route-name ${child.path === childRoute ? "active" : ""
-                          }`}
+                        className={` child-route-name ${
+                          child.path === childRoute ? "active" : ""
+                        }`}
                       >
                         {child.name}
                       </Link>
@@ -412,9 +432,7 @@ const Sidebar = ({ props }) => {
                         router.push("/dashboard");
                       }}
                     >
-                      <div>
-                        Home
-                      </div>
+                      <div>Home</div>
                     </div>
                   </div>
                 </div>
@@ -432,8 +450,9 @@ const Sidebar = ({ props }) => {
                       return (
                         <div
                           key={`${index}-productions`}
-                          className={`d-flex mb-2 align-items-center cursor-pointer flex-row${isClicked ? " clicked" : ""
-                            }`}
+                          className={`d-flex mb-2 align-items-center cursor-pointer flex-row${
+                            isClicked ? " clicked" : ""
+                          }`}
                           onClick={() => handleItemClick(item, index)}
                         >
                           <img
@@ -447,8 +466,9 @@ const Sidebar = ({ props }) => {
                           <div className="d-flex flex-column">
                             <div className="d-flex align-items-start">
                               <p
-                                className={`home cursor-pointer mt-1 ms-2 ${item?.Name.length > 5 ? "ellipsis" : ""
-                                  }`}
+                                className={`home cursor-pointer mt-1 ms-2 ${
+                                  item?.Name.length > 5 ? "ellipsis" : ""
+                                }`}
                               >
                                 {item.Name}
                               </p>
@@ -491,8 +511,9 @@ const Sidebar = ({ props }) => {
   );
   return (
     <div
-      className={`d-flex flex-column sidebar align-items-between bd-highlight ${showSidebar ? "" : "minimized"
-        }`}
+      className={`d-flex flex-column sidebar align-items-between bd-highlight ${
+        showSidebar ? "" : "minimized"
+      }`}
     >
       <div className="bd-highlight">
         <div className="pb-2 px-2 d-flex gap-2 justify-content-between align-items-center">
@@ -558,191 +579,263 @@ const Sidebar = ({ props }) => {
               }
             }}
           >
-            <OverlayTrigger
-              rootClose
-              trigger="click"
-              placement="bottom"
-              overlay={popover}
-              transition
-            >
-              {selectedProduction ? (
-                <div
-                  className="d-flex align-items-center cursor-pointer flex-row"
-                  onClick={() => {
-                    setSearchText("");
-                    // clearProductionSelection();
-                  }}
+            {!userData?.data?.IsStaffUser && productionData?.length === 1 ? (
+              <>
+                {productionData?.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="d-flex align-items-center flex-row"
+                    >
+                      <Image
+                        src="/home.svg"
+                        alt="project"
+                        width="30"
+                        height="35"
+                        className="ms-2 me-2"
+                      />
+                      <div className="d-flex flex-column cursor-pointer">
+                        <div className="d-flex align-items-start">
+                          <p className="home mt-1 cursor-pointer">
+                            {item?.Name}
+                          </p>
+                        </div>
+                        <div className="d-flex mb-1 align-items-start">
+                          <p className="ressl cursor-pointer">
+                            {item.Client.Name
+                              ? item.Client.Name
+                              : item.Description}
+                          </p>
+                        </div>
+                      </div>
+                      <Image
+                        src="/chevron-down.svg"
+                        alt="project"
+                        width="20"
+                        height="24"
+                        className="ms-auto cursor-pointer me-3"
+                      />
+                    </div>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <OverlayTrigger
+                  rootClose
+                  trigger="click"
+                  placement="bottom"
+                  overlay={popover}
+                  transition
                 >
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Image
-                      src="/home.svg"
-                      alt="project"
-                      width="30"
-                      height="35"
-                      className="ms-2 me-2 cursor-pointer"
-                    />
-                    <div className="text-container text-center">
-                      <div className="d-flex align-items-start">
-                        <p className="home mt-1 cursor-pointer ellipsis">
-                          {selectedProduction?.Name}
-                        </p>
+                  {selectedProduction ? (
+                    <div
+                      className="d-flex align-items-center cursor-pointer flex-row"
+                      onClick={() => {
+                        setSearchText("");
+                        // clearProductionSelection();
+                      }}
+                    >
+                      <div className="d-flex align-items-center justify-content-center">
+                        <Image
+                          src="/home.svg"
+                          alt="project"
+                          width="30"
+                          height="35"
+                          className="ms-2 me-2 cursor-pointer"
+                        />
+                        <div className="text-container text-center">
+                          <div className="d-flex align-items-start">
+                            <p className="home mt-1 cursor-pointer ellipsis">
+                              {selectedProduction?.Name}
+                            </p>
+                          </div>
+                          <div className="d-flex mt-1 mb-1 align-items-start">
+                            <p className="ressl cursor-pointer">
+                              {selectedProduction?.Client?.Name
+                                ? selectedProduction?.Client?.Name
+                                : selectedProduction?.Description}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="d-flex mt-1 mb-1 align-items-start">
-                        <p className="ressl cursor-pointer">
-                          {selectedProduction?.Client?.Name
-                            ? selectedProduction?.Client?.Name
-                            : selectedProduction?.Description}
-                        </p>
-                      </div>
+                      <Image
+                        src="/chevron-down.svg"
+                        alt="project"
+                        width="20"
+                        height="24"
+                        className="ms-auto me-2 cursor-pointer"
+                      />
                     </div>
-                  </div>
-                  <Image
-                    src="/chevron-down.svg"
-                    alt="project"
-                    width="20"
-                    height="24"
-                    className="ms-auto me-2 cursor-pointer"
-                  />
-                </div>
-              ) : (
-                showSidebar && (
-                  <div className="d-flex align-items-center flex-row">
-                    <Image
-                      src="/home.svg"
-                      alt="project"
-                      width="30"
-                      height="35"
-                      className="ms-2 me-2"
-                    />
-                    <div className="d-flex flex-column cursor-pointer">
-                      <div className="d-flex align-items-start">
-                        <p className="home mt-1 cursor-pointer">Home</p>
+                  ) : (
+                    showSidebar && (
+                      <div className="d-flex align-items-center flex-row">
+                        <Image
+                          src="/home.svg"
+                          alt="project"
+                          width="30"
+                          height="35"
+                          className="ms-2 me-2"
+                        />
+                        <div className="d-flex flex-column cursor-pointer">
+                          <div className="d-flex align-items-start">
+                            <p className="home mt-1 cursor-pointer">Home</p>
+                          </div>
+                          {userData?.data?.IsStaffUser ? (
+                            <div className="d-flex mb-1 align-items-start">
+                              <p className="ressl cursor-pointer">
+                                Resilient Software Solutions
+                              </p>
+                            </div>
+                          ) : (
+                            <div className="d-flex mb-1 align-items-start">
+                              <p className="ressl cursor-pointer">
+                                {userData?.data?.Client?.Name}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <Image
+                          src="/chevron-down.svg"
+                          alt="project"
+                          width="20"
+                          height="24"
+                          className="ms-auto cursor-pointer me-3"
+                        />
                       </div>
-                      <div className="d-flex mb-1 align-items-start">
-                        <p className="ressl cursor-pointer">
-                          Resilient Software Solutions
-                        </p>
-                      </div>
-                    </div>
-                    <Image
-                      src="/chevron-down.svg"
-                      alt="project"
-                      width="20"
-                      height="24"
-                      className="ms-auto cursor-pointer me-3"
-                    />
-                  </div>
-                )
-              )}
-            </OverlayTrigger>
+                    )
+                  )}
+                </OverlayTrigger>
+              </>
+            )}
           </div>
         )}
       </div>
-      <div className="bd-highlight ms-1">
-        {userData?.data?.IsStaffUser ? (
-          selectedProduction ? (
-            <div className="px-2 mt-2 sidebar-body">
-              {sidebarRoutesProduction.map((route, i) => {
+
+      {!userData?.data?.IsStaffUser && productionData?.length === 1 ? (
+        <>
+          <div className="px-2 mt-2 sidebar-body">
+            {sidebarRoutesProduction
+              .filter((route: any) => {
                 const isSuperAdminWithFullAccess =
                   userData?.data?.Role?.Code === "SUPER_ADMIN" &&
                   userData?.data?.Role?.AccessType === "full_acceess";
 
-                const isFilteredRoute =
-                  (hasViewConfiguration || route?.name !== "Configurations") &&
-                  (hasViewPayments || route?.name !== "Payments") &&
-                  (hasViewTranscations || route?.name !== "Transactions");
+                const filterByName =
+                  route.name === "Dashboard" ||
+                  (hasViewConfiguration && route?.name === "Configurations") ||
+                  (hasViewTranscations && route?.name === "Transactions") ||
+                  (hasViewPayments && route?.name === "Payments");
 
-                if (isSuperAdminWithFullAccess || userData?.data?.IsStaffUser) {
-                  return (
-                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
-                  );
-                } else if (isFilteredRoute) {
-                  return (
-                    <SideBarRoute route={route} key={`sidebar-route-staff-${i}`} />
-                  );
-                }
+                // Include the route only if filterByName is true
+                return isSuperAdminWithFullAccess || filterByName;
+              })
+              .map((route: any, i) => (
+                <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+              ))}
+          </div>
+        </>
+      ) : (
+        <div className="bd-highlight ms-1">
+          {userData?.data?.IsStaffUser ? (
+            selectedProduction ? (
+              <div className="px-2 mt-2 sidebar-body">
+                {sidebarRoutesProduction
+                  .filter((route: any) => {
+                    const isSuperAdminWithFullAccess =
+                      userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                      userData?.data?.Role?.AccessType === "full_acceess";
 
-                return null;
-              })}
+                    const filterByName =
+                      route.name === "Dashboard" ||
+                      (hasViewConfiguration &&
+                        route?.name === "Configurations") ||
+                      (hasViewTranscations && route?.name === "Transactions") ||
+                      (hasViewPayments && route?.name === "Payments");
+
+                    // Include the route only if filterByName is true
+                    return isSuperAdminWithFullAccess || filterByName;
+                  })
+                  .map((route: any, i) => (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  ))}
+              </div>
+            ) : (
+              <div className="px-2 mt-2 sidebar-body">
+                {sidebarRoutesMaster
+                  .filter((route) => {
+                    const isSuperAdminWithFullAccess =
+                      userData?.data?.Role?.Code === "SUPER_ADMIN" &&
+                      userData?.data?.Role?.AccessType === "full_acceess";
+
+                    const filterRoute =
+                      route.name === "Dashboard" ||
+                      (route.name === "Configurations" &&
+                        hasViewConfiguration) ||
+                      (route.name === "Reports" && hasViewReports) ||
+                      (route.name === "Productions" && hasViewProduction) ||
+                      (route.name === "Clients" && hasViewClients) ||
+                      (route.name === "Settings" &&
+                        ((hasViewUsers &&
+                          route.children?.some(
+                            (child) => child.name === "User Management"
+                          )) ||
+                          (hasViewRoles &&
+                            route.children?.some(
+                              (child) => child.name === "Role Management"
+                            ))));
+
+                    return isSuperAdminWithFullAccess || filterRoute;
+                  })
+
+                  .map((route: any, i) => (
+                    <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                  ))}
+              </div>
+            )
+          ) : selectedProduction ? (
+            <div className="px-2 mt-2 sidebar-body">
+              {sidebarRoutesProduction
+                .filter((route: any) => {
+                  const filterByName =
+                    route.name === "Dashboard" ||
+                    (hasViewConfiguration &&
+                      route?.name === "Configurations") ||
+                    (hasViewTranscations && route?.name === "Transactions") ||
+                    (hasViewPayments && route?.name === "Payments");
+
+                  // Include the route only if filterByName is true
+                  return filterByName;
+                })
+                .map((route: any, i) => (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                ))}
             </div>
           ) : (
-            <div className="px-2 mt-2 sidebar-body">
-              {sidebarRoutesMaster.map((route, i) => {
-                const isSuperAdminWithFullAccess =
-                  userData?.data?.Role?.Code === "SUPER_ADMIN" &&
-                  userData?.data?.Role?.AccessType === "full_acceess";
-
-                const isFilteredRoute =
-                  (hasViewConfiguration || route?.name !== "Configurations") &&
-                  (hasViewClients || route?.name !== "Clients") &&
-                  (hasViewProduction || route?.name !== "Productions") &&
-                  (hasViewReports || route?.name !== "Reports") &&
-                  (hasViewUsers ||
-                    hasViewRoles ||
-                    !route?.children?.some(
-                      (child) =>
-                        child.name === "User Management" ||
-                        child.name === "Role Management"
-                    ));
-
-                if (
-                  isSuperAdminWithFullAccess ||
-                  (userData?.data?.IsStaffUser && hasViewRoles)
-                ) {
-                  return (
-                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
-                  );
-                } else if (isFilteredRoute) {
-                  return (
-                    <SideBarRoute route={route} key={`sidebar-route-full_access-${i}`} />
-                  );
-                }
-
-                return null;
-              })}
+            <div className="px-3 mt-2 sidebar-body">
+              {sidebarRoutesNonStaff
+                .filter((route: any) => {
+                  const filterByName =
+                    route.name === "Dashboard" ||
+                    (hasViewConfiguration &&
+                      route?.name === "Configurations") ||
+                    (hasViewProduction && route?.name === "Productions") ||
+                    (hasViewReports && route?.name === "Reports") ||
+                    (route.name === "Settings" &&
+                      hasViewUsers &&
+                      route.children?.some(
+                        (child) => child.name === "User Management"
+                      ));
+                  // Include the route only if filterByName is true
+                  return filterByName;
+                })
+                .map((route: any, i) => (
+                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
+                ))}
             </div>
-          )
-        ) : selectedProduction ? (
-          <div className="px-2 mt-2 sidebar-body">
-            {sidebarRoutesProduction.map((route, i) => {
-              if (
-                (hasViewConfiguration && route?.name !== "Configurations") ||
-                (hasViewTranscations && route?.name !== "Transactions") ||
-                (hasViewPayments && route?.name !== "Payments")
-              ) {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
-              } else {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-route-${i}`} />
-                );
-              }
-            })}
-          </div>
-        ) : (
-          <div className="px-3 mt-2 sidebar-body">
-            {sidebarRoutesNonStaff.map((route: any, i) => {
-              if (
-                (hasViewReports && route?.name === "Reports") ||
-                (hasViewProduction && route?.name === "Productions") ||
-                (hasViewUsers &&
-                  route?.children?.filter(
-                    (child) => child.name !== "User Management"
-                  ))
-              ) {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
-                );
-              } else {
-                return (
-                  <SideBarRoute route={route} key={`sidebar-routes-${i}`} />
-                );
-              }
-            })}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Bottom Bar */}
       <div className="bottom-bar mb-2 ms-1 mt-auto bd-highlight">
@@ -823,7 +916,7 @@ const Sidebar = ({ props }) => {
         backdrop="static"
         keyboard={false}
         centered
-      // dialogClassName="modal-40w"
+        // dialogClassName="modal-40w"
       >
         <Modal.Header className="border-0 d-flex justify-content-center align-items-center mt-4 pt-2 pb-0 ps-4">
           <Modal.Title className="mb-0 fw-bold">Are you sure?</Modal.Title>
