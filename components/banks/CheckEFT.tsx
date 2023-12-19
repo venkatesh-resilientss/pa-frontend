@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AsyncSelect from "react-select/async";
 
@@ -6,17 +6,15 @@ import { Col, Form, Input, Label, Row } from "reactstrap";
 import { formValidationRules } from "@/constants/common";
 
 export default function CheckEFT(props) {
-  const { eft, setEft, positivePay, setPositivePay, ACHExport, setACHExport } =
+  const { positivePay, setPositivePay, ACHExport, setACHExport, isEditing } =
     props;
+  const { eft, setEft, wireTransfer, setWireTransfer, check, setCheck } = props;
   const { isSubmitted, watch, trigger, setValue, onSubmit, control, errors } =
     props;
+
   const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
-  const [check, setCheck] = useState(false);
-  // const [eft, setEft] = useState(false)
-  // const [positivePay, setPositivePay] = useState(false)
-  // const [ACHExport, setACHExport] = useState(false)
-  const [wireTransfer, setWireTransfer] = useState(false);
+
   const PPDataFormat = [
     { label: "JSON", value: "json" },
     { label: "XML", value: "xml" },
@@ -146,23 +144,9 @@ export default function CheckEFT(props) {
       >
         <div className="d-flex" style={{ gap: "5px" }}>
           <div className="form-check form-switch ">
-            {/* <Controller disabled={!check}
-              name="IsCheck"
-              rules={{
-                required: "Check Range Start is required",
-              }}
-              control={control}
-              render={({ field }) => (
-                <Input onChange={(e) => setCheck(e.target.checked)}
-                  type="switch"
-                  name="customSwitch"
-                  id="exampleCustomSwitch"
-                  checked={check}
-                />
-              )}
-            /> */}
             <Input
               type="switch"
+              disabled={!isEditing || false}
               name="customSwitch"
               id="exampleCustomSwitch"
               checked={check}
@@ -189,7 +173,6 @@ export default function CheckEFT(props) {
               Check Range Start
             </Label>
             <Controller
-              disabled={!check}
               name="checkRangeStart"
               rules={{
                 ...bankValidationRules.rangeStart,
@@ -203,6 +186,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Check Range Start"
                   invalid={errors.checkRangeStart && true}
                   {...field}
+                  disabled={!check || !isEditing || false}
                 />
               )}
             />
@@ -220,7 +204,6 @@ export default function CheckEFT(props) {
               Check Range End
             </Label>
             <Controller
-              disabled={!check}
               name="checkRangeEnd"
               rules={{
                 ...bankValidationRules.rangeEnd,
@@ -233,6 +216,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Check Range End"
                   invalid={errors.checkRangeEnd && true}
                   {...field}
+                  disabled={!check || !isEditing || false}
                 />
               )}
             />
@@ -250,7 +234,6 @@ export default function CheckEFT(props) {
               Check Copies
             </Label>
             <Controller
-              disabled={!check}
               name="checkCopies"
               rules={{
                 ...bankValidationRules.rangeCopies,
@@ -263,6 +246,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Check Copies"
                   invalid={errors.checkCopies && true}
                   {...field}
+                  disabled={!check || !isEditing || false}
                 />
               )}
             />
@@ -278,6 +262,7 @@ export default function CheckEFT(props) {
             <Input
               checked={eft}
               type="switch"
+              disabled={!isEditing || false}
               name="customSwitch"
               id="exampleCustomSwitch"
               onChange={(e) => {
@@ -287,6 +272,20 @@ export default function CheckEFT(props) {
                   setValue("ACHeftRangeStart", "");
                   setValue("ACHeftRangeEnd", "");
                   setValue("ACHeftCopies", "");
+                  setValue("ACHhost", "");
+                  setValue("ACHuserName", "");
+                  setValue("ACHpassword", "");
+                  setValue("ACHinboundPath", "");
+                  setValue("ACHoutboundPath", "");
+                  setValue("ACHdataFormat", null);
+                  setValue("ACHcertificate", "");
+                  setValue("PPhost", "");
+                  setValue("PPport", "");
+                  setValue("PPuserName", "");
+                  setValue("PPpassword", "");
+                  setValue("PPoutboundPath", "");
+                  setValue("PPdataFormat", null);
+                  setValue("PPcertificate", "");
                 }
               }}
             />
@@ -302,7 +301,6 @@ export default function CheckEFT(props) {
               EFT Range Start
             </Label>
             <Controller
-              disabled={!eft}
               name="ACHeftRangeStart"
               rules={{
                 ...bankValidationRules.rangeStart,
@@ -316,6 +314,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter EFT Range Start"
                   invalid={errors.ACHeftRangeStart && true}
                   {...field}
+                  disabled={!eft || !isEditing || false}
                 />
               )}
             />
@@ -333,7 +332,6 @@ export default function CheckEFT(props) {
               EFT Range End
             </Label>
             <Controller
-              disabled={!eft}
               name="ACHeftRangeEnd"
               rules={{
                 ...bankValidationRules.rangeEnd,
@@ -346,6 +344,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter EFT Range End"
                   invalid={errors.ACHeftRangeEnd && true}
                   {...field}
+                  disabled={!eft || !isEditing || false}
                 />
               )}
             />
@@ -363,7 +362,6 @@ export default function CheckEFT(props) {
               EFT Copies
             </Label>
             <Controller
-              disabled={!eft}
               name="ACHeftCopies"
               rules={{
                 ...bankValidationRules.rangeCopies,
@@ -376,6 +374,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter EFT Copies"
                   invalid={errors.ACHeftCopies && true}
                   {...field}
+                  disabled={!eft || !isEditing || false}
                 />
               )}
             />
@@ -397,7 +396,7 @@ export default function CheckEFT(props) {
             <div className="d-flex" style={{ gap: "5px" }}>
               <input
                 type="checkbox"
-                disabled={!eft}
+                disabled={!eft || !isEditing}
                 checked={ACHExport}
                 onChange={(e) => {
                   setACHExport(e.target.checked);
@@ -425,7 +424,6 @@ export default function CheckEFT(props) {
               Host
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHhost"
               rules={{
                 ...bankValidationRules.eftHost,
@@ -438,6 +436,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Host"
                   invalid={errors.ACHhost && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -455,7 +454,6 @@ export default function CheckEFT(props) {
               User Name
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHuserName"
               rules={{
                 ...bankValidationRules.eftUserName,
@@ -468,6 +466,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter User Name"
                   invalid={errors.ACHuserName && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -485,7 +484,6 @@ export default function CheckEFT(props) {
               Password
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHpassword"
               rules={{
                 ...bankValidationRules.eftPassword,
@@ -499,6 +497,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Password"
                   invalid={errors.ACHpassword && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -516,7 +515,6 @@ export default function CheckEFT(props) {
               Inbound Path
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHinboundPath"
               rules={{
                 ...bankValidationRules.eftInboundPath,
@@ -529,6 +527,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter   Inbound Path"
                   invalid={errors.ACHinboundPath && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -546,7 +545,6 @@ export default function CheckEFT(props) {
               Outbound Path
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHoutboundPath"
               rules={{
                 ...bankValidationRules.eftOutboundPath,
@@ -559,6 +557,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Outbound Path"
                   invalid={errors.ACHoutboundPath && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -590,7 +589,7 @@ export default function CheckEFT(props) {
                   // loadOptions={loadStateOptions}
                   placeholder="Select  Data Format"
                   defaultOptions={ACHDataFormatOptions}
-                  isDisabled={!ACHExport}
+                  isDisabled={!ACHExport || !isEditing || false}
                   styles={selectStyles}
                   instanceId={`react-select-ACHdataFormat`}
                 />
@@ -610,7 +609,6 @@ export default function CheckEFT(props) {
               Certificate
             </Label>
             <Controller
-              disabled={!ACHExport}
               name="ACHcertificate"
               rules={{
                 ...bankValidationRules.eftCertificate,
@@ -624,6 +622,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Certificate"
                   invalid={errors.ACHcertificate && true}
                   {...field}
+                  disabled={!ACHExport || !isEditing || false}
                 />
               )}
             />
@@ -646,7 +645,7 @@ export default function CheckEFT(props) {
             <div className="d-flex" style={{ gap: "5px" }}>
               <input
                 type="checkbox"
-                disabled={!eft}
+                disabled={!eft || !isEditing || false}
                 checked={positivePay}
                 onChange={(e) => {
                   setPositivePay(e.target.checked);
@@ -675,7 +674,6 @@ export default function CheckEFT(props) {
               Host
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPhost"
               rules={{
                 ...bankValidationRules.eftHost,
@@ -688,6 +686,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Host"
                   invalid={errors.PPhost && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
                 />
               )}
             />
@@ -706,7 +705,6 @@ export default function CheckEFT(props) {
               Port
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPport"
               rules={{
                 ...bankValidationRules.eftPort,
@@ -719,6 +717,8 @@ export default function CheckEFT(props) {
                   placeholder="Enter Port"
                   invalid={errors.PPport && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -736,7 +736,6 @@ export default function CheckEFT(props) {
               User Name
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPuserName"
               rules={{
                 ...bankValidationRules.eftUserName,
@@ -749,6 +748,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter User Name"
                   invalid={errors.PPuserName && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
                 />
               )}
             />
@@ -766,7 +766,6 @@ export default function CheckEFT(props) {
               Password
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPpassword"
               rules={{
                 ...bankValidationRules.eftPassword,
@@ -780,6 +779,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Password"
                   invalid={errors.PPpassword && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
                 />
               )}
             />
@@ -798,7 +798,6 @@ export default function CheckEFT(props) {
               Outbound Path
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPoutboundPath"
               rules={{
                 ...bankValidationRules.eftOutboundPath,
@@ -811,6 +810,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Outbound Path"
                   invalid={errors.PPoutboundPath && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
                 />
               )}
             />
@@ -842,7 +842,7 @@ export default function CheckEFT(props) {
                   // loadOptions={loadStateOptions}
                   placeholder="Select Data Format"
                   defaultOptions={PPDataFormatOptions}
-                  isDisabled={!positivePay}
+                  isDisabled={!positivePay || !isEditing || false}
                   styles={selectStyles}
                   instanceId={`react-select-PPdataFormat`}
                 />
@@ -862,7 +862,6 @@ export default function CheckEFT(props) {
               Certificate
             </Label>
             <Controller
-              disabled={!positivePay}
               name="PPcertificate"
               rules={{
                 ...bankValidationRules.eftCertificate,
@@ -876,6 +875,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Certificate"
                   invalid={errors.PPcertificate && true}
                   {...field}
+                  disabled={!positivePay || !isEditing || false}
                 />
               )}
             />
@@ -890,6 +890,7 @@ export default function CheckEFT(props) {
           <div className="form-check form-switch ">
             <Input
               type="switch"
+              disabled={!isEditing || false}
               name="customSwitch"
               id="exampleCustomSwitch"
               checked={wireTransfer}
@@ -915,7 +916,6 @@ export default function CheckEFT(props) {
               Wire Transafer Range Start
             </Label>
             <Controller
-              disabled={!wireTransfer}
               name="wireTransaferRangeStart"
               rules={{
                 ...bankValidationRules.rangeStart,
@@ -931,6 +931,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Wire Transafer Range Start"
                   invalid={errors.wireTransaferRangeStart && true}
                   {...field}
+                  disabled={!wireTransfer || !isEditing || false}
                 />
               )}
             />
@@ -948,7 +949,6 @@ export default function CheckEFT(props) {
               Wire Transfer Range End
             </Label>
             <Controller
-              disabled={!wireTransfer}
               name="wireTransaferRangeEnd"
               rules={{
                 ...bankValidationRules.rangeEnd,
@@ -963,6 +963,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter  Wire Transfer Range End"
                   invalid={errors.wireTransaferRangeEnd && true}
                   {...field}
+                  disabled={!wireTransfer || !isEditing || false}
                 />
               )}
             />
@@ -980,7 +981,6 @@ export default function CheckEFT(props) {
               Wire Transfer Copies
             </Label>
             <Controller
-              disabled={!wireTransfer}
               name="wireTransferCopies"
               rules={{
                 ...bankValidationRules.rangeCopies,
@@ -995,6 +995,7 @@ export default function CheckEFT(props) {
                   placeholder="Enter Wire Transfer Copies"
                   invalid={errors.wireTransferCopies && true}
                   {...field}
+                  disabled={!wireTransfer || !isEditing || false}
                 />
               )}
             />

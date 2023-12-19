@@ -8,7 +8,8 @@ import AsyncSelect from "react-select/async";
 
 const coaAccountsService = new COAAccountsService();
 
-export default function DefaultAccount({ onSubmit, control, errors }) {
+export default function DefaultAccount(props) {
+  const { control, onSubmit, errors, isEditing } = props;
   const bankValidationRules = formValidationRules.banks;
   const [initialcoaOptions, setInitialcoaOptions] = useState([]);
   const { handleSubmit } = useForm();
@@ -158,6 +159,7 @@ export default function DefaultAccount({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -194,6 +196,7 @@ export default function DefaultAccount({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -230,6 +233,7 @@ export default function DefaultAccount({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -266,6 +270,7 @@ export default function DefaultAccount({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"

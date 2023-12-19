@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { formValidationRules } from "@/constants/common";
 
-export default function PhysicalAddress({ onSubmit, control, errors }) {
+export default function PhysicalAddress(props) {
+  const { onSubmit, control, errors, isEditing } = props;
   const bankValidationRules = formValidationRules.banks;
   const { handleSubmit } = useForm();
   const [initialStateOptions, setInitialStateOptions] = useState([]);
@@ -140,6 +141,7 @@ export default function PhysicalAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Physical Address Line 1"
                   invalid={errors.physicalAddress1 && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -168,6 +170,7 @@ export default function PhysicalAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Physical Address Line 2"
                   invalid={errors.physicalAddress2 && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -195,6 +198,7 @@ export default function PhysicalAddress({ onSubmit, control, errors }) {
                   placeholder="Enter City"
                   invalid={errors.physicalAddressCity && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -219,6 +223,7 @@ export default function PhysicalAddress({ onSubmit, control, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -253,6 +258,8 @@ export default function PhysicalAddress({ onSubmit, control, errors }) {
                   placeholder="Enter Postal Code"
                   invalid={errors.physicalAddressPostalCode && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />

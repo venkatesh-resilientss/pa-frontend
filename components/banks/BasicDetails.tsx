@@ -6,7 +6,8 @@ import { CurrencyService } from "services";
 import { useEffect, useState } from "react";
 import { formValidationRules } from "constants/common";
 
-export default function BasicDetails({ control, onSubmit, errors }) {
+export default function BasicDetails(props) {
+  const { control, onSubmit, errors, isEditing } = props;
   const { handleSubmit } = useForm();
   const bankValidationRules = formValidationRules.banks;
   const [initialCurrencyOptions, setInitialCurrencyOptions] = useState([]);
@@ -124,6 +125,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Bank Name"
                   invalid={errors.bankName && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -152,6 +154,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Bank Code "
                   invalid={errors.bankCode && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -181,6 +184,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Account Number"
                   invalid={errors.accountNumber && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -208,6 +212,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Description"
                   invalid={errors.description && true}
                   {...field}
+                  disabled={!isEditing || false}
                   // type="textarea"
                 />
               )}
@@ -236,6 +241,8 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Routing Number"
                   invalid={errors.routingNumber && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -263,6 +270,8 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Account Fraction"
                   invalid={errors.accountFraction && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -287,6 +296,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
               render={({ field }) => (
                 <AsyncSelect
                   {...field}
+                  isDisabled={!isEditing || false}
                   isClearable={true}
                   className="react-select"
                   classNamePrefix="select"
@@ -324,6 +334,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder=" Enter Contact Name"
                   invalid={errors.contactName && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -351,6 +362,8 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder=" Enter Branch Number"
                   invalid={errors.branchNumber && true}
                   {...field}
+                  disabled={!isEditing || false}
+                  type="number"
                 />
               )}
             />
@@ -377,6 +390,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   placeholder="Enter Email ID"
                   invalid={errors.emailIDBasicInfo && true}
                   {...field}
+                  disabled={!isEditing || false}
                 />
               )}
             />
@@ -402,7 +416,7 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                   inputClass="react-tel-input w-100"
                   country={"us"}
                   placeholder="Enter Mobile Number"
-                  {...field}
+                  {...field}disabled={!isEditing || false}
                 />
               )}
             /> */}
@@ -418,6 +432,8 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                       placeholder="00"
                       // invalid={errors.emailIDBasicInfo && true}
                       {...field}
+                      disabled={!isEditing || false}
+                      type="number"
                     />
                   )}
                 />
@@ -433,6 +449,8 @@ export default function BasicDetails({ control, onSubmit, errors }) {
                       placeholder=" Enter Contact Number"
                       // invalid={errors.emailIDBasicInfo && true}
                       {...field}
+                      disabled={!isEditing || false}
+                      type="number"
                     />
                   )}
                 />
