@@ -63,8 +63,8 @@ function BankAccordion() {
 
   const onSubmit = (data) => {
     setLoading(true)
-    const clientId = parseInt(sessionStorage.getItem("clientid"));
-    const projectId = parseInt(sessionStorage.getItem("projectid"));
+    const clientId = parseInt(localStorage.getItem("clientid"));
+    const projectId = parseInt(localStorage.getItem("projectid"));
     const primaryContactPhone = `${data.basicInfoCountryCode}-${data.basicInfoContactNumber}`
     const bankPayload: any = {
       Name: data.bankName,
