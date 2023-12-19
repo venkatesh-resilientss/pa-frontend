@@ -159,7 +159,7 @@ function AddBudget() {
           projectId: projectID,
         }
       );
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+      const options = res?.data.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: `${item.Code} - ${item.Name}`
       }));
@@ -206,7 +206,7 @@ function AddBudget() {
           clientId: clientID,
           projectID: projectID
         });
-      const options = res?.result.filter(item => item.IsActive).map((item) => ({
+      const options = res?.data.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
         label: `${item.Code} - ${item.Name}`
       }));
