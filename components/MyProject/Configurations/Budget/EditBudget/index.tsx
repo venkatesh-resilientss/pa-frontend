@@ -44,7 +44,7 @@ function EditBudget() {
         });
         const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialCurrencyOptions(options);
       } catch (error) {
@@ -70,7 +70,7 @@ function EditBudget() {
         );
         const options = res?.data.map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialSeriesOptions(options);
       } catch (error) {
@@ -89,7 +89,7 @@ function EditBudget() {
         });
         const options = res?.result.filter(item=>item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialLocationOptions(options);
       } catch (error) {
@@ -116,7 +116,7 @@ function EditBudget() {
         );
         const options = res?.data.map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialSetOptions(options);
       } catch (error) {
@@ -137,7 +137,7 @@ function EditBudget() {
       });
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
 
       callback(options);
@@ -163,7 +163,7 @@ function EditBudget() {
       );
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
@@ -181,7 +181,7 @@ function EditBudget() {
       });
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
@@ -206,7 +206,7 @@ function EditBudget() {
       );
       const options = res?.result.filter(item=>item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
@@ -234,19 +234,19 @@ function EditBudget() {
     setValue("code", budgetData?.Code);
     setValue("currency", {
       value: budgetData?.Currency?.ID,
-      label: budgetData?.Currency?.Name,
+      label: `${budgetData?.Currency?.Code} - ${budgetData?.Currency?.Name}`,
     });
     setValue("series", {
       value: budgetData?.Series?.ID,
-      label: budgetData?.Series?.Name,
+      label: `${budgetData?.Series?.Code} - ${budgetData?.Series?.Name}`,
     });
     setValue("set", {
       value: budgetData?.Set?.ID,
-      label: budgetData?.Set?.Name,
+      label: `${budgetData?.Set?.Code} - ${budgetData?.Set?.Name}`,
     });
     setValue("location", {
       value: budgetData?.Location?.ID,
-      label: budgetData?.Location?.Name
+      label: `${budgetData?.Location?.Code} - ${budgetData?.Location?.Name}`
     })
     setActiveStatus(budgetData?.IsActive);
     setBudgetFileUrl(budgetData?.BudgetFile);

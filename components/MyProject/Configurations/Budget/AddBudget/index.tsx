@@ -39,7 +39,7 @@ function AddBudget() {
         });
         const options = res?.result.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialCurrencyOptions(options);
       } catch (error) {
@@ -64,7 +64,7 @@ function AddBudget() {
         );
         const options = res?.data.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialSeriesOptions(options);
       } catch (error) {
@@ -88,7 +88,7 @@ function AddBudget() {
         );
         const options = res?.result.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialLocationOptions(options);
       } catch (error) {
@@ -113,7 +113,7 @@ function AddBudget() {
           });
         const options = res?.data.filter(item => item.IsActive).map((item) => ({
           value: item.ID,
-          label: item.Name,
+          label: `${item.Code} - ${item.Name}`
         }));
         setInitialSetOptions(options);
       } catch (error) {
@@ -135,7 +135,7 @@ function AddBudget() {
       });
       const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
 
       callback(options);
@@ -161,7 +161,7 @@ function AddBudget() {
       );
       const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
@@ -185,7 +185,7 @@ function AddBudget() {
       );
       const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
@@ -208,7 +208,7 @@ function AddBudget() {
         });
       const options = res?.result.filter(item => item.IsActive).map((item) => ({
         value: item.ID,
-        label: item.Name,
+        label: `${item.Code} - ${item.Name}`
       }));
       callback(options);
     } catch (error) {
