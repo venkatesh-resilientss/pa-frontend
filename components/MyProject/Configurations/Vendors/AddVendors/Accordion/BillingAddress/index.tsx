@@ -2,24 +2,24 @@ import { useForm, Controller } from "react-hook-form";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 import Select from "react-select";
 import { StatesService, CountryService } from "services";
-import {toast} from 'react-toastify';
-import { useState,useEffect } from "react";
+import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
 import { selectStyles } from "constants/common";
 import { formValidationRules } from "constants/common";
-function BillingAddressForm({ onSubmit, control, errors,setValue }) {
+function BillingAddressForm({ onSubmit, control, errors, setValue }) {
   const { handleSubmit } = useForm();
   const statesService = new StatesService();
   const countryService = new CountryService();
   const addressValidationRules = formValidationRules.address;
   const [initialCountryOptions, setInitialCountryOptions] = useState([]);
   const [currentCountry, setCurrentCountry] = useState(null);
-  const [initialStateOptions,setInititalStateOptions] = useState([]);
+  const [initialStateOptions, setInititalStateOptions] = useState([]);
   useEffect(() => {
     const fetchInitialCountryOptions = async () => {
       try {
         const res = await countryService.getCountries({
           search: "",
-          limit: 200,
+          limit: 500,
           offset: 0,
         });
         // console.log(res);
@@ -36,7 +36,7 @@ function BillingAddressForm({ onSubmit, control, errors,setValue }) {
   }, []);
   useEffect(() => {
     const fetchStateOptions = async () => {
-      
+
       try {
         const response = await statesService.getStatesByCountry(
           currentCountry.value
@@ -52,13 +52,13 @@ function BillingAddressForm({ onSubmit, control, errors,setValue }) {
       } catch (error) {
         toast.error(
           error?.Message ||
-            error?.message ||
-            error?.error ||
-            "Unable to get state options"
+          error?.message ||
+          error?.error ||
+          "Unable to get state options"
         );
       }
     };
-    if(!currentCountry)
+    if (!currentCountry)
       return
     setInititalStateOptions([]);
     setValue("billingAddressState", null);
