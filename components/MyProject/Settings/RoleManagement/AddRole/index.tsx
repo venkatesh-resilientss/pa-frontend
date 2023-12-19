@@ -41,6 +41,29 @@ function AddRole() {
       const updatedPermissionSet = { ...prevPermissionSet };
       updatedPermissionSet[category].permissions[permission].state = newValue;
 
+      // Mapping of "Create" or "Edit" permissions to corresponding "View" permissions
+      const permissionMapping = {
+        "Create Client": "View All Clients",
+        "Edit Client": "View All Clients",
+        "Create Production": "View All Productions",
+        "Edit Production": "View All Productions",
+        "Create Configuration": "View All Configurations",
+        "Edit Configuration": "View All Configurations",
+        "Create Role": "View All Roles",
+        "Edit Role": "View All Roles",
+        "Create User": "View All Users",
+        "Edit User": "View All Users",
+      };
+
+      // Check if the permission has a corresponding "View" permission
+      const viewPermission = permissionMapping[permission];
+
+      if (viewPermission) {
+        // Update the state of the corresponding "View" permission
+        updatedPermissionSet[category].permissions[viewPermission].state =
+          newValue;
+      }
+
       // Check if all sub-permissions are selected
       const allSubPermissionsSelected = Object.values(
         updatedPermissionSet[category].permissions
@@ -57,6 +80,29 @@ function AddRole() {
     setPermissionSet1((prevPermissionSet) => {
       const updatedPermissionSet = { ...prevPermissionSet };
       updatedPermissionSet[category].permissions[permission].state = newValue;
+
+      // Mapping of "Create" or "Edit" permissions to corresponding "View" permissions
+      const permissionMapping = {
+        "Create Purchase Order": "View Purchase Order List",
+        "Edit Purchase Order": "View Purchase Order List",
+        "Create Account Pay": "View Account Pay List",
+        "Edit Account Pay": "View Account Pay List",
+        "Create Journal Entry": "View Journal Entry List",
+        "Edit Journal Entry": "View Journal Entry List",
+        "Create Petty Cash": "View Petty Cash List",
+        "Edit Petty Cash": "View Petty Cash List",
+        "Create Payroll": "View Payroll List",
+        "Edit Payroll": "View Payroll List",
+      };
+
+      // Check if the permission has a corresponding "View" permission
+      const viewPermission = permissionMapping[permission];
+
+      if (viewPermission) {
+        // Update the state of the corresponding "View" permission
+        updatedPermissionSet[category].permissions[viewPermission].state =
+          newValue;
+      }
 
       // Check if all sub-permissions are selected
       const allSubPermissionsSelected = Object.values(
