@@ -78,4 +78,14 @@ jobs:
 
       - name: Run new container
         run: |
+          echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV}}" >> .env && \
+          echo "NEXT_PUBLIC_BASE_LOCAL=${{ secrets.NEXT_PUBLIC_BASE_LOCAL}}" >> .env && \
+          echo "NEXT_PUBLIC_BASE_STAGING=${{ secrets.NEXT_PUBLIC_BASE_STAGING}}" >> .env && \
+          echo "NEXT_PUBLIC_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_PUBLIC_KEY}}" >> .env && \
+          echo "NEXT_PUBLIC_PRIVATE_KEY=${{ secrets.NEXT_PUBLIC_PRIVATE_KEY}}" >> .env && \
+          echo "OKTA_CLIENTID=${{ secrets.OKTA_CLIENTID}}" >> .env && \
+          echo "OKTA_CLIENTSECRET=${{ secrets.OKTA_CLIENTSECRET}}" >> .env && \
+          echo "OKTA_DOMAIN=${{ secrets.OKTA_DOMAIN}}" >> .env && \
+          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL}}" >> .env && \
+          echo "NEXT_PUBLIC_REDIRECT=${{ secrets.NEXT_PUBLIC_REDIRECT}}" >> .env && \
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.AWS_EC2_USER }}@${{ env.AWS_EC2_IP }} 'sudo docker run --env-file .env -p 3000:3000 -d devrssl/pa-frontend:latest'
