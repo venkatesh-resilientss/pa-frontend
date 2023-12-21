@@ -33,6 +33,17 @@ jobs:
           push: true
           dockerfile: ./Dockerfile
           tags: devrssl/pa-frontend:latest
+          build-args: |
+            NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV}}
+            NEXT_PUBLIC_BASE_LOCAL=${{ secrets.NEXT_PUBLIC_BASE_LOCAL}}
+            NEXT_PUBLIC_BASE_STAGING=${{ secrets.NEXT_PUBLIC_BASE_STAGING}}
+            NEXT_PUBLIC_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_PUBLIC_KEY}}
+            NEXT_PUBLIC_PRIVATE_KEY=${{ secrets.NEXT_PUBLIC_PRIVATE_KEY}}
+            OKTA_CLIENTID=${{ secrets.OKTA_CLIENTID}}
+            OKTA_CLIENTSECRET=${{ secrets.OKTA_CLIENTSECRET}}
+            OKTA_DOMAIN=${{ secrets.OKTA_DOMAIN}}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL}}
+            NEXT_PUBLIC_REDIRECT=${{ secrets.NEXT_PUBLIC_REDIRECT}}
             
 
   deploy:
@@ -53,16 +64,6 @@ jobs:
         run: |
           echo "${{ env.AWS_SECRET_KEY }}" > key.pem
           chmod 600 key.pem
-          echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV}}" > .env
-          echo "NEXT_PUBLIC_BASE_LOCAL=${{ secrets.NEXT_PUBLIC_BASE_LOCAL}}" > .env
-          echo "NEXT_PUBLIC_BASE_STAGING=${{ secrets.NEXT_PUBLIC_BASE_STAGING}}" > .env
-          echo "NEXT_PUBLIC_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_PUBLIC_KEY}}" > .env
-          echo "NEXT_PUBLIC_PRIVATE_KEY=${{ secrets.NEXT_PUBLIC_PRIVATE_KEY}}" > .env
-          echo "OKTA_CLIENTID=${{ secrets.OKTA_CLIENTID}}" > .env
-          echo "OKTA_CLIENTSECRET=${{ secrets.OKTA_CLIENTSECRET}}" > .env
-          echo "OKTA_DOMAIN=${{ secrets.OKTA_DOMAIN}}" > .env
-          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL}}" > .env
-          echo "NEXT_PUBLIC_REDIRECT=${{ secrets.NEXT_PUBLIC_REDIRECT}}" > .env
         
       - name: Pull Docker image
         run: |
@@ -70,8 +71,8 @@ jobs:
 
       - name: Stop running container
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.AWS_EC2_USER }}@${{ env.AWS_EC2_IP }} 'sudo docker stop pa-frontend || true'
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.AWS_EC2_USER }}@${{ env.AWS_EC2_IP }} 'sudo docker rm pa-frontend || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.AWS_EC2_USER }}@${{ env.AWS_EC2_IP }} 'sudo docker stop devrssl/pa-frontend || true'
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ env.AWS_EC2_USER }}@${{ env.AWS_EC2_IP }} 'sudo docker rm devrssl/pa-frontend || true'
 
       - name: Run new container
         run: |
