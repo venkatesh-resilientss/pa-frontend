@@ -55,7 +55,8 @@ jobs:
           chmod 600 key.pem
       
       - name: Create .env file
-        run: echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV}}" >> .env && \
+        run: |
+             echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV}}" >> .env && \
              echo "NEXT_PUBLIC_BASE_LOCAL=${{ secrets.NEXT_PUBLIC_BASE_LOCAL}}" >> .env && \
              echo "NEXT_PUBLIC_BASE_STAGING=${{ secrets.NEXT_PUBLIC_BASE_STAGING}}" >> .env && \
              echo "NEXT_PUBLIC_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_PUBLIC_KEY}}" >> .env && \
